@@ -5,7 +5,7 @@
 ## Notes: More than an UI.
 ## Version: 1.0.0
 ## X-Support: Classic
-## X-Website: https://github.com/siweia/NDui
+## X-Website: https://github.com/siweia/NDuiClassic
 ## SavedVariables: NDuiADB
 ## SavedVariablesPerCharacter: NDuiDB
 
