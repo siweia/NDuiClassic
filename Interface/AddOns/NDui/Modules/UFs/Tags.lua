@@ -9,7 +9,7 @@ local UnitIsDeadOrGhost, UnitIsConnected, UnitIsTapDenied, UnitIsPlayer = UnitIs
 local UnitHealth, UnitHealthMax, UnitPower, UnitPowerType, UnitStagger = UnitHealth, UnitHealthMax, UnitPower, UnitPowerType, UnitStagger
 local UnitClass, UnitReaction, UnitLevel, UnitClassification = UnitClass, UnitReaction, UnitLevel, UnitClassification
 local UnitIsAFK, UnitIsDND, UnitIsDead, UnitIsGhost = UnitIsAFK, UnitIsDND, UnitIsDead, UnitIsGhost
-local GetNumArenaOpponentSpecs, GetCreatureDifficultyColor = GetNumArenaOpponentSpecs, GetCreatureDifficultyColor
+local GetCreatureDifficultyColor = GetCreatureDifficultyColor
 
 local function ColorPercent(value)
 	local r, g, b
@@ -97,7 +97,7 @@ oUF.Tags.Methods["DDG"] = function(unit)
 		return "|cffCFCFCF"..DEAD.."|r"
 	elseif UnitIsGhost(unit) then
 		return "|cffCFCFCF"..L["Ghost"].."|r"
-	elseif not UnitIsConnected(unit) and GetNumArenaOpponentSpecs() == 0 then
+	elseif not UnitIsConnected(unit) then
 		return "|cffCFCFCF"..PLAYER_OFFLINE.."|r"
 	end
 end
