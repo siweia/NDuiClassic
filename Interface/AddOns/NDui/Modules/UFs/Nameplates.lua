@@ -232,7 +232,7 @@ end
 function UF:UpdateThreatColor(_, unit)
 	if unit ~= self.unit then return end
 
-	UF.CheckTankStatus(self, unit)
+	--UF.CheckTankStatus(self, unit)
 	UF.UpdateColor(self.Health, unit)
 end
 

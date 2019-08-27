@@ -182,7 +182,7 @@ function UF:OnLogin()
 		self:CreateUnitTable()
 		self:CreatePowerUnitTable()
 		self:AddInterruptInfo()
-		self:UpdateGroupRoles()
+		--self:UpdateGroupRoles()
 		self:QuestIconCheck()
 
 		oUF:RegisterStyle("Nameplates", UF.CreatePlates)
