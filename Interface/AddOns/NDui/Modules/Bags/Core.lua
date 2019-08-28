@@ -87,7 +87,7 @@ function module:CreateRestoreButton(f)
 		NDuiDB["TempAnchor"][f.main:GetName()] = nil
 		NDuiDB["TempAnchor"][f.bank:GetName()] = nil
 		f.main:ClearAllPoints()
-		f.main:SetPoint("BOTTOMRIGHT", -50, 50)
+		f.main:SetPoint("BOTTOMRIGHT", -50, 320)
 		f.bank:ClearAllPoints()
 		f.bank:SetPoint("BOTTOMRIGHT", f.main, "BOTTOMLEFT", -10, 0)
 		PlaySound(SOUNDKIT.IG_MINIMAP_OPEN)
@@ -188,7 +188,7 @@ function module:OnLogin()
 
 		f.main = MyContainer:New("Main", {Columns = bagsWidth, Bags = "bags"})
 		f.main:SetFilter(onlyBags, true)
-		f.main:SetPoint("BOTTOMRIGHT", -50, 50)
+		f.main:SetPoint("BOTTOMRIGHT", -50, 320)
 
 		f.junk = MyContainer:New("Junk", {Columns = bagsWidth, Parent = f.main})
 		f.junk:SetFilter(bagsJunk, true)
@@ -221,13 +221,10 @@ function module:OnLogin()
 	end
 
 	function Backpack:OnBankOpened()
-		BankFrame:Show()
 		self:GetContainer("Bank"):Show()
 	end
 
 	function Backpack:OnBankClosed()
-		BankFrame.selectedTab = 1
-		BankFrame:Hide()
 		self:GetContainer("Bank"):Hide()
 	end
 
