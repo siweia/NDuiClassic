@@ -4,7 +4,6 @@
 	<Script file="ItemLevel.lua"/>
 	<Script file="ExpRep.lua"/>
 	<Script file="Mail.lua"/>
-	<Script file="Focuser.lua"/>
 	<Script file="QuestNotifier.lua"/>
 	<Script file="AlertFrames.lua"/>
 </Ui>
