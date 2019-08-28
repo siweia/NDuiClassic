@@ -7,30 +7,9 @@ local ipairs, strmatch, unpack = ipairs, string.match, unpack
 local BAG_ITEM_QUALITY_COLORS = BAG_ITEM_QUALITY_COLORS
 local LE_ITEM_QUALITY_POOR, LE_ITEM_QUALITY_RARE, LE_ITEM_QUALITY_ARTIFACT, LE_ITEM_QUALITY_HEIRLOOM = LE_ITEM_QUALITY_POOR, LE_ITEM_QUALITY_RARE, LE_ITEM_QUALITY_ARTIFACT, LE_ITEM_QUALITY_HEIRLOOM
 local LE_ITEM_CLASS_WEAPON, LE_ITEM_CLASS_ARMOR, EJ_LOOT_SLOT_FILTER_ARTIFACT_RELIC = LE_ITEM_CLASS_WEAPON, LE_ITEM_CLASS_ARMOR, EJ_LOOT_SLOT_FILTER_ARTIFACT_RELIC
-local SortBankBags, SortReagentBankBags, SortBags = SortBankBags, SortReagentBankBags, SortBags
 local GetContainerNumSlots, GetContainerItemInfo, PickupContainerItem = GetContainerNumSlots, GetContainerItemInfo, PickupContainerItem
 local C_NewItems_IsNewItem, C_Timer_After = C_NewItems.IsNewItem, C_Timer.After
 local IsControlKeyDown, IsAltKeyDown, DeleteCursorItem = IsControlKeyDown, IsAltKeyDown, DeleteCursorItem
-
-local sortCache = {}
-function module:ReverseSort()
-	for bag = 0, 4 do
-		local numSlots = GetContainerNumSlots(bag)
-		for slot = 1, numSlots do
-			local texture, _, locked = GetContainerItemInfo(bag, slot)
-			if (slot <= numSlots/2) and texture and not locked and not sortCache["b"..bag.."s"..slot] then
-				PickupContainerItem(bag, slot)
-				PickupContainerItem(bag, numSlots+1 - slot)
-				sortCache["b"..bag.."s"..slot] = true
-				C_Timer_After(.1, module.ReverseSort)
-				return
-			end
-		end
-	end
-
-	NDui_Backpack.isSorting = false
-	NDui_Backpack:BAG_UPDATE()
-end
 
 function module:UpdateAnchors(parent, bags)
 	local anchor = parent
@@ -107,61 +86,13 @@ function module:CreateRestoreButton(f)
 	bu:SetScript("OnClick", function()
 		NDuiDB["TempAnchor"][f.main:GetName()] = nil
 		NDuiDB["TempAnchor"][f.bank:GetName()] = nil
-		NDuiDB["TempAnchor"][f.reagent:GetName()] = nil
 		f.main:ClearAllPoints()
 		f.main:SetPoint("BOTTOMRIGHT", -50, 50)
 		f.bank:ClearAllPoints()
 		f.bank:SetPoint("BOTTOMRIGHT", f.main, "BOTTOMLEFT", -10, 0)
-		f.reagent:ClearAllPoints()
-		f.reagent:SetPoint("BOTTOMLEFT", f.bank)
 		PlaySound(SOUNDKIT.IG_MINIMAP_OPEN)
 	end)
 	B.AddTooltip(bu, "ANCHOR_TOP", RESET)
-
-	return bu
-end
-
-function module:CreateReagentButton(f)
-	local bu = B.CreateButton(self, 24, 24, true, "Atlas:Reagents")
-	bu.Icon:SetPoint("BOTTOMRIGHT", -C.mult, -C.mult)
-	bu:RegisterForClicks("AnyUp")
-	bu:SetScript("OnClick", function(_, btn)
-		if not IsReagentBankUnlocked() then
-			StaticPopup_Show("CONFIRM_BUY_REAGENTBANK_TAB")
-		else
-			PlaySound(SOUNDKIT.IG_CHARACTER_INFO_TAB)
-			ReagentBankFrame:Show()
-			BankFrame.selectedTab = 2
-			f.reagent:Show()
-			f.bank:Hide()
-			if btn == "RightButton" then DepositReagentBank() end
-		end
-	end)
-	B.AddTooltip(bu, "ANCHOR_TOP", REAGENT_BANK)
-
-	return bu
-end
-
-function module:CreateBankButton(f)
-	local bu = B.CreateButton(self, 24, 24, true, "Atlas:Banker")
-	bu:SetScript("OnClick", function()
-		PlaySound(SOUNDKIT.IG_CHARACTER_INFO_TAB)
-		ReagentBankFrame:Hide()
-		BankFrame.selectedTab = 1
-		f.reagent:Hide()
-		f.bank:Show()
-	end)
-	B.AddTooltip(bu, "ANCHOR_TOP", BANK)
-
-	return bu
-end
-
-function module:CreateDepositButton()
-	local bu = B.CreateButton(self, 24, 24, true, "Atlas:GreenCross")
-	bu.Icon:SetPoint("TOPLEFT", -C.mult, C.mult)
-	bu.Icon:SetPoint("BOTTOMRIGHT", C.mult, -C.mult)
-	bu:SetScript("OnClick", DepositReagentBank)
-	B.AddTooltip(bu, "ANCHOR_TOP", REAGENTBANK_DEPOSIT)
 
 	return bu
 end
@@ -184,27 +115,13 @@ function module:CreateBagToggle()
 end
 
 function module:CreateSortButton(name)
-	local bu = B.CreateButton(self, 24, 24, true, "Interface\\Icons\\Ability_Hunter_BeastTraining")
+	local bu = B.CreateButton(self, 24, 24, true, "Interface\\Icons\\ABILITY_SEAL")
 	bu:SetScript("OnClick", function()
-		if DB.isClassic then return end
-
 		if name == "Bank" then
-			SortBankBags()
-		elseif name == "Reagent" then
-			SortReagentBankBags()
+			-- BANK SORT
 		else
-			if NDuiDB["Bags"]["ReverseSort"] then
-				if InCombatLockdown() then
-					UIErrorsFrame:AddMessage(DB.InfoColor..ERR_NOT_IN_COMBAT)
-				else
-					SortBags()
-					wipe(sortCache)
-					NDui_Backpack.isSorting = true
-					C_Timer_After(.5, module.ReverseSort)
-				end
-			else
-				SortBags()
-			end
+			-- BAG SORT
+			-- NDuiDB["Bags"]["ReverseSort"]
 		end
 	end)
 	B.AddTooltip(bu, "ANCHOR_TOP", L["Sort"])
@@ -301,11 +218,6 @@ function module:OnLogin()
 
 		f.bankCompanion = MyContainer:New("BankCompanion", {Columns = bankWidth, Parent = f.bank})
 		f.bankCompanion:SetFilter(bankMountPet, true)
-
-		f.reagent = MyContainer:New("Reagent", {Columns = bankWidth})
-		f.reagent:SetFilter(onlyReagent, true)
-		f.reagent:SetPoint("BOTTOMLEFT", f.bank)
-		f.reagent:Hide()
 	end
 
 	function Backpack:OnBankOpened()
@@ -317,8 +229,6 @@ function module:OnLogin()
 		BankFrame.selectedTab = 1
 		BankFrame:Hide()
 		self:GetContainer("Bank"):Hide()
-		self:GetContainer("Reagent"):Hide()
-		ReagentBankFrame:Hide()
 	end
 
 	local MyButton = Backpack:GetItemButtonClass()
@@ -480,11 +390,7 @@ function module:OnLogin()
 			if deleteButton then buttons[4] = module.CreateDeleteButton(self) end
 		elseif name == "Bank" then
 			module.CreateBagBar(self, settings, 7)
-			buttons[2] = module.CreateReagentButton(self, f)
-			buttons[3] = module.CreateBagToggle(self)
-		elseif name == "Reagent" then
-			buttons[2] = module.CreateBankButton(self, f)
-			buttons[3] = module.CreateDepositButton(self)
+			buttons[2] = module.CreateBagToggle(self)
 		end
 
 		for i = 1, 4 do
@@ -532,7 +438,6 @@ function module:OnLogin()
 	BankFrame.GetRight = function() return f.bank:GetRight() end
 	BankFrameItemButton_Update = B.Dummy
 
-	--SetSortBagsRightToLeft(not NDuiDB["Bags"]["ReverseSort"])
 	SetInsertItemsLeftToRight(false)
 	module:DisableAuroraClassic()
 end
