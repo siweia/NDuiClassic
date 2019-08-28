@@ -38,6 +38,7 @@ local frames = {
 	["ReputationFrame"] = true,
 	["ScrollOfResurrectionSelectionFrame"] = false,
 	["SendMailFrame"] = true,
+	["SkillFrame"] = true,
 	["SpellBookFrame"] = false,
 	["SplashFrame"] = false,
 	["StackSplitFrame"] = false,
