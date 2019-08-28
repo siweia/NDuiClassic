@@ -3,6 +3,10 @@ local B, C, L, DB = unpack(ns)
 
 local oUF = ns.oUF or oUF
 local UF = B:RegisterModule("UnitFrames")
+
+local LCD = LibStub("LibClassicDurations")
+LCD:RegisterFrame("NDui")
+
 local format, floor, abs, min = string.format, math.floor, math.abs, math.min
 local pairs, next = pairs, next
 
@@ -474,8 +478,19 @@ local filteredStyle = {
 	["arena"] = true,
 }
 
-function UF.PostUpdateIcon(element, _, button, _, _, duration, expiration, debuffType)
+function UF.PostUpdateIcon(element, unit, button, index, _, duration, expiration, debuffType)
 	if duration then button.Shadow:Show() end
+
+	if duration == 0 then
+		local name, _, _, _, _, _, caster, _, _, spellID = LCD:UnitAura(unit, index, button.filter)
+		duration, expiration = LCD:GetAuraDurationByUnit(unit, spellID, caster, name)
+		if duration and duration > 0 then
+			if button.cd and not element.disableCooldown then
+				button.cd:SetCooldown(expiration - duration, duration)
+				button.cd:Show()
+			end
+		end
+	end
 
 	local style = element.__owner.mystyle
 	if style == "nameplate" then
