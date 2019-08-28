@@ -112,6 +112,7 @@ function module:WorldMapScale()
 	end
 
 	B.CreateMF(WorldMapFrame, nil, true)
+	self.UpdateMapScale(WorldMapFrame)
 	hooksecurefunc(WorldMapFrame, "HandleUserActionToggleSelf", self.UpdateMapAnchor)
 	WorldMapFrame.BlackoutFrame:Hide()
 end
