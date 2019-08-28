@@ -203,7 +203,7 @@ SlashCmdList.MOUSEOVERBIND = function()
 
 		function bind:Deactivate(save)
 			if save then
-				SaveBindings(NDuiDB["Actionbar"]["BindType"])
+				AttemptToSaveBindings(NDuiDB["Actionbar"]["BindType"])
 				print("|cffffff00"..KEY_BOUND.."|r")
 			else
 				LoadBindings(NDuiDB["Actionbar"]["BindType"])
