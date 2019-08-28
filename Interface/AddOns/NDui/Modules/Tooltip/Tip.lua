@@ -163,6 +163,9 @@ function TT:OnTooltipSetUnit()
 				end
 				GameTooltipTextLeft2:SetText("<"..guildName.."> "..rank.."("..rankIndex..")")
 			end
+
+			local line1 = GameTooltipTextLeft1:GetText()
+			GameTooltipTextLeft1:SetFormattedText("%s", hexColor..line1)
 		end
 
 		local alive = not UnitIsDeadOrGhost(unit)
@@ -175,11 +178,15 @@ function TT:OnTooltipSetUnit()
 			local diff = GetCreatureDifficultyColor(level)
 			local classify = UnitClassification(unit)
 			local textLevel = format("%s%s%s|r", B.HexRGB(diff), boss or format("%d", level), classification[classify] or "")
+			local pvpFlag = isPlayer and UnitIsPVP(unit) and format(" |cffff0000%s|r", PVP) or ""
+			local unitClass = isPlayer and format("%s %s", UnitRace(unit) or "", hexColor..(UnitClass(unit) or "").."|r") or UnitCreatureType(unit) or ""
+			local levelString = format(("%s%s %s %s"), textLevel, pvpFlag, unitClass, (not alive and "|cffCCCCCC"..DEAD.."|r" or ""))
+
 			local tiptextLevel = TT.GetLevelLine(self)
 			if tiptextLevel then
-				local pvpFlag = isPlayer and UnitIsPVP(unit) and format(" |cffff0000%s|r", PVP) or ""
-				local unitClass = isPlayer and format("%s %s", UnitRace(unit) or "", hexColor..(UnitClass(unit) or "").."|r") or UnitCreatureType(unit) or ""
-				tiptextLevel:SetFormattedText(("%s%s %s %s"), textLevel, pvpFlag, unitClass, (not alive and "|cffCCCCCC"..DEAD.."|r" or ""))
+				tiptextLevel:SetText(levelString)
+			else
+				GameTooltip:AddLine(levelString)
 			end
 		end
 
@@ -190,7 +197,6 @@ function TT:OnTooltipSetUnit()
 			self:AddLine(TARGET..": "..tar)
 		end
 
-		GameTooltipTextLeft1:SetTextColor(r, g, b)
 		if alive then
 			GameTooltipStatusBar:SetStatusBarColor(r, g, b)
 		else
