@@ -214,9 +214,7 @@ local defaultSettings = {
 		HideErrors = true,
 		SoloInfo = true,
 		AlertinChat = false,
-		Focuser = true,
 		ExpRep = true,
-		Screenshot = false,
 		TradeTab = true,
 		Interrupt = false,
 		OwnInterrupt = true,
@@ -334,10 +332,6 @@ local function setupAuraWatch()
 	SlashCmdList["NDUI_AWCONFIG"]()
 end
 
-local function updateBagSortOrder()
-	SetSortBagsRightToLeft(not NDuiDB["Bags"]["ReverseSort"])
-end
-
 local function updateChatSticky()
 	B:GetModule("Chat"):ChatWhisperSticky()
 end
@@ -410,10 +404,6 @@ local function updateQuestNotifier()
 	B:GetModule("Misc"):QuestNotifier()
 end
 
-local function updateScreenShot()
-	B:GetModule("Misc"):UpdateScreenShot()
-end
-
 local function updateFasterLoot()
 	B:GetModule("Misc"):UpdateFasterLoot()
 end
@@ -465,7 +455,7 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Bags", "BagsiLvl", L["Bags Itemlevel"]},
 		{1, "Bags", "Artifact", L["Bags Artifact"], true},
 		{1, "Bags", "DeleteButton", L["Bags DeleteButton"]},
-		--{1, "Bags", "ReverseSort", L["Bags ReverseSort"].."*", true, nil, updateBagSortOrder},
+		{1, "Bags", "ReverseSort", L["Bags ReverseSort"].."*", true},
 		{},--blank
 		{3, "Bags", "BagsScale", L["Bags Scale"], false, {.5, 1.5, 1}},
 		{3, "Bags", "IconSize", L["Bags IconSize"], true, {30, 42, 0}},
@@ -549,9 +539,9 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{5, "Nameplate", "OffTankColor", L["OffTank Color"].."*", 3},
 		{},--blank
 		{3, "Nameplate", "VerticalSpacing", L["NP VerticalSpacing"].."*", false, {.5, 1.5, 1}, updatePlateSpacing},
-		{3, "Nameplate", "Distance", L["Nameplate Distance"].."*", true, {20, 100, 0}, updatePlateRange},
-		{3, "Nameplate", "MinScale", L["Nameplate MinScale"].."*", false, {.5, 1, 1}, updatePlateScale},
-		{3, "Nameplate", "MinAlpha", L["Nameplate MinAlpha"].."*", true, {.5, 1, 1}, updatePlateAlpha},
+		--{3, "Nameplate", "Distance", L["Nameplate Distance"].."*", true, {20, 100, 0}, updatePlateRange},
+		{3, "Nameplate", "MinScale", L["Nameplate MinScale"].."*", true, {.5, 1, 1}, updatePlateScale},
+		--{3, "Nameplate", "MinAlpha", L["Nameplate MinAlpha"].."*", true, {.5, 1, 1}, updatePlateAlpha},
 		{3, "Nameplate", "PlateWidth", L["NP Width"].."*", false, {50, 200, 0}, refreshNameplates},
 		{3, "Nameplate", "PlateHeight", L["NP Height"].."*", true, {5, 20, 0}, refreshNameplates},
 		{3, "Nameplate", "NameTextSize", L["NameTextSize"].."*", false, {8, 16, 0}, refreshNameplates},
@@ -670,13 +660,11 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Misc", "ItemLevel", "|cff00cc4c"..L["Show ItemLevel"]},
 		{1, "Misc", "GemNEnchant", L["Show GemNEnchant"].."*", true},
 		{},--blank
-		{1, "Misc", "Focuser", L["Easy Focus"]},
-		{1, "ACCOUNT", "AutoBubbles", L["AutoBubbles"], true},
 		{1, "Misc", "Mail", L["Mail Tool"]},
 		{1, "Misc", "TradeTab", L["TradeTabs"], true},
 		{1, "Misc", "FasterLoot", L["Faster Loot"].."*", nil, nil, updateFasterLoot},
 		{1, "Misc", "HideErrors", L["Hide Error"].."*", true, nil, updateErrorBlocker},
-		{1, "Misc", "Screenshot", L["Auto ScreenShot"].."*", nil, nil, updateScreenShot},
+		{1, "ACCOUNT", "AutoBubbles", L["AutoBubbles"]},
 	},
 	[13] = {
 		{1, "ACCOUNT", "VersionCheck", L["Version Check"]},
