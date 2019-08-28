@@ -5,7 +5,15 @@ if DB.Client ~= "zhCN" then return end
 local strsplit, pairs = string.split, pairs
 
 local hx = {
-	"怀旧服首个版本。",
+	"添加对ClassicCodex的支持；",
+	"添加对宠物快乐值的支持；",
+	"修正快速按键设置；",
+	"背包模块整理；",
+	"地图坐标模块调整；",
+	"移除部分怀旧服失效的功能；",
+	"鼠标提示模块更新；",
+	"施法条和法术信息更新；",
+	"控制台及本地文本更新。",
 }
 
 local f
