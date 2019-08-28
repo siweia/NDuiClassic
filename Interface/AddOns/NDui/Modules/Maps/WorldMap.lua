@@ -80,13 +80,13 @@ end
 function module:SetupCoords()
 	if not NDuiDB["Map"]["Coord"] then return end
 
-	playerCoords = B.CreateFS(WorldMapFrame.BorderFrame, 14, "", false, "TOPLEFT", 60, -6)
-	cursorCoords = B.CreateFS(WorldMapFrame.BorderFrame, 14, "", false, "TOPLEFT", 180, -6)
+	playerCoords = B.CreateFS(WorldMapFrame, 14, "", false, "TOPLEFT", 60, -6)
+	cursorCoords = B.CreateFS(WorldMapFrame, 14, "", false, "TOPLEFT", 180, -6)
 
 	hooksecurefunc(WorldMapFrame, "OnFrameSizeChanged", module.UpdateMapID)
 	hooksecurefunc(WorldMapFrame, "OnMapChanged", module.UpdateMapID)
 
-	local CoordsUpdater = CreateFrame("Frame", nil, WorldMapFrame.BorderFrame)
+	local CoordsUpdater = CreateFrame("Frame", nil, WorldMapFrame)
 	CoordsUpdater:SetScript("OnUpdate", module.UpdateCoords)
 end
 
