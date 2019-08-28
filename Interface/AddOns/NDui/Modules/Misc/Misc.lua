@@ -19,7 +19,6 @@ local BuyMerchantItem = BuyMerchantItem
 local GetMerchantItemLink = GetMerchantItemLink
 local GetMerchantItemMaxStack = GetMerchantItemMaxStack
 local GetItemQualityColor = GetItemQualityColor
-local Screenshot = Screenshot
 local GetTime, GetCVarBool, SetCVar = GetTime, GetCVarBool, SetCVar
 local GetNumLootItems, LootSlot = GetNumLootItems, LootSlot
 local GetNumSavedInstances = GetNumSavedInstances
@@ -35,7 +34,6 @@ local IsGuildMember, BNGetGameAccountInfoByGUID, C_FriendList_IsFriend = IsGuild
 function M:OnLogin()
 	self:AddAlerts()
 	self:Expbar()
-	self:Focuser()
 	self:MailBox()
 	self:ShowItemLevel()
 	self:QuestNotifier()
@@ -44,7 +42,6 @@ function M:OnLogin()
 	self:MoveDurabilityFrame()
 	self:MoveTicketStatusFrame()
 	self:AlertFrame_Setup()
-	self:UpdateScreenShot()
 	self:UpdateFasterLoot()
 	self:UpdateErrorBlocker()
 	self:TradeTargetInfo()
@@ -152,33 +149,6 @@ function M:MoveTicketStatusFrame()
 			self:SetPoint("TOP", UIParent, "TOP", -400, -20)
 		end
 	end)
-end
-
--- Achievement screenshot
-function M:ScreenShotOnEvent()
-	M.ScreenShotFrame.delay = 1
-	M.ScreenShotFrame:Show()
-end
-
-function M:UpdateScreenShot()
-	if not M.ScreenShotFrame then
-		M.ScreenShotFrame = CreateFrame("Frame")
-		M.ScreenShotFrame:Hide()
-		M.ScreenShotFrame:SetScript("OnUpdate", function(self, elapsed)
-			self.delay = self.delay - elapsed
-			if self.delay < 0 then
-				Screenshot()
-				self:Hide()
-			end
-		end)
-	end
-
-	if NDuiDB["Misc"]["Screenshot"] then
-		B:RegisterEvent("ACHIEVEMENT_EARNED", M.ScreenShotOnEvent)
-	else
-		M.ScreenShotFrame:Hide()
-		B:UnregisterEvent("ACHIEVEMENT_EARNED", M.ScreenShotOnEvent)
-	end
 end
 
 -- Faster Looting
