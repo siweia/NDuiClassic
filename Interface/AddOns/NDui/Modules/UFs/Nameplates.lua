@@ -31,12 +31,12 @@ function UF:UpdatePlateScale()
 end
 
 function UF:UpdatePlateAlpha()
-	SetCVar("nameplateMinAlpha", NDuiDB["Nameplate"]["MinAlpha"])
-	SetCVar("nameplateMaxAlpha", NDuiDB["Nameplate"]["MinAlpha"])
+	SetCVar("nameplateMinAlpha", GetCVarDefault("nameplateMinAlpha"))
+	SetCVar("nameplateMaxAlpha", GetCVarDefault("nameplateMaxAlpha"))
 end
 
 function UF:UpdatePlateRange()
-	SetCVar("nameplateMaxDistance", NDuiDB["Nameplate"]["Distance"])
+	SetCVar("nameplateMaxDistance", GetCVarDefault("nameplateMaxDistance"))
 end
 
 function UF:UpdatePlateSpacing()
@@ -55,16 +55,10 @@ function UF:SetupCVars()
 	UF:UpdatePlateRange()
 	UF:UpdatePlateAlpha()
 	SetCVar("nameplateSelectedAlpha", 1)
-	--SetCVar("showQuestTrackingTooltips", 1)
 
 	UF:UpdatePlateScale()
 	SetCVar("nameplateSelectedScale", 1)
 	SetCVar("nameplateLargerScale", 1)
-
-	--SetCVar("nameplateShowSelf", 0)
-	--SetCVar("nameplateResourceOnTarget", 0)
-	--B.HideOption(InterfaceOptionsNamesPanelUnitNameplatesPersonalResource)
-	--B.HideOption(InterfaceOptionsNamesPanelUnitNameplatesPersonalResourceOnEnemy)
 
 	UF:UpdateClickableSize()
 	hooksecurefunc(NamePlateDriverFrame, "UpdateNamePlateOptions", UF.UpdateClickableSize)
@@ -390,21 +384,75 @@ function UF:UpdateQuestUnit(_, unit)
 	end
 end
 
+function UF:UpdateCodexQuestUnit()
+	if not NDuiDB["Nameplate"]["QuestIndicator"] then return end
+	if not Codex or not CodexMap then return end
+
+	self.questIcon:Hide()
+	self.questCount:SetText("")
+
+	local name = self.unitName
+	if name and CodexMap.tooltips[name] then
+		for _, meta in pairs(CodexMap.tooltips[name]) do
+			local questData = meta["quest"]
+			if questData then
+				for questId = 1, GetNumQuestLogEntries() do
+					local title, _, _, _, _, complete = GetQuestLogTitle(questId)
+					if questData == title then
+						local objectives = GetNumQuestLeaderBoards(questId)
+						local foundObjective, progressText = nil
+						if objectives then
+							for i = 1, objectives do
+								local text, type, complete = GetQuestLogLeaderBoard(i, questId)
+								if type == "monster" then
+									local _, _, monsterName, objNum, objNeeded = strfind(text, Codex:SanitizePattern(QUEST_MONSTERS_KILLED))
+									if meta["spawn"] == monsterName then
+										progressText = objNeeded - objNum
+										foundObjective = true
+										break
+									end
+								elseif table.getn(meta["item"]) > 0 and type == "item" and meta["dropRate"] then
+									local _, _, itemName, objNum, objNeeded = strfind(text, Codex:SanitizePattern(QUEST_OBJECTS_FOUND))
+									for mid, item in pairs(meta["item"]) do
+										if item == itemName then
+											progressText = objNeeded - objNum
+											foundObjective = true
+											break
+										end
+									end
+								end
+							end
+						end
+
+						if foundObjective then
+							self.questIcon:Show()
+							self.questCount:SetText(progressText)
+						elseif not foundObjective and meta["questLevel"] and meta["texture"] then
+							self.questIcon:Show()
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
 function UF:AddQuestIcon(self)
 	if not NDuiDB["Nameplate"]["QuestIndicator"] then return end
 
 	local qicon = self:CreateTexture(nil, "OVERLAY", nil, 2)
-	qicon:SetPoint("LEFT", self, "RIGHT", -1, 0)
-	qicon:SetSize(20, 20)
+	qicon:SetPoint("LEFT", self, "RIGHT", 2, 0)
+	qicon:SetSize(16, 16)
 	qicon:SetAtlas(DB.questTex)
 	qicon:Hide()
 	local count = B.CreateFS(self, 12, "", nil, "LEFT", 0, 0)
-	count:SetPoint("LEFT", qicon, "RIGHT", -4, 0)
+	count:SetPoint("LEFT", qicon, "RIGHT", -2, 0)
 	count:SetTextColor(.6, .8, 1)
 
 	self.questIcon = qicon
 	self.questCount = count
-	self:RegisterEvent("QUEST_LOG_UPDATE", UF.UpdateQuestUnit, true)
+	--self:RegisterEvent("QUEST_LOG_UPDATE", UF.UpdateQuestUnit, true)
+	self:RegisterEvent("QUEST_LOG_UPDATE", UF.UpdateCodexQuestUnit, true)
 end
 
 -- Unit classification
@@ -625,7 +673,8 @@ function UF:PostUpdatePlates(event, unit)
 
 	UF.UpdateUnitPower(self)
 	UF.UpdateTargetChange(self)
-	UF.UpdateQuestUnit(self, event, unit)
+	--UF.UpdateQuestUnit(self, event, unit)
+	UF.UpdateCodexQuestUnit(self)
 	UF.UpdateUnitClassify(self, unit)
 	UF:UpdateClassPowerAnchor()
 end
