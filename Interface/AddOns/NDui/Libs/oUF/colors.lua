@@ -38,6 +38,11 @@ local colors = {
 	debuff = {},
 	reaction = {},
 	power = {},
+	happiness = {
+		[1] = {1, 0, 0}, -- need.... | unhappy
+		[2] = {1, 1, 0}, -- new..... | content
+		[3] = {0, 1, 0}, -- colors.. | happy
+	},
 }
 
 -- We do this because people edit the vars directly, and changing the default

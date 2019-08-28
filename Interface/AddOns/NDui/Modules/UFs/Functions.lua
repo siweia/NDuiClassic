@@ -75,6 +75,7 @@ function UF:CreateHealthBar(self)
 		health.colorTapping = true
 		health.colorReaction = true
 		health.colorDisconnected = true
+		health.colorHappiness = true
 	elseif mystyle ~= "raid" and NDuiDB["UFs"]["HealthColor"] == 3 then
 		health.colorSmooth = true
 	end
@@ -199,6 +200,7 @@ function UF:CreatePowerBar(self)
 		power.colorTapping = true
 		power.colorDisconnected = true
 		power.colorReaction = true
+		power.colorHappiness = true
 	end
 	--power.frequentUpdates = true
 	power.frequentUpdates = mystyle == "player" or mystyle == "target" or mystyle == "PlayerPlate"
@@ -1019,8 +1021,8 @@ function UF:CreateFCT(self)
 	self.FloatingCombatFeedback = fcf
 
 	-- Default CombatText
-	SetCVar("enableFloatingCombatText", 0)
-	B.HideOption(InterfaceOptionsCombatPanelEnableFloatingCombatText)
+	--SetCVar("enableFloatingCombatText", 0)
+	--B.HideOption(InterfaceOptionsCombatPanelEnableFloatingCombatText)
 end
 
 function UF:CreatePVPClassify(self)
