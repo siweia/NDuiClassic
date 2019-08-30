@@ -324,6 +324,5 @@ end
 info.onMouseUp = function()
 	if not IsInGuild() then return end
 	infoFrame:Hide()
-	if not GuildFrame then LoadAddOn("Blizzard_GuildUI") end
 	ToggleFriendsFrame(3)
 end
