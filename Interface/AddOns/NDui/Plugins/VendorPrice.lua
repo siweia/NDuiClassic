@@ -1,3 +1,6 @@
+------------------------
+-- VendorPrice, Gethe
+------------------------
 local SELL_PRICE_TEXT = format("%s:", SELL_PRICE)
 local f = CreateFrame("Frame")
 

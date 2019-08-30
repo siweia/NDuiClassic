@@ -70,7 +70,8 @@ function S:QuestTracker()
 		line:SetFont(DB.Font[1], DB.Font[2]+2, DB.Font[3])
 	end
 
-	local function OnMouseUp(self)
+	-- ModernQuestWatch, Gethe
+	local function onMouseUp(self)
 		if IsShiftKeyDown() then -- untrack quest
 			local questID = GetQuestIDFromLogIndex(self.questIndex)
 			for index, value in ipairs(QUEST_WATCH_LIST) do
@@ -98,7 +99,7 @@ function S:QuestTracker()
 		QuestLog_Update()
 	end
 
-	local function OnEnter(self)
+	local function onEnter(self)
 		if self.completed then
 			-- use normal colors instead as highlight
 			self.headerText:SetTextColor(.75, .61, 0)
@@ -117,8 +118,8 @@ function S:QuestTracker()
 	local function SetClickFrame(watchIndex, questIndex, headerText, objectiveTexts, completed)
 		if not ClickFrames[watchIndex] then
 			ClickFrames[watchIndex] = CreateFrame("Frame")
-			ClickFrames[watchIndex]:SetScript("OnMouseUp", OnMouseUp)
-			ClickFrames[watchIndex]:SetScript("OnEnter", OnEnter)
+			ClickFrames[watchIndex]:SetScript("OnMouseUp", onMouseUp)
+			ClickFrames[watchIndex]:SetScript("OnEnter", onEnter)
 			ClickFrames[watchIndex]:SetScript("OnLeave", QuestWatch_Update)
 		end
 
