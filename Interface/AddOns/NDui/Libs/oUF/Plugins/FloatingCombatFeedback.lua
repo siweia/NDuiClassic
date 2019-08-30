@@ -7,6 +7,11 @@ local B, C, L, DB = unpack(ns)
 local oUF = ns.oUF or oUF
 assert(oUF, "oUF FloatingCombatFeedback was unable to locate oUF install")
 
+-- Libs
+DB.LibClassicDurations = LibStub("LibClassicDurations")
+DB.LibClassicDurations:RegisterFrame("NDui")
+local LCD = DB.LibClassicDurations
+
 local _G = getfenv(0)
 local select, tremove, tinsert, wipe = _G.select, _G.table.remove, _G.table.insert, _G.table.wipe
 local m_cos, m_sin, m_pi, m_random = _G.math.cos, _G.math.sin, _G.math.pi, _G.math.random
@@ -197,7 +202,7 @@ end
 local function getFloatingIconTexture(iconType, spellID, isPet)
 	local texture
 	if iconType == "spell" then
-		texture = getTexture(spellID)
+		texture = getTexture(spellID) or 136243
 	elseif iconType == "swing" then
 		if isPet then
 			texture = PET_ATTACK_TEXTURE
@@ -247,7 +252,7 @@ local function onEvent(self, event, ...)
 	local text, color, texture, critMark
 
 	if event == "COMBAT_LOG_EVENT_UNFILTERED" then
-		local _, eventType, _, sourceGUID, _, sourceFlags, _, destGUID, _, _, _, spellID, _, school = ...
+		local _, eventType, _, sourceGUID, _, sourceFlags, _, destGUID, _, _, _, spellID, spellName, school = ...
 		local isPlayer = playerGUID == sourceGUID
 		local atTarget = UnitGUID("target") == destGUID
 		local atPlayer = playerGUID == destGUID
@@ -257,6 +262,12 @@ local function onEvent(self, event, ...)
 		if (unit == "target" and (isPlayer or isPet or isVehicle) and atTarget) or (unit == "player" and atPlayer) then
 			local value = eventFilter[eventType]
 			if not value then return end
+
+			if isPlayer then
+				spellID = LCD.spellNameToID[spellName]
+			else
+				spellID = LCD.NPCspellNameToID[spellName]
+			end
 
 			if value.suffix == "DAMAGE" then
 				if value.autoAttack and not element.showAutoAttack then return end
