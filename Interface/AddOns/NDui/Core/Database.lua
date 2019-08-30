@@ -16,6 +16,7 @@ for k, v in pairs(LOCALIZED_CLASS_NAMES_MALE) do
 	DB.ClassList[v] = k
 end
 DB.ClassColors = {}
+RAID_CLASS_COLORS["SHAMAN"] = CreateColor(0.0, 0.44, 0.87) -- Shaman class color
 local colors = CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS
 for class in pairs(colors) do
 	DB.ClassColors[class] = {}
