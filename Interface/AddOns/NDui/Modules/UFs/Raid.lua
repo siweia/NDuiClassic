@@ -2,6 +2,8 @@ local _, ns = ...
 local B, C, L, DB = unpack(ns)
 local UF = B:GetModule("UnitFrames")
 
+local LCD = DB.LibClassicDurations
+
 local strmatch, format, wipe, tinsert = string.match, string.format, table.wipe, table.insert
 local pairs, ipairs, next, tonumber, unpack = pairs, ipairs, next, tonumber, unpack
 local UnitAura = UnitAura
@@ -351,6 +353,13 @@ function UF:UpdateBuffIndicator(event, unit)
 			if not name then break end
 			local value = spellList[spellID]
 			if value and (value[3] or caster == "player" or caster == "pet") then
+				if duration == 0 then
+					local newduration, newexpires = LCD:GetAuraDurationByUnit(unit, spellID, caster, name)
+					if newduration then
+						duration, expiration = newduration, newexpires
+					end
+				end
+
 				for _, icon in pairs(icons) do
 					if icon.anchor == value[1] then
 						if icon.timer then
