@@ -221,6 +221,10 @@ function TT:StatusBar_OnValueChanged(value)
 	if value > 0 and max == 1 then
 		self.text:SetFormattedText("%d%%", value*100)
 	else
+		local unit = TT.GetUnit(GameTooltip)
+		if RealMobHealth and RealMobHealth.UnitHasHealthData(unit) then
+			value, max = RealMobHealth.GetUnitHealth(unit)
+		end
 		self.text:SetText(B.Numb(value).." | "..B.Numb(max))
 	end
 end

@@ -11,6 +11,24 @@ local UnitClass, UnitReaction, UnitLevel, UnitClassification = UnitClass, UnitRe
 local UnitIsAFK, UnitIsDND, UnitIsDead, UnitIsGhost = UnitIsAFK, UnitIsDND, UnitIsDead, UnitIsGhost
 local GetCreatureDifficultyColor = GetCreatureDifficultyColor
 
+local GetUnitHealth
+local function updateHealthAPI(event)
+	if RealMobHealth then
+		GetUnitHealth = RealMobHealth.GetUnitHealth
+	end
+
+	B:UnregisterEvent(event, updateHealthAPI)
+end
+B:RegisterEvent("PLAYER_ENTERING_WORLD", updateHealthAPI)
+
+local function GetRealHealth(unit)
+	if GetUnitHealth and not UnitIsPlayer(unit) then
+		return GetUnitHealth(unit)
+	else
+		return UnitHealth(unit)
+	end
+end
+
 local function ColorPercent(value)
 	local r, g, b
 	if value < 20 then
@@ -38,7 +56,7 @@ oUF.Tags.Methods["hp"] = function(unit)
 		return oUF.Tags.Methods["DDG"](unit)
 	else
 		local per = oUF.Tags.Methods["perhp"](unit) or 0
-		local cur = UnitHealth(unit)
+		local cur = GetRealHealth(unit)
 		if unit == "player" or unit == "target" or unit == "focus" then
 			return ValueAndPercent(cur, per)
 		else
@@ -153,7 +171,7 @@ oUF.Tags.Events["raidhp"] = "UNIT_HEALTH_FREQUENT UNIT_MAXHEALTH UNIT_NAME_UPDAT
 oUF.Tags.Methods["nphp"] = function(unit)
 	local per = oUF.Tags.Methods["perhp"](unit) or 0
 	if NDuiDB["Nameplate"]["FullHealth"] then
-		local cur = UnitHealth(unit)
+		local cur = GetRealHealth(unit)
 		return ValueAndPercent(cur, per)
 	elseif per < 100 then
 		return ColorPercent(per)
