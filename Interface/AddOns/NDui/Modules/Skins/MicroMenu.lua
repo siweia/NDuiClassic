@@ -71,8 +71,8 @@ function S:MicroMenu()
 		{"quests", {83/256, 173/256, 80/256, 167/256}, "QuestLogMicroButton"},
 		{"guild", {83/256, 173/256, 80/256, 167/256}, "SocialsMicroButton"},
 		{"pets", {83/256, 173/256, 83/256, 173/256}, "WorldMapMicroButton"},
-		{"settings", {83/256, 173/256, 83/256, 173/256}, "MainMenuMicroButton", MicroButtonTooltipText(MAINMENU_BUTTON, "TOGGLEGAMEMENU")},
 		{"help", {83/256, 173/256, 80/256, 170/256}, "HelpMicroButton"},
+		{"settings", {83/256, 173/256, 83/256, 173/256}, "MainMenuMicroButton", MicroButtonTooltipText(MAINMENU_BUTTON, "TOGGLEGAMEMENU")},
 		{"bags", {47/256, 137/256, 83/256, 173/256}, ToggleAllBags, MicroButtonTooltipText(BAGSLOT, "OPENALLBAGS")},
 	}
 	for _, info in pairs(buttonInfo) do
