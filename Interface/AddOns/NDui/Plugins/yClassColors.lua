@@ -43,57 +43,40 @@ local function smoothColor(cur, max, color)
 end
 
 -- Guild
-local currentView
-local function setView(view)
-	currentView = view
-end
-
-local function updateGuildView()
-	currentView = currentView or GetCVar("guildRosterView")
-
+hooksecurefunc("GuildStatus_Update", function()
+	local guildIndex
 	local playerArea = GetRealZoneText()
-	local buttons = GuildRosterContainer.buttons
-
-	for _, button in ipairs(buttons) do
-		if button:IsShown() and button.online and button.guildIndex then
-			if currentView == "tradeskill" then
-				local _, _, _, headerName, _, _, _, _, _, _, _, zone = GetGuildTradeSkillInfo(button.guildIndex)
-				if not headerName and zone == playerArea then
-					button.string2:SetText("|cff00ff00"..zone)
+	local guildOffset = FauxScrollFrame_GetOffset(GuildListScrollFrame)
+	if FriendsFrame.playerStatusFrame then
+		for i = 1, GUILDMEMBERS_TO_DISPLAY, 1 do
+			guildIndex = guildOffset + i
+			local fullName, _, _, level, class, zone, _, _, online = GetGuildRosterInfo(guildIndex)
+			if fullName and online then
+				local r, g, b = classColor(class, true)
+				_G["GuildFrameButton"..i.."Name"]:SetTextColor(r, g, b)
+				if zone == playerArea then
+					_G["GuildFrameButton"..i.."Zone"]:SetTextColor(0, 1, 0)
 				end
-			else
-				local _, rank, rankIndex, level, _, zone, _, _, _, _, _, _, _, _, _, repStanding = GetGuildRosterInfo(button.guildIndex)
-				if currentView == "playerStatus" then
-					button.string1:SetText(diffColor(level)..level)
-					if zone == playerArea then
-						button.string3:SetText("|cff00ff00"..zone)
-					end
-				elseif currentView == "guildStatus" then
-					if rankIndex and rank then
-						button.string2:SetText(smoothColor(rankIndex, 10, rankColor)..rank)
-					end
-				elseif currentView == "achievement" then
-					button.string1:SetText(diffColor(level)..level)
-				elseif currentView == "reputation" then
-					button.string1:SetText(diffColor(level)..level)
-					if repStanding then
-						button.string3:SetText(smoothColor(repStanding-4, 5, repColor).._G["FACTION_STANDING_LABEL"..repStanding])
-					end
+				local color = GetQuestDifficultyColor(level)
+				_G["GuildFrameButton"..i.."Level"]:SetTextColor(color.r, color.g, color.b)
+				_G["GuildFrameButton"..i.."Class"]:SetTextColor(r, g, b)
+			end
+		end
+	else
+		for i = 1, GUILDMEMBERS_TO_DISPLAY, 1 do
+			guildIndex = guildOffset + i
+			local fullName, _, rankIndex, _, class, zone, _, _, online = GetGuildRosterInfo(guildIndex)
+			if fullName and online then
+				local r, g, b = classColor(class, true)
+				_G["GuildFrameGuildStatusButton"..i.."Name"]:SetTextColor(r, g, b)
+				local lr, lg, lb = oUF:RGBColorGradient(rankIndex, 10, unpack(rankColor))
+				if lr then
+					_G["GuildFrameGuildStatusButton"..i.."Rank"]:SetTextColor(lr, lg, lb)
 				end
 			end
 		end
 	end
-end
-
-local function updateGuildUI(event, addon)
-	if addon ~= "Blizzard_GuildUI" then return end
-	hooksecurefunc("GuildRoster_SetView", setView)
-	hooksecurefunc("GuildRoster_Update", updateGuildView)
-	hooksecurefunc(GuildRosterContainer, "update", updateGuildView)
-
-	B:UnregisterEvent(event, updateGuildUI)
-end
-B:RegisterEvent("ADDON_LOADED", updateGuildUI)
+end)
 
 -- Friends
 local FRIENDS_LEVEL_TEMPLATE = FRIENDS_LEVEL_TEMPLATE:gsub("%%d", "%%s")
