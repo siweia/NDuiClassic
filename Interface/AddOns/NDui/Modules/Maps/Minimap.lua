@@ -45,6 +45,16 @@ function module:CreatePulse()
 end
 
 function module:ReskinRegions()
+	-- Tracking icon
+	MiniMapTrackingFrame:SetScale(.7)
+	MiniMapTrackingFrame:ClearAllPoints()
+	MiniMapTrackingFrame:SetPoint("BOTTOMLEFT", Minimap, 0, 5)
+	MiniMapTrackingBorder:Hide()
+	MiniMapTrackingIcon:SetTexCoord(unpack(DB.TexCoord))
+	local bg = B.CreateBG(MiniMapTrackingIcon)
+	B.CreateBD(bg)
+	bg:SetBackdropBorderColor(cr, cg, cb)
+
 	-- Mail icon
 	MiniMapMailFrame:ClearAllPoints()
 	MiniMapMailFrame:SetPoint("TOPLEFT", Minimap, "TOPLEFT", -3, 3)
@@ -108,7 +118,7 @@ function module:RecycleBin()
 	local function CollectRubbish()
 		for _, child in ipairs({Minimap:GetChildren()}) do
 			local name = child:GetName()
-			if name and not blackList[name] and not strmatch(strupper(name), "HANDYNOTES") then
+			if name and not blackList[name] and not strmatch(strupper(name), "HANDYNOTES") and not strmatch(strupper(name), "GUIDELIME") then
 				if child:GetObjectType() == "Button" or strmatch(strupper(name), "BUTTON") then
 					child:SetParent(bin)
 					child:SetSize(34, 34)
