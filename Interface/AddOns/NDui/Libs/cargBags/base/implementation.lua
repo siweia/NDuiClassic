@@ -314,6 +314,7 @@ function Implementation:GetItemInfo(bagID, slotID, i)
 		i.name, i.link, i.rarity, i.level, i.minLevel, i.type, i.subType, i.stackCount, i.equipLoc, texture, i.sellPrice, i.classID, i.subClassID = GetItemInfo(clink)
 		i.texture = i.texture or texture
 		i.rarity = i.rarity or i.quality
+		if i.classID == LE_ITEM_CLASS_QUESTITEM then i.isQuestItem = true end
 
 		if clink:find("battlepet") then
 			local data, name = strmatch(clink, "|H(.-)|h(.-)|h")
