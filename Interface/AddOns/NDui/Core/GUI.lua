@@ -42,7 +42,7 @@ local defaultSettings = {
 		BagsiLvl = true,
 		Artifact = true,
 		ReverseSort = false,
-		ItemFilter = false,
+		ItemFilter = true,
 		ItemSetFilter = false,
 		DeleteButton = true,
 	},
