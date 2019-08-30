@@ -52,12 +52,11 @@ local _, PlayerClass = UnitClass('player')
 -- sourced from FrameXML/Constants.lua
 local SPELL_POWER_ENERGY = Enum.PowerType.Energy or 3
 local SPELL_POWER_COMBO_POINTS = Enum.PowerType.ComboPoints or 4
-local SPELL_POWER_SOUL_SHARDS = Enum.PowerType.SoulShards or 7
 
 -- Holds the class specific stuff.
 local ClassPowerID, ClassPowerType
 local ClassPowerEnable, ClassPowerDisable
-local RequireSpec, RequirePower, RequireSpell
+local RequirePower, RequireSpell
 
 local function UpdateColor(element, powerType)
 	local color = element.__owner.colors.power[powerType]
@@ -99,11 +98,6 @@ local function Update(self, event, unit, powerType)
 
 		-- mod should never be 0, but according to Blizz code it can actually happen
 		cur = mod == 0 and 0 or cur / mod
-
-		-- BUG: Destruction is supposed to show partial soulshards, but Affliction and Demonology should only show full ones
-		if (ClassPowerType == 'SOUL_SHARDS') then
-			cur = cur - cur % 1
-		end
 
 		local numActive = cur + 0.9
 		for i = 1, max do
@@ -159,16 +153,14 @@ local function Visibility(self, event, unit)
 	local shouldEnable
 
 	if(ClassPowerID) then
-		if(not RequireSpec) then
-			-- use 'player' instead of unit because 'SPELLS_CHANGED' is a unitless event
-			if(not RequirePower or RequirePower == UnitPowerType('player')) then
-				if(not RequireSpell or IsPlayerSpell(RequireSpell)) then
-					self:UnregisterEvent('SPELLS_CHANGED', Visibility)
-					shouldEnable = true
-					unit = 'player'
-				else
-					self:RegisterEvent('SPELLS_CHANGED', Visibility, true)
-				end
+		-- use 'player' instead of unit because 'SPELLS_CHANGED' is a unitless event
+		if(not RequirePower or RequirePower == UnitPowerType('player')) then
+			if(not RequireSpell or IsPlayerSpell(RequireSpell)) then
+				self:UnregisterEvent('SPELLS_CHANGED', Visibility)
+				shouldEnable = true
+				unit = 'player'
+			else
+				self:RegisterEvent('SPELLS_CHANGED', Visibility, true)
 			end
 		end
 	end
@@ -233,16 +225,13 @@ do
 		Path(self, 'ClassPowerDisable', 'player', ClassPowerType)
 	end
 
-	if(PlayerClass == 'WARLOCK') then
-		ClassPowerID = SPELL_POWER_SOUL_SHARDS
-		ClassPowerType = 'SOUL_SHARDS'
-	elseif(PlayerClass == 'ROGUE' or PlayerClass == 'DRUID') then
+	if(PlayerClass == 'ROGUE' or PlayerClass == 'DRUID') then
 		ClassPowerID = SPELL_POWER_COMBO_POINTS
 		ClassPowerType = 'COMBO_POINTS'
 
 		if(PlayerClass == 'DRUID') then
 			RequirePower = SPELL_POWER_ENERGY
-			RequireSpell = 5221 -- Shred
+			RequireSpell = 1082 -- Claw
 		end
 	end
 end
