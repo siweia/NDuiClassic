@@ -11,18 +11,24 @@ function module:GetMoneyString(money, full)
 	if money >= 1e6 and not full then
 		return format("%.0f%s", money / 1e4, GOLD_AMOUNT_SYMBOL)
 	else
-		local moneyString = ""
-		local gold = floor(money / 1e4)
-		if gold > 0 then
-			moneyString = " "..gold..GOLD_AMOUNT_SYMBOL
+		if money > 0 then
+			local moneyString = ""
+			local gold = floor(money / 1e4)
+			if gold > 0 then
+				moneyString = " "..gold..GOLD_AMOUNT_SYMBOL
+			end
+			local silver = floor((money - (gold * 1e4)) / 100)
+			if silver > 0 then
+				moneyString = moneyString.." "..silver..SILVER_AMOUNT_SYMBOL
+			end
+			local copper = mod(money, 100)
+			if copper > 0 then
+				moneyString = moneyString.." "..copper..COPPER_AMOUNT_SYMBOL
+			end
+			return moneyString
+		else
+			return " 0"..COPPER_AMOUNT_SYMBOL
 		end
-		local silver = floor((money - (gold * 1e4)) / 100)
-		if silver > 0 then
-			moneyString = moneyString.." "..silver..SILVER_AMOUNT_SYMBOL
-		end
-		local copper = mod(money, 100)
-		moneyString = moneyString.." "..copper..COPPER_AMOUNT_SYMBOL
-		return moneyString
 	end
 end
 
