@@ -187,7 +187,7 @@ function S:CreateRM()
 	end)
 	rcFrame:SetScript("OnMouseUp", function(self) self:Hide() end)
 
-	-- World marker
+	--[[ World marker
 	local marker = CompactRaidFrameManagerDisplayFrameLeaderOptionsRaidWorldMarkerButton
 	if not marker then
 		for _, addon in next, {"Blizzard_CUFProfiles", "Blizzard_CompactRaidFrames"} do
@@ -214,7 +214,17 @@ function S:CreateRM()
 				UIErrorsFrame:AddMessage(DB.InfoColor..ERR_NOT_LEADER)
 			end
 		end)
-	end
+	end]]
+
+	-- Left icon
+	local left = CreateFrame("Button", nil, header)
+	left:SetPoint("RIGHT", header, "LEFT", -2, 0)
+	left:SetSize(28, 28)
+	B.CreateBD(left)
+	B.CreateSD(left)
+	B.CreateTex(left)
+	B.CreateFS(left, 16, "?", true)
+	B.CreateBC(left, .5)
 
 	-- Buff checker
 	local checker = CreateFrame("Button", nil, header)
@@ -419,7 +429,7 @@ function S:CreateRM()
 			end
 		end},
 		{CONVERT_TO_RAID, function()
-			if UnitIsGroupLeader("player") and not HasLFGRestrictions() and GetNumGroupMembers() <= 5 then
+			if UnitIsGroupLeader("player") and GetNumGroupMembers() <= 5 then
 				if IsInRaid() then ConvertToParty() else ConvertToRaid() end
 				menu:Hide()
 				menu:SetScript("OnUpdate", nil)
@@ -428,11 +438,11 @@ function S:CreateRM()
 			end
 		end},
 		{ROLE_POLL, function()
-			if IsInGroup() and not HasLFGRestrictions() and (UnitIsGroupLeader("player") or (UnitIsGroupAssistant("player") and IsInRaid())) then
+			--[[if IsInGroup() and (UnitIsGroupLeader("player") or (UnitIsGroupAssistant("player") and IsInRaid())) then
 				InitiateRolePoll()
 			else
 				UIErrorsFrame:AddMessage(DB.InfoColor..ERR_NOT_LEADER)
-			end
+			end]]
 		end},
 		{RAID_CONTROL, function() ToggleFriendsFrame(3) end},
 	}
