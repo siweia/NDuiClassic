@@ -60,9 +60,9 @@ info.onEnter = function(self)
 	GameTooltip:SetOwner(self, "ANCHOR_NONE")
 	GameTooltip:SetPoint("BOTTOMRIGHT", UIParent, -15, 30)
 	GameTooltip:ClearLines()
---	local today = C_Calendar_GetDate()
-	--local w, m, d, y = today.weekday, today.month, today.monthDay, today.year
-	GameTooltip:AddLine("时间", 0,.6,1)
+	local today = C_DateAndTime.GetTodaysDate()
+	local w, m, d, y = today.weekDay, today.month, today.day, today.year
+	GameTooltip:AddLine(format(FULLDATE, CALENDAR_WEEKDAY_NAMES[w], CALENDAR_FULLDATE_MONTH_NAMES[m], d, y), 0,.6,1)
 	GameTooltip:AddLine(" ")
 	GameTooltip:AddDoubleLine(L["Local Time"], GameTime_GetLocalTime(true), .6,.8,1 ,1,1,1)
 	GameTooltip:AddDoubleLine(L["Realm Time"], GameTime_GetGameTime(true), .6,.8,1 ,1,1,1)
