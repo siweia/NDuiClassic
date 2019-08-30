@@ -219,7 +219,7 @@ local function buttonOnEnter(self)
 		local index, accountName, _, _, _, _, _, _, _, _, note, broadcastText, broadcastTime = unpack(self.data)
 		local numGameAccounts = BNGetNumFriendGameAccounts(index)
 		for i = 1, numGameAccounts do
-			local _, charName, client, realmName, _, faction, _, class, _, zoneName, level, gameText, _, _, _, bnetIDGameAccount, _, _, _, _, wowProjectID = BNGetFriendGameAccountInfo(index, i)
+			local _, charName, client, realmName, _, faction, _, class, _, zoneName, level, gameText, _, _, _, _, _, _, _, _, wowProjectID = BNGetFriendGameAccountInfo(index, i)
 			local clientString = BNet_GetClientEmbeddedTexture(client, 16)
 			if client == BNET_CLIENT_WOW then
 				realmName = (DB.MyRealm == realmName or realmName == "") and "" or "-"..realmName

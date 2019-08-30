@@ -4,9 +4,9 @@ if not C.Infobar.Time then return end
 
 local module = B:GetModule("Infobar")
 local info = module:RegisterInfobar("Time", C.Infobar.TimePos)
-local time, date = time, date
-local strfind, format, floor = string.find, string.format, math.floor
-local mod, tonumber, pairs, ipairs, select = mod, tonumber, pairs, ipairs, select
+local date = date
+local format, floor = string.format, math.floor
+local mod, tonumber, pairs, select = mod, tonumber, pairs, select
 local C_Map_GetMapInfo = C_Map.GetMapInfo
 local C_AreaPoiInfo_GetAreaPOISecondsLeft = C_AreaPoiInfo.GetAreaPOISecondsLeft
 local TIMEMANAGER_TICKER_24HOUR, TIMEMANAGER_TICKER_12HOUR = TIMEMANAGER_TICKER_24HOUR, TIMEMANAGER_TICKER_12HOUR
