@@ -56,19 +56,14 @@ function S:QuestTracker()
 	local header = CreateFrame("Frame", nil, frame)
 	header:SetAllPoints(frame)
 	header:Hide()
-	B.CreateFS(header, 16, QUEST_LOG, true, "TOPLEFT", 40, 20)
+	B.CreateFS(header, 16, QUEST_LOG, true, "TOPLEFT", 30, 18)
 
-	local lineL = CreateFrame("Frame", nil, header)
-	B.CreateGF(lineL, 100, C.mult, "Horizontal", cr, cg, cb, 0, 1)
-	lineL:SetPoint("TOPRIGHT", header, "TOP")
-	local lineR = CreateFrame("Frame", nil, header)
-	B.CreateGF(lineR, 100, C.mult, "Horizontal", cr, cg, cb, 1, 0)
-	lineR:SetPoint("TOPLEFT", header, "TOP")
-
-	for i = 1, 30 do
-		local line = _G["QuestWatchLine"..i]
-		line:SetFont(DB.Font[1], DB.Font[2]+2, DB.Font[3])
-	end
+	local bg = header:CreateTexture(nil, "ARTWORK")
+	bg:SetTexture("Interface\\LFGFrame\\UI-LFG-SEPARATOR")
+	bg:SetTexCoord(0, .66, 0, .31)
+	bg:SetVertexColor(cr, cg, cb, .8)
+	bg:SetPoint("TOPLEFT", 0, 20)
+	bg:SetSize(250, 30)
 
 	-- ModernQuestWatch, Gethe
 	local function onMouseUp(self)
@@ -142,15 +137,18 @@ function S:QuestTracker()
 				local numObjectives = GetNumQuestLeaderBoards(questIndex)
 				if numObjectives > 0 then
 					local headerText = _G["QuestWatchLine"..watchTextIndex]
+					if watchTextIndex > 1 then
+						headerText:SetPoint("TOPLEFT", "QuestWatchLine"..(watchTextIndex - 1), "BOTTOMLEFT", 0, -5)
+					end
 					watchTextIndex = watchTextIndex + 1
 					local objectivesGroup = {}
 					local objectivesCompleted = 0
-
 					for j = 1, numObjectives do
 						local finished = select(3, GetQuestLogLeaderBoard(j, questIndex))
 						if finished then
 							objectivesCompleted = objectivesCompleted + 1
 						end
+						_G["QuestWatchLine"..watchTextIndex]:SetPoint("TOPLEFT", "QuestWatchLine"..(watchTextIndex - 1), "BOTTOMLEFT", 0, -5)
 						tinsert(objectivesGroup, _G["QuestWatchLine"..watchTextIndex])
 						watchTextIndex = watchTextIndex + 1
 					end
