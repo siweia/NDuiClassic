@@ -6,12 +6,11 @@ local _, ns = ...
 local B, C, L, DB = unpack(ns)
 local oUF = ns.oUF or oUF
 
+local LCD = DB.LibClassicDurations
+
 local debugMode = false
 local class = DB.MyClass
 local RaidDebuffsIgnore, invalidPrio = {}, -1
-
-local function GetSpecialization()	-- prevent errors
-end
 
 local DispellColor = {
 	["Magic"]	= {.2, .6, 1},
@@ -64,37 +63,16 @@ end
 
 local function checkSpecs()
 	if class == "DRUID" then
-		if GetSpecialization() == 4 then
-			DispellFilter.Magic = true
-		else
-			DispellFilter.Magic = false
-		end
+		DispellFilter.Magic = true
 	elseif class == "MONK" then
-		if GetSpecialization() == 2 then
-			DispellFilter.Magic = true
-		else
-			DispellFilter.Magic = false
-		end
+		DispellFilter.Magic = true
 	elseif class == "PALADIN" then
-		if GetSpecialization() == 1 then
-			DispellFilter.Magic = true
-		else
-			DispellFilter.Magic = false
-		end
+		DispellFilter.Magic = true
 	elseif class == "PRIEST" then
-		if GetSpecialization() == 3 then
-			DispellFilter.Magic = false
-			DispellFilter.Disease = false
-		else
-			DispellFilter.Magic = true
-			DispellFilter.Disease = true
-		end
+		DispellFilter.Magic = true
+		DispellFilter.Disease = true
 	elseif class == "SHAMAN" then
-		if GetSpecialization() == 3 then
-			DispellFilter.Magic = true
-		else
-			DispellFilter.Magic = false
-		end
+		DispellFilter.Magic = true
 	end
 end
 
@@ -178,8 +156,15 @@ local function Update(self, _, unit)
 	local prio
 
 	for i = 1, 32 do
-		local name, icon, count, debuffType, duration, expiration, _, _, _, spellId = UnitAura(unit, i, rd.filter)
+		local name, icon, count, debuffType, duration, expiration, caster, _, _, spellId = UnitAura(unit, i, rd.filter)
 		if not name then break end
+
+		if duration == 0 then
+			local newduration, newexpires = LCD:GetAuraDurationByUnit(unit, spellId, caster, name)
+			if newduration then
+				duration, expiration = newduration, newexpires
+			end
+		end
 
 		if rd.ShowDispellableDebuff and debuffType and (not isCharmed) and (not canAttack) then
 			if rd.FilterDispellableDebuff then
@@ -237,7 +222,6 @@ local function Enable(self)
 	end
 
 	checkSpecs()
-	self:RegisterEvent("CHARACTER_POINTS_CHANGED", checkSpecs, true)
 	checkInstance()
 	self:RegisterEvent("PLAYER_ENTERING_WORLD", checkInstance, true)
 end
@@ -249,7 +233,6 @@ local function Disable(self)
 		self.RaidDebuffs.__owner = nil
 	end
 
-	self:UnregisterEvent("CHARACTER_POINTS_CHANGED", checkSpecs)
 	self:UnregisterEvent("PLAYER_ENTERING_WORLD", checkInstance)
 end
 
