@@ -1,5 +1,3 @@
-if _G.WOW_PROJECT_ID ~= _G.WOW_PROJECT_CLASSIC then return end
-
 --[================[
 LibClassicDurations
 Author: d87
@@ -63,7 +61,7 @@ Usage example 2:
 --]================]
 
 
-local MAJOR, MINOR = "LibClassicDurations", 11
+local MAJOR, MINOR = "LibClassicDurations", 13
 local lib = LibStub:NewLibrary(MAJOR, MINOR)
 if not lib then return end
 
@@ -77,7 +75,8 @@ lib.npc_spells = lib.npc_spells or {}
 lib.spellNameToID = lib.spellNameToID or {}
 local spellNameToID = lib.spellNameToID
 
-local NPCspellNameToID = {}
+lib.NPCspellNameToID = lib.NPCspellNameToID or {}
+local NPCspellNameToID = lib.NPCspellNameToID
 if lib.NPCSpellTableTimer then
     lib.NPCSpellTableTimer:Cancel()
 end
@@ -412,15 +411,19 @@ function f:COMBAT_LOG_EVENT_UNFILTERED(event)
     spellID, spellName, spellSchool, auraType, amount = CombatLogGetCurrentEventInfo()
 
     if auraType == "BUFF" or auraType == "DEBUFF" then
+        local isSrcPlayer = bit_band(srcFlags, COMBATLOG_OBJECT_TYPE_PLAYER) > 0
+
         if spellID == 0 then
             -- so not to rewrite the whole thing to spellnames after the combat log change
             -- just treat everything as max rank id of that spell name
-            spellID = spellNameToID[spellName]
-            if not spellID then
+            if isSrcPlayer then
+                spellID = spellNameToID[spellName]
+            else
                 spellID = NPCspellNameToID[spellName]
-                if not spellID then
-                    return
-                end
+            end
+
+            if not spellID then
+                return
             end
         end
 
@@ -585,7 +588,7 @@ local function GetGUIDAuraTime(dstGUID, spellName, spellID, srcGUID, isStacking)
         if spellTable then
             local applicationTable
             if isStacking then
-                if srcGUID then
+                if srcGUID and spellTable.applications then
                     applicationTable = spellTable.applications[srcGUID]
                 elseif spellTable.applications then -- return some duration
                     applicationTable = select(2,next(spellTable.applications))
