@@ -21,7 +21,7 @@ local function CreatePlayerStyle(self)
 	UF:CreateIcons(self)
 	UF:CreatePrediction(self)
 	UF:CreateFCT(self)
-	--UF:CreateAddPower(self)
+	UF:CreateAddPower(self)
 
 	if NDuiDB["UFs"]["Castbars"] then
 		UF:ReskinMirrorBars()
@@ -117,7 +117,6 @@ local function CreateBossStyle(self)
 	UF:CreatePowerText(self)
 	UF:CreateCastBar(self)
 	UF:CreateRaidMark(self)
-	UF:CreateAltPower(self)
 	UF:CreateBuffs(self)
 	UF:CreateDebuffs(self)
 end
@@ -134,7 +133,6 @@ local function CreateArenaStyle(self)
 	UF:CreateRaidMark(self)
 	UF:CreateBuffs(self)
 	UF:CreateDebuffs(self)
-	--UF:CreatePVPClassify(self)
 end
 
 local function CreateRaidStyle(self)

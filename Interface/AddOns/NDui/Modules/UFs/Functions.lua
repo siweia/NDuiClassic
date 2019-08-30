@@ -4,8 +4,7 @@ local B, C, L, DB = unpack(ns)
 local oUF = ns.oUF or oUF
 local UF = B:RegisterModule("UnitFrames")
 
-local LCD = LibStub("LibClassicDurations")
-LCD:RegisterFrame("NDui")
+local LCD = DB.LibClassicDurations
 
 local format, floor, abs, min = string.format, math.floor, math.abs, math.min
 local pairs, next = pairs, next
@@ -79,7 +78,7 @@ function UF:CreateHealthBar(self)
 		health.colorTapping = true
 		health.colorReaction = true
 		health.colorDisconnected = true
-		health.colorHappiness = true
+		health.colorHappiness = DB.MyClass == "HUNTER"
 	elseif mystyle ~= "raid" and NDuiDB["UFs"]["HealthColor"] == 3 then
 		health.colorSmooth = true
 	end
@@ -130,7 +129,7 @@ function UF:CreateHealthText(self)
 	elseif mystyle == "arena" then
 		self:Tag(name, "[arenaspec] [color][name]")
 	else
-		self:Tag(name, "[color][name]")
+		self:Tag(name, "[nplevel][color][name]")
 	end
 
 	local hpval = B.CreateFS(textFrame, retVal(self, 14, 13, 13, NDuiDB["Nameplate"]["HealthTextSize"]), "", false, "RIGHT", -3, -1)
@@ -173,6 +172,7 @@ function UF:UpdateRaidNameText()
 			else
 				name:SetPoint("TOPLEFT", 2, -2)
 			end
+			frame.healthValue:UpdateTag()
 		end
 	end
 end
@@ -204,7 +204,7 @@ function UF:CreatePowerBar(self)
 		power.colorTapping = true
 		power.colorDisconnected = true
 		power.colorReaction = true
-		power.colorHappiness = true
+		power.colorHappiness = DB.MyClass == "HUNTER"
 	end
 	--power.frequentUpdates = true
 	power.frequentUpdates = mystyle == "player" or mystyle == "target" or mystyle == "PlayerPlate"
@@ -285,6 +285,11 @@ function UF:CreateIcons(self)
 	ai:SetPoint("TOPLEFT", self, 0, 8)
 	ai:SetSize(12, 12)
 	self.AssistantIndicator = ai
+
+	local ml = self:CreateTexture(nil, "OVERLAY")
+	ml:SetPoint("LEFT", li, "RIGHT")
+	ml:SetSize(12, 12)
+	self.MasterLooterIndicator = ml
 end
 
 function UF:CreateRaidMark(self)
@@ -849,22 +854,6 @@ function UF.PostUpdateAltPower(element, _, cur, _, max)
 	end
 end
 
-function UF:CreateAltPower(self)
-	local bar = CreateFrame("StatusBar", nil, self)
-	bar:SetStatusBarTexture(DB.normTex)
-	bar:SetPoint("TOP", self.Power, "BOTTOM", 0, -3)
-	bar:SetSize(self:GetWidth(), 2)
-	B.CreateBD(bar, .5)
-	B.CreateSD(bar)
-
-	local text = B.CreateFS(bar, 14, "")
-	text:SetJustifyH("CENTER")
-	self:Tag(text, "[altpower]")
-
-	self.AlternativePower = bar
-	self.AlternativePower.PostUpdate = UF.PostUpdateAltPower
-end
-
 function UF:CreateExpRepBar(self)
 	local bar = CreateFrame("StatusBar", nil, self)
 	bar:SetPoint("TOPLEFT", self, "TOPRIGHT", 5, 0)
@@ -957,6 +946,8 @@ function UF.PostUpdateAddPower(element, _, cur, max)
 end
 
 function UF:CreateAddPower(self)
+	if DB.MyClass ~= "DRUID" then return end
+
 	local bar = CreateFrame("StatusBar", nil, self)
 	bar:SetSize(150, 4)
 	bar:SetPoint("TOPLEFT", self, "BOTTOMLEFT", 0, -10)
@@ -1038,14 +1029,6 @@ function UF:CreateFCT(self)
 	-- Default CombatText
 	--SetCVar("enableFloatingCombatText", 0)
 	--B.HideOption(InterfaceOptionsCombatPanelEnableFloatingCombatText)
-end
-
-function UF:CreatePVPClassify(self)
-    local bu = self:CreateTexture(nil, "ARTWORK")
-    bu:SetSize(30, 30)
-	bu:SetPoint("LEFT", self, "RIGHT", 5, -2)
-
-	self.PvPClassificationIndicator = bu
 end
 
 function UF:InterruptIndicator(self)

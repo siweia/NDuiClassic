@@ -592,7 +592,6 @@ function UF:CreatePlates()
 	UF:CreateRaidMark(self)
 	UF:CreatePrediction(self)
 	UF:CreateAuras(self)
-	--UF:CreatePVPClassify(self)
 	UF:CreateThreatColor(self)
 
 	self.powerText = B.CreateFS(self, 15)
