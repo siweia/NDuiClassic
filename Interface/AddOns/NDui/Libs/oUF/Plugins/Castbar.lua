@@ -1,8 +1,16 @@
 local _, ns = ...
 local B, C, L, DB = unpack(ns)
 
-local unpack, GetTime, IsPlayerSpell = unpack, GetTime, IsPlayerSpell
-local UnitChannelInfo, UnitIsUnit = UnitChannelInfo, UnitIsUnit
+local unpack = unpack
+local GetTime, UnitIsUnit = GetTime, UnitIsUnit
+local UnitChannelInfo = UnitChannelInfo or ChannelInfo
+
+local LibClassicCasterino = LibStub('LibClassicCasterino', true)
+if(LibClassicCasterino) then
+	UnitChannelInfo = function(unit)
+		return LibClassicCasterino:UnitChannelInfo(unit)
+	end
+end
 
 local function GetSpellName(spellID)
 	local name = GetSpellInfo(spellID)
