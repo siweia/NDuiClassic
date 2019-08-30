@@ -99,7 +99,7 @@ function M:FindWorldQuestComplete(questID)
 	if QuestUtils_IsQuestWorldQuest(questID) then
 		local name = GetQuestLogTitle(questID)
 		if name and not completedQuest[questID] then
-			sendQuestMsg(completeText(link))
+			sendQuestMsg(completeText(name))
 			completedQuest[questID] = true
 		end
 	end
