@@ -251,7 +251,7 @@ function module:OnLogin()
 		self.junkIcon:SetSize(20, 20)
 		self.junkIcon:SetPoint("TOPRIGHT", 1, 0)
 
-		self.Quest = B.CreateFS(self, 30, "!", "system", "LEFT", 3, 0)
+		--self.Quest = B.CreateFS(self, 30, "!", "system", "LEFT", 3, 0)
 
 		if artifaceMark then
 			self.Artifact = self:CreateTexture(nil, "ARTWORK")
@@ -320,13 +320,13 @@ function module:OnLogin()
 	end
 
 	function MyButton:OnUpdateQuest(item)
-		if item.questID and not item.questActive then
+		--[[if item.questID and not item.questActive then
 			self.Quest:SetAlpha(1)
 		else
 			self.Quest:SetAlpha(0)
-		end
+		end]]
 
-		if item.questID or item.isQuestItem then
+		if item.isQuestItem then
 			self.BG:SetBackdropBorderColor(.8, .8, 0)
 		elseif item.rarity and item.rarity > -1 then
 			local color = BAG_ITEM_QUALITY_COLORS[item.rarity]
