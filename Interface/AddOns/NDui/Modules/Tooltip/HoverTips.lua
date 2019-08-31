@@ -12,12 +12,7 @@ local linkTypes = {
 	quest = true,
 	unit = true,
 	talent = true,
-	achievement = true,
-	glyph = true,
 	instancelock = true,
-	currency = true,
-	keystone = true,
-	azessence = true,
 }
 
 function TT:HyperLink_SetTypes(link)
