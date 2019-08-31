@@ -1,5 +1,5 @@
 ------------------------------
--- VendorPrice 1.1.4, Gethe
+-- VendorPrice 1.1.4, Ketho
 ------------------------------
 local select, tonumber, type, strfind = select, tonumber, type, string.find
 local MerchantFrame = MerchantFrame
