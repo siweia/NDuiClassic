@@ -331,6 +331,10 @@ local function setupAuraWatch()
 	SlashCmdList["NDUI_AWCONFIG"]()
 end
 
+local function updateBagSortOrder()
+	SetSortBagsRightToLeft(not NDuiDB["Bags"]["ReverseSort"])
+end
+
 local function updateChatSticky()
 	B:GetModule("Chat"):ChatWhisperSticky()
 end
@@ -454,7 +458,7 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Bags", "BagsiLvl", L["Bags Itemlevel"]},
 		{1, "Bags", "Artifact", L["Bags Artifact"], true},
 		{1, "Bags", "DeleteButton", L["Bags DeleteButton"]},
-		{1, "Bags", "ReverseSort", L["Bags ReverseSort"].."*", true},
+		{1, "Bags", "ReverseSort", L["Bags ReverseSort"].."*", true, nil, updateBagSortOrder},
 		{},--blank
 		{3, "Bags", "BagsScale", L["Bags Scale"], false, {.5, 1.5, 1}},
 		{3, "Bags", "IconSize", L["Bags IconSize"], true, {30, 42, 0}},
@@ -1010,7 +1014,9 @@ local function importData()
 			NDuiDB[key][value] = {}
 		elseif arg1 == "r" or arg1 == "g" or arg1 == "b" then
 			local color = select(4, strsplit(":", option))
-			NDuiDB[key][value][arg1] = tonumber(color)
+			if NDuiDB[key][value] then
+				NDuiDB[key][value][arg1] = tonumber(color)
+			end
 		elseif key == "AuraWatchList" then
 			if value == "Switcher" then
 				local index, state = select(3, strsplit(":", option))
