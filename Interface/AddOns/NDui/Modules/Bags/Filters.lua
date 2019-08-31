@@ -36,7 +36,9 @@ local function isItemJunk(item)
 	return item.rarity == LE_ITEM_QUALITY_POOR and item.sellPrice > 0
 end
 
-local function isAzeriteArmor(item)
+local function isItemAmmo(item)
+	if not NDuiDB["Bags"]["ItemFilter"] then return end
+	return item.equipLoc == "INVTYPE_AMMO"
 end
 
 local function isItemEquipment(item)
@@ -65,13 +67,13 @@ local function isMountAndPet(item)
 end
 
 function module:GetFilters()
-	local onlyBags = function(item) return isItemInBag(item) and not isItemEquipment(item) and not isItemConsumble(item) and not isAzeriteArmor(item) and not isItemJunk(item) and not isMountAndPet(item) end
-	local bagAzeriteItem = function(item) return isItemInBag(item) and isAzeriteArmor(item) end
+	local onlyBags = function(item) return isItemInBag(item) and not isItemEquipment(item) and not isItemConsumble(item) and not isItemAmmo(item) and not isItemJunk(item) and not isMountAndPet(item) end
+	local bagAmmo = function(item) return isItemInBag(item) and isItemAmmo(item) end
 	local bagEquipment = function(item) return isItemInBag(item) and isItemEquipment(item) end
 	local bagConsumble = function(item) return isItemInBag(item) and isItemConsumble(item) end
 	local bagsJunk = function(item) return isItemInBag(item) and isItemJunk(item) end
-	local onlyBank = function(item) return isItemInBank(item) and not isItemEquipment(item) and not isItemConsumble(item) and not isAzeriteArmor(item) and not isMountAndPet(item) end
-	local bankAzeriteItem = function(item) return isItemInBank(item) and isAzeriteArmor(item) end
+	local onlyBank = function(item) return isItemInBank(item) and not isItemEquipment(item) and not isItemConsumble(item) and not isItemAmmo(item) and not isMountAndPet(item) end
+	local bankAmmo = function(item) return isItemInBank(item) and isItemAmmo(item) end
 	local bankLegendary = function(item) return isItemInBank(item) and isItemLegendary(item) end
 	local bankEquipment = function(item) return isItemInBank(item) and isItemEquipment(item) end
 	local bankConsumble = function(item) return isItemInBank(item) and isItemConsumble(item) end
@@ -79,5 +81,5 @@ function module:GetFilters()
 	local bagMountPet = function(item) return isItemInBag(item) and isMountAndPet(item) end
 	local bankMountPet = function(item) return isItemInBank(item) and isMountAndPet(item) end
 
-	return onlyBags, bagAzeriteItem, bagEquipment, bagConsumble, bagsJunk, onlyBank, bankAzeriteItem, bankLegendary, bankEquipment, bankConsumble, onlyReagent, bagMountPet, bankMountPet
+	return onlyBags, bagAmmo, bagEquipment, bagConsumble, bagsJunk, onlyBank, bankAmmo, bankLegendary, bankEquipment, bankConsumble, onlyReagent, bagMountPet, bankMountPet
 end
