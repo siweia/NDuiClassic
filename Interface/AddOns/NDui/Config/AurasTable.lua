@@ -131,6 +131,14 @@ function module:OnLogin()
 		B.CopyTable(C.CornerBuffs[DB.MyClass], NDuiADB["CornerBuffs"][DB.MyClass])
 	end
 
+	C.CornerBuffsByName = {}
+	for spellID, value in pairs(NDuiADB["CornerBuffs"][DB.MyClass]) do
+		local name = GetSpellInfo(spellID)
+		if name then
+			C.CornerBuffsByName[name] = value
+		end
+	end
+
 	-- Filter bloodlust for healers
 	local bloodlustList = {57723, 57724, 80354, 264689}
 	local function filterBloodlust()

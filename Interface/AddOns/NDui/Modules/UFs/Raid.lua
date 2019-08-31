@@ -351,7 +351,7 @@ function UF:UpdateBuffIndicator(event, unit)
 		for i = 1, 32 do
 			local name, _, count, _, duration, expiration, caster, _, _, spellID = UnitAura(unit, i, filter)
 			if not name then break end
-			local value = spellList[spellID]
+			local value = spellList[spellID] or C.CornerBuffsByName[name]
 			if value and (value[3] or caster == "player" or caster == "pet") then
 				if duration == 0 then
 					local newduration, newexpires = LCD:GetAuraDurationByUnit(unit, spellID, caster, name)
