@@ -574,8 +574,8 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{3, "Auras", "DebuffSize", L["DebuffSize"], true, {24, 40, 0}},
 		{3, "Auras", "BuffsPerRow", L["BuffsPerRow"], nil, {10, 20, 0}},
 		{3, "Auras", "DebuffsPerRow", L["DebuffsPerRow"], true, {10, 16, 0}},
-		{},--blank
-		{1, "Auras", "Totems", L["Enable Totems"]},
+		--{},--blank
+		--{1, "Auras", "Totems", L["Enable Totems"]},
 		--{1, "Auras", "Reminder", L["Enable Reminder"], true},
 	},
 	[7] = {

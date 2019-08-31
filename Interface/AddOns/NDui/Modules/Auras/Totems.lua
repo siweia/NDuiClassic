@@ -57,6 +57,7 @@ end
 
 function A:Totems()
 	if not NDuiDB["Auras"]["Totems"] then return end
+	if DB.isClassic then return end
 
 	TotemsGo()
 	B:RegisterEvent("PLAYER_ENTERING_WORLD", self.UpdateTotems)
