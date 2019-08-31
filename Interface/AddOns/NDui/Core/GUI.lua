@@ -183,7 +183,6 @@ local defaultSettings = {
 		DBMCount = "10",
 		EasyMarking = true,
 		TMW = true,
-		PetBattle = true,
 		WeakAuras = true,
 		BarLine = true,
 		InfobarLine = true,
@@ -193,6 +192,7 @@ local defaultSettings = {
 		Details = true,
 		PGFSkin = true,
 		Rematch = true,
+		QuestTracker = true,
 	},
 	Tooltip = {
 		CombatHide = false,
@@ -631,6 +631,7 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Skins", "ClassLine", L["ClassColor Line"]},
 		{},--blank
 		{1, "Skins", "MicroMenu", L["Micromenu"]},
+		{1, "Skins", "QuestTracker", L["QuestTracker"], true},
 		{},--blank
 		{1, "Skins", "DBM", L["DBM Skin"]},
 		{1, "Skins", "Skada", L["Skada Skin"], true},

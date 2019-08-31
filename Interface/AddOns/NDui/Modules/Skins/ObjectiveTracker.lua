@@ -53,6 +53,8 @@ function S:QuestTracker()
 	end
 	hooksecurefunc("QuestLog_Update", Showlevel)
 
+	if not NDuiDB["Skins"]["QuestTracker"] then return end
+
 	local header = CreateFrame("Frame", nil, frame)
 	header:SetAllPoints(frame)
 	header:Hide()
