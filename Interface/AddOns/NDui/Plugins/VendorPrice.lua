@@ -1,85 +1,17 @@
-------------------------
--- VendorPrice, Gethe
-------------------------
+------------------------------
+-- VendorPrice 1.1.4, Gethe
+------------------------------
+local select, tonumber, type, strfind = select, tonumber, type, string.find
+local MerchantFrame = MerchantFrame
+local GetMouseFocus, GetItemInfo, SetTooltipMoney = GetMouseFocus, GetItemInfo, SetTooltipMoney
 local SELL_PRICE_TEXT = format("%s:", SELL_PRICE)
-local f = CreateFrame("Frame")
-
-local function SetBagItemGlow(bagId, slot)
-	local item = nil
-	if IsAddOnLoaded("OneBag3") then
-		item = _G["OneBagFrameBag"..bagId.."Item"..slot]
-	else
-		for i = 1, NUM_CONTAINER_FRAMES, 1 do
-			local frame = _G["ContainerFrame"..i]
-			if frame:GetID() == bagId and frame:IsShown() then
-				item = _G["ContainerFrame"..i.."Item"..(GetContainerNumSlots(bagId) + 1 - slot)]
-			end
-		end
-	end
-	if item then
-		item.NewItemTexture:SetAtlas("bags-glow-orange")
-		item.NewItemTexture:Show()
-		item.flashAnim:Play()
-		item.newitemglowAnim:Play()
-	end
-end
-
-local function GlowCheapestGrey()
-	local lastPrice = nil
-	local bagNum = nil
-	local slotNum = nil
-	for bag = 0, NUM_BAG_SLOTS do
-		for bagSlot = 1, GetContainerNumSlots(bag) do
-			local itemid = GetContainerItemID(bag, bagSlot)
-			if itemid then
-				local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount,
-				itemEquipLoc, itemIcon, vendorPrice, itemClassID, itemSubClassID, bindType, expacID, itemSetID,
-				isCraftingReagent = GetItemInfo(itemid)
-				if itemRarity == 0 and vendorPrice > 0 then
-					local _, itemCount = GetContainerItemInfo(bag, bagSlot)
-					local totalVendorPrice = vendorPrice * itemCount
-					if lastPrice == nil then
-						lastPrice = totalVendorPrice
-						bagNum = bag
-						slotNum = bagSlot
-					elseif lastPrice > totalVendorPrice then
-						lastPrice = totalVendorPrice
-						bagNum = bag
-						slotNum = bagSlot
-					end
-				end
-			end
-		end
-	end
-	if bagNum and slotNum then
-		SetBagItemGlow(bagNum, slotNum)
-	end
-end
-
-function f:OnEvent(event, key, state)
-	if key == "LCTRL" and state == 1 then
-		local bagOpen = false
-		if IsAddOnLoaded("OneBag3") then
-			bagOpen = OneBagFrame:IsShown()
-		else
-			for bag = 0, NUM_BAG_SLOTS do
-				if IsBagOpen(bag) then
-					bagOpen = true
-					break
-				end
-			end
-		end
-		if bagOpen then
-			GlowCheapestGrey()
-		end
-	end
-end
 
 local function SetGameToolTipPrice(tt)
 	local container = GetMouseFocus()
 	if container and container.GetName then -- Auctionator sanity check
-		-- price is already shown at vendor; still allow showing price for tradeskill items
-		if not MerchantFrame:IsShown() or container:GetName():find("TradeSkill") then
+		local name = container:GetName()
+		-- price is already shown at vendor for bag items
+		if not MerchantFrame:IsShown() or strfind(name, "Character") or strfind(name, "TradeSkill") then
 			local itemLink = select(2, tt:GetItem())
 			if itemLink then
 				local itemSellPrice = select(11, GetItemInfo(itemLink))
@@ -99,6 +31,7 @@ local function SetGameToolTipPrice(tt)
 		end
 	end
 end
+GameTooltip:HookScript("OnTooltipSetItem", SetGameToolTipPrice)
 
 local function SetItemRefToolTipPrice(tt)
 	local itemLink = select(2, tt:GetItem())
@@ -109,8 +42,4 @@ local function SetItemRefToolTipPrice(tt)
 		end
 	end
 end
-
-GameTooltip:HookScript("OnTooltipSetItem", SetGameToolTipPrice)
 ItemRefTooltip:HookScript("OnTooltipSetItem", SetItemRefToolTipPrice)
-f:RegisterEvent("MODIFIER_STATE_CHANGED")
-f:SetScript("OnEvent", f.OnEvent)
