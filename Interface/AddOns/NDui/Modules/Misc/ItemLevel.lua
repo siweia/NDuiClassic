@@ -1,12 +1,13 @@
 ﻿local _, ns = ...
-local B, C, L, DB = unpack(ns)
+local B, C, L, DB, F = unpack(ns)
 local M = B:GetModule("Misc")
 
-local pairs, select, next = pairs, select, next
+local pairs, select, next, wipe = pairs, select, next, wipe
 local UnitGUID, GetItemInfo = UnitGUID, GetItemInfo
 local GetContainerItemLink, GetInventoryItemLink = GetContainerItemLink, GetInventoryItemLink
 local EquipmentManager_UnpackLocation, EquipmentManager_GetItemInfoByLocation = EquipmentManager_UnpackLocation, EquipmentManager_GetItemInfoByLocation
 local BAG_ITEM_QUALITY_COLORS = BAG_ITEM_QUALITY_COLORS
+local C_Timer_After = C_Timer.After
 
 local inspectSlots = {
 	"Head",
@@ -26,6 +27,7 @@ local inspectSlots = {
 	"Back",
 	"MainHand",
 	"SecondaryHand",
+	"Ranged",
 }
 
 function M:GetSlotAnchor(index)
@@ -54,15 +56,20 @@ function M:CreateItemTexture(slot, relF, x, y)
 	return icon
 end
 
+function M:CreateColorBorder()
+	if F then return end
+	local frame = CreateFrame("Frame", nil, self)
+	frame:SetAllPoints()
+	frame:SetFrameLevel(5)
+	self.colorBG = B.CreateSD(frame, 4, 4)
+end
+
 function M:CreateItemString(frame, strType)
 	if frame.fontCreated then return end
 
 	for index, slot in pairs(inspectSlots) do
 		if index ~= 4 then
 			local slotFrame = _G[strType..slot.."Slot"]
-			slotFrame.iLvlText = B.CreateFS(slotFrame, DB.Font[2]+1)
-			slotFrame.iLvlText:ClearAllPoints()
-			slotFrame.iLvlText:SetPoint("BOTTOMLEFT", slotFrame, 1, 1)
 			local relF, x, y = M:GetSlotAnchor(index)
 			slotFrame.enchantText = B.CreateFS(slotFrame, DB.Font[2]+1)
 			slotFrame.enchantText:ClearAllPoints()
@@ -74,10 +81,45 @@ function M:CreateItemString(frame, strType)
 				local iconY = index > 15 and 20 or 2
 				slotFrame["textureIcon"..i] = M:CreateItemTexture(slotFrame, relF, iconX, iconY)
 			end
+			M.CreateColorBorder(slotFrame)
 		end
 	end
 
 	frame.fontCreated = true
+end
+
+function M:ItemBorderSetColor(slotFrame, r, g, b)
+	if slotFrame.colorBG then
+		slotFrame.colorBG:SetBackdropBorderColor(r, g, b)
+	end
+	if slotFrame.bg then
+		slotFrame.bg:SetBackdropBorderColor(r, g, b)
+	end
+end
+
+local pending = {}
+function M:RefreshButtonInfo()
+	if InspectFrame and InspectFrame.unit then
+		for index, slotFrame in pairs(pending) do
+			local link = GetInventoryItemLink(InspectFrame.unit, index)
+			if link then
+				local quality = select(3, GetItemInfo(link))
+				if quality then
+					local color = BAG_ITEM_QUALITY_COLORS[quality]
+					M:ItemBorderSetColor(slotFrame, color.r, color.g, color.b)
+					pending[index] = nil
+				end
+			end
+		end
+
+		if not next(pending) then
+			self:Hide()
+			return
+		end
+	end
+
+	wipe(pending)
+	self:Hide()
 end
 
 function M:ItemLevel_SetupLevel(frame, strType, unit)
@@ -88,45 +130,45 @@ function M:ItemLevel_SetupLevel(frame, strType, unit)
 	for index, slot in pairs(inspectSlots) do
 		if index ~= 4 then
 			local slotFrame = _G[strType..slot.."Slot"]
-			slotFrame.iLvlText:SetText("")
 			slotFrame.enchantText:SetText("")
 			for i = 1, 5 do
 				local texture = slotFrame["textureIcon"..i]
 				texture:SetTexture(nil)
 				texture.bg:Hide()
 			end
+			M:ItemBorderSetColor(slotFrame, 0, 0, 0)
 
-			local link = GetInventoryItemLink(unit, index)
-			if link then
-				local quality = select(3, GetItemInfo(link))
-				local level, enchant, gems, essences = B.GetItemLevel(link, unit, index, NDuiDB["Misc"]["GemNEnchant"])
-
-				if level and level > 1 and quality then
-					local color = BAG_ITEM_QUALITY_COLORS[quality]
-					slotFrame.iLvlText:SetText(level)
-					slotFrame.iLvlText:SetTextColor(color.r, color.g, color.b)
-				end
-
-				if enchant then
-					slotFrame.enchantText:SetText(enchant)
-				end
-
-				for i = 1, 5 do
-					local texture = slotFrame["textureIcon"..i]
-					if gems and next(gems) then
-						local index, gem = next(gems)
-						texture:SetTexture(gem)
-						texture.bg:Show()
-
-						gems[index] = nil
-					elseif essences and next(essences) then
-						local index, essence = next(essences)
-						local selected = essence[1]
-						texture:SetTexture(selected)
-						texture.bg:Show()
-
-						essences[index] = nil
+			local itemTexture = GetInventoryItemTexture(unit, index)
+			if itemTexture then
+				local link = GetInventoryItemLink(unit, index)
+				if link then
+					local quality = select(3, GetItemInfo(link))
+					if quality then
+						local color = BAG_ITEM_QUALITY_COLORS[quality]
+						M:ItemBorderSetColor(slotFrame, color.r, color.g, color.b)
+					else
+						pending[index] = slotFrame
+						M.QualityUpdater:Show()
 					end
+
+					local _, enchant, gems = B.GetItemLevel(link, unit, index, NDuiDB["Misc"]["GemNEnchant"])
+					if enchant then
+						slotFrame.enchantText:SetText(enchant)
+					end
+
+					for i = 1, 5 do
+						local texture = slotFrame["textureIcon"..i]
+						if gems and next(gems) then
+							local index, gem = next(gems)
+							texture:SetTexture(gem)
+							texture.bg:Show()
+
+							gems[index] = nil
+						end
+					end
+				else
+					pending[index] = slotFrame
+					M.QualityUpdater:Show()
 				end
 			end
 		end
@@ -215,4 +257,9 @@ function M:ShowItemLevel()
 
 	-- iLvl on InspectFrame
 	B:RegisterEvent("INSPECT_READY", self.ItemLevel_UpdateInspect)
+
+	-- Update item quality
+	M.QualityUpdater = CreateFrame("Frame")
+	M.QualityUpdater:Hide()
+	M.QualityUpdater:SetScript("OnUpdate", M.RefreshButtonInfo)
 end
