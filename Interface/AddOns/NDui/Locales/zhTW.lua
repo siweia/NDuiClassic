@@ -364,7 +364,6 @@ L["Are you sure to reset the gold count?"] = "你確定要重置金幣統計嗎�
 L["WoW"] = "魔獸世界"
 L["BN"] = "戰網好友"
 L["SpecPanel"] = "天賦面板"
-L["Change Spec"] = "切換專精"
 L["Reset Gold"] = "重置數據"
 L["Toggle Calendar"] = "打開行事曆"
 L["Toggle Clock"] = "打開時鐘"

@@ -364,7 +364,6 @@ L["Are you sure to reset the gold count?"] = "Are you sure to reset the gold cou
 L["WoW"] = "World of Warcraft"
 L["BN"] = "Battle.NET"
 L["SpecPanel"] = "Toggle TalentFrame"
-L["Change Spec"] = "Select Your Spec"
 L["Reset Gold"] = "Reset Data"
 L["Toggle Calendar"] = "Toggle Calendar"
 L["Toggle Clock"] = "Toggle Clock"
