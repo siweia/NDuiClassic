@@ -153,7 +153,7 @@ function B:PostCastStop()
 		self:SetStatusBarColor(unpack(self.CompleteColor))
 		self.fadeOut = true
 	end
-	self:SetValue(self.max)
+	self:SetValue(self.max or 1)
 	self:Show()
 end
 
