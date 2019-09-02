@@ -231,7 +231,7 @@ do
 
 		if(PlayerClass == 'DRUID') then
 			RequirePower = SPELL_POWER_ENERGY
-			RequireSpell = 1082 -- Claw
+			RequireSpell = 768 -- Cat Form
 		end
 	end
 end
