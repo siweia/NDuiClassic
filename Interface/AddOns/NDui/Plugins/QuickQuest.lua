@@ -122,9 +122,7 @@ QuickQuest:Register("QUEST_GREETING", function()
 	local available = GetNumAvailableQuests()
 	if(available > 0) then
 		for index = 1, available do
-			if IsTrackingHidden() then
-				SelectAvailableQuest(index)
-			end
+			SelectAvailableQuest(index)
 		end
 	end
 end)
@@ -212,7 +210,7 @@ QuickQuest:Register("GOSSIP_SHOW", function()
 	if(available > 0) then
 		for index = 1, available do
 			local _, _, trivial, ignored = GetAvailableGossipQuestInfo(index)
-			if((not trivial and not ignored) or IsTrackingHidden()) then
+			if(not trivial and not ignored) then
 				SelectGossipAvailableQuest(index)
 			elseif(trivial and npcID == 64337) then
 				SelectGossipAvailableQuest(index)
