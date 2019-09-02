@@ -212,8 +212,6 @@ local defaultSettings = {
 		ItemLevel = true,
 		GemNEnchant = true,
 		HideErrors = true,
-		SoloInfo = true,
-		AlertinChat = false,
 		ExpRep = true,
 		Interrupt = false,
 		OwnInterrupt = true,
@@ -226,6 +224,7 @@ local defaultSettings = {
 		OnlyCompleteRing = false,
 		ExplosiveCache = {},
 		PlacedItemAlert = false,
+		EnhancedMenu = false,
 	},
 	Tutorial = {
 		Complete = false,
@@ -554,7 +553,7 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 	},
 	[6] = {
 		{1, "AuraWatch", "Enable", "|cff00cc4c"..L["Enable AuraWatch"], nil, setupAuraWatch},
-		{1, "AuraWatch", "DeprecatedAuras", L["DeprecatedAuras"]},
+		--{1, "AuraWatch", "DeprecatedAuras", L["DeprecatedAuras"]},
 		{1, "AuraWatch", "ClickThrough", L["AuraWatch ClickThrough"]},
 		{3, "AuraWatch", "IconScale", L["AuraWatch IconScale"], true, {.8, 2, 1}},
 		{},--blank
@@ -668,6 +667,7 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{1, "ACCOUNT", "AutoBubbles", L["AutoBubbles"], true},
 		{1, "Misc", "FasterLoot", L["Faster Loot"].."*", nil, nil, updateFasterLoot},
 		{1, "Misc", "HideErrors", L["Hide Error"].."*", true, nil, updateErrorBlocker},
+		{1, "Misc", "EnhancedMenu", L["TargetEnhancedMenu"]},
 	},
 	[13] = {
 		{1, "ACCOUNT", "VersionCheck", L["Version Check"]},

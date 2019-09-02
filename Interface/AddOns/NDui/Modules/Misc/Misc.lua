@@ -135,7 +135,7 @@ end
 -- Reanchor DurabilityFrame
 function M:MoveDurabilityFrame()
 	hooksecurefunc(DurabilityFrame, "SetPoint", function(self, _, parent)
-		if parent == "MinimapCluster" or parent == MinimapCluster then
+		if parent ~= Minimap then
 			self:ClearAllPoints()
 			self:SetPoint("TOPRIGHT", Minimap, "BOTTOMRIGHT", 0, -30)
 		end
@@ -417,6 +417,8 @@ function M:MenuButton_Show(_, unit)
 end
 
 function M:MenuButton_Add()
+	if not NDuiDB["Misc"]["EnhancedMenu"] then return end
+
 	M.MenuButtonList = {
 		["name"] = COPY_NAME,
 		["guild"] = gsub(CHAT_GUILD_INVITE_SEND, HEADER_COLON, ""),
