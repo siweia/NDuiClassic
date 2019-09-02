@@ -483,11 +483,16 @@ function G:SetupNameplateFilter(parent)
 	end
 end
 
+local function refreshNameList()
+	B:GetModule("AurasTable"):BuildNameListFromID()
+end
+
 function G:SetupBuffIndicator(parent)
 	toggleExtraGUI("NDuiGUI_BuffIndicator")
 	if buffIndicatorGUI then return end
 
 	buffIndicatorGUI = createExtraGUI(parent, "NDuiGUI_BuffIndicator")
+	buffIndicatorGUI:SetScript("OnHide", refreshNameList)
 
 	local frameData = {
 		[1] = {text = L["RaidBuffWatch"].."*", offset = -25, width = 160, barList = {}},

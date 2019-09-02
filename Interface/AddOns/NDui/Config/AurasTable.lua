@@ -38,9 +38,9 @@ function module:AddNewAuraWatch(class, list)
 				local name = GetSpellInfo(spellID)
 				if not name then
 					wipe(v)
-					if DB.isDeveloper then
+					--if DB.isDeveloper then
 						print(format("|cffFF0000Invalid spellID:|r '%s' %s", class, spellID))
-					end
+					--end
 				end
 			end
 		end
@@ -65,6 +65,7 @@ function module:AddNewAuraWatch(class, list)
 end
 
 function module:AddDeprecatedGroup()
+	if DB.isClassic then return end
 	if not NDuiDB["AuraWatch"]["DeprecatedAuras"] then return end
 
 	for name, value in pairs(C.DeprecatedAuras) do
@@ -107,6 +108,21 @@ function module:RegisterDebuff(_, instID, _, spellID, level)
 	RaidDebuffs[instName][spellID] = level
 end
 
+function module:BuildNameListFromID()
+	if not C.CornerBuffsByName then C.CornerBuffsByName = {} end
+	wipe(C.CornerBuffsByName)
+
+	local myCornerBuffs = NDuiADB["CornerBuffs"][DB.MyClass]
+	if not myCornerBuffs then return end
+
+	for spellID, value in pairs(myCornerBuffs) do
+		local name = GetSpellInfo(spellID)
+		if name then
+			C.CornerBuffsByName[name] = value
+		end
+	end
+end
+
 function module:OnLogin()
 	for instName, value in pairs(RaidDebuffs) do
 		for spell, priority in pairs(value) do
@@ -130,16 +146,9 @@ function module:OnLogin()
 	if not next(NDuiADB["CornerBuffs"][DB.MyClass]) then
 		B.CopyTable(C.CornerBuffs[DB.MyClass], NDuiADB["CornerBuffs"][DB.MyClass])
 	end
+	self:BuildNameListFromID()
 
-	C.CornerBuffsByName = {}
-	for spellID, value in pairs(NDuiADB["CornerBuffs"][DB.MyClass]) do
-		local name = GetSpellInfo(spellID)
-		if name then
-			C.CornerBuffsByName[name] = value
-		end
-	end
-
-	-- Filter bloodlust for healers
+	--[[ Filter bloodlust for healers
 	local bloodlustList = {57723, 57724, 80354, 264689}
 	local function filterBloodlust()
 		for _, spellID in pairs(bloodlustList) do
@@ -148,5 +157,5 @@ function module:OnLogin()
 		end
 	end
 	filterBloodlust()
-	B:RegisterEvent("CHARACTER_POINTS_CHANGED", filterBloodlust)
+	B:RegisterEvent("CHARACTER_POINTS_CHANGED", filterBloodlust)]]
 end
