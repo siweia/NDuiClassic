@@ -1,0 +1,17 @@
+## Interface: 11302
+## Title: |cff0080ffAuroraClassic|r
+## Title-zhCN: |cff0080ffAuroraClassic|r 材质美化
+## Title-zhTW: |cff0080ffAuroraClassic|r 材質美化
+## Notes: Classical Aurora Style for WoW UIs.
+## Author: Haleth/Lightsword, Siweia
+## X-Credits: Gethe
+## Version: 1.0.0c
+## X-Website: https://github.com/siweia/AuroraClassic
+## SavedVariables: AuroraConfig
+
+Core.lua
+GUI.lua
+
+AddOns\AddOns.xml
+FrameXML\FrameXML.xml
+SharedXML\SharedXML.xml
