@@ -1,12 +1,19 @@
 local lib = LibStub and LibStub("LibClassicDurations", true)
 if not lib then return end
 
-local Type, Version = "SpellTable", 15
+local Type, Version = "SpellTable", 18
 if lib:GetDataVersion(Type) >= Version then return end  -- older versions didn't have that function
 
 local Spell = lib.AddAura
 local Talent = lib.Talent
 
+local _, class = UnitClass("player")
+local locale = GetLocale()
+
+-- temporary
+if locale == "zhCN" then
+    lib.spellNameToID[GetSpellInfo(980)] = nil
+end
 ------------------
 -- GLOBAL
 ------------------
@@ -160,7 +167,8 @@ Spell({ 339, 1062, 5195, 5196, 9852, 9853 }, {
     end
 }) -- Entangling Roots
 Spell({ 2908, 8955, 9901 }, { duration = 15 }) -- Soothe Animal
-Spell({ 770, 778, 9749, 9907, 17390, 17391, 17392 }, { duration = 40 }) -- Faerie Fire
+Spell({ 770, 778, 9749, 9907 }, { duration = 40 }) -- Faerie Fire
+Spell({ 17390, 17391, 17392 }, { duration = 40 }) -- Faerie Fire (Feral)
 Spell({ 2637, 18657, 18658 }, {
     duration = function(spellID)
         if spellID == 2637 then return 20
@@ -340,7 +348,7 @@ Spell({ 1943, 8639, 8640, 11273, 11274, 11275 }, { stacking = true,
 }) -- Rupture
 -- SnD -- player-only, can skip
 
-Spell({ 2983, 8696, 11305 }, { duration = 8, type = "BUFF" }) -- Sprint
+Spell({ 2983, 8696, 11305 }, { duration = 15, type = "BUFF" }) -- Sprint
 Spell( 5277 ,{ duration = 15, type = "BUFF" }) -- Evasion
 Spell({ 1776, 1777, 8629, 11285, 11286 }, {
     duration = function(spellID, isSrcPlayer)
@@ -408,7 +416,11 @@ Spell({ 710, 18647 }, {
 Spell({ 6789, 17925, 17926 }, { duration = 3 }) -- Death Coil
 
 Spell({ 18265, 18879, 18880, 18881}, { duration = 30, stacking = true }) -- Siphon Life
+
+if locale ~= "zhCN" or class ~= "MAGE" then
 Spell({ 980, 1014, 6217, 11711, 11712, 11713 }, { duration = 24, stacking = true }) -- Curse of Agony
+end
+
 Spell({ 172, 6222, 6223, 7648, 11671, 11672, 25311 }, { stacking = true,
     duration = function(spellID)
         if spellID == 172 then
@@ -632,7 +644,11 @@ Spell({ 6143, 8461, 8462, 10177, 28609 }, { duration = 30, type = "BUFF" }) -- F
 
 Spell(12355, { duration = 2 }) -- Impact
 Spell(12654, { duration = 4 }) -- Ignite
+
+if locale ~= "zhCN" or class == "MAGE" then
 Spell(22959, { duration = 30 }) -- Fire Vulnerability
+end
+
 Spell({ 11113, 13018, 13019, 13020, 13021 }, { duration = 6 }) -- Blast Wave
 
 Spell({ 2120, 2121, 8422, 8423, 10215, 10216 }, { duration = 8, stacking = true }) -- Flamestrike
