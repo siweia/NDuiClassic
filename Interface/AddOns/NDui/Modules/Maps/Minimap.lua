@@ -283,7 +283,8 @@ function module:SetupMinimap()
 		"MinimapZoomIn",
 		"MiniMapWorldMapButton",
 		"MiniMapMailBorder",
-		--"MiniMapTracking",
+		"MinimapToggleButton",
+		"GameTimeFrame",
 	}
 
 	for _, v in pairs(frames) do
