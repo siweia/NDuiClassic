@@ -13,10 +13,8 @@ C.themes["Blizzard_TalentUI"] = function()
 	F.StripTextures(TalentFrameScrollFrame)
 
 	for i = 1, MAX_NUM_TALENTS do
-		local talent = _G['TalentFrameTalent'..i]
-		local icon = _G['TalentFrameTalent'..i..'IconTexture']
-		local rank = _G['TalentFrameTalent'..i..'Rank']
-
+		local talent = _G["TalentFrameTalent"..i]
+		local icon = _G["TalentFrameTalent"..i.."IconTexture"]
 		if talent then
 			F.StripTextures(talent)
 			icon:SetTexCoord(.08, .92, .08, .92)
