@@ -1,7 +1,7 @@
 local lib = LibStub and LibStub("LibClassicDurations", true)
 if not lib then return end
 
-local Type, Version = "SpellTable", 18
+local Type, Version = "SpellTable", 20
 if lib:GetDataVersion(Type) >= Version then return end  -- older versions didn't have that function
 
 local Spell = lib.AddAura
@@ -84,20 +84,23 @@ Spell( 7744, { duration = 5, type = "BUFF" }) -- Will of the Forsaken
 -- When you first get in combat log range with a player,
 -- you'll get AURA_APPLIED event as if it was just applied, when it actually wasn't.
 -- That's extremely common for these long self-buffs
--- So I think it's better not to show anything rather than incorrect time.
+-- Long raid buffs now have cast filter, that is only if you directly casted a spell it'll register
+-- Cast Filter is ignored for enemies, so some personal buffs have it to still show enemy buffs
 
--- Spell({ 1243, 1244, 1245, 2791, 10937, 10938 }, { duration = 1800, type = "BUFF" }) -- Power Word: Fortitude
--- Spell({ 21562, 21564 }, { duration = 3600, type = "BUFF" }) -- Prayer of Fortitude
--- Spell({ 976, 10957, 10958 }, { duration = 600, type = "BUFF" }) -- Shadow Protection
--- Spell( 27683, { duration = 600, type = "BUFF" }) -- Prayer of Shadow Protection
--- Spell({ 14752, 14818, 14819, 27841 }, { duration = 1800, type = "BUFF" }) -- Divine Spirit
--- Spell( 27681, { duration = 3600, type = "BUFF" }) -- Prayer of Spirit
+Spell({ 1243, 1244, 1245, 2791, 10937, 10938 }, { duration = 1800, type = "BUFF", castFilter = true }) -- Power Word: Fortitude
+Spell({ 21562, 21564 }, { duration = 3600, type = "BUFF", castFilter = true }) -- Prayer of Fortitude
+Spell({ 976, 10957, 10958 }, { duration = 600, type = "BUFF", castFilter = true }) -- Shadow Protection
+Spell( 27683, { duration = 600, type = "BUFF", castFilter = true }) -- Prayer of Shadow Protection
+Spell({ 14752, 14818, 14819, 27841 }, { duration = 1800, type = "BUFF", castFilter = true }) -- Divine Spirit
+Spell( 27681, { duration = 3600, type = "BUFF", castFilter = true }) -- Prayer of Spirit
+
+Spell({ 588, 602, 1006, 7128, 10951, 10952 }, { duration = 600, type = "BUFF", castFilter = true }) -- Inner Fire
 
 Spell({ 14743, 27828 }, { duration = 6, type = "BUFF" }) -- Focused Casting (Martyrdom)
 Spell( 27827, { duration = 10, type = "BUFF" }) -- Spirit of Redemption
 Spell( 15271, { duration = 15, type = "BUFF" }) -- Spirit Tap
 
-Spell({ 2652, 19261, 19262, 19264, 19265, 19266 }, { duration = 600, type = "BUFF" }) -- Touch of Weakness
+Spell({ 2652, 19261, 19262, 19264, 19265, 19266 }, { duration = 600, type = "BUFF", castFilter = true }) -- Touch of Weakness
 Spell({ 13896, 19271, 19273, 19274, 19275 }, { duration = 15, type = "BUFF" }) -- Feedback
 Spell({ 2651, 19289, 19291, 19292, 19293 }, { duration = 15, type = "BUFF" }) -- Elune's Grace
 Spell({ 9035, 19281, 19282, 19283, 19284, 19285 }, { duration = 120 }) -- Hex of Weakness
@@ -143,11 +146,11 @@ Spell({ 605, 10911, 10912 }, { duration = 60 }) -- Mind Control
 -- DRUID
 ---------------
 
--- Spell({ 1126, 5232, 5234, 6756, 8907, 9884, 9885 }, { duration = 1800, type = "BUFF" }) -- Mark of the Wild
--- Spell({ 21849, 21850 }, { duration = 3600, type = "BUFF" }) -- Gift of the Wild
+Spell({ 1126, 5232, 5234, 6756, 8907, 9884, 9885 }, { duration = 1800, type = "BUFF", castFilter = true }) -- Mark of the Wild
+Spell({ 21849, 21850 }, { duration = 3600, type = "BUFF", castFilter = true }) -- Gift of the Wild
 Spell( 19975, { duration = 12 }) -- Nature's Grasp root
 Spell({ 16689, 16810, 16811, 16812, 16813, 17329 }, { duration = 45, type = "BUFF" }) -- Nature's Grasp
-Spell( 16864, { duration = 600, type = "BUFF" }) -- Omen of Clarity
+Spell( 16864, { duration = 600, type = "BUFF", castFilter = true }) -- Omen of Clarity
 Spell( 16870, { duration = 15, type = "BUFF" }) -- Clearcasting from OoC
 
 
@@ -367,7 +370,7 @@ Spell( 14251 , { duration = 6 }) -- Riposte (disarm)
 ------------
 
 Spell({ 20707, 20762, 20763, 20764, 20765 }, { duration = 1800, type = "BUFF" }) -- Soulstone Resurrection
--- Spell({ 687, 696, 706, 1086, 11733, 11734, 11735 }, { duration = 1800, type = "BUFF" }) -- Demon SKin/Armor
+Spell({ 687, 696, 706, 1086, 11733, 11734, 11735 }, { duration = 1800, type = "BUFF", castFilter = true }) -- Demon SKin/Armor
 -- Spell({ 18791, 18789, 18792, 18790 }, { duration = 1800, type = "BUFF" })  -- Touch of Shadow, Burning Wish, Fel Energy, Fel Stamina
 
 --SKIPPING: Drain Life, Mana, Soul, Enslave, Health funnel, kilrog
@@ -559,7 +562,7 @@ Spell( 20170 ,{ duration = 2 }) -- Seal of Justice stun
 -- HUNTER
 -------------
 
--- Spell({ 19506, 20905, 20906 }, { duration = 1800, type = "BUFF" }) -- Trueshot Aura
+Spell({ 19506, 20905, 20906 }, { duration = 1800, type = "BUFF", castFilter = true }) -- Trueshot Aura
 --SKIPPING: Frenzy
 Spell({ 1130, 14323, 14324, 14325 }, { duration = 120 }) -- Hunter's Mark
 Spell(19263, { duration = 10, type = "BUFF" }) -- Deterrence
@@ -606,10 +609,10 @@ Spell(25999, { duration = 1 }) -- Boar Charge
 -- MAGE
 -------------
 
--- Spell({ 1459, 1460, 1461, 10156, 10157 }, { duration = 1800, type = "BUFF" }) -- Arcane Intellect
--- Spell( 23028, { duration = 1800, type = "BUFF" }) -- Arcane Brilliance
--- Spell({ 6117, 22782, 22783 }, { duration = 1800, type = "BUFF" }) -- Mage Armor
--- Spell({ 168, 7300, 7301, 7302, 7320, 10219, 10220 }, { duration = 1800, type = "BUFF" }) -- Frost/Ice Armor
+Spell({ 1459, 1460, 1461, 10156, 10157 }, { duration = 1800, type = "BUFF", castFilter = true }) -- Arcane Intellect
+Spell( 23028, { duration = 1800, type = "BUFF", castFilter = true }) -- Arcane Brilliance
+Spell({ 6117, 22782, 22783 }, { duration = 1800, type = "BUFF", castFilter = true }) -- Mage Armor
+Spell({ 168, 7300, 7301, 7302, 7320, 10219, 10220 }, { duration = 1800, type = "BUFF", castFilter = true }) -- Frost/Ice Armor
 
 Spell( 2855, { duration = 1800, type = "BUFF" }) -- Detect Magic
 Spell( 130, { duration = 1800, type = "BUFF" }) -- Slow Fall
@@ -622,7 +625,7 @@ Spell({ 133, 143, 145, 3140, 8400, 8401, 8402, 10148, 10149, 10150, 10151, 25306
         else return 8 end
     end
 }) -- Fireball
-
+Spell({ 11366, 12505, 12522, 12523, 12524, 12525, 12526, 18809 }, { duration = 12 }) -- Pyroblast
 
 Spell({ 604, 8450, 8451, 10173, 10174 }, { duration = 600, type = "BUFF" }) -- Dampen Magic
 Spell({ 1008, 8455, 10169, 10170 }, { duration = 600, type = "BUFF" }) -- Amplify Magic
