@@ -5,7 +5,7 @@ if not C.Infobar.Guild then return end
 local module = B:GetModule("Infobar")
 local info = module:RegisterInfobar("Guild", C.Infobar.GuildPos)
 
-local wipe, sort, format, select = table.wipe, table.sort, format, select
+local wipe, sort, format, select, strfind = table.wipe, table.sort, format, select, strfind
 local CLASS_ICON_TCOORDS, SELECTED_DOCK_FRAME = CLASS_ICON_TCOORDS, SELECTED_DOCK_FRAME
 local LEVEL_ABBR, CLASS_ABBR, NAME, ZONE, RANK, GUILDINFOTAB_APPLICANTS, REMOTE_CHAT = LEVEL_ABBR, CLASS_ABBR, NAME, ZONE, RANK, GUILDINFOTAB_APPLICANTS, REMOTE_CHAT
 local IsAltKeyDown, IsShiftKeyDown, InviteToGroup, C_Timer_After, GetTime, Ambiguate, MouseIsOver = IsAltKeyDown, IsShiftKeyDown, InviteToGroup, C_Timer.After, GetTime, Ambiguate, MouseIsOver
@@ -16,6 +16,8 @@ local GetQuestDifficultyColor, GetRealZoneText, UnitInRaid, UnitInParty = GetQue
 
 local r, g, b = DB.r, DB.g, DB.b
 local infoFrame, gName, gOnline, gRank, applyData, prevTime
+local onlineString = gsub(ERR_FRIEND_ONLINE_SS, ".+h", "")
+local offlineString = gsub(ERR_FRIEND_OFFLINE_S, "%%s", "")
 
 local function scrollBarHook(self, delta)
 	local scrollBar = self.ScrollBar
@@ -179,10 +181,7 @@ local function setPosition()
 end
 
 local function refreshData()
-	if not prevTime or (GetTime()-prevTime > 5) then
-		GuildRoster()
-		prevTime = GetTime()
-	end
+	GuildRoster()
 
 	wipe(guildTable)
 	local count = 0
@@ -279,19 +278,22 @@ info.eventList = {
 	"PLAYER_ENTERING_WORLD",
 	"GUILD_ROSTER_UPDATE",
 	"PLAYER_GUILD_UPDATE",
+	"CHAT_MSG_SYSTEM",
 }
 
-info.onEvent = function(self, event, ...)
+info.onEvent = function(self, event, arg1)
 	if not IsInGuild() then
 		self.text:SetText(GUILD..": "..DB.MyColor..NONE)
 		return
 	end
 
+	if event == "CHAT_MSG_SYSTEM" then
+		if not strfind(arg1, onlineString) and not strfind(arg1, offlineString) then return end
+		GuildRoster()
+	end
+
 	if event == "GUILD_ROSTER_UPDATE" then
-		local canRequestRosterUpdate = ...
-		if canRequestRosterUpdate then
-			GuildRoster()
-		end
+		if arg1 then GuildRoster() end
 	end
 
 	local online = select(3, GetNumGuildMembers())
