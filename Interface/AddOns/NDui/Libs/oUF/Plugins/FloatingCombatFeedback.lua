@@ -10,11 +10,11 @@ assert(oUF, "oUF FloatingCombatFeedback was unable to locate oUF install")
 -- Libs
 DB.LibClassicDurations = LibStub("LibClassicDurations")
 DB.LibClassicDurations:RegisterFrame("NDui")
-local LCD = DB.LibClassicDurations
 
 local _G = getfenv(0)
 local select, tremove, tinsert, wipe = _G.select, _G.table.remove, _G.table.insert, _G.table.wipe
 local m_cos, m_sin, m_pi, m_random = _G.math.cos, _G.math.sin, _G.math.pi, _G.math.random
+local strupper = strupper
 
 local UnitGUID = _G.UnitGUID
 local GetSpellTexture = _G.GetSpellTexture
@@ -202,7 +202,7 @@ end
 local function getFloatingIconTexture(iconType, spellID, isPet)
 	local texture
 	if iconType == "spell" then
-		texture = getTexture(spellID) or 136243
+		texture = getTexture(spellID)
 	elseif iconType == "swing" then
 		if isPet then
 			texture = PET_ATTACK_TEXTURE
@@ -249,7 +249,7 @@ local function onEvent(self, event, ...)
 		element.unitGUID = unitGUID
 	end
 	local multiplier = 1
-	local text, color, texture, critMark
+	local text, color, texture, critMark, name
 
 	if event == "COMBAT_LOG_EVENT_UNFILTERED" then
 		local _, eventType, _, sourceGUID, _, sourceFlags, _, destGUID, _, _, _, spellID, spellName, school = ...
@@ -263,12 +263,6 @@ local function onEvent(self, event, ...)
 			local value = eventFilter[eventType]
 			if not value then return end
 
-			if isPlayer then
-				spellID = LCD.spellNameToID[spellName]
-			else
-				spellID = LCD.NPCspellNameToID[spellName]
-			end
-
 			if value.suffix == "DAMAGE" then
 				if value.autoAttack and not element.showAutoAttack then return end
 				if value.isPeriod and not element.showHots then return end
@@ -276,6 +270,7 @@ local function onEvent(self, event, ...)
 				local amount, _, _, _, _, _, critical, _, crushing = select(value.index, ...)
 				texture = getFloatingIconTexture(value.iconType, spellID, isPet)
 				text = "-"..formatNumber(self, amount)
+				name = spellName
 
 				if critical or crushing then
 					multiplier = 1.25
@@ -293,6 +288,7 @@ local function onEvent(self, event, ...)
 				end
 				if amount == 0 and not element.showOverHealing then return end
 				text = "+"..formatNumber(self, amount)..overhealText
+				name = spellName
 
 				if critical then
 					multiplier = 1.25
@@ -302,10 +298,13 @@ local function onEvent(self, event, ...)
 				local missType = select(value.index, ...)
 				texture = getFloatingIconTexture(value.iconType, spellID, isPet)
 				text = getMissText(missType)
+				name = ATTACK
 			elseif value.suffix == "ENVIRONMENT" then
 				local envType, amount = select(value.index, ...)
 				texture = getFloatingIconTexture(value.iconType, envType)
 				text = "-"..formatNumber(self, amount)
+				envType = strupper(envType)
+				name = _G["ACTION_ENVIRONMENTAL_DAMAGE_"..envType]
 			end
 
 			color = schoolColors[school] or schoolColors[0]
@@ -324,12 +323,16 @@ local function onEvent(self, event, ...)
 		critMark = true
 	end
 
-	if text and texture then
+	if text and (texture or name) then
 		local animation = element.defaultMode
 		local string = getAvailableString(element)
 
 		string:SetFont(element.font, element.fontHeight * multiplier, element.fontFlags)
-		string:SetFormattedText(element.format, texture, (critMark and "*" or "")..text)
+		if texture then
+			string:SetFormattedText(element.textureFormat, texture, (critMark and "*" or "")..text)
+		else
+			string:SetFormattedText(element.nameFormat, name, (critMark and "*" or "")..text)
+		end
 		string:SetTextColor(color.r, color.g, color.b)
 		string.elapsed = 0
 		string.GetXY = animations[animation]
@@ -374,7 +377,8 @@ local function Enable(self, unit)
 	element.__owner = self
 	element.ForceUpdate = ForceUpdate
 	element.defaultMode = "vertical"
-	element.format = "|T%s:18:18:-2:0:64:64:5:59:5:59|t%s"
+	element.textureFormat = "|T%s:18:18:-2:0:64:64:5:59:5:59|t%s"
+	element.nameFormat = "%s %s"
 	element.xDirection = 1
 	element.yDirection = element.yDirection or 1
 	element.scrollTime = element.scrollTime or 2
