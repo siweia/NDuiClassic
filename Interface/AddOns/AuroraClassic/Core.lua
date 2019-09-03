@@ -379,13 +379,14 @@ function F:ReskinInput(height, width)
 	middle:Hide()
 	right:Hide()
 
-	local bd = F.CreateBDFrame(self, 0)
-	bd:SetPoint("TOPLEFT", -2, 0)
-	bd:SetPoint("BOTTOMRIGHT")
+	local bg = F.CreateBDFrame(self, 0)
+	bg:SetPoint("TOPLEFT", -2, 0)
+	bg:SetPoint("BOTTOMRIGHT")
+	self.bg = bg
 
 	local gradient = F.CreateGradient(self)
-	gradient:SetPoint("TOPLEFT", bd, C.mult, -C.mult)
-	gradient:SetPoint("BOTTOMRIGHT", bd, -C.mult, C.mult)
+	gradient:SetPoint("TOPLEFT", bg, C.mult, -C.mult)
+	gradient:SetPoint("BOTTOMRIGHT", bg, -C.mult, C.mult)
 
 	if height then self:SetHeight(height) end
 	if width then self:SetWidth(width) end
