@@ -118,8 +118,8 @@ function S:OnLogin()
 	self:SkadaSkin()
 	self:BigWigsSkin()
 	self:PGFSkin()
-	self:ReskinRematch()
 	self:PostalSkin()
+	self:ReskinQuestLogEx()
 
 	-- Register skin
 	local media = LibStub and LibStub("LibSharedMedia-3.0", true)
