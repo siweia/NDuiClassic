@@ -1,9 +1,8 @@
 # ScreenShot
 ![1](http://wx4.sinaimg.cn/large/7112bfffgy1fwr835r4grj21hc0u0kjm.jpg)
 
-# NDui Intro
-- This is not just an UI that changes your ingame appearence.
-- It contains build-in auras watcher and toolbar for all specs and talents.
+# NDui Classic
+- A classic version of [NDui](https://github.com/siweia/NDui) for World of Warcraft classic.
 - Locales include 简体中文, 繁體中文 and enUS.
 - Published Pages:
   - NGA: https://bbs.nga.cn/read.php?tid=18321155
