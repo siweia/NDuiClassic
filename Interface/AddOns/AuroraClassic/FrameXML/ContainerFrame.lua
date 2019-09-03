@@ -1,6 +1,8 @@
 local F, C = unpack(select(2, ...))
 
 tinsert(C.themes["AuroraClassic"], function()
+	if C.isClassic then return end
+
 	if not AuroraConfig.bags then return end
 
 	local r, g, b = C.r, C.g, C.b
