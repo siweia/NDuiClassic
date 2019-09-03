@@ -23,9 +23,6 @@ local list = {
 	["Spell Cooldown"] = {	-- 冷却计时组
 		{SlotID = 13},		-- 饰品1
 		{SlotID = 14},		-- 饰品2
-		{TotemID = 1},		-- 能量符文
-		{SpellID = 12472},	-- 冰冷血脉
-		{SpellID = 12042},	-- 奥术强化
 	},
 }
 
