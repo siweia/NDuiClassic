@@ -128,6 +128,7 @@ tinsert(C.themes["AuroraClassic"], function()
 	F.Reskin(QuestFramePushQuestButton)
 	F.Reskin(QuestFrameExitButton)
 	F.ReskinScroll(QuestLogDetailScrollFrameScrollBar)
+	F.ReskinScroll(QuestLogListScrollFrameScrollBar)
 
 	F.ReskinExpandOrCollapse(QuestLogCollapseAllButton)
 	QuestLogCollapseAllButton:DisableDrawLayer("BACKGROUND")
@@ -160,4 +161,9 @@ tinsert(C.themes["AuroraClassic"], function()
 			F.Reskin(CodexQuestReset)
 		end
 	end)
+
+	-- QuestTimerFrame
+
+	F.StripTextures(QuestTimerFrame)
+	F.CreateSD(F.CreateBDFrame(QuestTimerFrame))
 end)
