@@ -25,6 +25,17 @@ function S:QuestTracker()
 		end
 	end)
 
+	local timerMover = CreateFrame("Frame", "NDuiQuestTimerMover", UIParent)
+	timerMover:SetSize(150, 30)
+	B.Mover(timerMover, QUEST_TIMERS, "QuestTimer", {"TOPRIGHT", frame, "TOPLEFT", -10, 0})
+
+	hooksecurefunc(QuestTimerFrame, "SetPoint", function(self, _, parent)
+		if parent ~= timerMover then
+			self:ClearAllPoints()
+			self:SetPoint("TOP", timerMover)
+		end
+	end)
+
 	-- Show quest color and level
 	local function Showlevel(self)
 		local numEntries = GetNumQuestLogEntries()
