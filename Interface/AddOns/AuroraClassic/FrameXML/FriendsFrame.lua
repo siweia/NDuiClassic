@@ -76,7 +76,7 @@ tinsert(C.themes["AuroraClassic"], function()
 			reskinInvites(FriendsFrameFriendsScrollFrame.invitePool)
 		elseif button.buttonType == FRIENDS_BUTTON_TYPE_BNET then
 			local nt = button.travelPassButton:GetNormalTexture()
-			if FriendsFrame_GetInviteRestriction(button.id) == 6 then
+			if FriendsFrame_GetInviteRestriction(button.id) == 8 then
 				nt:SetVertexColor(1, 1, 1)
 			else
 				nt:SetVertexColor(.3, .3, .3)
@@ -183,7 +183,8 @@ tinsert(C.themes["AuroraClassic"], function()
 	F.Reskin(GuildFrameAddMemberButton)
 	F.Reskin(GuildFrameControlButton)
 	F.StripTextures(GuildFrameLFGFrame)
-	F.Reskin(GuildFrameLFGButton)
+	F.ReskinCheck(GuildFrameLFGButton)
+	F.ReskinScroll(GuildListScrollFrameScrollBar)
 	for i = 1, 4 do
 		F.ReskinTab(_G["GuildFrameColumnHeader"..i])
 		F.ReskinTab(_G["GuildFrameGuildStatusColumnHeader"..i])
@@ -222,5 +223,6 @@ tinsert(C.themes["AuroraClassic"], function()
 	F.Reskin(GuildControlPopupFrameCancelButton)
 	for i = 1, 13 do
 		F.ReskinCheck(_G["GuildControlPopupFrameCheckbox"..i])
+		_G["GuildFrameButton"..i.."Level"]:SetWidth(30)
 	end
 end)
