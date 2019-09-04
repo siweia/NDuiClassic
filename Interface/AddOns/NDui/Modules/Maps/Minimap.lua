@@ -284,6 +284,8 @@ function module:SetupMinimap()
 		"MiniMapWorldMapButton",
 		"MiniMapMailBorder",
 		--"MiniMapTracking",
+		"MinimapToggleButton",
+		"GameTimeFrame",
 	}
 
 	for _, v in pairs(frames) do
