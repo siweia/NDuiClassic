@@ -1,7 +1,7 @@
 local lib = LibStub and LibStub("LibClassicDurations", true)
 if not lib then return end
 
-local Type, Version = "SpellTable", 20
+local Type, Version = "SpellTable", 21
 if lib:GetDataVersion(Type) >= Version then return end  -- older versions didn't have that function
 
 local Spell = lib.AddAura
@@ -137,7 +137,7 @@ Spell({ 589, 594, 970, 992, 2767, 10892, 10893, 10894 }, { stacking = true,
     end
 }) -- SW:P
 Spell( 15269 ,{ duration = 3 }) -- Blackout
-Spell( 15258 ,{ duration = 15 }) -- Shadow Vulnerability
+-- Spell( 15258 ,{ duration = 15 }) -- Shadow Vulnerability
 Spell( 15286 ,{ duration = 60 }) -- Vampiric Embrace
 Spell({ 15407, 17311, 17312, 17313, 17314, 18807 }, { duration = 3 }) -- Mind Flay
 Spell({ 605, 10911, 10912 }, { duration = 60 }) -- Mind Control
@@ -195,7 +195,8 @@ Spell({ 1850, 9821 }, { duration = 15, type = "BUFF" }) -- Dash
 Spell( 5229, { duration = 10, type = "BUFF" }) -- Enrage
 Spell({ 22842, 22895, 22896 }, { duration = 10, type = "BUFF" }) -- Frenzied Regeneration
 Spell( 16922, { duration = 3 }) -- Imp Starfire Stun
-Spell({ 9005, 9823, 9827 }, {
+
+Spell({ 9005, 9823, 9827 }, { -- Pounce stun doesn't create a debuff icon, so this is not going to be used
     duration = function(spellID)
         local brutal_impact = Talent(16940, 16941)*0.5
         return 2+brutal_impact
@@ -304,8 +305,8 @@ Spell( 14278 , { duration = 7, type = "BUFF" }) -- Ghostly Strike
 Spell({ 16511, 17347, 17348 }, { duration = 15 }) -- Hemorrhage
 Spell({ 11327, 11329 }, { duration = 10 }) -- Vanish
 Spell({ 3409, 11201 }, { duration = 12 }) -- Crippling Poison
-Spell({ 13218, 13222, 13223, 13224 }, { duration = 15 }) -- Wound Poison
-Spell({ 2818, 2819, 11353, 11354, 25349 }, { duration = 12, stacking = true }) -- Deadly Poison
+-- Spell({ 13218, 13222, 13223, 13224 }, { duration = 15 }) -- Wound Poison
+-- Spell({ 2818, 2819, 11353, 11354, 25349 }, { duration = 12, stacking = true }) -- Deadly Poison
 Spell({ 5760, 8692, 11398 }, {
     duration = function(spellID)
         if spellID == 5760 then return 10
@@ -379,7 +380,7 @@ Spell({ 17767, 17850, 17851, 17852, 17853, 17854 }, { duration = 10 }) -- Consum
 Spell( 18118, { duration = 5 }) -- Aftermath Proc
 Spell({ 132, 2970, 11743 }, { duration = 600 }) -- Detect Invisibility
 Spell( 5697, { duration = 600 }) -- Unending Breath
-Spell({ 17794, 17798, 17797, 17799, 17800 }, { duration = 12 }) -- Shadow Vulnerability (Imp Shadow Bolt)
+-- Spell({ 17794, 17798, 17797, 17799, 17800 }, { duration = 12 }) -- Shadow Vulnerability (Imp Shadow Bolt)
 -- SKIPPING: Amplify Curse
 Spell({ 1714, 11719 }, { duration = 30 }) -- Curse of Tongues
 Spell({ 702, 1108, 6205, 7646, 11707, 11708 },{ duration = 120 }) -- Curse of Weakness
@@ -648,9 +649,9 @@ Spell({ 6143, 8461, 8462, 10177, 28609 }, { duration = 30, type = "BUFF" }) -- F
 Spell(12355, { duration = 2 }) -- Impact
 Spell(12654, { duration = 4 }) -- Ignite
 
-if locale ~= "zhCN" or class == "MAGE" then
-Spell(22959, { duration = 30 }) -- Fire Vulnerability
-end
+-- if locale ~= "zhCN" or class == "MAGE" then
+-- Spell(22959, { duration = 30 }) -- Fire Vulnerability
+-- end
 
 Spell({ 11113, 13018, 13019, 13020, 13021 }, { duration = 6 }) -- Blast Wave
 

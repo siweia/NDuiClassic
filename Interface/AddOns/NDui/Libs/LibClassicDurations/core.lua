@@ -61,7 +61,7 @@ Usage example 2:
 --]================]
 
 
-local MAJOR, MINOR = "LibClassicDurations", 16
+local MAJOR, MINOR = "LibClassicDurations", 17
 local lib = LibStub:NewLibrary(MAJOR, MINOR)
 if not lib then return end
 
@@ -404,6 +404,7 @@ function f:UNIT_SPELLCAST_SUCCEEDED(event, unit, castID, spellID)
     lastSpellCastName = GetSpellInfo(spellID)
 end
 
+local SunderArmorName = GetSpellInfo(11597)
 ---------------------------
 -- COMBAT LOG HANDLER
 ---------------------------
@@ -413,6 +414,13 @@ function f:COMBAT_LOG_EVENT_UNFILTERED(event)
     srcGUID, srcName, srcFlags, srcFlags2,
     dstGUID, dstName, dstFlags, dstFlags2,
     spellID, spellName, spellSchool, auraType, amount = CombatLogGetCurrentEventInfo()
+
+    if spellName == SunderArmorName then
+        if eventType == "SPELL_CAST_SUCCESS" then
+            eventType = "SPELL_AURA_REFRESH"
+            auraType = "DEBUFF"
+        end
+    end
 
     if auraType == "BUFF" or auraType == "DEBUFF" then
         local isSrcPlayer = bit_band(srcFlags, COMBATLOG_OBJECT_TYPE_PLAYER) > 0
