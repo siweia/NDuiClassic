@@ -9,7 +9,7 @@ local SELL_PRICE_TEXT = format("%s:", SELL_PRICE)
 local function SetGameToolTipPrice(tt)
 	local container = GetMouseFocus()
 	if container and container.GetName then -- Auctionator sanity check
-		local name = container:GetName()
+		local name = container:GetName() or ""
 		-- price is already shown at vendor for bag items
 		if not MerchantFrame:IsShown() or strfind(name, "Character") or strfind(name, "TradeSkill") then
 			local itemLink = select(2, tt:GetItem())
