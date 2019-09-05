@@ -122,7 +122,8 @@ local defaultSettings = {
 		BlockAddonAlert = true,
 		ChatMenu = true,
 		WhisperColor = true,
-		ChatItemLevel = true,
+		--ChatItemLevel = true,
+		Chatbar = true,
 	},
 	Map = {
 		Coord = true,
@@ -602,7 +603,8 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Chat", "Sticky", L["Chat Sticky"].."*", nil, nil, updateChatSticky},
 		{1, "Chat", "WhisperColor", L["Differ WhipserColor"].."*", true},
 		{1, "Chat", "Freedom", L["Language Filter"]},
-		{1, "Chat", "ChatItemLevel", "|cff00cc4c"..L["ShowChatItemLevel"], true},
+		{1, "Chat", "Chatbar", L["ShowChatbar"], true},
+		--{1, "Chat", "ChatItemLevel", "|cff00cc4c"..L["ShowChatItemLevel"]},
 		{},--blank
 		{1, "Chat", "EnableFilter", "|cff00cc4c"..L["Enable Chatfilter"]},
 		{1, "Chat", "BlockAddonAlert", L["Block Addon Alert"], true},
