@@ -122,7 +122,10 @@ QuickQuest:Register("QUEST_GREETING", function()
 	local available = GetNumAvailableQuests()
 	if(available > 0) then
 		for index = 1, available do
-			SelectAvailableQuest(index)
+			local isTrivial = IsActiveQuestTrivial(index)
+			if not isTrivial then
+				SelectAvailableQuest(index)
+			end
 		end
 	end
 end)
