@@ -194,6 +194,8 @@ function F:ReskinTab()
 	local hl = self:GetHighlightTexture()
 	hl:SetAllPoints(bg)
 	hl:SetVertexColor(r, g, b, .25)
+
+	return bg
 end
 
 local function textureOnEnter(self)

@@ -186,8 +186,12 @@ tinsert(C.themes["AuroraClassic"], function()
 	F.ReskinCheck(GuildFrameLFGButton)
 	F.ReskinScroll(GuildListScrollFrameScrollBar)
 	for i = 1, 4 do
-		F.ReskinTab(_G["GuildFrameColumnHeader"..i])
-		F.ReskinTab(_G["GuildFrameGuildStatusColumnHeader"..i])
+		local bg = F.ReskinTab(_G["GuildFrameColumnHeader"..i])
+		bg:SetPoint("TOPLEFT", 5, -2)
+		bg:SetPoint("BOTTOMRIGHT", 0, 0)
+		local bg = F.ReskinTab(_G["GuildFrameGuildStatusColumnHeader"..i])
+		bg:SetPoint("TOPLEFT", 5, -2)
+		bg:SetPoint("BOTTOMRIGHT", 0, 0)
 	end
 
 	F.StripTextures(GuildMemberDetailFrame)
