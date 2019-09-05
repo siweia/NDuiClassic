@@ -25,27 +25,11 @@ tinsert(C.themes["AuroraClassic"], function()
 	QuestInfoItemHighlight:HookScript("OnHide", clearHighlight)
 
 	-- Quest objective text color
-	local function QuestInfo_GetQuestID()
-		if QuestInfoFrame.questLog then
-			return select(8, GetQuestLogTitle(GetQuestLogSelection()))
-		else
-			return GetQuestID()
-		end
-	end
-
 	local function colourObjectivesText()
 		if not QuestInfoFrame.questLog then return end
 
-		local questID = QuestInfo_GetQuestID()
 		local objectivesTable = QuestInfoObjectivesFrame.Objectives
 		local numVisibleObjectives = 0
-
-		local waypointText = C_QuestLog.GetNextWaypointText(questID);
-		if waypointText then
-			numVisibleObjectives = numVisibleObjectives + 1;
-			objective = objectivesTable[numVisibleObjectives]
-			objective:SetTextColor(1, 1, 1)
-		end
 
 		for i = 1, GetNumQuestLeaderBoards() do
 			local _, type, finished = GetQuestLogLeaderBoard(i)
@@ -64,7 +48,6 @@ tinsert(C.themes["AuroraClassic"], function()
 			end
 		end
 	end
-	--hooksecurefunc("QuestMapFrame_ShowQuestDetails", colourObjectivesText)
 
 	-- Reskin rewards
 	local function restyleSpellButton(bu)
@@ -150,30 +133,6 @@ tinsert(C.themes["AuroraClassic"], function()
 			-- Spell Headers
 			for spellHeader in rewardsFrame.spellHeaderPool:EnumerateActive() do
 				spellHeader:SetVertexColor(1, 1, 1)
-			end
-			-- Follower Rewards
-			for reward in rewardsFrame.followerRewardPool:EnumerateActive() do
-				local portrait = reward.PortraitFrame
-				if not reward.bg then
-					F.ReskinGarrisonPortrait(portrait)
-					reward.BG:Hide()
-					reward.bg = F.CreateBDFrame(reward, .25)
-				end
-
-				if isQuestLog then
-					portrait:SetPoint("TOPLEFT", 2, 0)
-					reward.bg:SetPoint("TOPLEFT", 0, 1)
-					reward.bg:SetPoint("BOTTOMRIGHT", 2, -3)
-				else
-					portrait:SetPoint("TOPLEFT", 2, -5)
-					reward.bg:SetPoint("TOPLEFT", 0, -3)
-					reward.bg:SetPoint("BOTTOMRIGHT", 2, 7)
-				end
-
-				if portrait then
-					local color = BAG_ITEM_QUALITY_COLORS[portrait.quality or 1]
-					portrait.squareBG:SetBackdropBorderColor(color.r, color.g, color.b)
-				end
 			end
 			-- Spell Rewards
 			for spellReward in rewardsFrame.spellRewardPool:EnumerateActive() do
