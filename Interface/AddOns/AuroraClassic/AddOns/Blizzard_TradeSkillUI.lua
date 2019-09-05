@@ -19,7 +19,8 @@ C.themes["Blizzard_CraftUI"] = function()
 	F.ReskinExpandOrCollapse(CraftCollapseAllButton)
 	CraftExpandButtonFrame:DisableDrawLayer("BACKGROUND")
 
-	hooksecurefunc("CraftFrame_SetSelection", function()
+	hooksecurefunc("CraftFrame_SetSelection", function(id)
+		if not id then return end
 		local tex = CraftIcon:GetNormalTexture()
 		if tex then
 			tex:SetTexCoord(.08, .92, .08, .92)
@@ -70,6 +71,9 @@ C.themes["Blizzard_TradeSkillUI"] = function()
 	F.CreateBDFrame(TradeSkillSkillIcon)
 
 	hooksecurefunc("TradeSkillFrame_SetSelection", function(id)
+		local skillType = select(2, GetTradeSkillInfo(id))
+		if skillType == "header" then return end
+
 		local tex = TradeSkillSkillIcon:GetNormalTexture()
 		if tex then
 			tex:SetTexCoord(.08, .92, .08, .92)
