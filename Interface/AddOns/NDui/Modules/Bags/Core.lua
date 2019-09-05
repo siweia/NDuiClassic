@@ -200,7 +200,8 @@ function module:OnLogin()
 	local bankWidth = NDuiDB["Bags"]["BankWidth"]
 	local iconSize = NDuiDB["Bags"]["IconSize"]
 	local artifaceMark = NDuiDB["Bags"]["Artifact"]
-	local showItemLevel = NDuiDB["Bags"]["BagsiLvl"]
+	--local showItemLevel = NDuiDB["Bags"]["BagsiLvl"]
+	local showItemLevel = false
 	local deleteButton = NDuiDB["Bags"]["DeleteButton"]
 	local itemSetFilter = NDuiDB["Bags"]["ItemSetFilter"]
 

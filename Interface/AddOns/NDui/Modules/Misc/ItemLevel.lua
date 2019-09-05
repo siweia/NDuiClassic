@@ -116,10 +116,10 @@ function M:RefreshButtonInfo()
 			self:Hide()
 			return
 		end
+	else
+		wipe(pending)
+		self:Hide()
 	end
-
-	wipe(pending)
-	self:Hide()
 end
 
 function M:ItemLevel_SetupLevel(frame, strType, unit)
@@ -183,68 +183,6 @@ function M:ItemLevel_UpdateInspect(...)
 	local guid = ...
 	if InspectFrame and InspectFrame.unit and UnitGUID(InspectFrame.unit) == guid then
 		M:ItemLevel_SetupLevel(InspectFrame, "Inspect", InspectFrame.unit)
-	end
-end
-
-function M:ItemLevel_FlyoutUpdate(bag, slot, quality)
-	if not self.iLvl then
-		self.iLvl = B.CreateFS(self, DB.Font[2]+1, "", false, "BOTTOMLEFT", 1, 1)
-	end
-
-	local link, level
-	if bag then
-		link = GetContainerItemLink(bag, slot)
-		level = B.GetItemLevel(link, bag, slot)
-	else
-		link = GetInventoryItemLink("player", slot)
-		level = B.GetItemLevel(link, "player", slot)
-	end
-
-	local color = BAG_ITEM_QUALITY_COLORS[quality or 1]
-	self.iLvl:SetText(level)
-	self.iLvl:SetTextColor(color.r, color.g, color.b)
-end
-
-function M:ItemLevel_FlyoutSetup()
-	local location = self.location
-	if not location or location >= EQUIPMENTFLYOUT_FIRST_SPECIAL_LOCATION then
-		if self.iLvl then self.iLvl:SetText("") end
-		return
-	end
-
-	local _, _, bags, voidStorage, slot, bag = EquipmentManager_UnpackLocation(location)
-	if voidStorage then return end
-	local quality = select(13, EquipmentManager_GetItemInfoByLocation(location))
-	if bags then
-		M.ItemLevel_FlyoutUpdate(self, bag, slot, quality)
-	else
-		M.ItemLevel_FlyoutUpdate(self, nil, slot, quality)
-	end
-end
-
-function M:ItemLevel_ScrappingUpdate()
-	if not self.iLvl then
-		self.iLvl = B.CreateFS(self, DB.Font[2]+1, "", false, "BOTTOMLEFT", 1, 1)
-	end
-	if not self.itemLink then self.iLvl:SetText("") return end
-
-	local quality = 1
-	if self.itemLocation and not self.item:IsItemEmpty() and self.item:GetItemName() then
-		quality = self.item:GetItemQuality()
-	end
-	local level = B.GetItemLevel(self.itemLink)
-	local color = BAG_ITEM_QUALITY_COLORS[quality]
-	self.iLvl:SetText(level)
-	self.iLvl:SetTextColor(color.r, color.g, color.b)
-end
-
-function M.ItemLevel_ScrappingShow(event, addon)
-	if addon == "Blizzard_ScrappingMachineUI" then
-		for button in pairs(ScrappingMachineFrame.ItemSlots.scrapButtons.activeObjects) do
-			hooksecurefunc(button, "RefreshIcon", M.ItemLevel_ScrappingUpdate)
-		end
-
-		B:UnregisterEvent(event, M.ItemLevel_ScrappingShow)
 	end
 end
 

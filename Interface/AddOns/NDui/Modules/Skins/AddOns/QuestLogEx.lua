@@ -54,7 +54,7 @@ function S:ReskinQuestLogEx()
 	QuestLogExDescriptionTitle:SetTextColor(1, .8, 0)
 	for i = 1, 10 do
 		local text = _G["QuestLogExObjective"..i]
-		text:SetTextColor(.7, .7, .7)
+		text:SetTextColor(1, 1, 1)
 		text.SetTextColor = F.dummy
 	end
 	QuestLogExRewardTitleText:SetTextColor(1, .8, 0)
