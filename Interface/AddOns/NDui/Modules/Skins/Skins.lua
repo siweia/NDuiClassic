@@ -119,7 +119,7 @@ function S:OnLogin()
 	self:BigWigsSkin()
 	self:PGFSkin()
 	self:PostalSkin()
-	self:ReskinQuestLogEx()
+	self:ExtraQuestSkin()
 
 	-- Register skin
 	local media = LibStub and LibStub("LibSharedMedia-3.0", true)

@@ -97,6 +97,9 @@ function S:QuestTracker()
 			elseif ClassicQuestLog then -- https://www.wowinterface.com/downloads/info24937-ClassicQuestLogforClassic.html
 				ShowUIPanel(ClassicQuestLog)
 				QuestLog_SetSelection(self.questIndex)
+			elseif QuestGuru then -- https://www.curseforge.com/wow/addons/questguru_classic
+				ShowUIPanel(QuestGuru)
+				QuestLog_SetSelection(self.questIndex)
 			else
 				ShowUIPanel(QuestLogFrame)
 				QuestLog_SetSelection(self.questIndex)
