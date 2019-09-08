@@ -124,6 +124,8 @@ function S:ReskinQuestLogEx()
 	QuestLogExRewardTitleText.SetTextColor = F.dummy
 	QuestLogExItemChooseText:SetTextColor(1, 1, 1)
 	QuestLogExItemChooseText.SetTextColor = F.dummy
+	QuestLogExItemReceiveText:SetTextColor(1, 1, 1)
+	QuestLogExItemReceiveText.SetTextColor = F.dummy
 end
 
 function S:ExtraQuestSkin()
