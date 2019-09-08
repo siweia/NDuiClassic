@@ -3,10 +3,11 @@ local B, C, L, DB, F = unpack(ns)
 
 local module = B:RegisterModule("Bags")
 local cargBags = ns.cargBags
+
 local ipairs, strmatch, unpack = ipairs, string.match, unpack
 local BAG_ITEM_QUALITY_COLORS = BAG_ITEM_QUALITY_COLORS
 local LE_ITEM_QUALITY_POOR, LE_ITEM_QUALITY_RARE, LE_ITEM_QUALITY_ARTIFACT, LE_ITEM_QUALITY_HEIRLOOM = LE_ITEM_QUALITY_POOR, LE_ITEM_QUALITY_RARE, LE_ITEM_QUALITY_ARTIFACT, LE_ITEM_QUALITY_HEIRLOOM
-local LE_ITEM_CLASS_WEAPON, LE_ITEM_CLASS_ARMOR, EJ_LOOT_SLOT_FILTER_ARTIFACT_RELIC = LE_ITEM_CLASS_WEAPON, LE_ITEM_CLASS_ARMOR, EJ_LOOT_SLOT_FILTER_ARTIFACT_RELIC
+local LE_ITEM_CLASS_WEAPON, LE_ITEM_CLASS_ARMOR, LE_ITEM_CLASS_QUIVER = LE_ITEM_CLASS_WEAPON, LE_ITEM_CLASS_ARMOR, LE_ITEM_CLASS_QUIVER
 local GetContainerNumSlots, GetContainerItemInfo, PickupContainerItem = GetContainerNumSlots, GetContainerItemInfo, PickupContainerItem
 local C_NewItems_IsNewItem, C_Timer_After = C_NewItems.IsNewItem, C_Timer.After
 local IsControlKeyDown, IsAltKeyDown, DeleteCursorItem = IsControlKeyDown, IsAltKeyDown, DeleteCursorItem
@@ -213,6 +214,7 @@ function module:OnLogin()
 	Backpack:HookScript("OnHide", function() PlaySound(SOUNDKIT.IG_BACKPACK_CLOSE) end)
 
 	local f = {}
+	module.AmmoBags = {}
 	local onlyBags, bagAmmo, bagEquipment, bagConsumble, bagsJunk, onlyBank, bankAmmo, bankLegendary, bankEquipment, bankConsumble, onlyReagent, bagMountPet, bankMountPet = self:GetFilters()
 
 	function Backpack:OnInit()
@@ -338,7 +340,7 @@ function module:OnLogin()
 		end
 
 		if showItemLevel then
-			if item.link and item.level and item.rarity > 1 and (item.subType == EJ_LOOT_SLOT_FILTER_ARTIFACT_RELIC or item.classID == LE_ITEM_CLASS_WEAPON or item.classID == LE_ITEM_CLASS_ARMOR) then
+			if item.link and item.level and item.rarity > 1 and (item.classID == LE_ITEM_CLASS_WEAPON or item.classID == LE_ITEM_CLASS_ARMOR) then
 				local level = B.GetItemLevel(item.link, item.bagID, item.slotID) or item.level
 				local color = BAG_ITEM_QUALITY_COLORS[item.rarity]
 				self.iLvl:SetText(level)
@@ -459,7 +461,9 @@ function module:OnLogin()
 
 	function BagButton:OnUpdate()
 		local id = GetInventoryItemID("player", (self.GetInventorySlot and self:GetInventorySlot()) or self.invID)
-		local quality = id and select(3, GetItemInfo(id)) or 0
+		if not id then return end
+		local _, _, quality, _, _, _, _, _, _, _, _, classID = GetItemInfo(id)
+		quality = quality or 0
 		if quality == 1 then quality = 0 end
 		local color = BAG_ITEM_QUALITY_COLORS[quality]
 		if not self.hidden and not self.notBought then
@@ -467,6 +471,8 @@ function module:OnLogin()
 		else
 			self.BG:SetBackdropBorderColor(0, 0, 0)
 		end
+
+		module.AmmoBags[self.bagID] = (classID == LE_ITEM_CLASS_QUIVER)
 	end
 
 	-- Fixes
