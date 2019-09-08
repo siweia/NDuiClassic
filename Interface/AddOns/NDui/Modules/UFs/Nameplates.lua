@@ -442,7 +442,7 @@ function UF:UpdateCodexQuestUnit(name)
 							end
 						end
 
-						if foundObjective then
+						if foundObjective and progressText > 0 then
 							self.questIcon:Show()
 							self.questCount:SetText(progressText)
 						elseif not foundObjective and meta["questLevel"] and meta["texture"] then
