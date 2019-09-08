@@ -11,15 +11,15 @@ local QUEST_COMPLETE, LE_QUEST_TAG_TYPE_PROFESSION, LE_QUEST_FREQUENCY_DAILY = Q
 
 local function acceptText(link, daily)
 	if daily then
-		return format("%s [%s]%s", L["AcceptQuest"], DAILY, link)
+		return format("%s: [%s]%s", L["AcceptQuest"], DAILY, link)
 	else
-		return format("%s %s", L["AcceptQuest"], link)
+		return format("%s: %s", L["AcceptQuest"], link)
 	end
 end
 
 local function completeText(link)
 	PlaySound(soundKitID, "Master")
-	return format("%s %s", link, QUEST_COMPLETE)
+	return format("%s (%s)", link, QUEST_COMPLETE)
 end
 
 local function sendQuestMsg(msg)
@@ -74,8 +74,6 @@ end
 function M:FindQuestAccept(questLogIndex, questID)
 	local name, _, _, _, _, _, frequency = GetQuestLogTitle(questLogIndex)
 	if name then
-		local tagID, _, worldQuestType = GetQuestTagInfo(questID)
-		if tagID == 109 or worldQuestType == LE_QUEST_TAG_TYPE_PROFESSION then return end
 		sendQuestMsg(acceptText(name, frequency == LE_QUEST_FREQUENCY_DAILY))
 	end
 end
@@ -83,26 +81,14 @@ end
 function M:FindQuestComplete()
 	for i = 1, GetNumQuestLogEntries() do
 		local name, _, _, _, _, isComplete, _, questID = GetQuestLogTitle(i)
-		local worldQuest = select(3, GetQuestTagInfo(questID))
-		if name and isComplete and not completedQuest[questID] and not worldQuest then
+		if name and isComplete and not completedQuest[questID] then
 			if initComplete then
 				sendQuestMsg(completeText(name))
-			else
-				initComplete = true
 			end
 			completedQuest[questID] = true
 		end
 	end
-end
-
-function M:FindWorldQuestComplete(questID)
-	if QuestUtils_IsQuestWorldQuest(questID) then
-		local name = GetQuestLogTitle(questID)
-		if name and not completedQuest[questID] then
-			sendQuestMsg(completeText(name))
-			completedQuest[questID] = true
-		end
-	end
+	initComplete = true
 end
 
 function M:QuestNotifier()
@@ -110,13 +96,11 @@ function M:QuestNotifier()
 		self:FindQuestComplete()
 		B:RegisterEvent("QUEST_ACCEPTED", self.FindQuestAccept)
 		B:RegisterEvent("QUEST_LOG_UPDATE", self.FindQuestComplete)
-		B:RegisterEvent("QUEST_TURNED_IN", self.FindWorldQuestComplete)
 		B:RegisterEvent("UI_INFO_MESSAGE", self.FindQuestProgress)
 	else
 		wipe(completedQuest)
 		B:UnregisterEvent("QUEST_ACCEPTED", self.FindQuestAccept)
 		B:UnregisterEvent("QUEST_LOG_UPDATE", self.FindQuestComplete)
-		B:UnregisterEvent("QUEST_TURNED_IN", self.FindWorldQuestComplete)
 		B:UnregisterEvent("UI_INFO_MESSAGE", self.FindQuestProgress)
 	end
 end
