@@ -379,7 +379,7 @@ local function CreatePanel()
 			end
 			Option[1] = G:CreateDropdown(tabs[i].Page, L["Type*"], 20, -30, {"AuraID", "SpellID", "SlotID", "TotemID"}, L["Type Intro"])
 			Option[2] = G:CreateEditbox(tabs[i].Page, "ID*", 140, -30, L["ID Intro"])
-			Option[3] = G:CreateDropdown(tabs[i].Page, L["Unit*"], 260, -30, {"player", "target", "focus", "pet"}, L["Unit Intro"])
+			Option[3] = G:CreateDropdown(tabs[i].Page, L["Unit*"], 260, -30, {"player", "target", "pet"}, L["Unit Intro"])
 			Option[4] = G:CreateDropdown(tabs[i].Page, L["Caster"], 380, -30, {"player", "target", "pet"}, L["Caster Intro"])
 			Option[5] = G:CreateEditbox(tabs[i].Page, L["Stack"], 500, -30, L["Stack Intro"])
 			Option[6] = G:CreateCheckBox(tabs[i].Page, L["Value"], 40, -95, L["Value Intro"])
