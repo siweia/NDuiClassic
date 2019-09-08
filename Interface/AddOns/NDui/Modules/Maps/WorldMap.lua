@@ -117,9 +117,13 @@ function module:WorldMapScale()
 	WorldMapFrame.BlackoutFrame:Hide()
 end
 
+local function isMouseOverMap()
+	return not WorldMapFrame:IsMouseOver()
+end
+
 function module:MapFader()
 	if NDuiDB["Map"]["MapFader"] then
-		PlayerMovementFrameFader.AddDeferredFrame(WorldMapFrame, .5, 1, 1)
+		PlayerMovementFrameFader.AddDeferredFrame(WorldMapFrame, .5, 1, .5, isMouseOverMap)
 	else
 		PlayerMovementFrameFader.RemoveFrame(WorldMapFrame)
 	end
