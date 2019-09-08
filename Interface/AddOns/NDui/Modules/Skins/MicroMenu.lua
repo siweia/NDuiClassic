@@ -60,7 +60,7 @@ function S:MicroMenu()
 	if not NDuiDB["Skins"]["MicroMenu"] then return end
 
 	local menubar = CreateFrame("Frame", nil, UIParent)
-	menubar:SetSize(257, 22)
+	menubar:SetSize(238, 22)
 	B.Mover(menubar, L["Menubar"], "Menubar", C.Skins.MicroMenuPos)
 
 	-- Generate Buttons
