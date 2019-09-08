@@ -415,6 +415,21 @@ local function updateErrorBlocker()
 	B:GetModule("Misc"):UpdateErrorBlocker()
 end
 
+local function questIndicatorTooltip(self)
+	if self.created then return end
+
+	self:HookScript("OnEnter", function()
+		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+		GameTooltip:ClearLines()
+		GameTooltip:AddLine(L["QuestIndicatorAddOns"], 1,.8,0, 1)
+		GameTooltip:Show()
+	end)
+	self:HookScript("OnLeave", B.HideTooltip)
+	self:GetScript("OnEnter")()
+
+	self.created = true
+end
+
 -- Config
 local tabList = {
 	L["Actionbar"],
@@ -528,7 +543,7 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Nameplate", "FullHealth", L["Show FullHealth"].."*"},
 		{1, "Nameplate", "ColorBorder", L["ColorBorder"].."*", true, nil, refreshNameplates},
 		{1, "Nameplate", "InsideView", L["Nameplate InsideView"].."*", nil, nil, updatePlateInsideView},
-		{1, "Nameplate", "QuestIndicator", L["QuestIndicator"], true},
+		{1, "Nameplate", "QuestIndicator", L["QuestIndicator"], true, questIndicatorTooltip},
 		{},--blank
 		{1, "Nameplate", "CustomUnitColor", "|cff00cc4c"..L["CustomUnitColor"].."*", nil, nil, updateCustomUnitList},
 		{5, "Nameplate", "CustomColor", L["Custom Color"].."*", 2},
