@@ -17,4 +17,8 @@ tinsert(C.themes["AuroraClassic"], function()
 	--ItemTextFramePageBg:SetAlpha(0)
 	ItemTextPageText:SetTextColor(1, 1, 1)
 	ItemTextPageText.SetTextColor = F.dummy
+
+	-- fix scrollbar bg, need reviewed
+	ItemTextScrollFrame:DisableDrawLayer("ARTWORK")
+	ItemTextScrollFrame:DisableDrawLayer("BACKGROUND")
 end)
