@@ -301,7 +301,7 @@ local function onEvent(self, event, ...)
 				name = ATTACK
 			elseif value.suffix == "ENVIRONMENT" then
 				local envType, amount = select(value.index, ...)
-				texture = getFloatingIconTexture(value.iconType, envType)
+				texture = nil
 				text = "-"..formatNumber(self, amount)
 				envType = strupper(envType)
 				name = _G["ACTION_ENVIRONMENTAL_DAMAGE_"..envType]
