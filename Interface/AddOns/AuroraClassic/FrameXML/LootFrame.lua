@@ -45,41 +45,12 @@ tinsert(C.themes["AuroraClassic"], function()
 	F.ReskinArrow(LootFrameUpButton, "up")
 	F.ReskinArrow(LootFrameDownButton, "down")
 
-	if C.isClassic then return end
-
-	-- Bonus roll
-
-	local frame = BonusRollFrame
-
-	frame.Background:SetAlpha(0)
-	frame.IconBorder:Hide()
-	frame.BlackBackgroundHoist.Background:Hide()
-	frame.SpecRing:SetAlpha(0)
-	frame.SpecIcon:SetPoint("TOPLEFT", 5, -5)
-	local bg = F.ReskinIcon(frame.SpecIcon)
-	bg:SetDrawLayer("OVERLAY", 1)
-	hooksecurefunc("BonusRollFrame_StartBonusRoll", function()
-		bg:SetShown(frame.SpecIcon:IsShown())
-	end)
-
-	F.ReskinIcon(frame.PromptFrame.Icon)
-	frame.PromptFrame.Timer.Bar:SetTexture(C.media.backdrop)
-	F.CreateBD(frame)
-	F.CreateSD(frame)
-	F.CreateBDFrame(frame.PromptFrame.Timer, .25)
-
-	local from, to = "|T.+|t", "|T%%s:14:14:0:0:64:64:5:59:5:59|t"
-	BONUS_ROLL_COST = BONUS_ROLL_COST:gsub(from, to)
-	BONUS_ROLL_CURRENT_COUNT = BONUS_ROLL_CURRENT_COUNT:gsub(from, to)
-
 	-- Loot Roll Frame
 
 	hooksecurefunc("GroupLootFrame_OpenNewFrame", function()
 		for i = 1, NUM_GROUP_LOOT_FRAMES do
 			local frame = _G["GroupLootFrame"..i]
 			if not frame.styled then
-				frame.Border:SetAlpha(0)
-				frame.Background:SetAlpha(0)
 				frame.bg = F.CreateBDFrame(frame)
 				F.CreateSD(frame)
 
@@ -88,12 +59,11 @@ tinsert(C.themes["AuroraClassic"], function()
 				frame.Timer.Background:SetAlpha(0)
 				F.CreateBDFrame(frame.Timer, .25)
 
-				frame.IconFrame.Border:SetAlpha(0)
-				F.ReskinIcon(frame.IconFrame.Icon)
-
+				local icon = frame.IconFrame.Icon
+				F.ReskinIcon(icon)
 				local bg = F.CreateBDFrame(frame, .25)
-				bg:SetPoint("TOPLEFT", frame.IconFrame.Icon, "TOPRIGHT", 0, 1)
-				bg:SetPoint("BOTTOMRIGHT", frame.IconFrame.Icon, "BOTTOMRIGHT", 150, -1)
+				bg:SetPoint("TOPLEFT", icon, "TOPRIGHT", 0, 1)
+				bg:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", 150, -1)
 
 				frame.styled = true
 			end
