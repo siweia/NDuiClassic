@@ -58,7 +58,7 @@ function module:Chatbar()
 			ChatFrame_OpenChat("/raid ", chatFrame)
 		end},
 		{.25, 1, .25, GUILD.."/"..OFFICER, function(_, btn)
-			if btn == "RightButton" and C_GuildInfo.CanEditOfficerNote() then
+			if btn == "RightButton" and CanEditOfficerNote() then
 				ChatFrame_OpenChat("/o ", chatFrame)
 			else
 				ChatFrame_OpenChat("/g ", chatFrame)
