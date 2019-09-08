@@ -300,11 +300,12 @@ local function onEvent(self, event, ...)
 				text = getMissText(missType)
 				name = ATTACK
 			elseif value.suffix == "ENVIRONMENT" then
-				local envType, amount = select(value.index, ...)
+				local envType, amount, _, envSchool = select(value.index, ...)
 				texture = nil
 				text = "-"..formatNumber(self, amount)
 				envType = strupper(envType)
 				name = _G["ACTION_ENVIRONMENTAL_DAMAGE_"..envType]
+				school = envSchool
 			end
 
 			color = schoolColors[school] or schoolColors[0]
