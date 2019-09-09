@@ -111,9 +111,6 @@ local defaultSettings = {
 		PlayerWidth = 245,
 		PlayerHeight = 24,
 		PlayerPowerHeight = 4,
-		FocusWidth = 200,
-		FocusHeight = 22,
-		FocusPowerHeight = 3,
 		PetWidth = 120,
 		PetHeight = 18,
 		PetPowerHeight = 2,
@@ -504,9 +501,8 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Bags", "ItemFilter", L["Bags ItemFilter"]},
 		{1, "Bags", "ItemSetFilter", L["Use ItemSetFilter"], true},
 		{},--blank
-		{1, "Bags", "BagsiLvl", L["Bags Itemlevel"]},
-		{1, "Bags", "Artifact", L["Bags Artifact"], true},
 		{1, "Bags", "DeleteButton", L["Bags DeleteButton"]},
+		{1, "Bags", "Artifact", L["Bags Artifact"], true},
 		{1, "Bags", "ReverseSort", L["Bags ReverseSort"].."*", true, nil, updateBagSortOrder},
 		{},--blank
 		{3, "Bags", "BagsScale", L["Bags Scale"], false, {.5, 1.5, 1}},
@@ -526,8 +522,8 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{1, "UFs", "ClassPower", L["UFs ClassPower"], true},
 		--{1, "UFs", "Arena", L["Arena Frame"]},
 		{1, "UFs", "PlayerDebuff", L["Player Debuff"]},
-		{1, "UFs", "ToTAuras", L["ToT Debuff"], true},
-		{4, "UFs", "HealthColor", L["HealthColor"], false, {L["Default Dark"], L["ClassColorHP"], L["GradientHP"]}},
+		{1, "UFs", "ToTAuras", L["ToT Debuff"], false},
+		{4, "UFs", "HealthColor", L["HealthColor"], true, {L["Default Dark"], L["ClassColorHP"], L["GradientHP"]}},
 		{},--blank
 		{1, "UFs", "CombatText", "|cff00cc4c"..L["UFs CombatText"]},
 		{1, "UFs", "AutoAttack", L["CombatText AutoAttack"]},
