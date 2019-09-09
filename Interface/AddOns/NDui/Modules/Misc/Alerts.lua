@@ -33,29 +33,21 @@ local infoType = {
 	["SPELL_AURA_BROKEN_SPELL"] = L["BrokenSpell"],
 }
 
-local blackList = {
-	[99] = true,		-- 夺魂咆哮
+local spellBlackList = {
 	[122] = true,		-- 冰霜新星
 	[1776] = true,		-- 凿击
 	[1784] = true,		-- 潜行
 	[5246] = true,		-- 破胆怒吼
 	[8122] = true,		-- 心灵尖啸
-	[31661] = true,		-- 龙息术
-	[33395] = true,		-- 冰冻术
-	[64695] = true,		-- 陷地
-	[82691] = true,		-- 冰霜之环
-	[91807] = true,		-- 蹒跚冲锋
-	[102359] = true,	-- 群体缠绕
-	[105421] = true,	-- 盲目之光
-	[115191] = true,	-- 潜行
-	[157997] = true,	-- 寒冰新星
-	[197214] = true,	-- 裂地术
-	[198121] = true,	-- 冰霜撕咬
-	[207167] = true,	-- 致盲冰雨
-	[207685] = true,	-- 悲苦咒符
-	[226943] = true,	-- 心灵炸弹
-	[228600] = true,	-- 冰川尖刺
 }
+
+local blackList = {}
+for spellID in pairs(spellBlackList) do
+	local name = GetSpellInfo(spellID)
+	if name then
+		blackList[name] = true
+	end
+end
 
 function M:IsAllyPet(sourceFlags)
 	if sourceFlags == DB.MyPetFlags or (not NDuiDB["Misc"]["OwnInterrupt"] and (sourceFlags == DB.PartyPetFlags or sourceFlags == DB.RaidPetFlags)) then
@@ -66,7 +58,7 @@ end
 function M:InterruptAlert_Update(...)
 	if NDuiDB["Misc"]["AlertInInstance"] and (not IsInInstance()) then return end
 
-	local _, eventType, _, sourceGUID, sourceName, sourceFlags, _, _, destName, _, _, spellID, _, _, extraskillID, _, _, auraType = ...
+	local _, eventType, _, sourceGUID, sourceName, sourceFlags, _, _, destName, _, _, _, spellName, _, _, extraskillName, _, auraType = ...
 	if not sourceGUID or sourceName == destName then return end
 
 	if UnitInRaid(sourceName) or UnitInParty(sourceName) or M:IsAllyPet(sourceFlags) then
@@ -74,11 +66,11 @@ function M:InterruptAlert_Update(...)
 		if infoText then
 			if infoText == L["BrokenSpell"] then
 				if not NDuiDB["Misc"]["BrokenSpell"] then return end
-				if auraType and auraType == AURA_TYPE_BUFF or blackList[spellID] then return end
-				SendChatMessage(format(infoText, sourceName..GetSpellLink(extraskillID), destName..GetSpellLink(spellID)), msgChannel())
+				if auraType and auraType == AURA_TYPE_BUFF or blackList[spellName] then return end
+				SendChatMessage(format(infoText, sourceName, extraskillName, destName, spellName), msgChannel())
 			else
 				if NDuiDB["Misc"]["OwnInterrupt"] and sourceName ~= DB.MyName and not M:IsAllyPet(sourceFlags) then return end
-				SendChatMessage(format(infoText, sourceName..GetSpellLink(spellID), destName..GetSpellLink(extraskillID)), msgChannel())
+				SendChatMessage(format(infoText, sourceName, spellName, destName, extraskillName), msgChannel())
 			end
 		end
 	end
