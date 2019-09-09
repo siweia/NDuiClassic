@@ -315,7 +315,6 @@ function G:SetupClickCast(parent)
 
 	local textIndex, barTable = {
 		["target"] = TARGET,
-		["focus"] = SET_FOCUS,
 		["follow"] = FOLLOW,
 	}, {}
 
@@ -389,7 +388,7 @@ function G:SetupClickCast(parent)
 		local value, key, modKey = options[1]:GetText(), options[2].Text:GetText(), options[3].Text:GetText()
 		if not value or not key then UIErrorsFrame:AddMessage(DB.InfoColor..L["Incomplete Input"]) return end
 		if tonumber(value) and not GetSpellInfo(value) then UIErrorsFrame:AddMessage(DB.InfoColor..L["Incorrect SpellID"]) return end
-		if (not tonumber(value)) and value ~= "target" and value ~= "focus" and value ~= "follow" and not value:match("/") then UIErrorsFrame:AddMessage(DB.InfoColor..L["Invalid Input"]) return end
+		if (not tonumber(value)) and value ~= "target" and value ~= "follow" and not value:match("/") then UIErrorsFrame:AddMessage(DB.InfoColor..L["Invalid Input"]) return end
 		if not modKey or modKey == NONE then modKey = "" end
 		local clickSet = modKey..key
 		if NDuiDB["RaidClickSets"][clickSet] then UIErrorsFrame:AddMessage(DB.InfoColor..L["Existing ClickSet"]) return end
@@ -672,14 +671,12 @@ function G:SetupUnitFrame(parent)
 
 	local sliderRange = {
 		["Player"] = {200, 300},
-		["Focus"] = {150, 250},
 		["Pet"] = {100, 200},
 		["Boss"] = {100, 250},
 	}
 
 	local defaultValue = {
 		["Player"] = {245, 24, 4},
-		["Focus"] = {200, 22, 3},
 		["Pet"] = {120, 18, 2},
 		["Boss"] = {150, 22, 2},
 	}
@@ -703,23 +700,14 @@ function G:SetupUnitFrame(parent)
 	end
 	createOptionGroup(scroll.child, L["Player&Target"], -10, "Player", updatePlayerSize)
 
-	local function updateFocusSize()
-		local frame = _G.oUF_Focus
-		if frame then
-			frame:SetSize(NDuiDB["UFs"]["FocusWidth"], NDuiDB["UFs"]["FocusHeight"])
-			frame.Power:SetHeight(NDuiDB["UFs"]["FocusPowerHeight"])
-		end
-	end
-	createOptionGroup(scroll.child, L["FocusUF"], -270, "Focus", updateFocusSize)
-
 	local function updatePetSize()
-		local frames = {_G.oUF_Pet, _G.oUF_ToT, _G.oUF_FocusTarget}
+		local frames = {_G.oUF_Pet, _G.oUF_ToT}
 		for _, frame in pairs(frames) do
 			frame:SetSize(NDuiDB["UFs"]["PetWidth"], NDuiDB["UFs"]["PetHeight"])
 			frame.Power:SetHeight(NDuiDB["UFs"]["PetPowerHeight"])
 		end
 	end
-	createOptionGroup(scroll.child, L["Pet&*Target"], -530, "Pet", updatePetSize)
+	createOptionGroup(scroll.child, L["Pet&*Target"], -270, "Pet", updatePetSize)
 
 	local function updateBossSize()
 		for _, frame in next, oUF.objects do
@@ -729,5 +717,5 @@ function G:SetupUnitFrame(parent)
 			end
 		end
 	end
-	createOptionGroup(scroll.child, L["Boss&Arena"], -790, "Boss", updateBossSize)
+	createOptionGroup(scroll.child, L["BossFrame"], -530, "Boss", updateBossSize)
 end

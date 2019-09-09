@@ -124,8 +124,6 @@ function UF:CreateHealthText(self)
 		self:Tag(name, " [color][name]")
 	elseif mystyle == "target" then
 		self:Tag(name, "[fulllevel] [color][name][afkdnd]")
-	elseif mystyle == "focus" then
-		self:Tag(name, "[color][name][afkdnd]")
 	elseif mystyle == "nameplate" then
 		self:Tag(name, "[nplevel][name]")
 	elseif mystyle == "arena" then
@@ -330,9 +328,6 @@ function UF:CreateCastBar(self)
 	elseif mystyle == "target" then
 		cb:SetSize(unpack(C.UFs.TargetcbSize))
 		createBarMover(cb, L["Target Castbar"], "TargetCB", C.UFs.Targetcb)
-	elseif mystyle == "focus" then
-		cb:SetSize(unpack(C.UFs.FocuscbSize))
-		createBarMover(cb, L["Focus Castbar"], "FocusCB", C.UFs.Focuscb)
 	elseif mystyle == "boss" or mystyle == "arena" then
 		cb:SetPoint("TOPRIGHT", self.Power, "BOTTOMRIGHT", 0, -8)
 		cb:SetSize(self:GetWidth(), 10)
@@ -605,11 +600,6 @@ function UF:CreateAuras(self)
 		bu.numBuffs = 0
 		bu.numDebuffs = 10
 		bu.iconsPerRow = 5
-	elseif mystyle == "focus" then
-		bu:SetPoint("TOPLEFT", self.Power, "BOTTOMLEFT", 0, -10)
-		bu.numBuffs = 0
-		bu.numDebuffs = 14
-		bu.iconsPerRow = 7
 	elseif mystyle == "raid" then
 		if NDuiDB["UFs"]["RaidBuffIndicator"] then
 			bu.initialAnchor = "LEFT"

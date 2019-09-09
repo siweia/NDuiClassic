@@ -54,23 +54,6 @@ local function CreateTargetStyle(self)
 	UF:CreateAuras(self)
 end
 
-local function CreateFocusStyle(self)
-	self.mystyle = "focus"
-	self:SetSize(NDuiDB["UFs"]["FocusWidth"], NDuiDB["UFs"]["FocusHeight"])
-
-	UF:CreateHeader(self)
-	UF:CreateHealthBar(self)
-	UF:CreateHealthText(self)
-	UF:CreatePowerBar(self)
-	UF:CreatePowerText(self)
-	UF:CreatePortrait(self)
-	UF:CreateCastBar(self)
-	UF:CreateRaidMark(self)
-	UF:CreateIcons(self)
-	UF:CreatePrediction(self)
-	UF:CreateAuras(self)
-end
-
 local function CreateToTStyle(self)
 	self.mystyle = "tot"
 	self:SetSize(NDuiDB["UFs"]["PetWidth"], NDuiDB["UFs"]["PetHeight"])
@@ -82,17 +65,6 @@ local function CreateToTStyle(self)
 	UF:CreateRaidMark(self)
 
 	if NDuiDB["UFs"]["ToTAuras"] then UF:CreateAuras(self) end
-end
-
-local function CreateFocusTargetStyle(self)
-	self.mystyle = "focustarget"
-	self:SetSize(NDuiDB["UFs"]["PetWidth"], NDuiDB["UFs"]["PetHeight"])
-
-	UF:CreateHeader(self)
-	UF:CreateHealthBar(self)
-	UF:CreateHealthText(self)
-	UF:CreatePowerBar(self)
-	UF:CreateRaidMark(self)
 end
 
 local function CreatePetStyle(self)
@@ -223,8 +195,6 @@ function UF:OnLogin()
 		oUF:RegisterStyle("Player", CreatePlayerStyle)
 		oUF:RegisterStyle("Target", CreateTargetStyle)
 		oUF:RegisterStyle("ToT", CreateToTStyle)
-		--oUF:RegisterStyle("Focus", CreateFocusStyle)
-		--oUF:RegisterStyle("FocusTarget", CreateFocusTargetStyle)
 		oUF:RegisterStyle("Pet", CreatePetStyle)
 
 		-- Loader
@@ -243,15 +213,7 @@ function UF:OnLogin()
 		oUF:SetActiveStyle("Pet")
 		local pet = oUF:Spawn("pet", "oUF_Pet")
 		B.Mover(pet, L["PetUF"], "PetUF", C.UFs.PetPos)
---[=[
-		oUF:SetActiveStyle("Focus")
-		local focus = oUF:Spawn("focus", "oUF_Focus")
-		B.Mover(focus, L["FocusUF"], "FocusUF", C.UFs.FocusPos)
 
-		oUF:SetActiveStyle("FocusTarget")
-		local focustarget = oUF:Spawn("focustarget", "oUF_FocusTarget")
-		B.Mover(focustarget, L["FotUF"], "FotUF", {"TOPLEFT", oUF_Focus, "TOPRIGHT", 5, 0})
-]=]
 		oUF:RegisterStyle("Boss", CreateBossStyle)
 		oUF:SetActiveStyle("Boss")
 		local boss = {}
