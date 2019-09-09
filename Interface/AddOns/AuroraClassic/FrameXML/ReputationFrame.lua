@@ -11,10 +11,17 @@ tinsert(C.themes["AuroraClassic"], function()
 	local function UpdateFactionSkins()
 		for i = 1, GetNumFactions() do
 			local bar = _G["ReputationBar"..i]
+			local check = _G["ReputationBar"..i.."AtWarCheck"]
 			if bar and not bar.styled then
 				F.StripTextures(bar)
 				bar:SetStatusBarTexture(C.media.backdrop)
 				F.CreateBD(bar, .25)
+
+				local icon = check:GetRegions()
+				icon:SetTexture("Interface\\Buttons\\UI-CheckBox-SwordCheck")
+				icon:SetTexCoord(0, 1, 0, 1)
+				icon:ClearAllPoints()
+				icon:SetPoint("LEFT", check, 0, -3)
 
 				bar.styled = true
 			end
