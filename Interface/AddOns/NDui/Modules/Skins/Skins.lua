@@ -113,7 +113,6 @@ function S:OnLogin()
 	self:DBMSkin()
 	self:SkadaSkin()
 	self:BigWigsSkin()
-	self:PGFSkin()
 	self:PostalSkin()
 	self:ExtraQuestSkin()
 
