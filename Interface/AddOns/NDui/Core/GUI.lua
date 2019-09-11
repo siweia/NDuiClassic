@@ -131,7 +131,7 @@ local defaultSettings = {
 		BlockAddonAlert = true,
 		ChatMenu = true,
 		WhisperColor = true,
-		--ChatItemLevel = true,
+		ChatItemLevel = true,
 		Chatbar = true,
 		ChatWidth = 380,
 		ChatHeight = 190,
@@ -483,12 +483,13 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 	},
 	[2] = {
 		{1, "Bags", "Enable", "|cff00cc4c"..L["Enable Bags"]},
-		{},--blank
 		{1, "Bags", "ItemFilter", L["Bags ItemFilter"]},
 		{1, "Bags", "ItemSetFilter", L["Use ItemSetFilter"], true},
-		{1, "Bags", "DeleteButton", L["Bags DeleteButton"]},
+		{},--blank
+		{1, "Bags", "BagsiLvl", L["Bags Itemlevel"]},
 		{1, "Bags", "Artifact", L["Bags Artifact"], true},
-		{1, "Bags", "ReverseSort", L["Bags ReverseSort"].."*", nil, nil, updateBagSortOrder},
+		{1, "Bags", "DeleteButton", L["Bags DeleteButton"]},
+		{1, "Bags", "ReverseSort", L["Bags ReverseSort"].."*", true, nil, updateBagSortOrder},
 		{},--blank
 		{3, "Bags", "BagsScale", L["Bags Scale"], false, {.5, 1.5, 1}},
 		{3, "Bags", "IconSize", L["Bags IconSize"], true, {30, 42, 0}},
@@ -636,7 +637,7 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Chat", "WhisperColor", L["Differ WhipserColor"].."*", true},
 		{1, "Chat", "Freedom", L["Language Filter"]},
 		{1, "Chat", "Chatbar", L["ShowChatbar"], true},
-		--{1, "Chat", "ChatItemLevel", "|cff00cc4c"..L["ShowChatItemLevel"]},
+		{1, "Chat", "ChatItemLevel", "|cff00cc4c"..L["ShowChatItemLevel"]},
 		{},--blank
 		{1, "Chat", "EnableFilter", "|cff00cc4c"..L["Enable Chatfilter"]},
 		{1, "Chat", "BlockAddonAlert", L["Block Addon Alert"], true},
