@@ -326,6 +326,7 @@ local function YesTutor()
 
 	local pass = B.CreateButton(tutor, 50, 20, L["Skip"])
 	pass:SetPoint("BOTTOMLEFT", 10, 10)
+	pass:Hide()
 	local apply = B.CreateButton(tutor, 50, 20, APPLY)
 	apply:SetPoint("BOTTOMRIGHT", -10, 10)
 
@@ -345,11 +346,11 @@ local function YesTutor()
 		PlaySound(SOUNDKIT.IG_QUEST_LOG_OPEN)
 	end)
 	apply:SetScript("OnClick", function()
-		pass:Show()
 		if currentPage == 1 then
 			ForceDefaultSettings()
 			ForceRaidFrame()
 			UIErrorsFrame:AddMessage(DB.InfoColor..L["Default Settings Check"])
+			pass:Show()
 		elseif currentPage == 2 then
 			ForceChatSettings()
 			UIErrorsFrame:AddMessage(DB.InfoColor..L["Chat Settings Check"])
