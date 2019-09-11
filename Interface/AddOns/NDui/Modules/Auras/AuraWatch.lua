@@ -112,6 +112,21 @@ local function BuildAuraList()
 	wipe(C.AuraWatchList)
 end
 
+local auraListByName = {}
+local function BuildNamesForSpellRank()
+	if not NDuiDB["AuraWatch"]["WatchSpellRank"] then return end
+
+	for KEY, VALUE in pairs(AuraList) do
+		for spellID, value in pairs(VALUE.List) do
+			local name = GetSpellInfo(spellID)
+			if value.AuraID and name then
+				if not auraListByName[KEY] then auraListByName[KEY] = {} end
+				auraListByName[KEY][name] = value
+			end
+		end
+	end
+end
+
 local function BuildUnitIDTable()
 	for _, VALUE in pairs(AuraList) do
 		for _, value in pairs(VALUE.List) do
@@ -280,6 +295,7 @@ end
 local function InitSetup()
 	ConvertTable()
 	BuildAuraList()
+	BuildNamesForSpellRank()
 	BuildUnitIDTable()
 	BuildCooldownTable()
 	BuildAura()
@@ -419,9 +435,12 @@ function A:AuraWatch_SetupAura(index, UnitID, name, icon, count, duration, expir
 	frames.Index = (frames.Index + 1 > maxFrames) and maxFrames or frames.Index + 1
 end
 
-function A:AuraWatch_UpdateAura(spellID, UnitID, index, bool)
+function A:AuraWatch_UpdateAura(spellName, spellID, UnitID, index, bool)
 	for KEY, VALUE in pairs(AuraList) do
 		local value = VALUE.List[spellID]
+		if not value then
+			value = auraListByName[KEY] and auraListByName[KEY][spellName]
+		end
 		if value and value.AuraID and value.UnitID == UnitID then
 			local filter = bool and "HELPFUL" or "HARMFUL"
 			local name, icon, count, _, duration, expires, caster, _, _, spellID, _, _, _, _, _, number = UnitAura(value.UnitID, index, filter)
@@ -461,7 +480,7 @@ function A:UpdateAuraWatch(UnitID)
     while true do
 		local name, _, _, _, _, _, _, _, _, spellID = UnitBuff(UnitID, index)
 		if not name then break end
-		A:AuraWatch_SetupAura(A:AuraWatch_UpdateAura(spellID, UnitID, index, true))
+		A:AuraWatch_SetupAura(A:AuraWatch_UpdateAura(name, spellID, UnitID, index, true))
 		index = index + 1
 	end
 
@@ -469,7 +488,7 @@ function A:UpdateAuraWatch(UnitID)
     while true do
 		local name, _, _, _, _, _, _, _, _, spellID = UnitDebuff(UnitID, index)
 		if not name then break end
-		A:AuraWatch_SetupAura(A:AuraWatch_UpdateAura(spellID, UnitID, index, false))
+		A:AuraWatch_SetupAura(A:AuraWatch_UpdateAura(name, spellID, UnitID, index, false))
 		index = index + 1
 	end
 end
