@@ -184,6 +184,7 @@ local defaultSettings = {
 		MinAlpha = 1,
 		ColorBorder = false,
 		QuestIndicator = true,
+		ClassPowerOnly = false,
 	},
 	Skins = {
 		DBM = true,
@@ -202,7 +203,6 @@ local defaultSettings = {
 		MenuLine = true,
 		ClassLine = true,
 		Details = true,
-		PGFSkin = true,
 		QuestLogEx = true,
 		QuestTracker = true,
 	},
@@ -446,21 +446,6 @@ local function updateErrorBlocker()
 	B:GetModule("Misc"):UpdateErrorBlocker()
 end
 
-local function questIndicatorTooltip(self)
-	if self.created then return end
-
-	self:HookScript("OnEnter", function()
-		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-		GameTooltip:ClearLines()
-		GameTooltip:AddLine(L["QuestIndicatorAddOns"], 1,.8,0, 1)
-		GameTooltip:Show()
-	end)
-	self:HookScript("OnLeave", B.HideTooltip)
-	self:GetScript("OnEnter")()
-
-	self.created = true
-end
-
 -- Config
 local tabList = {
 	L["Actionbar"],
@@ -498,12 +483,12 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 	},
 	[2] = {
 		{1, "Bags", "Enable", "|cff00cc4c"..L["Enable Bags"]},
+		{},--blank
 		{1, "Bags", "ItemFilter", L["Bags ItemFilter"]},
 		{1, "Bags", "ItemSetFilter", L["Use ItemSetFilter"], true},
-		{},--blank
 		{1, "Bags", "DeleteButton", L["Bags DeleteButton"]},
 		{1, "Bags", "Artifact", L["Bags Artifact"], true},
-		{1, "Bags", "ReverseSort", L["Bags ReverseSort"].."*", true, nil, updateBagSortOrder},
+		{1, "Bags", "ReverseSort", L["Bags ReverseSort"].."*", nil, nil, updateBagSortOrder},
 		{},--blank
 		{3, "Bags", "BagsScale", L["Bags Scale"], false, {.5, 1.5, 1}},
 		{3, "Bags", "IconSize", L["Bags IconSize"], true, {30, 42, 0}},
@@ -569,10 +554,10 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Nameplate", "FriendlyCC", L["Friendly CC"].."*"},
 		{1, "Nameplate", "HostileCC", L["Hostile CC"].."*"},
 		{4, "Nameplate", "TargetIndicator", L["TargetIndicator"].."*", true, {DISABLE, L["TopArrow"], L["RightArrow"], L["TargetGlow"], L["TopNGlow"], L["RightNGlow"]}, refreshNameplates},
-		{1, "Nameplate", "FullHealth", L["Show FullHealth"].."*"},
+		{1, "Nameplate", "FullHealth", L["Show FullHealth"].."*", nil, nil, refreshNameplates},
 		{1, "Nameplate", "ColorBorder", L["ColorBorder"].."*", true, nil, refreshNameplates},
 		{1, "Nameplate", "InsideView", L["Nameplate InsideView"].."*", nil, nil, updatePlateInsideView},
-		{1, "Nameplate", "QuestIndicator", L["QuestIndicator"], true, questIndicatorTooltip},
+		{1, "Nameplate", "QuestIndicator", L["QuestIndicator"], true, nil, nil, L["QuestIndicatorAddOns"]},
 		{},--blank
 		{1, "Nameplate", "CustomUnitColor", "|cff00cc4c"..L["CustomUnitColor"].."*", nil, nil, updateCustomUnitList},
 		{5, "Nameplate", "CustomColor", L["Custom Color"].."*", 2},
@@ -605,7 +590,8 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Nameplate", "ShowPlayerPlate", "|cff00cc4c"..L["Enable PlayerPlate"]},
 		--{1, "Auras", "ClassAuras", L["Enable ClassAuras"], true},
 		--{1, "Nameplate", "MaxPowerGlow", L["MaxPowerGlow"]},
-		{1, "Nameplate", "NameplateClassPower", L["Nameplate ClassPower"], true},
+		{1, "Nameplate", "NameplateClassPower", L["Nameplate ClassPower"]},
+		{1, "Nameplate", "ClassPowerOnly", L["Nameplate ClassPowerOnly"], true},
 		{1, "Nameplate", "PPPowerText", L["PlayerPlate PowerText"]},
 		{1, "Nameplate", "PPHideOOC", L["Fadeout OOC"], true},
 		--{3, "Nameplate", "PPIconSize", L["PlayerPlate IconSize"], true, {30, 60, 0}},
@@ -690,8 +676,7 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Skins", "TMW", L["TMW Skin"], true},
 		{1, "Skins", "WeakAuras", L["WeakAuras Skin"]},
 		{1, "Skins", "Details", L["Details Skin"], true},
-		{1, "Skins", "PGFSkin", L["PGF Skin"]},
-		{1, "Skins", "QuestLogEx", L["QuestLogEx Skin"], true},
+		{1, "Skins", "QuestLogEx", L["QuestLogEx Skin"]},
 	},
 	[11] = {
 		{1, "Tooltip", "CombatHide", L["Hide Tooltip"].."*"},
@@ -715,7 +700,7 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{1, "ACCOUNT", "AutoBubbles", L["AutoBubbles"], true},
 		{1, "Misc", "FasterLoot", L["Faster Loot"].."*", nil, nil, updateFasterLoot},
 		{1, "Misc", "HideErrors", L["Hide Error"].."*", true, nil, updateErrorBlocker},
-		{1, "Misc", "EnhancedMenu", L["TargetEnhancedMenu"]},
+		{1, "Misc", "EnhancedMenu", L["TargetEnhancedMenu"], nil, nil, nil, L["MenuEnhancedTaints"]},
 	},
 	[13] = {
 		{1, "ACCOUNT", "VersionCheck", L["Version Check"]},
@@ -794,11 +779,19 @@ local function editBoxOnEnter(self)
 	GameTooltip:Show()
 end
 
+local function optionOnEnter(self)
+	GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+	GameTooltip:ClearLines()
+	GameTooltip:AddLine(L["Tips"])
+	GameTooltip:AddLine(self.tips, .6,.8,1, 1)
+	GameTooltip:Show()
+end
+
 local function CreateOption(i)
 	local parent, offset = guiPage[i].child, 20
 
 	for _, option in pairs(optionList[i]) do
-		local optType, key, value, name, horizon, data, callback = unpack(option)
+		local optType, key, value, name, horizon, data, callback, tooltip = unpack(option)
 		-- Checkboxes
 		if optType == 1 then
 			local cb = B.CreateCheckBox(parent)
@@ -819,6 +812,11 @@ local function CreateOption(i)
 				local bu = B.CreateGear(parent)
 				bu:SetPoint("LEFT", cb.name, "RIGHT", -2, 1)
 				bu:SetScript("OnClick", data)
+			end
+			if tooltip then
+				cb.tips = tooltip
+				cb:HookScript("OnEnter", optionOnEnter)
+				cb:HookScript("OnLeave", B.HideTooltip)
 			end
 		-- Editbox
 		elseif optType == 2 then
