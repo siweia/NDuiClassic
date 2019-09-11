@@ -46,6 +46,7 @@ function M:OnLogin()
 	self:UpdateErrorBlocker()
 	self:TradeTargetInfo()
 	self:MenuButton_Add()
+	self:SpellBookFrame_EnableScroll()
 
 	-- Max camera distancee
 	if tonumber(GetCVar("cameraDistanceMaxZoomFactor")) ~= 2.6 then
@@ -427,4 +428,22 @@ function M:MenuButton_Add()
 		["guild"] = gsub(CHAT_GUILD_INVITE_SEND, HEADER_COLON, ""),
 	}
 	hooksecurefunc("UnitPopup_ShowMenu", M.MenuButton_Show)
+end
+
+-- Mousewheel scroll on SpellBookFrame, FrameXML/SpellBookFrame.lua
+function M:SpellBookFrame_OnMouseWheel(value)
+	local currentPage, maxPages = SpellBook_GetCurrentPage()
+	if value > 0 then
+		if currentPage > 1 then
+			SpellBookPrevPageButton_OnClick()
+		end
+	else
+		if currentPage < maxPages then
+			SpellBookNextPageButton_OnClick()
+		end
+	end
+end
+
+function M:SpellBookFrame_EnableScroll()
+	SpellBookFrame:SetScript("OnMouseWheel", M.SpellBookFrame_OnMouseWheel)
 end
