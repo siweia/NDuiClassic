@@ -104,12 +104,29 @@ function module:UpdateMapAnchor()
 end
 
 function module:WorldMapScale()
+	if IsAddOnLoaded("Leatrix_Maps") then return end
+
 	-- Fix worldmap cursor when scaling
 	WorldMapFrame.ScrollContainer.GetCursorPosition = function(f)
 		local x, y = MapCanvasScrollControllerMixin.GetCursorPosition(f)
 		local scale = WorldMapFrame:GetScale()
 		return x / scale, y / scale
 	end
+
+	-- Fix scroll zooming in classic
+	WorldMapFrame.ScrollContainer:HookScript("OnMouseWheel", function(self, delta)
+		local x, y = self:GetNormalizedCursorPosition()
+		local nextZoomOutScale, nextZoomInScale = self:GetCurrentZoomRange()
+		if delta == 1 then
+			if nextZoomInScale > self:GetCanvasScale() then
+				self:InstantPanAndZoom(nextZoomInScale, x, y)
+			end
+		else
+			if nextZoomOutScale < self:GetCanvasScale() then
+				self:InstantPanAndZoom(nextZoomOutScale, x, y)
+			end
+		end
+	end)
 
 	B.CreateMF(WorldMapFrame, nil, true)
 	self.UpdateMapScale(WorldMapFrame)
