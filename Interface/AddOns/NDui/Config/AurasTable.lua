@@ -64,23 +64,6 @@ function module:AddNewAuraWatch(class, list)
 	end
 end
 
-function module:AddDeprecatedGroup()
-	if DB.isClassic then return end
-	if not NDuiDB["AuraWatch"]["DeprecatedAuras"] then return end
-
-	for name, value in pairs(C.DeprecatedAuras) do
-		for _, list in pairs(AuraWatchList["ALL"]) do
-			if list.Name == name then
-				local newTable = newAuraFormat(value)
-				for spellID, v in pairs(newTable) do
-					list.List[spellID] = v
-				end
-			end
-		end
-	end
-	wipe(C.DeprecatedAuras)
-end
-
 -- RaidFrame spells
 local RaidBuffs = {}
 function module:AddClassSpells(list)
@@ -137,7 +120,6 @@ function module:OnLogin()
 		end
 	end
 
-	self:AddDeprecatedGroup()
 	C.AuraWatchList = AuraWatchList
 	C.RaidBuffs = RaidBuffs
 	C.RaidDebuffs = RaidDebuffs
@@ -147,15 +129,4 @@ function module:OnLogin()
 		B.CopyTable(C.CornerBuffs[DB.MyClass], NDuiADB["CornerBuffs"][DB.MyClass])
 	end
 	self:BuildNameListFromID()
-
-	--[[ Filter bloodlust for healers
-	local bloodlustList = {57723, 57724, 80354, 264689}
-	local function filterBloodlust()
-		for _, spellID in pairs(bloodlustList) do
-			NDuiADB["CornerBuffs"][DB.MyClass][spellID] = DB.Role ~= "Healer" and {"BOTTOMLEFT", {1, .8, 0}, true} or nil
-			C.RaidBuffs["WARNING"][spellID] = (DB.Role ~= "Healer")
-		end
-	end
-	filterBloodlust()
-	B:RegisterEvent("CHARACTER_POINTS_CHANGED", filterBloodlust)]]
 end
