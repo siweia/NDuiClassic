@@ -93,6 +93,27 @@ tinsert(C.themes["AuroraClassic"], function()
 		icon:SetTexCoord(a+.2, c-.2, b+.018, d-.018)
 	end
 
+	local function updateHappiness(self)
+		local happiness = GetPetHappiness()
+		local _, isHunterPet = HasPetUI()
+		if not happiness or not isHunterPet then return end
+
+		local texture = self:GetRegions()
+		if happiness == 1 then
+			texture:SetTexCoord(.41, .53, .06, .3)
+		elseif happiness == 2 then
+			texture:SetTexCoord(.22, .345, .06, .3)
+		elseif happiness == 3 then
+			texture:SetTexCoord(.04, .15, .06, .3)
+		end
+	end
+
+	PetPaperDollPetInfo:GetRegions():SetTexCoord(.04, .15, .06, .3)
+	F.CreateBDFrame(PetPaperDollPetInfo)
+	PetPaperDollPetInfo:RegisterEvent("UNIT_HAPPINESS")
+	PetPaperDollPetInfo:SetScript("OnEvent", updateHappiness)
+	PetPaperDollPetInfo:SetScript("OnShow", updateHappiness)
+
 	-- HonorFrame
 	F.StripTextures(HonorFrame)
 end)
