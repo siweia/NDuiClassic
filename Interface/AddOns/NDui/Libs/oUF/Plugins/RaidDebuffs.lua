@@ -31,27 +31,21 @@ local DispellFilter
 do
 	local dispellClasses = {
 		["DRUID"] = {
-			["Magic"] = false,
 			["Curse"] = true,
 			["Poison"] = true,
 		},
-		["MONK"] = {
+		["PALADIN"] = {
 			["Magic"] = true,
 			["Poison"] = true,
 			["Disease"] = true,
 		},
-		["PALADIN"] = {
-			["Magic"] = false,
-			["Poison"] = true,
+		["PRIEST"] = {
+			["Magic"] = true,
 			["Disease"] = true,
 		},
-		["PRIEST"] = {
-			["Magic"] = false,
-			["Disease"] = false,
-		},
 		["SHAMAN"] = {
-			["Magic"] = false,
-			["Curse"] = true,
+			["Poison"] = true,
+			["Disease"] = true,
 		},
 		["MAGE"] = {
 			["Curse"] = true,
@@ -59,21 +53,6 @@ do
 	}
 
 	DispellFilter = dispellClasses[class] or {}
-end
-
-local function checkSpecs()
-	if class == "DRUID" then
-		DispellFilter.Magic = true
-	elseif class == "MONK" then
-		DispellFilter.Magic = true
-	elseif class == "PALADIN" then
-		DispellFilter.Magic = true
-	elseif class == "PRIEST" then
-		DispellFilter.Magic = true
-		DispellFilter.Disease = true
-	elseif class == "SHAMAN" then
-		DispellFilter.Magic = true
-	end
 end
 
 local function UpdateDebuffFrame(self, name, icon, count, debuffType, duration, expiration)
@@ -221,7 +200,6 @@ local function Enable(self)
 		return true
 	end
 
-	checkSpecs()
 	checkInstance()
 	self:RegisterEvent("PLAYER_ENTERING_WORLD", checkInstance, true)
 end
