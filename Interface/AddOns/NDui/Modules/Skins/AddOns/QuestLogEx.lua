@@ -2,10 +2,14 @@ local _, ns = ...
 local B, C, L, DB, F, T = unpack(ns)
 local S = B:GetModule("Skins")
 
+local gsub, next = gsub, next
+local IsModifiedClick, ChatEdit_GetActiveWindow, ChatEdit_InsertLink = IsModifiedClick, ChatEdit_GetActiveWindow, ChatEdit_InsertLink
+
 function S:ReskinQuestTemplate(frame)
 	F.ReskinPortraitFrame(frame)
 	F.StripTextures(frame.count)
 	F.CreateBDFrame(frame.count, .25)
+	F.StripTextures(frame.emptyLog)
 	F.StripTextures(frame.scrollFrame.expandAll)
 	F.ReskinExpandOrCollapse(frame.scrollFrame.expandAll)
 
@@ -55,16 +59,37 @@ function S:ReskinClassicQuestLog()
 		local bu = optionsFrame[name]
 		if bu then F.ReskinCheck(bu) end
 	end
+
+	-- Copy header to Chatframe
+	function ClassicQuestLog:ListEntryOnClick()
+		local index = self.index
+		if self.index == 0 then
+			return -- this is a fake header/war campaign; don't do anything
+		elseif self.isHeader then
+			ClassicQuestLogCollapsedHeaders[self.questTitle] = not ClassicQuestLogCollapsedHeaders[self.questTitle] or nil
+		else
+			if IsModifiedClick("CHATLINK") and ChatEdit_GetActiveWindow() then
+				ChatEdit_InsertLink(gsub(self:GetText(), " *(.*)", "%1")) -- Interface\FrameXML\QuestLogFrame:480
+			elseif IsModifiedClick("QUESTWATCHTOGGLE") then
+				ClassicQuestLog:ToggleWatch(index)
+			else
+				ClassicQuestLog:SelectQuestIndex(index)
+			end
+		end
+		ClassicQuestLog:UpdateLogList()
+	end
 end
 
 function S:ReskinQuestGuru()
 	if not IsAddOnLoaded("QuestGuru") then return end
 
 	S:ReskinQuestTemplate(QuestGuru)
+
 	-- Temp fix
 	if not QuestMapFrame_ShowQuestDetails then
 		QuestMapFrame_ShowQuestDetails = F.dummy
 	end
+	-- https://bbs.nga.cn/read.php?tid=18321155&pid=362320732
 end
 
 function S:ReskinQuestLogEx()
@@ -80,6 +105,7 @@ function S:ReskinQuestLogEx()
 		end
 	end)
 
+	F.StripTextures(EmptyQuestLogExFrame)
 	F.StripTextures(QuestLogExFrameDescription)
 	F.ReskinClose(QuestLogExDetailCloseButton, "TOPRIGHT", QuestLogExFrameDescription, -30, -10)
 	F.ReskinArrow(QuestLogExFrameMaximizeButton, "right")
