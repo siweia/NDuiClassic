@@ -139,18 +139,19 @@ end
 function module:CreateSortButton(name)
 	local bu = B.CreateButton(self, 24, 24, true, "Interface\\Icons\\ABILITY_SEAL")
 	bu:SetScript("OnClick", function()
+		if InCombatLockdown() then
+			UIErrorsFrame:AddMessage(DB.InfoColor..ERR_NOT_IN_COMBAT)
+			return
+		end
+
 		if name == "Bank" then
 			SortBankBags()
 		else
 			if NDuiDB["Bags"]["ReverseSort"] then
-				if InCombatLockdown() then
-					UIErrorsFrame:AddMessage(DB.InfoColor..ERR_NOT_IN_COMBAT)
-				else
-					SortBags()
-					wipe(sortCache)
-					NDui_Backpack.isSorting = true
-					C_Timer_After(.5, module.ReverseSort)
-				end
+				SortBags()
+				wipe(sortCache)
+				NDui_Backpack.isSorting = true
+				C_Timer_After(.5, module.ReverseSort)
 			else
 				SortBags()
 			end
