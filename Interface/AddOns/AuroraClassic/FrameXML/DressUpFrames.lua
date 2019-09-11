@@ -3,19 +3,11 @@ local F, C = unpack(select(2, ...))
 tinsert(C.themes["AuroraClassic"], function()
 	-- Dressup Frame
 
-	F.ReskinPortraitFrame(DressUpFrame)
---	F.Reskin(DressUpFrameOutfitDropDown.SaveButton)
+	F.ReskinPortraitFrame(DressUpFrame, 13, -10, -35, 75)
 	F.Reskin(DressUpFrameCancelButton)
 	F.Reskin(DressUpFrameResetButton)
---	F.StripTextures(DressUpFrameOutfitDropDown)
---	F.ReskinDropDown(DressUpFrameOutfitDropDown)
-	F.ReskinClose(DressUpFrameCloseButton, "TOPRIGHT", DressUpFrame, "TOPRIGHT", -10, 0)
 
---	DressUpFrameOutfitDropDown:SetHeight(32)
---	DressUpFrameOutfitDropDown.SaveButton:SetPoint("LEFT", DressUpFrameOutfitDropDown, "RIGHT", -13, 2)
-	DressUpFrameResetButton:SetPoint("RIGHT", DressUpFrameCancelButton, "LEFT", -1, 0)
-
---	F.ReskinMinMax(MaximizeMinimizeFrame)
+	DressUpFrameResetButton:SetPoint("RIGHT", DressUpFrameCancelButton, "LEFT", -2, 0)
 
 	-- SideDressUp
 
