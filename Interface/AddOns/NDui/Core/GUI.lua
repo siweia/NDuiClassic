@@ -47,7 +47,7 @@ local defaultSettings = {
 		DeleteButton = true,
 	},
 	Auras = {
-		Reminder = false,
+		Reminder = true,
 		Totems = false,
 		DestroyTotems = true,
 		ClassAuras = false,
@@ -62,7 +62,7 @@ local defaultSettings = {
 		Enable = true,
 		ClickThrough = false,
 		IconScale = 1,
-		DeprecatedAuras = false,
+		WatchSpellRank = true,
 	},
 	UFs = {
 		Enable = true,
@@ -177,7 +177,6 @@ local defaultSettings = {
 		PPIconSize = 32,
 		PPHideOOC = true,
 		NameplateClassPower = false,
-		MaxPowerGlow = false,
 		NameTextSize = 10,
 		HealthTextSize = 12,
 		MinScale = 1,
@@ -584,13 +583,12 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 	},
 	[6] = {
 		{1, "AuraWatch", "Enable", "|cff00cc4c"..L["Enable AuraWatch"], nil, setupAuraWatch},
-		--{1, "AuraWatch", "DeprecatedAuras", L["DeprecatedAuras"]},
+		{1, "AuraWatch", "WatchSpellRank", L["AuraWatch WatchSpellRank"]},
 		{1, "AuraWatch", "ClickThrough", L["AuraWatch ClickThrough"]},
 		{3, "AuraWatch", "IconScale", L["AuraWatch IconScale"], true, {.8, 2, 1}},
 		{},--blank
 		{1, "Nameplate", "ShowPlayerPlate", "|cff00cc4c"..L["Enable PlayerPlate"]},
 		--{1, "Auras", "ClassAuras", L["Enable ClassAuras"], true},
-		--{1, "Nameplate", "MaxPowerGlow", L["MaxPowerGlow"]},
 		{1, "Nameplate", "NameplateClassPower", L["Nameplate ClassPower"]},
 		{1, "Nameplate", "ClassPowerOnly", L["Nameplate ClassPowerOnly"], true},
 		{1, "Nameplate", "PPPowerText", L["PlayerPlate PowerText"]},
@@ -599,15 +597,15 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{3, "Nameplate", "PPHeight", L["PlayerPlate HPHeight"].."*", false, {5, 15, 0}, updatePlayerPlate},
 		{3, "Nameplate", "PPPHeight", L["PlayerPlate MPHeight"].."*", true, {5, 15, 0}, updatePlayerPlate},
 		{},--blank
+		{1, "Auras", "Reminder", L["Enable Reminder"]},
+		{},--blank
 		{1, "Auras", "ReverseBuffs", L["ReverseBuffs"]},
 		{1, "Auras", "ReverseDebuffs", L["ReverseDebuffs"], true},
 		{3, "Auras", "BuffSize", L["BuffSize"], nil, {24, 40, 0}},
 		{3, "Auras", "DebuffSize", L["DebuffSize"], true, {24, 40, 0}},
 		{3, "Auras", "BuffsPerRow", L["BuffsPerRow"], nil, {10, 20, 0}},
 		{3, "Auras", "DebuffsPerRow", L["DebuffsPerRow"], true, {10, 16, 0}},
-		--{},--blank
 		--{1, "Auras", "Totems", L["Enable Totems"]},
-		--{1, "Auras", "Reminder", L["Enable Reminder"], true},
 	},
 	[7] = {
 		{1, "Skins", "RM", "|cff00cc4c"..L["Raid Manger"]},
