@@ -189,7 +189,7 @@ Spell({ 5211, 6798, 8983 }, { stacking = true, -- stacking?
     end
 }) -- Bash
 Spell( 5209, { duration = 6 }) -- Challenging Roar
-Spell( 6795, { duration = 3 }) -- Taunt
+Spell( 6795, { duration = 3, stacking = true }) -- Taunt
 
 Spell({ 1850, 9821 }, { duration = 15, type = "BUFF" }) -- Dash
 Spell( 5229, { duration = 10, type = "BUFF" }) -- Enrage
@@ -259,7 +259,7 @@ Spell({ 6343, 8198, 8204, 8205, 11580, 11581 }, {
 }) -- Thunder Clap
 Spell({ 694, 7400, 7402, 20559, 20560 }, { duration = 6 }) -- Mocking Blow
 Spell( 1161 ,{ duration = 6 }) -- Challenging Shout
-Spell( 355 ,{ duration = 3 }) -- Taunt
+Spell( 355 ,{ duration = 3, stacking = true }) -- Taunt
 Spell({ 5242, 6192, 6673, 11549, 11550, 11551, 25289 }, { type = "BUFF",
     duration = function(spellID, isSrcPlayer)
         local talents = isSrcPlayer and Talent(12321, 12835, 12836, 12837, 12838) or 0
