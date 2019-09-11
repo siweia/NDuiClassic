@@ -5,12 +5,14 @@ local module = B:GetModule("AurasTable")
 -- 猎人的法术监控
 local list = {
 	["Player Aura"] = {		-- 玩家光环组
-		{AuraID = 136, UnitID = "pet"},			-- 治疗宠物
+		{AuraID = 5118, UnitID = "player"},		-- 猎豹守护
 		{AuraID = 19577, UnitID = "pet"},		-- 胁迫
 	},
 	["Target Aura"] = {		-- 目标光环组
 		{AuraID = 3355, UnitID = "target", Caster = "player"},		-- 冰冻陷阱
 		{AuraID = 5116, UnitID = "target", Caster = "player"},		-- 震荡射击
+		{AuraID = 13550, UnitID = "target", Caster = "player"},		-- 毒蛇钉刺
+		{AuraID = 14323, UnitID = "target"},	-- 猎人印记
 		{AuraID = 19386, UnitID = "target", Caster = "player"},		-- 翼龙钉刺
 		{AuraID = 24394, UnitID = "target", Caster = "pet"},		-- 胁迫
 	},
