@@ -185,6 +185,8 @@ function UF:OnLogin()
 		oUF:SetActiveStyle("PlayerPlate")
 		local plate = oUF:Spawn("player", "oUF_PlayerPlate", true)
 		B.Mover(plate, L["PlayerNP"], "PlayerPlate", C.UFs.PlayerPlate, plate:GetWidth(), 20)
+
+		UF:TogglePlayerPlateElements()
 	end
 
 	-- Default Clicksets for RaidFrame

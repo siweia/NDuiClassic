@@ -680,6 +680,7 @@ function UF:RefreshAllPlates()
 		nameplate:SetSize(NDuiDB["Nameplate"]["PlateWidth"], NDuiDB["Nameplate"]["PlateHeight"])
 		nameplate.nameText:SetFont(DB.Font[1], NDuiDB["Nameplate"]["NameTextSize"], DB.Font[3])
 		nameplate.healthValue:SetFont(DB.Font[1], NDuiDB["Nameplate"]["HealthTextSize"], DB.Font[3])
+		nameplate.healthValue:UpdateTag()
 		nameplate.Auras.showDebuffType = NDuiDB["Nameplate"]["ColorBorder"]
 		UF:UpdateClickableSize()
 		UF:UpdateTargetIndicator(nameplate)
@@ -741,6 +742,16 @@ function UF:ResizePlayerPlate()
 	end
 end
 
+function UF:TogglePlayerPlateElements()
+	if not NDuiDB["Nameplate"]["ClassPowerOnly"] then return end
+
+	local plate = _G.oUF_PlayerPlate
+	if plate then
+		plate:DisableElement("Health")
+		plate:DisableElement("Power")
+	end
+end
+
 function UF:CreatePlayerPlate()
 	self.mystyle = "PlayerPlate"
 	local iconSize, margin = NDuiDB["Nameplate"]["PPIconSize"], 2
@@ -763,7 +774,7 @@ function UF:CreatePlayerPlate()
 
 	UF:UpdateTargetClassPower()
 
-	if NDuiDB["Nameplate"]["PPHideOOC"] then
+	if NDuiDB["Nameplate"]["PPHideOOC"] and not NDuiDB["Nameplate"]["ClassPowerOnly"] then
 		self:RegisterEvent("PLAYER_REGEN_ENABLED", UF.PlateVisibility, true)
 		self:RegisterEvent("PLAYER_REGEN_DISABLED", UF.PlateVisibility, true)
 		self:RegisterEvent("PLAYER_ENTERING_WORLD", UF.PlateVisibility, true)
