@@ -22,7 +22,7 @@ end
 B:RegisterEvent("PLAYER_ENTERING_WORLD", updateHealthAPI)
 
 local function GetRealHealth(unit)
-	if GetUnitHealth and not UnitIsPlayer(unit) then
+	if GetUnitHealth and RealMobHealth.UnitHasHealthData(unit) then
 		return GetUnitHealth(unit)
 	else
 		return UnitHealth(unit)
