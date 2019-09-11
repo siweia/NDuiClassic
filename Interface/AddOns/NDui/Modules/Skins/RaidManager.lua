@@ -15,6 +15,7 @@ function S:CreateRM()
 	B.CreateSD(header)
 	B.CreateTex(header)
 	B.CreateBC(header, .5)
+	B.CreateFS(header, 14, L["Raid Tool"], true)
 	B.Mover(header, L["Raid Tool"], "RaidManager", C.Skins.RMPos)
 	header:RegisterEvent("GROUP_ROSTER_UPDATE")
 	header:RegisterEvent("PLAYER_ENTERING_WORLD")
@@ -48,7 +49,7 @@ function S:CreateRM()
 			return 5
 		end
 	end
-
+--[=[
 	local roleTexCoord = {
 		{.5, .75, 0, 1},
 		{.75, 1, 0, 1},
@@ -133,7 +134,7 @@ function S:CreateRM()
 			self.elapsed = 0
 		end
 	end)
-
+]=]
 	-- Ready check indicator
 	local rcFrame = CreateFrame("Frame", nil, header)
 	rcFrame:SetPoint("TOP", header, "BOTTOM", 0, -2)
@@ -437,14 +438,14 @@ function S:CreateRM()
 				UIErrorsFrame:AddMessage(DB.InfoColor..ERR_NOT_LEADER)
 			end
 		end},
-		{ROLE_POLL, function()
-			--[[if IsInGroup() and (UnitIsGroupLeader("player") or (UnitIsGroupAssistant("player") and IsInRaid())) then
+		--[[{ROLE_POLL, function()
+			if IsInGroup() and (UnitIsGroupLeader("player") or (UnitIsGroupAssistant("player") and IsInRaid())) then
 				InitiateRolePoll()
 			else
 				UIErrorsFrame:AddMessage(DB.InfoColor..ERR_NOT_LEADER)
-			end]]
-		end},
-		{RAID_CONTROL, function() ToggleFriendsFrame(3) end},
+			end
+		end},]]
+		{RAID_CONTROL, function() ToggleFriendsFrame(4) end},
 	}
 	local bu = {}
 	for i, j in pairs(buttons) do
