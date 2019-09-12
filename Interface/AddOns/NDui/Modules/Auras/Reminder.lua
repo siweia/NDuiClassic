@@ -9,6 +9,15 @@ local InCombatLockdown, GetZonePVPInfo = InCombatLockdown, GetZonePVPInfo
 local IsInInstance, IsPlayerSpell, UnitBuff, GetSpellTexture = IsInInstance, IsPlayerSpell, UnitBuff, GetSpellTexture
 local pairs, tinsert, next = pairs, table.insert, next
 
+function A:Reminder_ConvertToName(cfg)
+	for spellID in pairs(cfg.spells) do
+		local name = GetSpellInfo(spellID)
+		if name then
+			cfg.spells[name] = true
+		end
+	end
+end
+
 function A:Reminder_Update(cfg)
 	local frame = cfg.frame
 	local depend = cfg.depend
@@ -27,9 +36,9 @@ function A:Reminder_Update(cfg)
 	frame:Hide()
 	if isPlayerSpell and (isInCombat or isInInst or isInPVP) then
 		for i = 1, 32 do
-			local name, _, _, _, _, _, _, _, _, spellID = UnitBuff("player", i)
+			local name = UnitBuff("player", i)
 			if not name then break end
-			if name and cfg.spells[spellID] then
+			if name and cfg.spells[name] then
 				frame:Hide()
 				return
 			end
@@ -68,7 +77,10 @@ end
 
 function A:Reminder_OnEvent()
 	for _, cfg in pairs(groups) do
-		if not cfg.frame then A:Reminder_Create(cfg) end
+		if not cfg.frame then
+			A:Reminder_Create(cfg)
+			A:Reminder_ConvertToName(cfg)
+		end
 		A:Reminder_Update(cfg)
 	end
 	A:Reminder_UpdateAnchor()
@@ -76,15 +88,29 @@ end
 
 function A:InitReminder()
 	if not groups then return end
-	if not NDuiDB["Auras"]["Reminder"] then return end
 
-	parentFrame = CreateFrame("Frame", nil, UIParent)
-	parentFrame:SetPoint("CENTER", -220, 130)
-	parentFrame:SetSize(iconSize, iconSize)
+	if NDuiDB["Auras"]["Reminder"] then
+		if not parentFrame then
+			parentFrame = CreateFrame("Frame", nil, UIParent)
+			parentFrame:SetPoint("CENTER", -220, 130)
+			parentFrame:SetSize(iconSize, iconSize)
+		end
+		parentFrame:Show()
 
-	B:RegisterEvent("UNIT_AURA", A.Reminder_OnEvent, "player")
-	B:RegisterEvent("PLAYER_REGEN_ENABLED", A.Reminder_OnEvent)
-	B:RegisterEvent("PLAYER_REGEN_DISABLED", A.Reminder_OnEvent)
-	B:RegisterEvent("ZONE_CHANGED_NEW_AREA", A.Reminder_OnEvent)
-	B:RegisterEvent("PLAYER_ENTERING_WORLD", A.Reminder_OnEvent)
+		A:Reminder_OnEvent()
+		B:RegisterEvent("UNIT_AURA", A.Reminder_OnEvent, "player")
+		B:RegisterEvent("PLAYER_REGEN_ENABLED", A.Reminder_OnEvent)
+		B:RegisterEvent("PLAYER_REGEN_DISABLED", A.Reminder_OnEvent)
+		B:RegisterEvent("ZONE_CHANGED_NEW_AREA", A.Reminder_OnEvent)
+		B:RegisterEvent("PLAYER_ENTERING_WORLD", A.Reminder_OnEvent)
+	else
+		if parentFrame then
+			parentFrame:Hide()
+			B:UnregisterEvent("UNIT_AURA", A.Reminder_OnEvent)
+			B:UnregisterEvent("PLAYER_REGEN_ENABLED", A.Reminder_OnEvent)
+			B:UnregisterEvent("PLAYER_REGEN_DISABLED", A.Reminder_OnEvent)
+			B:UnregisterEvent("ZONE_CHANGED_NEW_AREA", A.Reminder_OnEvent)
+			B:UnregisterEvent("PLAYER_ENTERING_WORLD", A.Reminder_OnEvent)
+		end
+	end
 end
