@@ -156,19 +156,4 @@ DB.ReminderBuffs = {
 			pvp = true,
 		},
 	},
-	ROGUE = {
-		{	spells = {	-- 伤害类毒药
-				[2823] = true,		-- 致命药膏
-				[8679] = true,		-- 致伤药膏
-			},
-			combat = true,
-			instance = true,
-			pvp = true,
-		},
-		{	spells = {	-- 效果类毒药
-				[3408] = true,		-- 减速药膏
-			},
-			pvp = true,
-		},
-	},
 }
