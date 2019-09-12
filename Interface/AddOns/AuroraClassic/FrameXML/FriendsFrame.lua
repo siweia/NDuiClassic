@@ -2,7 +2,14 @@ local F, C = unpack(select(2, ...))
 
 tinsert(C.themes["AuroraClassic"], function()
 	for i = 1, 5 do
-		F.ReskinTab(_G["FriendsFrameTab"..i])
+		local tab = _G["FriendsFrameTab"..i]
+		tab.bg = F.ReskinTab(tab)
+		local hl = _G["FriendsFrameTab"..i.."HighlightTexture"]
+		hl:SetPoint("TOPLEFT", tab.bg, C.mult, -C.mult)
+		hl:SetPoint("BOTTOMRIGHT", tab.bg, -C.mult, C.mult)
+		if i == 1 then
+			tab:SetPoint("BOTTOMLEFT", -2, -31)
+		end
 	end
 	FriendsFrameIcon:Hide()
 	F.StripTextures(FriendsFrameFriendsScrollFrame)
