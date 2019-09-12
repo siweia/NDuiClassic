@@ -445,6 +445,10 @@ local function updateErrorBlocker()
 	B:GetModule("Misc"):UpdateErrorBlocker()
 end
 
+local function updateReminder()
+	B:GetModule("Auras"):InitReminder()
+end
+
 -- Config
 local tabList = {
 	L["Actionbar"],
@@ -597,7 +601,7 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{3, "Nameplate", "PPHeight", L["PlayerPlate HPHeight"].."*", false, {5, 15, 0}, updatePlayerPlate},
 		{3, "Nameplate", "PPPHeight", L["PlayerPlate MPHeight"].."*", true, {5, 15, 0}, updatePlayerPlate},
 		{},--blank
-		{1, "Auras", "Reminder", L["Enable Reminder"]},
+		{1, "Auras", "Reminder", L["Enable Reminder"].."*", nil, nil, updateReminder},
 		{},--blank
 		{1, "Auras", "ReverseBuffs", L["ReverseBuffs"]},
 		{1, "Auras", "ReverseDebuffs", L["ReverseDebuffs"], true},
@@ -770,14 +774,6 @@ local function NDUI_VARIABLE(key, value, newValue)
 	end
 end
 
-local function editBoxOnEnter(self)
-	GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-	GameTooltip:ClearLines()
-	GameTooltip:AddLine(L["Tips"])
-	GameTooltip:AddLine(L["EdieBox Tip"], .6,.8,1)
-	GameTooltip:Show()
-end
-
 local function optionOnEnter(self)
 	GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
 	GameTooltip:ClearLines()
@@ -835,7 +831,8 @@ local function CreateOption(i)
 				NDUI_VARIABLE(key, value, eb:GetText())
 				if callback then callback() end
 			end)
-			eb:SetScript("OnEnter", editBoxOnEnter)
+			eb.tips = L["EdieBox Tip"]
+			eb:SetScript("OnEnter", optionOnEnter)
 			eb:SetScript("OnLeave", B.HideTooltip)
 
 			B.CreateFS(eb, 14, name, "system", "CENTER", 0, 25)
