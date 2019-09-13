@@ -222,6 +222,7 @@ local defaultSettings = {
 		Mail = true,
 		ItemLevel = true,
 		GemNEnchant = true,
+		ShowItemLevel = true,
 		HideErrors = true,
 		ExpRep = true,
 		Interrupt = false,
@@ -698,6 +699,7 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 	[12] = {
 		{1, "Misc", "ItemLevel", "|cff00cc4c"..L["Show ItemLevel"]},
 		{1, "Misc", "GemNEnchant", L["Show GemNEnchant"].."*", true},
+		{1, "Misc", "ShowItemLevel", L["Show ItemLevel"].."*"},
 		{},--blank
 		{1, "Misc", "Mail", L["Mail Tool"]},
 		{1, "ACCOUNT", "AutoBubbles", L["AutoBubbles"], true},
