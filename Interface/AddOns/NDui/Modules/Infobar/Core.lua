@@ -9,7 +9,7 @@ local COPPER_AMOUNT_SYMBOL = format("|cffc77050%s|r", COPPER_AMOUNT_SYMBOL)
 
 function module:GetMoneyString(money, full)
 	if money >= 1e6 and not full then
-		return format("%.0f%s", money / 1e4, GOLD_AMOUNT_SYMBOL)
+		return format(" %.0f%s", money / 1e4, GOLD_AMOUNT_SYMBOL)
 	else
 		if money > 0 then
 			local moneyString = ""
