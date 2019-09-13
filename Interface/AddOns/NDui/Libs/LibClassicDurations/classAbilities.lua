@@ -1,7 +1,7 @@
 local lib = LibStub and LibStub("LibClassicDurations", true)
 if not lib then return end
 
-local Type, Version = "SpellTable", 23
+local Type, Version = "SpellTable", 24
 if lib:GetDataVersion(Type) >= Version then return end  -- older versions didn't have that function
 
 local Spell = lib.AddAura
@@ -330,26 +330,53 @@ Spell( 2094 , { duration = 10 }) -- Blind
 
 Spell({ 8647, 8649, 8650, 11197, 11198 }, { duration = 30 }) -- Expose Armor
 Spell({ 703, 8631, 8632, 8633, 11289, 11290 }, { duration = 18 }) -- Garrote
-Spell({ 408, 8643 }, {
-    duration = function(spellID, isSrcPlayer, comboPoints)
-        local duration = spellID == 8643 and 1 or 0 -- if Rank 2, add 1s
-        if isSrcPlayer then
-            return duration + comboPoints
-        else
-            return duration + 5 -- just assume 5cp i guess
-        end
-    end
-}) -- Kidney Shot
 
-Spell({ 1943, 8639, 8640, 11273, 11274, 11275 }, { stacking = true,
-    duration = function(spellID, isSrcPlayer, comboPoints)
-        if isSrcPlayer then
-            return (6 + comboPoints*2)
-        else
-            return 16
+do
+    local currentKidneyShotStartTime
+    local currentKidneyShotDuration
+    Spell({ 408, 8643 }, {
+        duration = function(spellID, isSrcPlayer, comboPoints, startTime)
+            local baseDuration = spellID == 8643 and 1 or 0 -- if Rank 2, add 1s
+            if isSrcPlayer then
+                -- This function runs at every UnitAura,
+                -- but we need to return duration calculated at the time of debuff application
+                if startTime == currentKidneyShotStartTime then
+                    return currentKidneyShotDuration
+                end
+
+                local duration = baseDuration + comboPoints
+                currentKidneyShotStartTime = startTime
+                currentKidneyShotDuration = duration
+
+                return duration
+            else
+                return baseDuration + 5 -- just assume 5cp i guess
+            end
         end
-    end
-}) -- Rupture
+    }) -- Kidney Shot
+end
+
+do
+    local currentRuptureStartTime
+    local currentRuptureDuration
+    Spell({ 1943, 8639, 8640, 11273, 11274, 11275 }, { stacking = true,
+        duration = function(spellID, isSrcPlayer, comboPoints, startTime)
+            if isSrcPlayer then
+                if startTime == currentRuptureStartTime then
+                    return currentRuptureDuration
+                end
+
+                local duration = 6 + comboPoints*2
+                currentRuptureStartTime = startTime
+                currentRuptureDuration = duration
+
+                return duration
+            else
+                return 16
+            end
+        end
+    }) -- Rupture
+end
 -- SnD -- player-only, can skip
 
 Spell({ 2983, 8696, 11305 }, { duration = 15, type = "BUFF" }) -- Sprint
