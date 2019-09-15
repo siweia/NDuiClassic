@@ -103,7 +103,7 @@ function module:UpdateMapAnchor()
 	if not self.isMaximized then B.RestoreMF(self) end
 end
 
-function module:WorldMapScale()
+function module:SetupWorldMap()
 	if IsAddOnLoaded("Leatrix_Maps") then return end
 
 	-- Fix worldmap cursor when scaling
@@ -131,7 +131,19 @@ function module:WorldMapScale()
 	B.CreateMF(WorldMapFrame, nil, true)
 	self.UpdateMapScale(WorldMapFrame)
 	hooksecurefunc(WorldMapFrame, "HandleUserActionToggleSelf", self.UpdateMapAnchor)
+
+	-- Default elements
 	WorldMapFrame.BlackoutFrame:Hide()
+	WorldMapFrame:SetFrameStrata("MEDIUM")
+	WorldMapFrame.BorderFrame:SetFrameStrata("MEDIUM")
+	WorldMapFrame.BorderFrame:SetFrameLevel(1)
+	WorldMapFrame:SetAttribute("UIPanelLayout-area", "center")
+	WorldMapFrame:SetAttribute("UIPanelLayout-enabled", false)
+	WorldMapFrame:SetAttribute("UIPanelLayout-allowOtherPanels", true)
+	WorldMapFrame.HandleUserActionToggleSelf = function()
+		if WorldMapFrame:IsShown() then WorldMapFrame:Hide() else WorldMapFrame:Show() end
+	end
+	tinsert(UISpecialFrames, "WorldMapFrame")
 end
 
 local function isMouseOverMap()
@@ -147,7 +159,7 @@ function module:MapFader()
 end
 
 function module:OnLogin()
-	self:WorldMapScale()
+	self:SetupWorldMap()
 	self:SetupCoords()
 	self:SetupMinimap()
 	self:MapReveal()
