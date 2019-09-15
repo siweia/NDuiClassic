@@ -178,23 +178,9 @@ local keyList = {
 
 local defaultSpellList = {
 	["DRUID"] = {
-		[2] = 88423,		-- 驱散
 		[5] = 774,			-- 回春术
-		[6] = 33763,		-- 生命绽放
-	},
-	["HUNTER"] = {
-		[21] = 90361,		-- 灵魂治愈
-		[25] = 34477,		-- 误导
-	},
-	["ROGUE"] = {
-		[6] = 57934,		-- 嫁祸
-	},
-	["WARRIOR"] = {
-		[6] = 198304,		-- 拦截
 	},
 	["SHAMAN"] = {
-		[2] = 77130,		-- 驱散
-		[5] = 61295,		-- 激流
 		[6] = 546,			-- 水上行走
 	},
 	["PALADIN"] = {
@@ -207,16 +193,13 @@ local defaultSpellList = {
 		[5] = 17,			-- 真言术盾
 		[6] = 1706,			-- 漂浮术
 	},
-	["MONK"] = {
-		[2] = 115450,		-- 驱散
-		[5] = 119611,		-- 复苏之雾
-	},
 	["MAGE"] = {
 		[6] = 130,			-- 缓落
 	},
-	["DEMONHUNTER"] = {},
+	["ROGUE"] = {},
+	["HUNTER"] = {},
+	["WARRIOR"] = {},
 	["WARLOCK"] = {},
-	["DEATHKNIGHT"] = {},
 }
 
 function UF:DefaultClickSets()
