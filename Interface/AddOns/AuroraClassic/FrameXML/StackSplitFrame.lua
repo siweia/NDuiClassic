@@ -4,8 +4,7 @@ tinsert(C.themes["AuroraClassic"], function()
 	local StackSplitFrame = StackSplitFrame
 
 	F.StripTextures(StackSplitFrame)
-	F.CreateBD(StackSplitFrame)
-	F.CreateSD(StackSplitFrame)
+	F.SetBD(StackSplitFrame, 10, -10, -10, 10)
 	F.Reskin(StackSplitOkayButton)
 	F.Reskin(StackSplitCancelButton)
 end)
