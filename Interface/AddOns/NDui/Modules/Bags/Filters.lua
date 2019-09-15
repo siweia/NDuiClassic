@@ -4,7 +4,6 @@ local module = B:GetModule("Bags")
 
 local LE_ITEM_QUALITY_POOR, LE_ITEM_QUALITY_COMMON, LE_ITEM_QUALITY_LEGENDARY = LE_ITEM_QUALITY_POOR, LE_ITEM_QUALITY_COMMON, LE_ITEM_QUALITY_LEGENDARY
 local LE_ITEM_CLASS_CONSUMABLE, LE_ITEM_CLASS_ITEM_ENHANCEMENT, EJ_LOOT_SLOT_FILTER_ARTIFACT_RELIC = LE_ITEM_CLASS_CONSUMABLE, LE_ITEM_CLASS_ITEM_ENHANCEMENT, EJ_LOOT_SLOT_FILTER_ARTIFACT_RELIC
-local LE_ITEM_CLASS_MISCELLANEOUS, LE_ITEM_MISCELLANEOUS_MOUNT, LE_ITEM_MISCELLANEOUS_COMPANION_PET = LE_ITEM_CLASS_MISCELLANEOUS, LE_ITEM_MISCELLANEOUS_MOUNT, LE_ITEM_MISCELLANEOUS_COMPANION_PET
 local LE_ITEM_CLASS_WEAPON, LE_ITEM_CLASS_ARMOR = LE_ITEM_CLASS_WEAPON, LE_ITEM_CLASS_ARMOR
 
 -- Custom filter
@@ -61,25 +60,25 @@ local function isItemLegendary(item)
 	return item.rarity == LE_ITEM_QUALITY_LEGENDARY
 end
 
-local function isMountAndPet(item)
+local function isItemFavourite(item)
 	if not NDuiDB["Bags"]["ItemFilter"] then return end
-	return item.classID == LE_ITEM_CLASS_MISCELLANEOUS and (item.subClassID == LE_ITEM_MISCELLANEOUS_MOUNT or item.subClassID == LE_ITEM_MISCELLANEOUS_COMPANION_PET)
+	return item.id and NDuiDB["Bags"]["FavouriteItems"][item.id]
 end
 
 function module:GetFilters()
-	local onlyBags = function(item) return isItemInBag(item) and not isItemEquipment(item) and not isItemConsumble(item) and not isItemAmmo(item) and not isItemJunk(item) and not isMountAndPet(item) end
+	local onlyBags = function(item) return isItemInBag(item) and not isItemEquipment(item) and not isItemConsumble(item) and not isItemAmmo(item) and not isItemJunk(item) and not isItemFavourite(item) end
 	local bagAmmo = function(item) return isItemInBag(item) and isItemAmmo(item) end
 	local bagEquipment = function(item) return isItemInBag(item) and isItemEquipment(item) end
 	local bagConsumble = function(item) return isItemInBag(item) and isItemConsumble(item) end
 	local bagsJunk = function(item) return isItemInBag(item) and isItemJunk(item) end
-	local onlyBank = function(item) return isItemInBank(item) and not isItemEquipment(item) and not isItemConsumble(item) and not isItemAmmo(item) and not isMountAndPet(item) end
+	local onlyBank = function(item) return isItemInBank(item) and not isItemEquipment(item) and not isItemConsumble(item) and not isItemAmmo(item) and not isItemFavourite(item) end
 	local bankAmmo = function(item) return isItemInBank(item) and isItemAmmo(item) end
 	local bankLegendary = function(item) return isItemInBank(item) and isItemLegendary(item) end
 	local bankEquipment = function(item) return isItemInBank(item) and isItemEquipment(item) end
 	local bankConsumble = function(item) return isItemInBank(item) and isItemConsumble(item) end
 	local onlyReagent = function(item) return item.bagID == -3 end
-	local bagMountPet = function(item) return isItemInBag(item) and isMountAndPet(item) end
-	local bankMountPet = function(item) return isItemInBank(item) and isMountAndPet(item) end
+	local bagFavourite = function(item) return isItemInBag(item) and isItemFavourite(item) end
+	local bankFavourite = function(item) return isItemInBank(item) and isItemFavourite(item) end
 
-	return onlyBags, bagAmmo, bagEquipment, bagConsumble, bagsJunk, onlyBank, bankAmmo, bankLegendary, bankEquipment, bankConsumble, onlyReagent, bagMountPet, bankMountPet
+	return onlyBags, bagAmmo, bagEquipment, bagConsumble, bagsJunk, onlyBank, bankAmmo, bankLegendary, bankEquipment, bankConsumble, onlyReagent, bagFavourite, bankFavourite
 end
