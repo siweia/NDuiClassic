@@ -552,7 +552,7 @@ function UF:CreatePlates()
 	UF:CreateRaidMark(self)
 	UF:CreatePrediction(self)
 	UF:CreateAuras(self)
-	UF:CreateThreatColor(self)
+	--UF:CreateThreatColor(self)
 
 	self.powerText = B.CreateFS(self, 15)
 	self.powerText:ClearAllPoints()
