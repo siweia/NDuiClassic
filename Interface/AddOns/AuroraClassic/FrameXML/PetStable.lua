@@ -1,49 +1,37 @@
 local F, C = unpack(select(2, ...))
 
 tinsert(C.themes["AuroraClassic"], function()
-	if C.isClassic then return end
-
 	local class = select(2, UnitClass("player"))
 	if class ~= "HUNTER" then return end
 
-	PetStableBottomInset:Hide()
-	PetStableLeftInset:Hide()
-	PetStableModelShadow:Hide()
-	PetStableModelRotateLeftButton:Hide()
-	PetStableModelRotateRightButton:Hide()
-	PetStableFrameModelBg:Hide()
-	PetStablePrevPageButtonIcon:SetTexture("")
-	PetStableNextPageButtonIcon:SetTexture("")
+	F.ReskinPortraitFrame(PetStableFrame, 15, -15, -35, 73)
+	F.Reskin(PetStablePurchaseButton)
 
-	F.ReskinPortraitFrame(PetStableFrame)
-	F.ReskinArrow(PetStablePrevPageButton, "left")
-	F.ReskinArrow(PetStableNextPageButton, "right")
+	local slots = {
+		PetStableCurrentPet,
+		PetStableStabledPet1,
+		PetStableStabledPet2,
+	}
 
-	PetStableSelectedPetIcon:SetTexCoord(.08, .92, .08, .92)
-	F.CreateBG(PetStableSelectedPetIcon)
-
-	for i = 1, NUM_PET_ACTIVE_SLOTS do
-		local bu = _G["PetStableActivePet"..i]
-		bu.Background:Hide()
-		bu.Border:Hide()
+	for _, bu in pairs(slots) do
 		bu:SetNormalTexture("")
 		bu:SetPushedTexture("")
-		bu.Checked:SetTexture(C.media.checked)
-		bu:GetHighlightTexture():SetColorTexture(1, 1, 1, .25)
-
-		_G["PetStableActivePet"..i.."IconTexture"]:SetTexCoord(.08, .92, .08, .92)
-		F.CreateBDFrame(bu, .25)
-	end
-
-	for i = 1, NUM_PET_STABLE_SLOTS do
-		local bu = _G["PetStableStabledPet"..i]
-		bu:SetNormalTexture("")
-		bu:SetPushedTexture("")
-		bu.Checked:SetTexture(C.media.checked)
+		bu:SetCheckedTexture(C.media.checked)
 		bu:GetHighlightTexture():SetColorTexture(1, 1, 1, .25)
 		bu:DisableDrawLayer("BACKGROUND")
 
-		_G["PetStableStabledPet"..i.."IconTexture"]:SetTexCoord(.08, .92, .08, .92)
-		F.CreateBDFrame(bu, .25)
+		_G[bu:GetName().."IconTexture"]:SetTexCoord(.08, .92, .08, .92)
+		bu.bg = F.CreateBDFrame(bu, .25)
 	end
+
+	hooksecurefunc("PetStable_Update", function()
+		for i = 1, 2 do
+			local bu = _G["PetStableStabledPet"..i]
+			if i <= GetNumStableSlots() then
+				bu.bg:SetBackdropBorderColor(0, 0, 0)
+			else
+				bu.bg:SetBackdropBorderColor(1, 0, 0)
+			end
+		end
+	end)
 end)
