@@ -17,12 +17,14 @@ tinsert(C.themes["AuroraClassic"], function()
 	F.ReskinPortraitFrame(TradeFrame)
 	F.Reskin(TradeFrameTradeButton)
 	F.Reskin(TradeFrameCancelButton)
+
 	F.ReskinInput(TradePlayerInputMoneyFrameGold)
 	F.ReskinInput(TradePlayerInputMoneyFrameSilver)
+	TradePlayerInputMoneyFrameSilver.bg:SetPoint("BOTTOMRIGHT", -10, 0)
 	F.ReskinInput(TradePlayerInputMoneyFrameCopper)
-
-	TradePlayerInputMoneyFrameSilver:SetPoint("LEFT", TradePlayerInputMoneyFrameGold, "RIGHT", 1, 0)
-	TradePlayerInputMoneyFrameCopper:SetPoint("LEFT", TradePlayerInputMoneyFrameSilver, "RIGHT", 1, 0)
+	TradePlayerInputMoneyFrameCopper.bg:SetPoint("BOTTOMRIGHT", -10, 0)
+	TradePlayerInputMoneyFrameSilver:SetPoint("LEFT", TradePlayerInputMoneyFrameGold, "RIGHT", 18, 0)
+	TradePlayerInputMoneyFrameCopper:SetPoint("LEFT", TradePlayerInputMoneyFrameSilver, "RIGHT", 8, 0)
 
 	local function reskinButton(bu)
 		bu:SetNormalTexture("")
