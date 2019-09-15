@@ -8,10 +8,8 @@ local UnitThreatSituation, UnitIsTapDenied, UnitPlayerControlled, UnitIsUnit = U
 local UnitReaction, UnitIsConnected, UnitIsPlayer, UnitSelectionColor = UnitReaction, UnitIsConnected, UnitIsPlayer, UnitSelectionColor
 local GetInstanceInfo, UnitClassification, UnitExists, InCombatLockdown = GetInstanceInfo, UnitClassification, UnitExists, InCombatLockdown
 local C_NamePlate_GetNamePlates = C_NamePlate.GetNamePlates
-local UnitGUID, GetPlayerInfoByGUID, Ambiguate = UnitGUID, GetPlayerInfoByGUID, Ambiguate
+local UnitGUID, GetPlayerInfoByGUID, Ambiguate, UnitName = UnitGUID, GetPlayerInfoByGUID, Ambiguate, UnitName
 local SetCVar, UIFrameFadeIn, UIFrameFadeOut = SetCVar, UIFrameFadeIn, UIFrameFadeOut
-local IsInRaid, IsInGroup, UnitName = IsInRaid, IsInGroup, UnitName
-local GetNumGroupMembers, GetNumSubgroupMembers, UnitGroupRolesAssigned = GetNumGroupMembers, GetNumSubgroupMembers, UnitGroupRolesAssigned
 local UNKNOWN, INTERRUPTED = UNKNOWN, INTERRUPTED
 
 -- Init
@@ -108,62 +106,16 @@ function UF:UpdateUnitPower()
 	end
 end
 
--- Off-tank threat color
-local groupRoles, isInGroup = {}
-local function refreshGroupRoles()
-	local isInRaid = IsInRaid()
-	isInGroup = isInRaid or IsInGroup()
-	wipe(groupRoles)
-
-	if isInGroup then
-		local numPlayers = (isInRaid and GetNumGroupMembers()) or GetNumSubgroupMembers()
-		local unit = (isInRaid and "raid") or "party"
-		for i = 1, numPlayers do
-			local index = unit..i
-			if UnitExists(index) then
-				groupRoles[UnitName(index)] = UnitGroupRolesAssigned(index)
-			end
-		end
-	end
-end
-
-local function resetGroupRoles()
-	isInGroup = IsInRaid() or IsInGroup()
-	wipe(groupRoles)
-end
-
-function UF:UpdateGroupRoles()
-	refreshGroupRoles()
-	B:RegisterEvent("GROUP_ROSTER_UPDATE", refreshGroupRoles)
-	B:RegisterEvent("GROUP_LEFT", resetGroupRoles)
-end
-
-function UF:CheckTankStatus(unit)
-	local index = unit.."target"
-	local unitRole = isInGroup and UnitExists(index) and not UnitIsUnit(index, "player") and groupRoles[UnitName(index)] or "NONE"
-	if unitRole == "TANK" and DB.Role == "Tank" then
-		self.feedbackUnit = index
-		self.isOffTank = true
-	else
-		self.feedbackUnit = "player"
-		self.isOffTank = false
-	end
-end
-
 -- Update unit color
 function UF.UpdateColor(element, unit)
 	local self = element.__owner
 	local name = self.unitName
 	local npcID = self.npcID
 	local isCustomUnit = customUnits[name] or customUnits[npcID]
-	local status = false
+	local status = UnitIsUnit(unit.."target", "player")
 	local reaction = UnitReaction(unit, "player")
 	local customColor = NDuiDB["Nameplate"]["CustomColor"]
 	local secureColor = NDuiDB["Nameplate"]["SecureColor"]
-	local transColor = NDuiDB["Nameplate"]["TransColor"]
-	local insecureColor = NDuiDB["Nameplate"]["InsecureColor"]
-	local revertThreat = NDuiDB["Nameplate"]["DPSRevertThreat"]
-	local offTankColor = NDuiDB["Nameplate"]["OffTankColor"]
 	local r, g, b
 
 	if not UnitIsConnected(unit) then
@@ -183,26 +135,8 @@ function UF.UpdateColor(element, unit)
 			r, g, b = .6, .6, .6
 		else
 			r, g, b = UnitSelectionColor(unit, true)
-			if status and (NDuiDB["Nameplate"]["TankMode"] or DB.Role == "Tank") then
-				if status == 3 then
-					if DB.Role ~= "Tank" and revertThreat then
-						r, g, b = insecureColor.r, insecureColor.g, insecureColor.b
-					else
-						if self.isOffTank then
-							r, g, b = offTankColor.r, offTankColor.g, offTankColor.b
-						else
-							r, g, b = secureColor.r, secureColor.g, secureColor.b
-						end
-					end
-				elseif status == 2 or status == 1 then
-					r, g, b = transColor.r, transColor.g, transColor.b
-				elseif status == 0 then
-					if DB.Role ~= "Tank" and revertThreat then
-						r, g, b = secureColor.r, secureColor.g, secureColor.b
-					else
-						r, g, b = insecureColor.r, insecureColor.g, insecureColor.b
-					end
-				end
+			if NDuiDB["Nameplate"]["TankMode"] and status then
+				r, g, b = secureColor.r, secureColor.g, secureColor.b
 			end
 		end
 	end
@@ -211,14 +145,8 @@ function UF.UpdateColor(element, unit)
 		element:SetStatusBarColor(r, g, b)
 	end
 
-	if not NDuiDB["Nameplate"]["TankMode"] and DB.Role ~= "Tank" then
-		if status and status == 3 then
-			element.Shadow:SetBackdropBorderColor(1, 0, 0)
-		elseif status and (status == 2 or status == 1) then
-			element.Shadow:SetBackdropBorderColor(1, 1, 0)
-		else
-			element.Shadow:SetBackdropBorderColor(0, 0, 0)
-		end
+	if not NDuiDB["Nameplate"]["TankMode"] and status then
+		element.Shadow:SetBackdropBorderColor(1, 0, 0)
 	else
 		element.Shadow:SetBackdropBorderColor(0, 0, 0)
 	end
@@ -227,7 +155,6 @@ end
 function UF:UpdateThreatColor(_, unit)
 	if unit ~= self.unit then return end
 
-	--UF.CheckTankStatus(self, unit)
 	UF.UpdateColor(self.Health, unit)
 end
 
