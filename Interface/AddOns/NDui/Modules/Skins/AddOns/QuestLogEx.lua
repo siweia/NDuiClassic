@@ -5,6 +5,31 @@ local S = B:GetModule("Skins")
 local gsub, next = gsub, next
 local IsModifiedClick, ChatEdit_GetActiveWindow, ChatEdit_InsertLink = IsModifiedClick, ChatEdit_GetActiveWindow, ChatEdit_InsertLink
 
+function S:MoveCodexButtons(frame)
+	if not CodexQuest then return end
+
+	local buttonShow = CodexQuest.buttonShow
+	buttonShow:SetParent(frame)
+	buttonShow:ClearAllPoints()
+	buttonShow:SetPoint("BOTTOMLEFT", frame, "TOPLEFT", 5, 10)
+	buttonShow:SetWidth(55)
+	buttonShow:SetText(SHOW)
+
+	local buttonHide = CodexQuest.buttonHide
+	buttonHide:SetParent(frame)
+	buttonHide:ClearAllPoints()
+	buttonHide:SetPoint("LEFT", buttonShow, "RIGHT", 5, 0)
+	buttonHide:SetWidth(55)
+	buttonHide:SetText(HIDE)
+
+	local buttonReset = CodexQuest.buttonReset
+	buttonReset:SetParent(frame)
+	buttonReset:ClearAllPoints()
+	buttonReset:SetPoint("LEFT", buttonHide, "RIGHT", 5, 0)
+	buttonReset:SetWidth(55)
+	buttonReset:SetText(RESET)
+end
+
 function S:ReskinQuestTemplate(frame)
 	F.ReskinPortraitFrame(frame)
 	F.StripTextures(frame.count)
@@ -38,6 +63,9 @@ function S:ReskinQuestTemplate(frame)
 		local bu = frame[name]
 		if bu then F.Reskin(bu) end
 	end
+
+	-- Move ClassicCodex
+	S:MoveCodexButtons(frame.detail)
 end
 
 function S:ReskinClassicQuestLog()
@@ -152,6 +180,9 @@ function S:ReskinQuestLogEx()
 	QuestLogExItemChooseText.SetTextColor = F.dummy
 	QuestLogExItemReceiveText:SetTextColor(1, 1, 1)
 	QuestLogExItemReceiveText.SetTextColor = F.dummy
+
+	-- Move ClassicCodex
+	S:MoveCodexButtons(QuestLogExDetailScrollFrame)
 end
 
 function S:ExtraQuestSkin()
