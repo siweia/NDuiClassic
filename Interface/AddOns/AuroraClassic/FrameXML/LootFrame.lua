@@ -50,27 +50,39 @@ tinsert(C.themes["AuroraClassic"], function()
 	hooksecurefunc("GroupLootFrame_OpenNewFrame", function()
 		for i = 1, NUM_GROUP_LOOT_FRAMES do
 			local frame = _G["GroupLootFrame"..i]
+			F.StripTextures(frame)
 			if not frame.styled then
 				frame.bg = F.CreateBDFrame(frame)
-				F.CreateSD(frame)
+				frame.bg:SetPoint("TOPLEFT", 8, -8)
+				frame.bg:SetPoint("BOTTOMRIGHT", -8, 8)
+				F.CreateSD(frame.bg)
+				if frame.bg.Shadow then
+					frame.bg.Shadow:SetFrameLevel(0)
+				end
 
+				F.ReskinClose(frame.PassButton, "TOPRIGHT", frame.bg, "TOPRIGHT", -5, -5)
+
+				F.StripTextures(frame.Timer)
 				frame.Timer.Bar:SetTexture(C.media.backdrop)
 				frame.Timer.Bar:SetVertexColor(1, .8, 0)
 				frame.Timer.Background:SetAlpha(0)
 				F.CreateBDFrame(frame.Timer, .25)
 
 				local icon = frame.IconFrame.Icon
-				F.ReskinIcon(icon)
+				icon:ClearAllPoints()
+				icon:SetPoint("BOTTOMLEFT", frame.Timer, "TOPLEFT", 0, 5)
+				
+				icon.bg = F.ReskinIcon(icon)
 				local bg = F.CreateBDFrame(frame, .25)
-				bg:SetPoint("TOPLEFT", icon, "TOPRIGHT", 0, 1)
-				bg:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", 150, -1)
+				bg:SetPoint("TOPLEFT", icon.bg, "TOPRIGHT", 2, 0)
+				bg:SetPoint("BOTTOMRIGHT", frame.Timer, "TOPRIGHT", C.mult, 5)
 
 				frame.styled = true
 			end
 
 			if frame:IsShown() then
-				local _, _, _, quality = GetLootRollItemInfo(frame.rollID)
-				local color = BAG_ITEM_QUALITY_COLORS[quality]
+				local quality = select(4, GetLootRollItemInfo(frame.rollID))
+				local color = BAG_ITEM_QUALITY_COLORS[quality or 1]
 				frame.bg:SetBackdropBorderColor(color.r, color.g, color.b)
 			end
 		end
