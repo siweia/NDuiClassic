@@ -595,7 +595,11 @@ function UF:UpdateTargetClassPower()
 		UF:UpdateClassPowerAnchor()
 	else
 		isTargetClassPower = false
-		bar:SetParent(playerPlate.Health)
+		if NDuiDB["Nameplate"]["ClassPowerOnly"] then
+			bar:SetParent(UIParent)
+		else
+			bar:SetParent(playerPlate.Health)
+		end
 		bar:SetScale(1)
 		bar:ClearAllPoints()
 		bar:SetPoint("BOTTOMLEFT", playerPlate.Health, "TOPLEFT", 0, 3)
