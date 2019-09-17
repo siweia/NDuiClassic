@@ -143,6 +143,7 @@ function S:ReskinQuestLogEx()
 	QuestLogExDetailMinimizeButton:ClearAllPoints()
 	QuestLogExDetailMinimizeButton:SetPoint("RIGHT", QuestLogExDetailCloseButton, "LEFT", -2, 0)
 
+	F.ReskinScroll(QuestLogExListScrollFrameScrollBar)
 	F.ReskinScroll(QuestLogExDetailScrollFrameScrollBar)
 	F.Reskin(QuestLogExFrameAbandonButton)
 	F.Reskin(QuestLogExFramePushQuestButton)
