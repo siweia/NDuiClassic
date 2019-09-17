@@ -73,6 +73,8 @@ function module:LoadInfobar(info)
 end
 
 function module:OnLogin()
+	if NDuiADB["DisableInfobars"] then return end
+
 	if not self.modules then return end
 	for _, info in pairs(self.modules) do
 		self:LoadInfobar(info)

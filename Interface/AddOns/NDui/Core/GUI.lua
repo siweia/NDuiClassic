@@ -269,6 +269,7 @@ local accountSettings = {
 	KeystoneInfo = {},
 	AutoBubbles = false,
 	SystemInfoType = 1,
+	DisableInfobars = false,
 }
 
 -- Initial settings
@@ -708,6 +709,7 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 	},
 	[13] = {
 		{1, "ACCOUNT", "VersionCheck", L["Version Check"]},
+		{1, "ACCOUNT", "DisableInfobars", L["DisableInfobars"]},
 		{},--blank
 		{3, "ACCOUNT", "UIScale", L["Setup UIScale"], false, {.4, 1.15, 2}},
 		{1, "ACCOUNT", "LockUIScale", "|cff00cc4c"..L["Lock UIScale"], true},
