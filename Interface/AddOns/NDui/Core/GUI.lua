@@ -1059,7 +1059,7 @@ local function importData()
 		elseif value == "FavouriteItems" then
 			local items = {select(3, strsplit(":", option))}
 			for _, itemID in next, items do
-				NDuiDB[key][value][itemID] = true
+				NDuiDB[key][value][tonumber(itemID)] = true
 			end
 		elseif key == "Mover" then
 			local relFrom, parent, relTo, x, y = select(3, strsplit(":", option))
