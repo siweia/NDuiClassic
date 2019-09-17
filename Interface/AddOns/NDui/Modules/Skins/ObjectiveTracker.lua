@@ -66,10 +66,13 @@ function S:QuestTracker()
 
 	if not NDuiDB["Skins"]["QuestTracker"] then return end
 
+	local headerString = QUEST_LOG.." %s/%s"
+	local MAX_QUESTLOG_QUESTS = MAX_QUESTLOG_QUESTS or 20
+
 	local header = CreateFrame("Frame", nil, frame)
 	header:SetAllPoints(frame)
 	header:Hide()
-	B.CreateFS(header, 16, QUEST_LOG, true, "TOPLEFT", 0, 15)
+	header.Text = B.CreateFS(header, 16, QUEST_LOG, true, "TOPLEFT", 0, 15)
 
 	local bg = header:CreateTexture(nil, "ARTWORK")
 	bg:SetTexture("Interface\\LFGFrame\\UI-LFG-SEPARATOR")
@@ -118,9 +121,9 @@ function S:QuestTracker()
 				text:SetTextColor(.8, .8, .8)
 			end
 		else
-			self.headerText:SetTextColor(NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b) -- 1, .82, 0
+			self.headerText:SetTextColor(1, .8, 0)
 			for _, text in ipairs(self.objectiveTexts) do
-				text:SetTextColor(HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b) -- 1, 1, 1
+				text:SetTextColor(1, 1, 1)
 			end
 		end
 	end
@@ -145,6 +148,8 @@ function S:QuestTracker()
 
 	hooksecurefunc("QuestWatch_Update", function()
 		header:SetShown(tracker:IsShown())
+		local numQuests = select(2, GetNumQuestLogEntries())
+		header.Text:SetFormattedText(headerString, numQuests, MAX_QUESTLOG_QUESTS)
 
 		local watchTextIndex = 1
 		for i = 1, GetNumQuestWatches() do
