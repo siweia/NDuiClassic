@@ -181,7 +181,7 @@ function module:CreateDeleteButton()
 			self.text = enabledText
 		else
 			self:SetBackdropBorderColor(0, 0, 0)
-			self.text = ""
+			self.text = nil
 		end
 		self:GetScript("OnEnter")(self)
 	end)
@@ -215,7 +215,7 @@ function module:CreateFavouriteButton()
 			self.text = enabledText
 		else
 			self:SetBackdropBorderColor(0, 0, 0)
-			self.text = ""
+			self.text = nil
 		end
 		self:GetScript("OnEnter")(self)
 	end)
@@ -240,7 +240,8 @@ local function favouriteOnClick(self)
 	end
 end
 
-local function buttonOnClick(self)
+local function buttonOnClick(self, btn)
+	if btn ~= "LeftButton" then return end
 	deleteButtonOnClick(self)
 	favouriteOnClick(self)
 end
@@ -344,10 +345,10 @@ function module:OnLogin()
 
 		self.Quest = B.CreateFS(self, 26, "!", "system", "LEFT", 2, 0)
 
-		self.Favourite = self:CreateTexture(nil, "ARTWORK")
+		self.Favourite = self:CreateTexture(nil, "ARTWORK", nil, 2)
 		self.Favourite:SetAtlas("collections-icon-favorites")
-		self.Favourite:SetSize(35, 35)
-		self.Favourite:SetPoint("TOPLEFT", -12, 10)
+		self.Favourite:SetSize(30, 30)
+		self.Favourite:SetPoint("TOPLEFT", -12, 9)
 
 		if showItemLevel then
 			self.iLvl = B.CreateFS(self, 12, "", false, "BOTTOMLEFT", 1, 1)
