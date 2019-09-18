@@ -112,7 +112,8 @@ function UF.UpdateColor(element, unit)
 	local name = self.unitName
 	local npcID = self.npcID
 	local isCustomUnit = customUnits[name] or customUnits[npcID]
-	local status = UnitIsUnit(unit.."target", "player")
+	local isPlayer = UnitIsPlayer(unit)
+	local isTargeting = UnitIsUnit(unit.."target", "player")
 	local reaction = UnitReaction(unit, "player")
 	local customColor = NDuiDB["Nameplate"]["CustomColor"]
 	local secureColor = NDuiDB["Nameplate"]["SecureColor"]
@@ -123,19 +124,19 @@ function UF.UpdateColor(element, unit)
 	else
 		if isCustomUnit then
 			r, g, b = customColor.r, customColor.g, customColor.b
-		elseif UnitIsPlayer(unit) and (reaction and reaction >= 5) then
+		elseif isPlayer and (reaction and reaction >= 5) then
 			if NDuiDB["Nameplate"]["FriendlyCC"] then
 				r, g, b = B.UnitColor(unit)
 			else
 				r, g, b = .3, .3, 1
 			end
-		elseif UnitIsPlayer(unit) and (reaction and reaction <= 4) and NDuiDB["Nameplate"]["HostileCC"] then
+		elseif isPlayer and (reaction and reaction <= 4) and NDuiDB["Nameplate"]["HostileCC"] then
 			r, g, b = B.UnitColor(unit)
 		elseif UnitIsTapDenied(unit) and not UnitPlayerControlled(unit) then
 			r, g, b = .6, .6, .6
 		else
 			r, g, b = UnitSelectionColor(unit, true)
-			if NDuiDB["Nameplate"]["TankMode"] and status then
+			if NDuiDB["Nameplate"]["TankMode"] and isTargeting then
 				r, g, b = secureColor.r, secureColor.g, secureColor.b
 			end
 		end
@@ -145,7 +146,7 @@ function UF.UpdateColor(element, unit)
 		element:SetStatusBarColor(r, g, b)
 	end
 
-	if not NDuiDB["Nameplate"]["TankMode"] and status then
+	if not NDuiDB["Nameplate"]["TankMode"] and not isPlayer and isTargeting then
 		element.Shadow:SetBackdropBorderColor(1, 0, 0)
 	else
 		element.Shadow:SetBackdropBorderColor(0, 0, 0)
