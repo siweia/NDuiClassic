@@ -147,8 +147,13 @@ function A:UpdateTempEnchant(button, index)
 		button:SetBackdropBorderColor(GetItemQualityColor(quality))
 	end
 
-	local expirationTime = select(offset, GetWeaponEnchantInfo())
+	local expirationTime, count = select(offset, GetWeaponEnchantInfo())
 	if expirationTime then
+		if count and count > 0 then
+			button.count:SetText(count)
+		else
+			button.count:SetText("")
+		end
 		button.offset = offset
 		button:SetScript("OnUpdate", A.UpdateTimer)
 		button.nextUpdate = -1
@@ -158,6 +163,7 @@ function A:UpdateTempEnchant(button, index)
 		button.timeLeft = nil
 		button:SetScript("OnUpdate", nil)
 		button.timer:SetText("")
+		button.count:SetText("")
 	end
 end
 
