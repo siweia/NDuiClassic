@@ -139,6 +139,7 @@ DB.ReminderBuffs = {
 	MAGE = {
 		{	spells = {	-- 奥术智慧
 				[1459] = true,
+				[23028] = true,
 			},
 			depend = 1459,
 			combat = true,
@@ -149,6 +150,7 @@ DB.ReminderBuffs = {
 	PRIEST = {
 		{	spells = {	-- 真言术耐
 				[1243] = true,
+				[21562] = true,
 			},
 			depend = 1243,
 			combat = true,
