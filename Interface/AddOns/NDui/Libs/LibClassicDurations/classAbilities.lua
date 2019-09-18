@@ -1,7 +1,7 @@
 local lib = LibStub and LibStub("LibClassicDurations", true)
 if not lib then return end
 
-local Type, Version = "SpellTable", 25
+local Type, Version = "SpellTable", 27
 if lib:GetDataVersion(Type) >= Version then return end  -- older versions didn't have that function
 
 local Spell = lib.AddAura
@@ -34,7 +34,8 @@ Spell({ 13099, 13138, 16566 }, {
 Spell( 23451, { duration = 10 }) -- Battleground speed buff
 Spell( 23493, { duration = 10 }) -- Battleground heal buff
 Spell( 23505, { duration = 60 }) -- Battleground damage buff
-Spell({ 4068, 19769 }, { duration = 3 }) -- Iron Grenade, Thorium
+Spell({ 4068 }, { duration = 3 }) -- Iron Grenade
+Spell({ 19769 }, { duration = 3 }) -- Thorium Grenade
 Spell( 6615, { duration = 30, type = "BUFF" }) -- Free Action Potion
 Spell( 24364, { duration = 5, type = "BUFF" }) -- Living Action Potion
 Spell( 3169, { duration = 6, type = "BUFF" }) -- Limited Invulnerability Potion
@@ -100,7 +101,7 @@ Spell({ 14743, 27828 }, { duration = 6, type = "BUFF" }) -- Focused Casting (Mar
 Spell( 27827, { duration = 10, type = "BUFF" }) -- Spirit of Redemption
 Spell( 15271, { duration = 15, type = "BUFF" }) -- Spirit Tap
 
-Spell({ 2652, 19261, 19262, 19264, 19265, 19266 }, { duration = 600, type = "BUFF", castFilter = true }) -- Touch of Weakness
+Spell({ 2943, 19249, 19251, 19252, 19253, 19254 }, { duration = 120 }) -- Touch of Weakness Effect
 Spell({ 13896, 19271, 19273, 19274, 19275 }, { duration = 15, type = "BUFF" }) -- Feedback
 Spell({ 2651, 19289, 19291, 19292, 19293 }, { duration = 15, type = "BUFF" }) -- Elune's Grace
 Spell({ 9035, 19281, 19282, 19283, 19284, 19285 }, { duration = 120 }) -- Hex of Weakness
@@ -160,6 +161,7 @@ Spell({ 467, 782, 1075, 8914, 9756, 9910 }, { duration = 600, type = "BUFF" }) -
 Spell( 22812 ,{ duration = 15, type = "BUFF" }) -- Barkskin
 --SKIPPING: Hurricane (Channeled)
 Spell({ 339, 1062, 5195, 5196, 9852, 9853 }, {
+    -- pvpduration = 15,
     duration = function(spellID)
         if spellID == 339 then return 12
         elseif spellID == 1062 then return 15
@@ -171,8 +173,9 @@ Spell({ 339, 1062, 5195, 5196, 9852, 9853 }, {
 }) -- Entangling Roots
 Spell({ 2908, 8955, 9901 }, { duration = 15 }) -- Soothe Animal
 Spell({ 770, 778, 9749, 9907 }, { duration = 40 }) -- Faerie Fire
-Spell({ 17390, 17391, 17392 }, { duration = 40 }) -- Faerie Fire (Feral)
+Spell({ 16857, 17390, 17391, 17392 }, { duration = 40 }) -- Faerie Fire (Feral)
 Spell({ 2637, 18657, 18658 }, {
+    -- pvpduration = 15,
     duration = function(spellID)
         if spellID == 2637 then return 20
         elseif spellID == 18657 then return 30
@@ -320,6 +323,7 @@ Spell( 13750, { duration = 15, type = "BUFF" }) -- Adrenaline Rush
 Spell( 13877, { duration = 15, type = "BUFF" }) -- Blade Flurry
 Spell( 1833, { duration = 4 }) -- Cheap Shot
 Spell({ 2070, 6770, 11297 }, {
+    -- pvpduration = 15,
     duration = function(spellID)
         if spellID == 6770 then return 25 -- yes, Rank 1 spell id is 6770 actually
         elseif spellID == 2070 then return 35
@@ -391,6 +395,7 @@ Spell({ 704, 7658, 7659, 11717 }, { duration = 120 }) -- Curse of Recklessness
 Spell( 603 ,{ duration = 60, stacking = true }) -- Curse of Doom
 Spell( 18223 ,{ duration = 12 }) -- Curse of Exhaustion
 Spell( 6358, {
+    -- pvpduration = 15,
     duration = function(spellID, isSrcPlayer)
         if isSrcPlayer then
             local mul = 1 + Talent(18754, 18755, 18756)*0.1
@@ -406,6 +411,7 @@ Spell({ 5484, 17928 }, {
     end
 }) -- Howl of Terror
 Spell({ 5782, 6213, 6215 }, {
+    -- pvpduration = 15,
     duration = function(spellID)
         if spellID == 5782 then return 10
         elseif spellID == 6213 then return 15
@@ -576,6 +582,7 @@ Spell({ 3034, 14279, 14280 }, { duration = 8 }) -- Viper Sting
 Spell({ 19386, 24132, 24133 }, { duration = 12 }) -- Wyvern Sting
 Spell({ 24131, 24134, 24135 }, { duration = 12 }) -- Wyvern Sting Dot
 Spell({ 1513, 14326, 14327 }, {
+    -- pvpduration = 15,
     duration = function(spellID)
         if spellID == 1513 then return 10
         elseif spellID == 14326 then return 15
@@ -588,6 +595,7 @@ Spell({ 19306, 20909, 20910 }, { duration = 5 }) -- Counterattack
 -- Spell({ 13812, 14314, 14315 }, { duration = 20, stacking = true }) -- Explosive Trap
 Spell({ 13797, 14298, 14299, 14300, 14301 }, { duration = 15, stacking = true }) -- Immolation Trap
 Spell({ 3355, 14308, 14309 }, {
+    -- pvpduration = 15,
     duration = function(spellID, isSrcPlayer)
         local mul = 1
         if isSrcPlayer then
@@ -635,6 +643,7 @@ Spell({ 1008, 8455, 10169, 10170 }, { duration = 600, type = "BUFF" }) -- Amplif
 
 Spell(18469, { duration = 4 }) -- Imp CS Silence
 Spell({ 118, 12824, 12825, 12826, 28270, 28271, 28272 }, {
+    -- pvpduration = 15,
     duration = function(spellID)
         if spellID == 118 then return 20
         elseif spellID == 12824 then return 30
