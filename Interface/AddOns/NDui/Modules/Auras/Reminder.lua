@@ -10,11 +10,15 @@ local IsInInstance, IsPlayerSpell, UnitBuff, GetSpellTexture = IsInInstance, IsP
 local pairs, tinsert, next = pairs, table.insert, next
 
 function A:Reminder_ConvertToName(cfg)
+	local cache = {}
 	for spellID in pairs(cfg.spells) do
 		local name = GetSpellInfo(spellID)
 		if name then
-			cfg.spells[name] = true
+			cache[name] = true
 		end
+	end
+	for name in pairs(cache) do
+		cfg.spells[name] = true
 	end
 end
 
