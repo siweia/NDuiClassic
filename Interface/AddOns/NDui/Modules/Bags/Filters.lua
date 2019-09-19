@@ -65,13 +65,18 @@ local function isItemFavourite(item)
 	return item.id and NDuiDB["Bags"]["FavouriteItems"][item.id]
 end
 
+local function isEmptySlot(item)
+	if not NDuiDB["Bags"]["GatherEmpty"] then return end
+	return not item.texture and not module.SpecialBags[item.bagID]
+end
+
 function module:GetFilters()
-	local onlyBags = function(item) return isItemInBag(item) and not isItemEquipment(item) and not isItemConsumble(item) and not isItemAmmo(item) and not isItemJunk(item) and not isItemFavourite(item) end
+	local onlyBags = function(item) return isItemInBag(item) and not isItemEquipment(item) and not isItemConsumble(item) and not isItemAmmo(item) and not isItemJunk(item) and not isItemFavourite(item) and not isEmptySlot(item) end
 	local bagAmmo = function(item) return isItemInBag(item) and isItemAmmo(item) end
 	local bagEquipment = function(item) return isItemInBag(item) and isItemEquipment(item) end
 	local bagConsumble = function(item) return isItemInBag(item) and isItemConsumble(item) end
 	local bagsJunk = function(item) return isItemInBag(item) and isItemJunk(item) end
-	local onlyBank = function(item) return isItemInBank(item) and not isItemEquipment(item) and not isItemConsumble(item) and not isItemAmmo(item) and not isItemFavourite(item) end
+	local onlyBank = function(item) return isItemInBank(item) and not isItemEquipment(item) and not isItemLegendary(item) and not isItemConsumble(item) and not isItemAmmo(item) and not isItemFavourite(item) and not isEmptySlot(item) end
 	local bankAmmo = function(item) return isItemInBank(item) and isItemAmmo(item) end
 	local bankLegendary = function(item) return isItemInBank(item) and isItemLegendary(item) end
 	local bankEquipment = function(item) return isItemInBank(item) and isItemEquipment(item) end
