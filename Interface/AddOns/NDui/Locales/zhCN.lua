@@ -543,3 +543,5 @@ L["ExtendedQuestLogAddons"] = "\n支持插件:\n- ClassicQuestLog\n- QuestGuru\n
 L["FavouriteMode"] = "设置偏好模式"
 L["FavouriteMode Enabled"] = "\n你现在可以点击标记物品。\n若启用了物品分类存放，还可以将其添加到偏好选择分类中。\n此操作对垃圾物品无效。"
 L["DisableInfobars"] = "关闭所有信息条模块"
+L["FreeSlots"] = "剩余背包空间"
+L["Bags GatherEmpty"] = "合并背包剩余空间"

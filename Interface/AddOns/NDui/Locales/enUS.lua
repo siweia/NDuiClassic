@@ -543,3 +543,5 @@ L["ExtendedQuestLogAddons"] = "\nCompatible with:\n- ClassicQuestLog\n- QuestGur
 L["FavouriteMode"] = "FavouriteMode"
 L["FavouriteMode Enabled"] = "\nYou can now star items.\nIf \'Bags ItemFilter\' enabled, the item you starred will add to Preferences filter slots.\nThis is not available to trash."
 L["DisableInfobars"] = "Disable All Infobars"
+L["FreeSlots"] = "Total free slots"
+L["Bags GatherEmpty"] = "Collect empty slots"
