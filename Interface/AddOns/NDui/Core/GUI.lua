@@ -268,7 +268,7 @@ local accountSettings = {
 	TexStyle = 2,
 	KeystoneInfo = {},
 	AutoBubbles = false,
-	SystemInfoType = 1,
+	SystemInfoType = 0,
 	DisableInfobars = false,
 }
 
