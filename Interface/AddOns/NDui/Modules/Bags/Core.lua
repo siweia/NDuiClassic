@@ -65,7 +65,11 @@ function module:CreateInfoFrame()
 	local infoFrame = CreateFrame("Button", nil, self)
 	infoFrame:SetPoint("TOPLEFT", 10, 0)
 	infoFrame:SetSize(200, 32)
-	B.CreateFS(infoFrame, 14, SEARCH, true, "LEFT", -5, 0)
+	local icon = infoFrame:CreateTexture()
+	icon:SetSize(20, 20)
+	icon:SetPoint("LEFT")
+	icon:SetTexture("Interface\\Minimap\\Tracking\\None")
+	icon:SetTexCoord(1, 0, 0, 1)
 
 	local search = self:SpawnPlugin("SearchBar", infoFrame)
 	search.highlightFunction = highlightFunction
