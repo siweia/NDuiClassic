@@ -367,7 +367,8 @@ function A:AuraWatch_UpdateCD()
 					if group.Mode:lower() == "icon" then name = nil end
 					if charges and maxCharges and maxCharges > 1 and charges < maxCharges then
 						A:AuraWatch_SetupCD(KEY, name, icon, chargeStart, chargeDuration, true, 1, value.SpellID, charges)
-					elseif start and duration > 1.5 then
+					--elseif start and duration > 1.5 then
+					elseif start and duration > 3 then -- FOR CLASSIC WOW
 						A:AuraWatch_SetupCD(KEY, name, icon, start, duration, true, 1, value.SpellID)
 					end
 				elseif value.ItemID then
