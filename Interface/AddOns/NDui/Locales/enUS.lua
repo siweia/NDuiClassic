@@ -545,3 +545,4 @@ L["FavouriteMode Enabled"] = "\nYou can now star items.\nIf \'Bags ItemFilter\' 
 L["DisableInfobars"] = "Disable All Infobars"
 L["FreeSlots"] = "Total free slots"
 L["Bags GatherEmpty"] = "Collect empty slots"
+L["AutoDismount"] = "AutoDismount&AutoStand"

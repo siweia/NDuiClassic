@@ -545,3 +545,4 @@ L["FavouriteMode Enabled"] = "\n你現在可以點擊標記物品。\n若啓用�
 L["DisableInfobars"] = "關閉所有信息條模塊"
 L["FreeSlots"] = "空閑背包欄位"
 L["Bags GatherEmpty"] = "合并背包空閑欄位"
+L["AutoDismount"] = "自動下馬及站立"

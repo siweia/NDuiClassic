@@ -238,6 +238,7 @@ local defaultSettings = {
 		ExplosiveCache = {},
 		PlacedItemAlert = false,
 		EnhancedMenu = false,
+		AutoDismount = true,
 	},
 	Tutorial = {
 		Complete = false,
@@ -708,6 +709,7 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Misc", "FasterLoot", L["Faster Loot"].."*", nil, nil, updateFasterLoot},
 		{1, "Misc", "HideErrors", L["Hide Error"].."*", true, nil, updateErrorBlocker},
 		{1, "Misc", "EnhancedMenu", L["TargetEnhancedMenu"], nil, nil, nil, L["MenuEnhancedTaints"]},
+		{1, "Misc", "AutoDismount", L["AutoDismount"], true},
 	},
 	[13] = {
 		{1, "ACCOUNT", "VersionCheck", L["Version Check"]},
