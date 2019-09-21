@@ -40,6 +40,9 @@ local talentDecreased
 local crowdControlAuras
 local FireToUnits
 
+local AIMED_SHOT = GetSpellInfo(19434)
+local playerGUID = UnitGUID("player")
+
 f:SetScript("OnEvent", function(self, event, ...)
     return self[event](self, event, ...)
 end)
@@ -111,7 +114,11 @@ local function CastStart(srcGUID, castType, spellName, spellID, overrideCastTime
     end
 
     if castType == "CAST" then
-        FireToUnits("UNIT_SPELLCAST_START", srcGUID)
+        if srcGUID == playerGUID and spellName == AIMED_SHOT then
+            callbacks:Fire("UNIT_SPELLCAST_START", "player")
+        else
+            FireToUnits("UNIT_SPELLCAST_START", srcGUID)
+        end
     else
         FireToUnits("UNIT_SPELLCAST_CHANNEL_START", srcGUID)
     end
@@ -249,7 +256,8 @@ local function IsSlowedDown(unit)
 end
 
 function lib:UnitCastingInfo(unit)
-    if UnitIsUnit(unit,"player") then return CastingInfo() end
+    local name = CastingInfo()
+    if UnitIsUnit(unit,"player") and name then return CastingInfo() end
     local guid = UnitGUID(unit)
     local cast = casters[guid]
     if cast then
