@@ -1,7 +1,7 @@
 local lib = LibStub and LibStub("LibClassicDurations", true)
 if not lib then return end
 
-local Type, Version = "SpellTable", 27
+local Type, Version = "SpellTable", 28
 if lib:GetDataVersion(Type) >= Version then return end  -- older versions didn't have that function
 
 local Spell = lib.AddAura
@@ -10,10 +10,51 @@ local Talent = lib.Talent
 local _, class = UnitClass("player")
 local locale = GetLocale()
 
--- temporary
+-- Temporary
+-- Erases Fire Vulnerability from the name to id table in case older version of the lib written it there
 if locale == "zhCN" then
     lib.spellNameToID[GetSpellInfo(980)] = nil
 end
+
+-- https://github.com/rgd87/LibClassicDurations/issues/11
+lib.indirectRefreshSpells = {
+    [GetSpellInfo(11597)] = { -- Sunder Armor
+        event = "SPELL_CAST_SUCCESS",
+        targetSpellID = 11597,
+    },
+
+    [GetSpellInfo(10207)] = { -- Scorch
+        event = "SPELL_DAMAGE",
+        targetSpellID = 22959, -- Fire Vulnerability
+        condition = function(isMine) return isMine end,
+        -- it'll refresg only from mages personal casts which is fine
+        -- because if mage doesn't have imp scorch then he won't even see a Fire Vulnerability timer
+    },
+
+    -- Shadow Weaving
+    [GetSpellInfo(10894)] = { -- SW:Pain
+        event = "SPELL_PERIODIC_DAMAGE",
+        targetSpellID = 15258, -- Shadow Weaving
+        condition = function(isMine) return isMine end,
+    },
+    [GetSpellInfo(10947)] = { -- Mind Blast
+        event = "SPELL_DAMAGE",
+        targetSpellID = 15258, -- Shadow Weaving
+        condition = function(isMine) return isMine end,
+    },
+    [GetSpellInfo(18807)] = { -- Mind Flay
+        event = "SPELL_PERIODIC_DAMAGE",
+        targetSpellID = 15258, -- Shadow Weaving
+        condition = function(isMine) return isMine end,
+    },
+
+    [GetSpellInfo(25357)] = { -- Healing Wave
+        event = "SPELL_CAST_SUCCESS",
+        targetSpellID = 29203, -- Healing Way
+    },
+
+}
+
 ------------------
 -- GLOBAL
 ------------------
@@ -138,7 +179,20 @@ Spell({ 589, 594, 970, 992, 2767, 10892, 10893, 10894 }, { stacking = true,
     end
 }) -- SW:P
 Spell( 15269 ,{ duration = 3 }) -- Blackout
--- Spell( 15258 ,{ duration = 15 }) -- Shadow Vulnerability
+
+if class == "PRIEST" then
+Spell( 15258 ,{
+    duration = function(spellID, isSrcPlayer)
+        -- Only SP himself can see the timer
+        if Talent(15257, 15331, 15332, 15333, 15334) > 0 then
+            return 15
+        else
+            return nil
+        end
+    end
+}) -- Shadow Weaving
+end
+
 Spell( 15286 ,{ duration = 60 }) -- Vampiric Embrace
 Spell({ 15407, 17311, 17312, 17313, 17314, 18807 }, { duration = 3 }) -- Mind Flay
 Spell({ 605, 10911, 10912 }, { duration = 60 }) -- Mind Control
@@ -660,9 +714,16 @@ Spell({ 6143, 8461, 8462, 10177, 28609 }, { duration = 30, type = "BUFF" }) -- F
 Spell(12355, { duration = 2 }) -- Impact
 Spell(12654, { duration = 4 }) -- Ignite
 
--- if locale ~= "zhCN" or class == "MAGE" then
--- Spell(22959, { duration = 30 }) -- Fire Vulnerability
--- end
+if class == "MAGE" then
+Spell(22959, {
+    duration = function(spellID, isSrcPlayer)
+        if Talent(11095, 12872, 12873) > 0 then
+            return 30
+        else
+            return nil
+        end
+    end }) -- Fire Vulnerability
+end
 
 Spell({ 11113, 13018, 13019, 13020, 13021 }, { duration = 6 }) -- Blast Wave
 
