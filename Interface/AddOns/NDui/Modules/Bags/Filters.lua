@@ -37,6 +37,7 @@ end
 
 local function isItemAmmo(item)
 	if not NDuiDB["Bags"]["ItemFilter"] then return end
+	if DB.MyClass ~= "HUNTER" then return end
 	return item.equipLoc == "INVTYPE_AMMO" or module.AmmoBags[item.bagID]
 end
 
