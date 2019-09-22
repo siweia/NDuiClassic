@@ -1,7 +1,3 @@
--------------------------------
--- oUF_RaidDebuffs, by yleaf
--- NDui MOD
--------------------------------
 local _, ns = ...
 local B, C, L, DB = unpack(ns)
 local oUF = ns.oUF or oUF
@@ -112,12 +108,13 @@ local function UpdateDebuffFrame(self, name, icon, count, debuffType, duration, 
 	end
 end
 
-local instName
+local instType
 local function checkInstance()
-	if IsInInstance() then
-		instName = GetInstanceInfo()
+	local _, instanceType = GetInstanceInfo()
+	if instanceType == "raid" then
+		instType = "raid"
 	else
-		instName = nil
+		instType = "other"
 	end
 end
 
@@ -160,8 +157,8 @@ local function Update(self, _, unit)
 		end
 
 		local instPrio
-		if instName and debuffs[instName] then
-			instPrio = debuffs[instName][spellId]
+		if instType and debuffs[instType] then
+			instPrio = debuffs[instType][spellId]
 		end
 
 		if not RaidDebuffsIgnore[spellId] and instPrio and (instPrio == 6 or instPrio > rd.priority) then
@@ -172,7 +169,7 @@ local function Update(self, _, unit)
 
 	if debugMode then
 		rd.priority = 6
-		_name, _, _icon = GetSpellInfo(47540)
+		_name, _, _icon = GetSpellInfo(168)
 		_count, _debuffType, _duration, _expiration = 2, "Magic", 10, GetTime()+10, 0
 	end
 

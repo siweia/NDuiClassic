@@ -76,19 +76,14 @@ end
 
 -- RaidFrame debuffs
 local RaidDebuffs = {}
-function module:RegisterDebuff(_, instID, _, spellID, level)
-	--local instName = EJ_GetInstanceInfo(instID)
-	local instName = instID
-	if not instName then print("Invalid instance ID: "..instID) return end
-
-	if not RaidDebuffs[instName] then RaidDebuffs[instName] = {} end
-	if level then
-		if level > 6 then level = 6 end
-	else
-		level = 2
+function module:AddRaidDebuffs(list)
+	for instType, value in pairs(list) do
+		for spellID, prio in pairs(value) do
+			if not RaidDebuffs[instType] then RaidDebuffs[instType] = {} end
+			if prio > 6 then prio = 6 end
+			RaidDebuffs[instType][spellID] = prio
+		end
 	end
-
-	RaidDebuffs[instName][spellID] = level
 end
 
 function module:BuildNameListFromID()
@@ -107,16 +102,15 @@ function module:BuildNameListFromID()
 end
 
 function module:OnLogin()
-	for instName, value in pairs(RaidDebuffs) do
-		for spell, priority in pairs(value) do
-			if NDuiADB["RaidDebuffs"][instName] and NDuiADB["RaidDebuffs"][instName][spell] and NDuiADB["RaidDebuffs"][instName][spell] == priority then
-				NDuiADB["RaidDebuffs"][instName][spell] = nil
-			end
-		end
+	-- Cleanup data
+	if not NDuiADB["RaidDebuffs"]["other"] then
+		wipe(NDuiADB["RaidDebuffs"])
 	end
-	for instName, value in pairs(NDuiADB["RaidDebuffs"]) do
-		if not next(value) then
-			NDuiADB["RaidDebuffs"][instName] = nil
+	for instType, value in pairs(RaidDebuffs) do
+		for spellID, prio in pairs(value) do
+			if NDuiADB["RaidDebuffs"][instType] and NDuiADB["RaidDebuffs"][instType][spellID] and NDuiADB["RaidDebuffs"][instType][spellID] == prio then
+				NDuiADB["RaidDebuffs"][instType][spellID] = nil
+			end
 		end
 	end
 

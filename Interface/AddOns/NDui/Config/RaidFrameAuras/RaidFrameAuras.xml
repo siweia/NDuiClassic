@@ -1,3 +1,4 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file="ClassSpells.lua"/>
+	<Script file="RaidDebuffs.lua"/>
 </Ui>
