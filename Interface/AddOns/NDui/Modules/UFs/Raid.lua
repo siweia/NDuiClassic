@@ -75,19 +75,19 @@ end
 local debuffList = {}
 function UF:UpdateRaidDebuffs()
 	wipe(debuffList)
-	for instName, value in pairs(C.RaidDebuffs) do
-		for spell, priority in pairs(value) do
-			if not (NDuiADB["RaidDebuffs"][instName] and NDuiADB["RaidDebuffs"][instName][spell]) then
-				if not debuffList[instName] then debuffList[instName] = {} end
-				debuffList[instName][spell] = priority
+	for instType, value in pairs(C.RaidDebuffs) do
+		for spellID, priority in pairs(value) do
+			if not (NDuiADB["RaidDebuffs"][instType] and NDuiADB["RaidDebuffs"][instType][spellID]) then
+				if not debuffList[instType] then debuffList[instType] = {} end
+				debuffList[instType][spellID] = priority
 			end
 		end
 	end
-	for instName, value in pairs(NDuiADB["RaidDebuffs"]) do
-		for spell, priority in pairs(value) do
+	for instType, value in pairs(NDuiADB["RaidDebuffs"]) do
+		for spellID, priority in pairs(value) do
 			if priority > 0 then
-				if not debuffList[instName] then debuffList[instName] = {} end
-				debuffList[instName][spell] = priority
+				if not debuffList[instType] then debuffList[instType] = {} end
+				debuffList[instType][spellID] = priority
 			end
 		end
 	end
