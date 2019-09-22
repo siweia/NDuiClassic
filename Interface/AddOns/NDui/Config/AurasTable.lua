@@ -103,7 +103,7 @@ end
 
 function module:OnLogin()
 	-- Cleanup data
-	if not NDuiADB["RaidDebuffs"]["other"] then
+	if next(NDuiADB["RaidDebuffs"]) and not NDuiADB["RaidDebuffs"]["raid"] and not NDuiADB["RaidDebuffs"]["other"] then
 		wipe(NDuiADB["RaidDebuffs"])
 	end
 	for instType, value in pairs(RaidDebuffs) do
