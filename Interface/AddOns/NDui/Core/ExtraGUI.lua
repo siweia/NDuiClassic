@@ -72,43 +72,22 @@ function G:SetupRaidDebuffs(parent)
 	local frame = raidDebuffsGUI.bg
 	local bars, options = {}, {}
 
-	local iType = G:CreateDropdown(frame, L["Type*"], 10, -30, {DUNGEONS, RAID}, L["Instance Type"])
+	local iType = G:CreateDropdown(frame, L["Type*"], 10, -30, {RAID, OTHER}, L["Instance Type"], 150, 30)
 	for i = 1, 2 do
 		iType.options[i]:HookScript("OnClick", function()
-			for j = 1, 2 do
-				G:ClearEdit(options[j])
-				if i == j then
-					options[j]:Show()
-				else
-					options[j]:Hide()
-				end
-			end
-
 			for k = 1, #bars do
 				bars[k]:Hide()
 			end
 		end)
 	end
 
-	local dungeons = {}
-	for _, dungeon in next, C_ChallengeMode.GetMapTable() do
-		local name = C_ChallengeMode.GetMapUIInfo(dungeon)
-		tinsert(dungeons, name)
-	end
-	local raids = {
-		[1] = EJ_GetInstanceInfo(1031),
-		[2] = EJ_GetInstanceInfo(1176),
-		[3] = EJ_GetInstanceInfo(1177),
-		[4] = EJ_GetInstanceInfo(1179),
+	local typeIndex = {
+		[RAID] = "raid",
+		[OTHER] = "other",
 	}
 
-	options[1] = G:CreateDropdown(frame, DUNGEONS.."*", 120, -30, dungeons, L["Dungeons Intro"], 130, 30)
-	options[1]:Hide()
-	options[2] = G:CreateDropdown(frame, RAID.."*", 120, -30, raids, L["Raid Intro"], 130, 30)
-	options[2]:Hide()
-
-	options[3] = G:CreateEditbox(frame, "ID*", 10, -90, L["ID Intro"])
-	options[4] = G:CreateEditbox(frame, L["Priority"], 120, -90, L["Priority Intro"])
+	options[1] = G:CreateEditbox(frame, "ID*", 10, -90, L["ID Intro"])
+	options[2] = G:CreateEditbox(frame, L["Priority"], 120, -90, L["Priority Intro"])
 
 	local function analyzePrio(priority)
 		priority = priority or 2
@@ -117,9 +96,9 @@ function G:SetupRaidDebuffs(parent)
 		return priority
 	end
 
-	local function isAuraExisted(instName, spellID)
-		local localPrio = C.RaidDebuffs[instName][spellID]
-		local savedPrio = NDuiADB["RaidDebuffs"][instName] and NDuiADB["RaidDebuffs"][instName][spellID]
+	local function isAuraExisted(instType, spellID)
+		local localPrio = C.RaidDebuffs[instType][spellID]
+		local savedPrio = NDuiADB["RaidDebuffs"][instType] and NDuiADB["RaidDebuffs"][instType][spellID]
 		if (localPrio and savedPrio and savedPrio == 0) or (not localPrio and not savedPrio) then
 			return false
 		end
@@ -127,18 +106,18 @@ function G:SetupRaidDebuffs(parent)
 	end
 
 	local function addClick(options)
-		local dungeonName, raidName, spellID, priority = options[1].Text:GetText(), options[2].Text:GetText(), tonumber(options[3]:GetText()), tonumber(options[4]:GetText())
-		local instName = dungeonName or raidName
-		if not instName or not spellID then UIErrorsFrame:AddMessage(DB.InfoColor..L["Incomplete Input"]) return end
+		local instType, spellID, priority = iType.Text:GetText(), tonumber(options[1]:GetText()), tonumber(options[2]:GetText())
+		instType = typeIndex[instType]
+		if not instType or not spellID then UIErrorsFrame:AddMessage(DB.InfoColor..L["Incomplete Input"]) return end
 		if spellID and not GetSpellInfo(spellID) then UIErrorsFrame:AddMessage(DB.InfoColor..L["Incorrect SpellID"]) return end
-		if isAuraExisted(instName, spellID) then UIErrorsFrame:AddMessage(DB.InfoColor..L["Existing ID"]) return end
+		if isAuraExisted(instType, spellID) then UIErrorsFrame:AddMessage(DB.InfoColor..L["Existing ID"]) return end
 
 		priority = analyzePrio(priority)
-		if not NDuiADB["RaidDebuffs"][instName] then NDuiADB["RaidDebuffs"][instName] = {} end
-		NDuiADB["RaidDebuffs"][instName][spellID] = priority
-		setupBars(instName)
-		G:ClearEdit(options[3])
-		G:ClearEdit(options[4])
+		if not NDuiADB["RaidDebuffs"][instType] then NDuiADB["RaidDebuffs"][instType] = {} end
+		NDuiADB["RaidDebuffs"][instType][spellID] = priority
+		setupBars(instType)
+		G:ClearEdit(options[1])
+		G:ClearEdit(options[2])
 	end
 
 	local scroll = G:CreateScroll(frame, 240, 350)
@@ -190,13 +169,13 @@ function G:SetupRaidDebuffs(parent)
 
 		close:SetScript("OnClick", function()
 			bar:Hide()
-			if C.RaidDebuffs[bar.instName][bar.spellID] then
-				if not NDuiADB["RaidDebuffs"][bar.instName] then NDuiADB["RaidDebuffs"][bar.instName] = {} end
-				NDuiADB["RaidDebuffs"][bar.instName][bar.spellID] = 0
+			if C.RaidDebuffs[bar.instType][bar.spellID] then
+				if not NDuiADB["RaidDebuffs"][bar.instType] then NDuiADB["RaidDebuffs"][bar.instType] = {} end
+				NDuiADB["RaidDebuffs"][bar.instType][bar.spellID] = 0
 			else
-				NDuiADB["RaidDebuffs"][bar.instName][bar.spellID] = nil
+				NDuiADB["RaidDebuffs"][bar.instType][bar.spellID] = nil
 			end
-			setupBars(bar.instName)
+			setupBars(bar.instType)
 		end)
 
 		local spellName = B.CreateFS(bar, 14, "", false, "LEFT", 30, 0)
@@ -215,8 +194,8 @@ function G:SetupRaidDebuffs(parent)
 		end)
 		prioBox:HookScript("OnEnterPressed", function(self)
 			local prio = analyzePrio(tonumber(self:GetText()))
-			if not NDuiADB["RaidDebuffs"][bar.instName] then NDuiADB["RaidDebuffs"][bar.instName] = {} end
-			NDuiADB["RaidDebuffs"][bar.instName][bar.spellID] = prio
+			if not NDuiADB["RaidDebuffs"][bar.instType] then NDuiADB["RaidDebuffs"][bar.instType] = {} end
+			NDuiADB["RaidDebuffs"][bar.instType][bar.spellID] = prio
 			self:SetText(prio)
 		end)
 		prioBox.title = L["Tips"]
@@ -226,12 +205,12 @@ function G:SetupRaidDebuffs(parent)
 		return bar
 	end
 
-	local function applyData(index, instName, spellID, priority)
+	local function applyData(index, instType, spellID, priority)
 		local name, _, texture = GetSpellInfo(spellID)
 		if not bars[index] then
 			bars[index] = createBar(index, texture)
 		end
-		bars[index].instName = instName
+		bars[index].instType = instType
 		bars[index].spellID = spellID
 		bars[index].priority = priority
 		bars[index].spellName:SetText(name)
@@ -241,21 +220,24 @@ function G:SetupRaidDebuffs(parent)
 	end
 
 	function setupBars(self)
-		local instName = self.text or self
+		local instType = self
+		if self.text then
+			instType = typeIndex[self.text]
+		end
 		local index = 0
 
-		for spellID, priority in pairs(C.RaidDebuffs[instName]) do
-			if not (NDuiADB["RaidDebuffs"][instName] and NDuiADB["RaidDebuffs"][instName][spellID]) then
+		for spellID, priority in pairs(C.RaidDebuffs[instType]) do
+			if not (NDuiADB["RaidDebuffs"][instType] and NDuiADB["RaidDebuffs"][instType][spellID]) then
 				index = index + 1
-				applyData(index, instName, spellID, priority)
+				applyData(index, instType, spellID, priority)
 			end
 		end
 
-		if NDuiADB["RaidDebuffs"][instName] then
-			for spellID, priority in pairs(NDuiADB["RaidDebuffs"][instName]) do
+		if NDuiADB["RaidDebuffs"][instType] then
+			for spellID, priority in pairs(NDuiADB["RaidDebuffs"][instType]) do
 				if priority > 0 then
 					index = index + 1
-					applyData(index, instName, spellID, priority)
+					applyData(index, instType, spellID, priority)
 				end
 			end
 		end
@@ -276,27 +258,8 @@ function G:SetupRaidDebuffs(parent)
 	end
 
 	for i = 1, 2 do
-		for j = 1, #options[i].options do
-			options[i].options[j]:HookScript("OnClick", setupBars)
-		end
+		iType.options[i]:HookScript("OnClick", setupBars)
 	end
-
-	local function autoSelectInstance()
-		local instName, instType = GetInstanceInfo()
-		if instType == "none" then return end
-		for i = 1, 2 do
-			local option = options[i]
-			for j = 1, #option.options do
-				local name = option.options[j].text
-				if instName == name then
-					iType.options[i]:Click()
-					options[i].options[j]:Click()
-				end
-			end
-		end
-	end
-	autoSelectInstance()
-	raidDebuffsGUI:HookScript("OnShow", autoSelectInstance)
 end
 
 function G:SetupClickCast(parent)
