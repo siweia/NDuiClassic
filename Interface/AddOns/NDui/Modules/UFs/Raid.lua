@@ -30,11 +30,6 @@ function UF:CreateRaidIcons(self)
 	role:SetSize(12, 12)
 	role:SetPoint("TOPLEFT", 12, 8)
 	self.RaidRoleIndicator = role
---[[
-	local summon = parent:CreateTexture(nil, "OVERLAY")
-	summon:SetSize(32, 32)
-	summon:SetPoint("CENTER", parent)
-	self.SummonIndicator = summon]]
 end
 
 function UF:UpdateTargetBorder()
@@ -132,10 +127,10 @@ function UF:CreateRaidDebuffs(self)
 	bu.ShowDispellableDebuff = true
 	bu.ShowDebuffBorder = true
 	bu.FilterDispellableDebuff = true
-	--if NDuiDB["UFs"]["InstanceAuras"] then
-	--	if not next(debuffList) then UF:UpdateRaidDebuffs() end
-	--	bu.Debuffs = debuffList
-	--end
+	if NDuiDB["UFs"]["InstanceAuras"] then
+		if not next(debuffList) then UF:UpdateRaidDebuffs() end
+		bu.Debuffs = debuffList
+	end
 	self.RaidDebuffs = bu
 end
 
