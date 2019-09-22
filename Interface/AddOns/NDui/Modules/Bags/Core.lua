@@ -8,10 +8,11 @@ local ipairs, strmatch, unpack, pairs, ceil = ipairs, string.match, unpack, pair
 local BAG_ITEM_QUALITY_COLORS = BAG_ITEM_QUALITY_COLORS
 local LE_ITEM_QUALITY_POOR, LE_ITEM_QUALITY_RARE = LE_ITEM_QUALITY_POOR, LE_ITEM_QUALITY_RARE
 local LE_ITEM_CLASS_WEAPON, LE_ITEM_CLASS_ARMOR, LE_ITEM_CLASS_QUIVER = LE_ITEM_CLASS_WEAPON, LE_ITEM_CLASS_ARMOR, LE_ITEM_CLASS_QUIVER
-local GetContainerNumSlots, GetContainerItemInfo, PickupContainerItem, GetContainerItemID = GetContainerNumSlots, GetContainerItemInfo, PickupContainerItem, GetContainerItemID
+local GetContainerNumSlots, GetContainerItemInfo, PickupContainerItem = GetContainerNumSlots, GetContainerItemInfo, PickupContainerItem
 local C_NewItems_IsNewItem, C_Timer_After = C_NewItems.IsNewItem, C_Timer.After
 local IsControlKeyDown, IsAltKeyDown, DeleteCursorItem = IsControlKeyDown, IsAltKeyDown, DeleteCursorItem
 local SortBankBags, SortBags, InCombatLockdown, ClearCursor = SortBankBags, SortBags, InCombatLockdown, ClearCursor
+local GetContainerItemID, GetContainerNumFreeSlots = GetContainerItemID, GetContainerNumFreeSlots
 
 local sortCache = {}
 function module:ReverseSort()
@@ -608,7 +609,9 @@ function module:OnLogin()
 
 		module.AmmoBags[self.bagID] = (classID == LE_ITEM_CLASS_QUIVER)
 		local bagFamily = select(2, GetContainerNumFreeSlots(self.bagID))
-		module.SpecialBags[self.bagID] = bagFamily ~= 0
+		if bagFamily then
+			module.SpecialBags[self.bagID] = bagFamily ~= 0
+		end
 	end
 
 	-- Fixes
