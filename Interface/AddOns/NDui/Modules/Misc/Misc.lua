@@ -80,7 +80,7 @@ function M:OnLogin()
 	MAIN_MENU_MICRO_ALERT_PRIORITY = MAIN_MENU_MICRO_ALERT_PRIORITY or {}
 
 	-- RealMobHealth override
-	if RealMobHealth then
+	if RealMobHealth and RealMobHealth.OverrideOption then
 		RealMobHealth.OverrideOption("ModifyHealthBarText", false)
 		RealMobHealth.OverrideOption("ShowTooltipHealthText", false)
 		RealMobHealth.OverrideOption("ShowNamePlateHealthText", false)
