@@ -9,7 +9,7 @@ local BAG_ITEM_QUALITY_COLORS = BAG_ITEM_QUALITY_COLORS
 local LE_ITEM_QUALITY_POOR, LE_ITEM_QUALITY_RARE = LE_ITEM_QUALITY_POOR, LE_ITEM_QUALITY_RARE
 local LE_ITEM_CLASS_WEAPON, LE_ITEM_CLASS_ARMOR, LE_ITEM_CLASS_QUIVER = LE_ITEM_CLASS_WEAPON, LE_ITEM_CLASS_ARMOR, LE_ITEM_CLASS_QUIVER
 local GetContainerNumSlots, GetContainerItemInfo, PickupContainerItem = GetContainerNumSlots, GetContainerItemInfo, PickupContainerItem
-local C_NewItems_IsNewItem, C_Timer_After = C_NewItems.IsNewItem, C_Timer.After
+local C_NewItems_IsNewItem, C_NewItems_RemoveNewItem, C_Timer_After = C_NewItems.IsNewItem, C_NewItems.RemoveNewItem, C_Timer.After
 local IsControlKeyDown, IsAltKeyDown, DeleteCursorItem = IsControlKeyDown, IsAltKeyDown, DeleteCursorItem
 local SortBankBags, SortBags, InCombatLockdown, ClearCursor = SortBankBags, SortBags, InCombatLockdown, ClearCursor
 local GetContainerItemID, GetContainerNumFreeSlots = GetContainerItemID, GetContainerNumFreeSlots
@@ -427,7 +427,10 @@ function module:OnLogin()
 	end
 
 	function MyButton:ItemOnEnter()
-		if self.glowFrame then B.HideOverlayGlow(self.glowFrame) end
+		if self.glowFrame then
+			B.HideOverlayGlow(self.glowFrame)
+			C_NewItems_RemoveNewItem(self.bagID, self.slotID)
+		end
 	end
 
 	function MyButton:OnUpdate(item)
