@@ -37,7 +37,6 @@ function M:OnLogin()
 	self:MailBox()
 	self:ShowItemLevel()
 	self:QuestNotifier()
-	self:ExtendInstance()
 	self:UIWidgetFrameMover()
 	self:MoveDurabilityFrame()
 	self:MoveTicketStatusFrame()
@@ -78,42 +77,6 @@ function M:OnLogin()
 
 	-- Fix blizz error
 	MAIN_MENU_MICRO_ALERT_PRIORITY = MAIN_MENU_MICRO_ALERT_PRIORITY or {}
-
-	-- RealMobHealth override
-	if RealMobHealth and RealMobHealth.OverrideOption then
-		RealMobHealth.OverrideOption("ModifyHealthBarText", false)
-		RealMobHealth.OverrideOption("ShowTooltipHealthText", false)
-		RealMobHealth.OverrideOption("ShowNamePlateHealthText", false)
-		RealMobHealth.OverrideOption("ShowStatusBarTextAdditions", false)
-	end
-end
-
--- Extend Instance
-function M:ExtendInstance()
-	local bu = CreateFrame("Button", nil, RaidInfoFrame)
-	bu:SetPoint("TOPRIGHT", -35, -5)
-	bu:SetSize(25, 25)
-	B.PixelIcon(bu, GetSpellTexture(80353), true)
-	B.AddTooltip(bu, "ANCHOR_RIGHT", L["Extend Instance"], "system")
-
-	bu:SetScript("OnMouseUp", function(_, btn)
-		for i = 1, GetNumSavedInstances() do
-			local _, _, _, _, _, extended, _, isRaid = GetSavedInstanceInfo(i)
-			if isRaid then
-				if btn == "LeftButton" then
-					if not extended then
-						SetSavedInstanceExtend(i, true)		-- extend
-					end
-				else
-					if extended then
-						SetSavedInstanceExtend(i, false)	-- cancel
-					end
-				end
-			end
-		end
-		RequestRaidInfo()
-		RaidInfoFrame_Update()
-	end)
 end
 
 -- Reanchor Vehicle
