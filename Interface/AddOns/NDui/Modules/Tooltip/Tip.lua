@@ -364,6 +364,11 @@ function TT:OnLogin()
 	self:ReskinTooltipIcons()
 	self:SetupTooltipID()
 	self:TargetedInfo()
+
+	-- RealMobHealth override
+	if RealMobHealth and RealMobHealth.OverrideOption then
+		RealMobHealth.OverrideOption("ShowTooltipHealthText", false)
+	end
 end
 
 -- Tooltip Skin Registration
