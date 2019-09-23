@@ -146,7 +146,7 @@ function UF.UpdateColor(element, unit)
 		element:SetStatusBarColor(r, g, b)
 	end
 
-	if not NDuiDB["Nameplate"]["TankMode"] and not isPlayer and isTargeting then
+	if (not NDuiDB["Nameplate"]["TankMode"] or isCustomUnit or isPlayer) and UnitCanAttack(unit, "player") and isTargeting then
 		element.Shadow:SetBackdropBorderColor(1, 0, 0)
 	else
 		element.Shadow:SetBackdropBorderColor(0, 0, 0)
