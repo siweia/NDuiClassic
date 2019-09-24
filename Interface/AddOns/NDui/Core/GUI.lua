@@ -146,7 +146,7 @@ local defaultSettings = {
 		ShowRecycleBin = true,
 		WhoPings = true,
 		MapReveal = true,
-		MapFader = false,
+		MapFader = true,
 	},
 	Nameplate = {
 		Enable = true,
@@ -247,6 +247,7 @@ local defaultSettings = {
 
 local accountSettings = {
 	ChatFilterList = "%*",
+	ChatFilterWhiteList = "",
 	Timestamp = true,
 	NameplateFilter = {[1]={}, [2]={}},
 	RaidDebuffs = {},
@@ -375,6 +376,10 @@ end
 
 local function updateFilterList()
 	B:GetModule("Chat"):UpdateFilterList()
+end
+
+local function updateFilterWhiteList()
+	B:GetModule("Chat"):UpdateFilterWhiteList()
 end
 
 local function updateChatSize()
@@ -646,9 +651,10 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Chat", "ChatItemLevel", "|cff00cc4c"..L["ShowChatItemLevel"]},
 		{},--blank
 		{1, "Chat", "EnableFilter", "|cff00cc4c"..L["Enable Chatfilter"]},
-		{1, "Chat", "BlockAddonAlert", L["Block Addon Alert"], true},
-		{3, "Chat", "Matches", L["Keyword Match"].."*", false, {1, 3, 0}},
-		{2, "ACCOUNT", "ChatFilterList", L["Filter List"].."*", true, nil, updateFilterList},
+		{1, "Chat", "BlockAddonAlert", L["Block Addon Alert"]},
+		{2, "ACCOUNT", "ChatFilterWhiteList", L["ChatFilterWhiteList"].."*", true, nil, updateFilterWhiteList, L["ChatFilterWhiteListTip"]},
+		{3, "Chat", "Matches", L["Keyword Match"].."*", nil, {1, 3, 0}},
+		{2, "ACCOUNT", "ChatFilterList", L["Filter List"].."*", true, nil, updateFilterList, L["FilterListTip"]},
 		{},--blank
 		{1, "Chat", "Invite", "|cff00cc4c"..L["Whisper Invite"]},
 		{1, "Chat", "GuildInvite", L["Guild Invite Only"].."*"},
@@ -830,7 +836,9 @@ local function CreateOption(i)
 				if callback then callback() end
 			end)
 			eb.title = L["Tips"]
-			B.AddTooltip(eb, "ANCHOR_RIGHT", L["EdieBox Tip"], "info")
+			local tip = L["EdieBox Tip"]
+			if tooltip then tip = tooltip.."|n"..tip end
+			B.AddTooltip(eb, "ANCHOR_RIGHT", tip, "info")
 
 			B.CreateFS(eb, 14, name, "system", "CENTER", 0, 25)
 		-- Slider
