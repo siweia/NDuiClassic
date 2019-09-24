@@ -19,6 +19,11 @@ function module:UpdateFilterList()
 	B.SplitList(FilterList, NDuiADB["ChatFilterList"], true)
 end
 
+local WhiteFilterList = {}
+function module:UpdateFilterWhiteList()
+	B.SplitList(WhiteFilterList, NDuiADB["ChatFilterWhiteList"], true)
+end
+
 -- ECF strings compare
 local last, this = {}, {}
 function module:CompareStrDiff(sA, sB) -- arrays of bytes
@@ -40,10 +45,11 @@ end
 
 C.BadBoys = {} -- debug
 local chatLines, prevLineID, filterResult = {}, 0, false
+
 function module:GetFilterResult(event, msg, name, flag, guid)
 	if name == DB.MyName or (event == "CHAT_MSG_WHISPER" and flag == "GM") or flag == "DEV" then
 		return
-	elseif guid and (IsGuildMember(guid) or BNGetGameAccountInfoByGUID(guid) or C_FriendList_IsFriend(guid) or (IsInInstance() and IsGUIDInGroup(guid))) then
+	elseif guid and (IsGuildMember(guid) or BNGetGameAccountInfoByGUID(guid) or C_FriendList_IsFriend(guid) or IsGUIDInGroup(guid)) then
 		return
 	end
 
@@ -56,6 +62,23 @@ function module:GetFilterResult(event, msg, name, flag, guid)
 	-- Trash Filter
 	for _, symbol in ipairs(msgSymbols) do
 		filterMsg = gsub(filterMsg, symbol, "")
+	end
+
+	if event == "CHAT_MSG_CHANNEL" then
+		local matches = 0
+		local found
+		for keyword in pairs(WhiteFilterList) do
+			if keyword ~= "" then
+				found = true
+				local _, count = gsub(filterMsg, keyword, "")
+				if count > 0 then
+					matches = matches + 1
+				end
+			end
+		end
+		if matches == 0 and found then
+			return 0
+		end
 	end
 
 	local matches = 0
@@ -96,7 +119,10 @@ function module:UpdateChatFilter(event, msg, author, _, _, _, flag, _, _, _, _, 
 
 		local name = Ambiguate(author, "none")
 		filterResult = module:GetFilterResult(event, msg, name, flag, guid)
-		if filterResult then C.BadBoys[name] = (C.BadBoys[name] or 0) + 1 end
+		if filterResult and filterResult ~= 0 then
+			C.BadBoys[name] = (C.BadBoys[name] or 0) + 1
+		end
+		if filterResult == 0 then filterResult = true end
 	end
 
 	return filterResult
@@ -178,14 +204,13 @@ end
 function module:ChatFilter()
 	if NDuiDB["Chat"]["EnableFilter"] then
 		self:UpdateFilterList()
+		self:UpdateFilterWhiteList()
 		ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL", self.UpdateChatFilter)
 		ChatFrame_AddMessageEventFilter("CHAT_MSG_SAY", self.UpdateChatFilter)
 		ChatFrame_AddMessageEventFilter("CHAT_MSG_YELL", self.UpdateChatFilter)
 		ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER", self.UpdateChatFilter)
 		ChatFrame_AddMessageEventFilter("CHAT_MSG_EMOTE", self.UpdateChatFilter)
 		ChatFrame_AddMessageEventFilter("CHAT_MSG_TEXT_EMOTE", self.UpdateChatFilter)
-		ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID", self.UpdateChatFilter)
-		ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID_LEADER", self.UpdateChatFilter)
 	end
 
 	if NDuiDB["Chat"]["BlockAddonAlert"] then
