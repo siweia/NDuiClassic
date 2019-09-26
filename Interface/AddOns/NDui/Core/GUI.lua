@@ -60,7 +60,7 @@ local defaultSettings = {
 		DebuffsPerRow = 16,
 	},
 	AuraWatch = {
-		Enable = true,
+		Enable = false,
 		ClickThrough = false,
 		IconScale = 1,
 		WatchSpellRank = true,
@@ -851,7 +851,7 @@ local function CreateOption(i)
 				x, y = 40, -offset - 30
 				offset = offset + 70
 			end
-			local s = B.CreateSlider(parent, name, min, max, x, y, width)
+			local s = B.CreateSlider(parent, name, min, max, x, y)
 			s:SetValue(NDUI_VARIABLE(key, value))
 			s:SetScript("OnValueChanged", function(_, v)
 				local current = tonumber(format("%."..step.."f", v))
