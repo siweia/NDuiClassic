@@ -83,6 +83,8 @@ function TT:UpdateSpellCaster(...)
 end
 
 function TT:SetupTooltipID()
+	if NDuiDB["Tooltip"]["HideAllID"] then return end
+
 	-- Update all
 	hooksecurefunc(GameTooltip, "SetHyperlink", TT.SetHyperLinkID)
 	hooksecurefunc(ItemRefTooltip, "SetHyperlink", TT.SetHyperLinkID)

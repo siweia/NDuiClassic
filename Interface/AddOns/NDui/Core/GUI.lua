@@ -218,6 +218,7 @@ local defaultSettings = {
 		HideRealm = false,
 		HideTitle = false,
 		HideJunkGuild = true,
+		HideAllID = false,
 	},
 	Misc = {
 		Mail = true,
@@ -704,6 +705,7 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Tooltip", "HideRealm", L["Hide Realm"].."*"},
 		{1, "Tooltip", "SpecLevelByShift", L["Show SpecLevelByShift"].."*", true},
 		{1, "Tooltip", "TargetBy", L["Show TargetedBy"].."*"},
+		{1, "Tooltip", "HideAllID", "|cff00cc4c"..L["HideAllID"], true},
 	},
 	[12] = {
 		{1, "Misc", "ItemLevel", "|cff00cc4c"..L["Show ItemLevel"]},
