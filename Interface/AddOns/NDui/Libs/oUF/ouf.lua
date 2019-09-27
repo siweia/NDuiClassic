@@ -644,35 +644,6 @@ do
 
 		-- We set it here so layouts can't directly override it.
 		header:SetAttribute('initialConfigFunction', initialConfigFunction)
-		header:SetAttribute('_initialAttributeNames', '_onenter,_onleave,refreshUnitChange,_onstate-vehicleui')
-		header:SetAttribute('_initialAttribute-_onenter', [[
-			local snippet = self:GetAttribute('clickcast_onenter')
-			if(snippet) then
-				self:Run(snippet)
-			end
-		]])
-		header:SetAttribute('_initialAttribute-_onleave', [[
-			local snippet = self:GetAttribute('clickcast_onleave')
-			if(snippet) then
-				self:Run(snippet)
-			end
-		]])
-		header:SetAttribute('_initialAttribute-refreshUnitChange', [[
-			local unit = self:GetAttribute('unit')
-			if(unit) then
-				RegisterStateDriver(self, 'vehicleui', '[@' .. unit .. ',unithasvehicleui]vehicle; novehicle')
-			else
-				UnregisterStateDriver(self, 'vehicleui')
-			end
-		]])
-		header:SetAttribute('_initialAttribute-_onstate-vehicleui', [[
-			local unit = self:GetAttribute('unit')
-			if(newstate == 'vehicle' and unit and UnitPlayerOrPetInRaid(unit) and not UnitTargetsVehicleInRaidUI(unit)) then
-				self:SetAttribute('toggleForVehicle', false)
-			else
-				self:SetAttribute('toggleForVehicle', true)
-			end
-		]])
 		header:SetAttribute('oUF-headerType', isPetHeader and 'pet' or 'group')
 
 		if(Clique) then
