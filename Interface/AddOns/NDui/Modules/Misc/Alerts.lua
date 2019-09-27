@@ -134,6 +134,7 @@ function M:VersionCheck_Initial()
 	end
 end
 
+local lastTime = 0
 function M:VersionCheck_Update(...)
 	local prefix, msg, distType, author = ...
 	if prefix ~= "NDuiVersionCheck" then return end
@@ -143,7 +144,10 @@ function M:VersionCheck_Update(...)
 	if status == "IsNew" then
 		NDuiADB["DetectVersion"] = msg
 	elseif status == "IsOld" then
-		C_ChatInfo_SendAddonMessage("NDuiVersionCheck", NDuiADB["DetectVersion"], distType)
+		if GetTime() - lastTime > 10 then
+			C_ChatInfo_SendAddonMessage("NDuiVersionCheck", NDuiADB["DetectVersion"], distType)
+			lastTime = GetTime()
+		end
 	end
 
 	M:VersionCheck_Initial()
