@@ -115,10 +115,25 @@ function module:RecycleBin()
 		C_Timer.After(.5, hideBinButton)
 	end
 
+	local secureAddons = {
+		["HANDYNOTES"] = true,
+		["GUIDELIME"] = true,
+		["TOWNSFOLKTRACKER"] = true,
+	}
+
+	local function isButtonSecure(name)
+		name = strupper(name)
+		for addonName in pairs(secureAddons) do
+			if strmatch(name, addonName) then
+				return true
+			end
+		end
+	end
+
 	local function CollectRubbish()
 		for _, child in ipairs({Minimap:GetChildren()}) do
 			local name = child:GetName()
-			if name and not blackList[name] and not strmatch(strupper(name), "HANDYNOTES") and not strmatch(strupper(name), "GUIDELIME") then
+			if name and not blackList[name] and not isButtonSecure(name) then
 				if child:GetObjectType() == "Button" or strmatch(strupper(name), "BUTTON") then
 					child:SetParent(bin)
 					child:SetSize(34, 34)
@@ -297,4 +312,9 @@ function module:SetupMinimap()
 	self:ReskinRegions()
 	self:RecycleBin()
 	self:WhoPingsMyMap()
+
+	if LibDBIcon10_TownsfolkTracker then
+		LibDBIcon10_TownsfolkTracker:DisableDrawLayer("OVERLAY")
+		LibDBIcon10_TownsfolkTracker:DisableDrawLayer("BACKGROUND")
+	end
 end
