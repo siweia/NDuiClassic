@@ -32,7 +32,7 @@ function S:MicroButton_Create(parent, data)
 		button:SetParent(bu)
 		button:ClearAllPoints(bu)
 		button:SetAllPoints(bu)
-		button.SetPoint = B.Dummy
+		--button.SetPoint = B.Dummy
 		button:UnregisterAllEvents()
 		button:SetNormalTexture(nil)
 		button:SetPushedTexture(nil)
