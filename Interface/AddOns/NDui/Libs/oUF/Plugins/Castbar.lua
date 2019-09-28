@@ -52,8 +52,19 @@ local function updateCastBarTicks(bar, numTicks)
 	end
 end
 
+function B:FixTargetCastbarUpdate()
+	if UnitIsUnit("target", "player") and not CastingInfo() then
+		self.casting = nil
+		self.channeling = nil
+		self.Text:SetText(INTERRUPTED)
+		self.holdTime = 0
+	end
+end
+
 function B:OnCastbarUpdate(elapsed)
 	if self.casting or self.channeling then
+		B.FixTargetCastbarUpdate(self)
+
 		local decimal = self.decimal
 
 		local duration = self.casting and self.duration + elapsed or self.duration - elapsed

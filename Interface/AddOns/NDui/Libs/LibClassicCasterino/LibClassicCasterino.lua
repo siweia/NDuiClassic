@@ -288,7 +288,7 @@ end
 
 
 local Passthrough = function(self, event, unit, ...)
-    if unit == "player" then
+    if unit == "player" or UnitIsUnit(unit, "player") then
         callbacks:Fire(event, unit, ...)
     end
 end
