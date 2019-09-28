@@ -24,7 +24,7 @@ local function retVal(self, val1, val2, val3, val4, val5)
 		return val1
 	elseif mystyle == "focus" then
 		return val2
-	elseif mystyle == "boss" or mystyle == "arena" then
+	elseif mystyle == "boss" then
 		return val3
 	else
 		if mystyle == "nameplate" and val5 then
@@ -126,8 +126,6 @@ function UF:CreateHealthText(self)
 		self:Tag(name, "[fulllevel] [color][name][afkdnd]")
 	elseif mystyle == "nameplate" then
 		self:Tag(name, "[nplevel][name]")
-	elseif mystyle == "arena" then
-		self:Tag(name, "[arenaspec] [color][name]")
 	else
 		self:Tag(name, "[nplevel][color][name]")
 	end
@@ -328,7 +326,7 @@ function UF:CreateCastBar(self)
 	elseif mystyle == "target" then
 		cb:SetSize(unpack(C.UFs.TargetcbSize))
 		createBarMover(cb, L["Target Castbar"], "TargetCB", C.UFs.Targetcb)
-	elseif mystyle == "boss" or mystyle == "arena" then
+	elseif mystyle == "boss" then
 		cb:SetPoint("TOPRIGHT", self.Power, "BOTTOMRIGHT", 0, -8)
 		cb:SetSize(self:GetWidth(), 10)
 	elseif mystyle == "nameplate" then
@@ -348,7 +346,7 @@ function UF:CreateCastBar(self)
 	name:SetPoint("RIGHT", timer, "LEFT", -5, 0)
 	name:SetJustifyH("LEFT")
 
-	if mystyle ~= "boss" and mystyle ~= "arena" then
+	if mystyle ~= "boss" then
 		cb.Icon = cb:CreateTexture(nil, "ARTWORK")
 		cb.Icon:SetSize(cb:GetHeight(), cb:GetHeight())
 		cb.Icon:SetPoint("BOTTOMRIGHT", cb, "BOTTOMLEFT", -5, 0)
@@ -385,7 +383,7 @@ function UF:CreateCastBar(self)
 		cb.timeToHold = .5
 	end
 
-	if mystyle == "nameplate" or mystyle == "boss" or mystyle == "arena" then
+	if mystyle == "nameplate" or mystyle == "boss" then
 		cb.decimal = "%.1f"
 	else
 		cb.decimal = "%.2f"
@@ -477,7 +475,6 @@ local filteredStyle = {
 	["target"] = true,
 	["nameplate"] = true,
 	["boss"] = true,
-	["arena"] = true,
 }
 
 function UF.PostUpdateIcon(element, unit, button, index, _, duration, expiration, debuffType)
@@ -563,7 +560,7 @@ function UF.CustomFilter(element, unit, button, name, _, _, _, _, _, caster, isS
 		else
 			return (button.isPlayer or caster == "pet") and C.RaidBuffs[DB.MyClass][name] or C.RaidBuffs["ALL"][name]
 		end
-	elseif style == "nameplate" or style == "boss" or style == "arena" then
+	elseif style == "nameplate" or style == "boss" then
 		if NDuiADB["NameplateFilter"][2][spellID] or C.BlackList[spellID] then
 			return false
 		elseif element.showStealableBuffs and isStealable and not UnitIsPlayer(unit) then
@@ -684,7 +681,7 @@ function UF:CreateDebuffs(self)
 		bu.num = 14
 		bu.iconsPerRow = 7
 		bu.showDebuffType = true
-	elseif mystyle == "boss" or mystyle == "arena" then
+	elseif mystyle == "boss" then
 		bu:SetPoint("TOPRIGHT", self, "TOPLEFT", -5, 0)
 		bu.num = 10
 		bu.iconsPerRow = 5

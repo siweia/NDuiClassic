@@ -70,7 +70,6 @@ local defaultSettings = {
 		Portrait = true,
 		PlayerDebuff = false,
 		ToTAuras = false,
-		Arena = true,
 		Castbars = true,
 		SwingBar = false,
 		SwingTimer = false,
@@ -519,7 +518,6 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{},--blank
 		{1, "UFs", "Portrait", L["UFs Portrait"]},
 		{1, "UFs", "ClassPower", L["UFs ClassPower"], true},
-		--{1, "UFs", "Arena", L["Arena Frame"]},
 		{1, "UFs", "PlayerDebuff", L["Player Debuff"]},
 		{1, "UFs", "ToTAuras", L["ToT Debuff"]},
 		{4, "UFs", "HealthColor", L["HealthColor"], true, {L["Default Dark"], L["ClassColorHP"], L["GradientHP"]}},

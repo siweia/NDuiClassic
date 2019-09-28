@@ -666,7 +666,7 @@ function G:SetupUnitFrame(parent)
 
 	local function updateBossSize()
 		for _, frame in next, ns.oUF.objects do
-			if frame.mystyle == "boss" or frame.mystyle == "arena" then
+			if frame.mystyle == "boss" then
 				frame:SetSize(NDuiDB["UFs"]["BossWidth"], NDuiDB["UFs"]["BossHeight"])
 				frame.Power:SetHeight(NDuiDB["UFs"]["BossPowerHeight"])
 			end
