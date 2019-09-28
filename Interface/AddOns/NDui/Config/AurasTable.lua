@@ -68,8 +68,14 @@ end
 local RaidBuffs = {}
 function module:AddClassSpells(list)
 	for class, value in pairs(list) do
-		if class == "ALL" or class == "WARNING" or class == DB.MyClass then
-			RaidBuffs[class] = value
+		if class == "ALL" or class == DB.MyClass then
+			if not RaidBuffs[class] then RaidBuffs[class] = {} end
+			for spellID in pairs(value) do
+				local name = GetSpellInfo(spellID)
+				if name then
+					RaidBuffs[class][name] = true
+				end
+			end
 		end
 	end
 end

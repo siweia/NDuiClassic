@@ -46,8 +46,6 @@ local list = {
 		[1022] = true,		-- 保护祝福
 		[27827] = true,		-- 救赎之魂
 	},
-	["WARNING"] = {
-	},
 	["DRUID"] = {		-- 德鲁伊
 		[774] = true,		-- 回春
 		[8936] = true,		-- 愈合
@@ -59,7 +57,6 @@ local list = {
 	["WARRIOR"] = {		-- 战士
 	},
 	["SHAMAN"] = {		-- 萨满
-		[974] = true,		-- 大地之盾
 	},
 	["PALADIN"] = {		-- 圣骑士
 		[1022] = true,		-- 保护祝福
