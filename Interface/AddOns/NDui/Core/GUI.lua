@@ -107,6 +107,7 @@ local defaultSettings = {
 		HealthColor = 1,
 		BuffIndicatorType = 1,
 		BI_IconSize = 10,
+		EnergyTicker = true,
 
 		PlayerWidth = 245,
 		PlayerHeight = 24,
@@ -520,8 +521,9 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{1, "UFs", "ClassPower", L["UFs ClassPower"], true},
 		--{1, "UFs", "Arena", L["Arena Frame"]},
 		{1, "UFs", "PlayerDebuff", L["Player Debuff"]},
-		{1, "UFs", "ToTAuras", L["ToT Debuff"], false},
+		{1, "UFs", "ToTAuras", L["ToT Debuff"]},
 		{4, "UFs", "HealthColor", L["HealthColor"], true, {L["Default Dark"], L["ClassColorHP"], L["GradientHP"]}},
+		{1, "UFs", "EnergyTicker", L["EnergyTicker"]},
 		{},--blank
 		{1, "UFs", "CombatText", "|cff00cc4c"..L["UFs CombatText"]},
 		{1, "UFs", "AutoAttack", L["CombatText AutoAttack"]},
