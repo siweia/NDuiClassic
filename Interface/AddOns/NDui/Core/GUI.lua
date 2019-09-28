@@ -101,7 +101,6 @@ local defaultSettings = {
 		LagString = true,
 		RaidBuffIndicator = true,
 		PartyFrame = true,
-		PartyWatcher = true,
 		PWOnRight = false,
 		PartyWidth = 100,
 		PartyHeight = 32,
@@ -535,8 +534,6 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{},--blank
 		{1, "UFs", "PartyFrame", "|cff00cc4c"..L["UFs PartyFrame"]},
 		{1, "UFs", "HorizonParty", L["Horizon PartyFrame"], true},
-		{1, "UFs", "PartyWatcher", L["UFs PartyWatcher"]},
-		{1, "UFs", "PWOnRight", L["PartyWatcherOnRight"], true},
 		{3, "UFs", "PartyWidth", L["PartyFrame Width"].."*(100)", false, {60, 200, 0}, updatePartySize},
 		{3, "UFs", "PartyHeight", L["PartyFrame Height"].."*(32)", true, {25, 60, 0}, updatePartySize},
 		{},--blank

@@ -152,7 +152,6 @@ end
 local function CreatePartyStyle(self)
 	self.isPartyFrame = true
 	CreateRaidStyle(self)
-	UF:InterruptIndicator(self)
 end
 
 -- Spawns
