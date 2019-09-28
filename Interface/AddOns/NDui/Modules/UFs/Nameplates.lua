@@ -697,6 +697,7 @@ function UF:CreatePlayerPlate()
 	UF:CreateClassPower(self)
 	UF:StaggerBar(self)
 	if NDuiDB["Auras"]["ClassAuras"] and not DB.isClassic then auras:CreateLumos(self) end
+	if not NDuiDB["Nameplate"]["ClassPowerOnly"] then UF:CreateEneryTicker(self) end
 
 	if NDuiDB["Nameplate"]["PPPowerText"] then
 		local textFrame = CreateFrame("Frame", nil, self.Power)

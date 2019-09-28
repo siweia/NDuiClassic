@@ -559,9 +559,9 @@ function UF.CustomFilter(element, unit, button, name, _, _, _, _, _, caster, isS
 		end
 	elseif style == "raid" then
 		if NDuiDB["UFs"]["RaidBuffIndicator"] then
-			return C.RaidBuffs["ALL"][spellID] or NDuiADB["RaidAuraWatch"][spellID]
+			return C.RaidBuffs["ALL"][name] or NDuiADB["RaidAuraWatch"][spellID]
 		else
-			return (button.isPlayer or caster == "pet") and C.RaidBuffs[DB.MyClass][spellID] or C.RaidBuffs["ALL"][spellID] or C.RaidBuffs["WARNING"][spellID]
+			return (button.isPlayer or caster == "pet") and C.RaidBuffs[DB.MyClass][name] or C.RaidBuffs["ALL"][name]
 		end
 	elseif style == "nameplate" or style == "boss" or style == "arena" then
 		if NDuiADB["NameplateFilter"][2][spellID] or C.BlackList[spellID] then
@@ -1021,4 +1021,13 @@ function UF:CreateFCT(self)
 	-- Default CombatText
 	--SetCVar("enableFloatingCombatText", 0)
 	--B.HideOption(InterfaceOptionsCombatPanelEnableFloatingCombatText)
+end
+
+function UF:CreateEneryTicker(self)
+	if not NDuiDB["UFs"]["EnergyTicker"] then return end
+
+	local ticker = CreateFrame("Frame", nil, self)
+	ticker:SetFrameLevel(self.Power:GetFrameLevel() + 1)
+
+	self.EnergyTicker = ticker
 end

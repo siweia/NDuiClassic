@@ -23,6 +23,9 @@ local function CreatePlayerStyle(self)
 	UF:CreateFCT(self)
 	UF:CreateAddPower(self)
 
+	if not NDuiDB["Nameplate"]["ShowPlayerPlate"] or NDuiDB["Nameplate"]["ClassPowerOnly"] then
+		UF:CreateEneryTicker(self)
+	end
 	if NDuiDB["UFs"]["Castbars"] then
 		UF:ReskinMirrorBars()
 		UF:ReskinTimerTrakcer(self)
