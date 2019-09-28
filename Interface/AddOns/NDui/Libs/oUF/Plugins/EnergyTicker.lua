@@ -1,54 +1,71 @@
---[[
-	self.EnergyTicker = CreateFrame("Frame", nil, self)
-	self.EnergyTicker:SetFrameLevel(self.Power:GetFrameLevel() + 1)
-]]
-
-local parent, ns = ...
+local _, ns = ...
 local oUF = ns.oUF
-local LastEnergyTickTime = GetTime()
-local LastEnergyValue = 0
 
-local function SetEnergyTickValue(self, timer)
+local max = math.max
+local UnitPowerType, UnitPower, GetTime = UnitPowerType, UnitPower, GetTime
+
+local SPELL_POWER_MANA = Enum.PowerType.Mana or 0
+local SPELL_POWER_ENERGY = Enum.PowerType.Energy or 3
+local lastEnergyTickTime = GetTime()
+local lastEnergyValue = 0
+local isWaiting
+
+local requireTypes = {
+	[SPELL_POWER_MANA] = true,
+	[SPELL_POWER_ENERGY] = true,
+}
+
+local function SetEnergyTickValue(self, timer, isWaiting)
 	local Power = self.Power
 	local Width = Power:GetWidth()
 	local Texture = self.EnergyTicker.Texture
 
-	Texture:SetPoint("CENTER", Power, "LEFT", (Width * timer) / 2, 0)
+	if isWaiting then
+		local Width = max(Width-(Width * timer) / 5, 0)
+		Texture:SetPoint("CENTER", Power, "LEFT", Width, 0)
+	else
+		Texture:SetPoint("CENTER", Power, "LEFT", (Width * timer) / 2, 0)
+	end
 end
 
-local Update = function(self, elapsed)
-	local PType = UnitPowerType("player")
+local function Update(self)
+	local powerType = UnitPowerType("player")
 	local EnergyTicker = self.EnergyTicker
 
-	if PType ~= Enum.PowerType.Energy then
+	if not requireTypes[powerType] then
 		EnergyTicker:SetAlpha(0)
+		return
 	else
 		EnergyTicker:SetAlpha(1)
 	end
 
-	local CurrentEnergy = UnitPower("player", Enum.PowerType.Energy)
+	local CurrentEnergy = UnitPower("player", powerType)
 
 	local Now = GetTime()
-	local Timer = Now - LastEnergyTickTime
+	local Timer = Now - lastEnergyTickTime
 
-	if CurrentEnergy > LastEnergyValue or Now >= LastEnergyTickTime + 2 then
-		LastEnergyTickTime = Now
+	if powerType == SPELL_POWER_MANA and CurrentEnergy < lastEnergyValue then
+		lastEnergyTickTime = Now
+		isWaiting = true
+	elseif CurrentEnergy > lastEnergyValue or (Now >= lastEnergyTickTime + 2 and not isWaiting) then
+		lastEnergyTickTime = Now
+		isWaiting = nil
 	end
 
-	SetEnergyTickValue(self, Timer)
+	SetEnergyTickValue(self, Timer, isWaiting)
 
-	LastEnergyValue = CurrentEnergy
+	lastEnergyValue = CurrentEnergy
 end
 
-local Path = function(self, ...)
+local function Path(self, ...)
 	return (self.EnergyTicker.Override or Update) (self, ...)
 end
 
-local Enable = function(self, unit)
+local function Enable(self, unit)
 	local EnergyTicker = self.EnergyTicker
 	local Power = self.Power
 
-	if (Power) and (EnergyTicker) and (unit == "player") then
+	if Power and EnergyTicker and (unit == "player") then
 		EnergyTicker.__owner = self
 		EnergyTicker.UpdateFrame = CreateFrame("Frame")
 
@@ -59,7 +76,6 @@ local Enable = function(self, unit)
 			EnergyTicker.Texture:SetPoint("CENTER", Power, 0, 0)
 			EnergyTicker.Texture:SetBlendMode("ADD")
 		end
-
 		EnergyTicker:SetAlpha(1)
 		EnergyTicker.UpdateFrame:SetScript("OnUpdate", function() Path(self, unit) end)
 
@@ -67,11 +83,11 @@ local Enable = function(self, unit)
 	end
 end
 
-local Disable = function(self)
+local function Disable(self)
 	local EnergyTicker = self.EnergyTicker
 	local Power = self.Power
 
-	if (Power) and (EnergyTicker) and (unit == "player") then
+	if Power and EnergyTicker and (unit == "player") then
 		EnergyTicker:SetAlpha(0)
 		EnergyTicker.UpdateFrame:SetScript("OnUpdate", nil)
 
