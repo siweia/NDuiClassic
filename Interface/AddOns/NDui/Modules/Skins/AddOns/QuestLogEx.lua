@@ -1,5 +1,5 @@
 local _, ns = ...
-local B, C, L, DB, F, T = unpack(ns)
+local B, C, L, DB, F = unpack(ns)
 local S = B:GetModule("Skins")
 
 local gsub, next = gsub, next
