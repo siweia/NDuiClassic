@@ -8,7 +8,6 @@ local list = {
 		{AuraID = 5697, UnitID = "player"},		-- 无尽呼吸
 	},
 	["Target Aura"] = {		-- 目标光环组
-		{AuraID = 980, UnitID = "target", Caster = "player"},		-- 痛楚
 		{AuraID = 710, UnitID = "target", Caster = "player"},		-- 放逐术
 		{AuraID = 6358, UnitID = "target", Caster = "pet"},			-- 魅惑
 		{AuraID = 6789, UnitID = "target", Caster = "player"},		-- 死亡缠绕
