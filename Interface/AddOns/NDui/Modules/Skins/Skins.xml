@@ -12,4 +12,6 @@
 	<Script file="AddOns\Details.lua"/>
 	<Script file="AddOns\Postal.lua"/>
 	<Script file="AddOns\QuestLogEx.lua"/>
+
+	<Script file="AddOns\Others.lua"/>
 </Ui>

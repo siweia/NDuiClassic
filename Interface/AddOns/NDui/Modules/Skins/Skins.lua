@@ -115,6 +115,7 @@ function S:OnLogin()
 	self:BigWigsSkin()
 	self:PostalSkin()
 	self:ExtraQuestSkin()
+	self:WhatsTraining()
 
 	-- Register skin
 	local media = LibStub and LibStub("LibSharedMedia-3.0", true)
