@@ -525,6 +525,14 @@ function G:SetupBuffIndicator(parent)
 		end,
 		whileDead = 1,
 	}
+
+	local function optionOnEnter(self)
+		GameTooltip:SetOwner(self, "ANCHOR_TOP")
+		GameTooltip:ClearLines()
+		GameTooltip:AddLine(L[decodeAnchor[self.text]], 1, 1, 1)
+		GameTooltip:Show()
+	end
+
 	for index, value in ipairs(frameData) do
 		B.CreateFS(buffIndicatorGUI, 14, value.text, "system", "TOPLEFT", 20, value.offset)
 
@@ -537,6 +545,9 @@ function G:SetupBuffIndicator(parent)
 		scroll.box = B.CreateEditBox(frame, value.width, 25)
 		scroll.box:SetPoint("TOPLEFT", 10, -10)
 		scroll.box:SetMaxLetters(6)
+		scroll.box.title = L["Tips"]
+		B.AddTooltip(scroll.box, "ANCHOR_RIGHT", L["ID Intro"], "info")
+
 		scroll.add = B.CreateButton(frame, 45, 25, ADD)
 		scroll.add:SetPoint("TOPRIGHT", -8, -10)
 		scroll.add:SetScript("OnClick", function()
@@ -557,12 +568,6 @@ function G:SetupBuffIndicator(parent)
 			scroll.dd:SetPoint("TOPLEFT", 10, -10)
 			scroll.dd.options[1]:Click()
 
-			local function optionOnEnter(self)
-				GameTooltip:SetOwner(self, "ANCHOR_TOP")
-				GameTooltip:ClearLines()
-				GameTooltip:AddLine(L[decodeAnchor[self.text]], 1, 1, 1)
-				GameTooltip:Show()
-			end
 			for i = 1, 8 do
 				scroll.dd.options[i]:HookScript("OnEnter", optionOnEnter)
 				scroll.dd.options[i]:HookScript("OnLeave", B.HideTooltip)
