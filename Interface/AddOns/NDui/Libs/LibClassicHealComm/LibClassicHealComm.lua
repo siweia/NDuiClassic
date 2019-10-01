@@ -14,11 +14,11 @@ local HealComm = LibStub:NewLibrary(major, minor)
 if( not HealComm ) then return end
 
 -- API CONSTANTS
---local ALL_DATA = 0x0f
+local ALL_DATA = 0x0f
 local DIRECT_HEALS = 0x01
 local CHANNEL_HEALS = 0x02
 local HOT_HEALS = 0x04
---local ABSORB_SHIELDS = 0x08
+local ABSORB_SHIELDS = 0x08
 local ALL_HEALS = bit.bor(DIRECT_HEALS, CHANNEL_HEALS, HOT_HEALS)
 local CASTED_HEALS = bit.bor(DIRECT_HEALS, CHANNEL_HEALS)
 local OVERTIME_HEALS = bit.bor(HOT_HEALS, CHANNEL_HEALS)
@@ -436,9 +436,14 @@ end
 -- Gets healing amount using the passed filters
 function HealComm:GetHealAmount(guid, bitFlag, time, casterGUID)
 	local amount = 0
-	if( casterGUID and pendingHeals[casterGUID] ) then
-		amount = filterData(pendingHeals[casterGUID], guid, bitFlag, time) + filterData(pendingHots[casterGUID], guid, bitFlag, time)
-	elseif( not casterGUID ) then
+	if casterGUID then
+		if pendingHeals[casterGUID] then
+			amount = amount + filterData(pendingHeals[casterGUID], guid, bitFlag, time)
+		end
+		if pendingHots[casterGUID] then
+			amount = amount + filterData(pendingHots[casterGUID], guid, bitFlag, time)
+		end
+	else
 		for _, spells in pairs(pendingHeals) do
 			amount = amount + filterData(spells, guid, bitFlag, time)
 		end
@@ -1296,7 +1301,7 @@ local function parseDirectHeal(casterGUID, spellID, amount, castTime, ...)
 	if unit == "player" then
 		endTime = select(5, CastingInfo())
 	else
-		endTime = GetTime() + castTime
+		endTime = GetTime() + (castTime or 1.5)
 	end
 
 	pendingHeals[casterGUID] = pendingHeals[casterGUID] or {}
