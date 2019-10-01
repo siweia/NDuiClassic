@@ -2,9 +2,19 @@ local _, ns = ...
 local B, C, L, DB, F = unpack(ns)
 local S = B:GetModule("Skins")
 
+local _G = getfenv(0)
+local pairs, tinsert, select = pairs, tinsert, select
+local GetNumQuestLogEntries, GetQuestLogTitle, GetNumQuestWatches = GetNumQuestLogEntries, GetQuestLogTitle, GetNumQuestWatches
+local IsShiftKeyDown, RemoveQuestWatch, ShowUIPanel, GetCVarBool = IsShiftKeyDown, RemoveQuestWatch, ShowUIPanel, GetCVarBool
+local GetQuestIndexForWatch, GetNumQuestLeaderBoards, GetQuestLogLeaderBoard = GetQuestIndexForWatch, GetNumQuestLeaderBoards, GetQuestLogLeaderBoard
+local FauxScrollFrame_GetOffset = FauxScrollFrame_GetOffset
+
 local cr, cg, cb = DB.r, DB.g, DB.b
-local pairs = pairs
 local LE_QUEST_FREQUENCY_DAILY = LE_QUEST_FREQUENCY_DAILY or 2
+local MAX_QUESTLOG_QUESTS = MAX_QUESTLOG_QUESTS or 20
+local MAX_WATCHABLE_QUESTS = MAX_WATCHABLE_QUESTS or 5
+local headerString = QUESTS_LABEL.." %s/%s"
+
 local frame
 
 function S:EnhancedQuestLog()
@@ -140,13 +150,10 @@ function S:QuestLogLevel()
 end
 
 function S:EnhancedQuestTracker()
-	local headerString = QUEST_LOG.." %s/%s"
-	local MAX_QUESTLOG_QUESTS = MAX_QUESTLOG_QUESTS or 20
-
 	local header = CreateFrame("Frame", nil, frame)
 	header:SetAllPoints()
 	header:SetParent(QuestWatchFrame)
-	header.Text = B.CreateFS(header, 16, QUEST_LOG, true, "TOPLEFT", 0, 15)
+	header.Text = B.CreateFS(header, 16, "", true, "TOPLEFT", 0, 15)
 
 	local bg = header:CreateTexture(nil, "ARTWORK")
 	bg:SetTexture("Interface\\LFGFrame\\UI-LFG-SEPARATOR")
