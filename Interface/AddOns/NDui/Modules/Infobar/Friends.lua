@@ -434,5 +434,5 @@ end
 info.onMouseUp = function(_, btn)
 	if btn ~= "LeftButton" then return end
 	if friendsFrame then friendsFrame:Hide() end
-	ToggleFriendsFrame(1)
+	ToggleFrame(FriendsFrame)
 end

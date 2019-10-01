@@ -318,5 +318,5 @@ end
 info.onMouseUp = function()
 	if not IsInGuild() then return end
 	infoFrame:Hide()
-	ToggleFriendsFrame(3)
+	ToggleFrame(FriendsFrame)
 end
