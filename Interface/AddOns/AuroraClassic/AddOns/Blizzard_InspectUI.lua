@@ -33,4 +33,6 @@ C.themes["Blizzard_InspectUI"] = function()
 	for i = 1, 2 do
 		F.ReskinTab(_G["InspectFrameTab"..i])
 	end
+
+	F.ReskinRotationButtons(InspectModelFrame)
 end

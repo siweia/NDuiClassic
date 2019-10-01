@@ -6,6 +6,7 @@ tinsert(C.themes["AuroraClassic"], function()
 	F.ReskinPortraitFrame(DressUpFrame, 13, -10, -35, 75)
 	F.Reskin(DressUpFrameCancelButton)
 	F.Reskin(DressUpFrameResetButton)
+	F.ReskinRotationButtons(DressUpModelFrame)
 
 	DressUpFrameResetButton:SetPoint("RIGHT", DressUpFrameCancelButton, "LEFT", -2, 0)
 

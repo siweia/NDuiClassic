@@ -8,10 +8,6 @@ tinsert(C.themes["AuroraClassic"], function()
 	local bg = F.CreateBDFrame(CharacterAttributesFrame, .25)
 	bg:SetPoint("BOTTOMRIGHT", 0, -8)
 
-	CharacterModelFrame:DisableDrawLayer("BACKGROUND")
-	CharacterModelFrame:DisableDrawLayer("BORDER")
-	CharacterModelFrame:DisableDrawLayer("OVERLAY")
-
 	-- [[ Item buttons ]]
 
 	local slots = {
@@ -84,6 +80,7 @@ tinsert(C.themes["AuroraClassic"], function()
 	F.CreateBDFrame(PetPaperDollFrameExpBar, .25)
 	F.StripTextures(PetAttributesFrame)
 	F.CreateBDFrame(PetAttributesFrame, .25)
+	F.ReskinRotationButtons(PetModelFrame)
 
 	for i = 1, 5 do
 		local bu = _G["PetMagicResFrame"..i]

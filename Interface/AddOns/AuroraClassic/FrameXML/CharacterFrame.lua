@@ -2,6 +2,7 @@ local F, C = unpack(select(2, ...))
 
 tinsert(C.themes["AuroraClassic"], function()
 	F.ReskinPortraitFrame(CharacterFrame, 15, -15, -35, 73)
+	F.ReskinRotationButtons(CharacterModelFrame)
 
 	for i = 1, 4 do
 		local tab = _G["CharacterFrameTab"..i]

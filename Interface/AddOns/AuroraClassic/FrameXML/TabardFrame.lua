@@ -5,9 +5,7 @@ tinsert(C.themes["AuroraClassic"], function()
 	F.CreateBD(TabardFrameCostFrame, .25)
 	F.Reskin(TabardFrameAcceptButton)
 	F.Reskin(TabardFrameCancelButton)
-	F.ReskinArrow(TabardCharacterModelRotateLeftButton, "left")
-	F.ReskinArrow(TabardCharacterModelRotateRightButton, "right")
-	TabardCharacterModelRotateRightButton:SetPoint("TOPLEFT", TabardCharacterModelRotateLeftButton, "TOPRIGHT", 1, 0)
+	F.ReskinRotationButtons("TabardCharacterModel")
 
 	TabardFrameCustomizationBorder:Hide()
 	for i = 1, 5 do

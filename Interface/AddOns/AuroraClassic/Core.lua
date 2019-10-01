@@ -795,6 +795,31 @@ function F:StyleSearchButton()
 	hl:SetPoint("BOTTOMRIGHT", -C.mult, C.mult)
 end
 
+local function reskinRotation(self, direction)
+	self:SetSize(20, 20)
+	F.Reskin(self)
+	local tex = self:CreateTexture(nil, "ARTWORK")
+	tex:SetAllPoints()
+	tex:SetTexture("Interface\\Buttons\\UI-RefreshButton")
+	if direction == "left" then
+		tex:SetTexCoord(1, 0, 0, 1)
+	else
+		tex:SetTexCoord(0, 1, 0, 1)
+	end
+end
+
+function F:ReskinRotationButtons()
+	local name = self.GetName and self:GetName() or self
+	local leftButton = _G[name.."RotateRightButton"]
+	reskinRotation(leftButton, "left")
+	local rightButton = _G[name.."RotateLeftButton"]
+	reskinRotation(rightButton, "right")
+
+	leftButton:SetPoint("TOPLEFT", 5, -5)
+	rightButton:ClearAllPoints()
+	rightButton:SetPoint("LEFT", leftButton, "RIGHT", 3, 0)
+end
+
 function F:GetRoleTexCoord()
 	if self == "TANK" then
 		return .32/9.03, 2.04/9.03, 2.65/9.03, 4.3/9.03
