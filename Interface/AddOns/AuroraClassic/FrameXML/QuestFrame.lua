@@ -133,6 +133,12 @@ tinsert(C.themes["AuroraClassic"], function()
 	F.ReskinExpandOrCollapse(QuestLogCollapseAllButton)
 	QuestLogCollapseAllButton:DisableDrawLayer("BACKGROUND")
 
+	F.StripTextures(QuestLogTrack)
+	QuestLogTrack:SetSize(10, 10)
+	QuestLogTrackTitle:SetPoint("LEFT", QuestLogTrack, "RIGHT", 3, 0)
+	QuestLogTrackTracking:SetTexture(C.media.backdrop)
+	F.CreateBDFrame(QuestLogTrackTracking)
+
 	hooksecurefunc("QuestLog_Update", function()
 		for i = 1, QUESTS_DISPLAYED, 1 do
 			local bu = _G["QuestLogTitle"..i]
