@@ -72,7 +72,7 @@ local function Enable(self, unit)
 		if not EnergyTicker.Texture then
 			EnergyTicker.Texture = self.EnergyTicker:CreateTexture(nil, 'OVERLAY', 8)
 			EnergyTicker.Texture:SetTexture([[Interface\CastingBar\UI-CastingBar-Spark]])
-			EnergyTicker.Texture:SetSize(Power:GetHeight() + 4, Power:GetHeight() + 4)
+			EnergyTicker.Texture:SetSize(Power:GetHeight() + 10, Power:GetHeight() + 10)
 			EnergyTicker.Texture:SetPoint("CENTER", Power, 0, 0)
 			EnergyTicker.Texture:SetBlendMode("ADD")
 		end
