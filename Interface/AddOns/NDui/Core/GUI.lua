@@ -677,7 +677,7 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Skins", "ClassLine", L["ClassColor Line"]},
 		{},--blank
 		{1, "Skins", "MicroMenu", L["Micromenu"]},
-		{1, "Skins", "QuestTracker", L["QuestTracker"], true},
+		{1, "Skins", "QuestTracker", L["EnhancedQuestLog"], true},
 		{},--blank
 		{1, "Skins", "DBM", L["DBM Skin"]},
 		{1, "Skins", "Skada", L["Skada Skin"], true},
