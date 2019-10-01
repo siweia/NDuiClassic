@@ -314,7 +314,7 @@ function S:QuestTracker()
 	frame:SetSize(240, 50)
 	B.Mover(frame, L["QuestTracker"], "QuestTracker", {"TOPRIGHT", Minimap, "BOTTOMRIGHT", -70, -55})
 
-	QuestWatchFrame:SetHeight(GetScreenHeight()*.65)
+	--QuestWatchFrame:SetHeight(GetScreenHeight()*.65)
 	QuestWatchFrame:SetClampedToScreen(false)
 	QuestWatchFrame:SetMovable(true)
 	QuestWatchFrame:SetUserPlaced(true)
