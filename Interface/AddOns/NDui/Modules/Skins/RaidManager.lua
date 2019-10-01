@@ -321,9 +321,11 @@ function S:CreateRM()
 		GameTooltip:AddLine(" ")
 		GameTooltip:AddDoubleLine(DB.LeftButton..DB.InfoColor..READY_CHECK)
 		GameTooltip:AddDoubleLine(DB.ScrollButton..DB.InfoColor..L["Count Down"])
-		GameTooltip:AddDoubleLine(DB.RightButton.."(Ctrl) "..DB.InfoColor..L["Check Status"])
-		if potionCheck then
-			GameTooltip:AddDoubleLine(DB.RightButton.."(Alt) "..DB.InfoColor..L["ExRT Potioncheck"])
+		if not DB.isClassic then
+			GameTooltip:AddDoubleLine(DB.RightButton.."(Ctrl) "..DB.InfoColor..L["Check Status"])
+			if potionCheck then
+				GameTooltip:AddDoubleLine(DB.RightButton.."(Alt) "..DB.InfoColor..L["ExRT Potioncheck"])
+			end
 		end
 		GameTooltip:Show()
 	end)
@@ -331,7 +333,7 @@ function S:CreateRM()
 
 	local reset = true
 	checker:HookScript("OnMouseDown", function(_, btn)
-		if btn == "RightButton" then
+		if btn == "RightButton" and not DB.isClassic then
 			if IsAltKeyDown() and potionCheck then
 				SlashCmdList["exrtSlash"]("potionchat")
 			elseif IsControlKeyDown() then
@@ -344,7 +346,7 @@ function S:CreateRM()
 			else
 				UIErrorsFrame:AddMessage(DB.InfoColor..ERR_NOT_LEADER)
 			end
-		else
+		elseif btn == "MiddleButton" then
 			if IsInGroup() and (UnitIsGroupLeader("player") or (UnitIsGroupAssistant("player") and IsInRaid())) then
 				if IsAddOnLoaded("DBM-Core") then
 					if reset then
