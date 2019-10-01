@@ -145,7 +145,7 @@ function S:EnhancedQuestTracker()
 
 	local header = CreateFrame("Frame", nil, frame)
 	header:SetAllPoints()
-	header:Hide()
+	header:SetParent(QuestWatchFrame)
 	header.Text = B.CreateFS(header, 16, QUEST_LOG, true, "TOPLEFT", 0, 15)
 
 	local bg = header:CreateTexture(nil, "ARTWORK")
@@ -154,6 +154,37 @@ function S:EnhancedQuestTracker()
 	bg:SetVertexColor(cr, cg, cb, .8)
 	bg:SetPoint("TOPLEFT", 0, 20)
 	bg:SetSize(250, 30)
+
+	local bu = CreateFrame("Button", nil, frame)
+	bu:SetSize(20, 20)
+	bu:SetPoint("TOPRIGHT", 0, 18)
+	bu.collapse = false
+	bu:SetNormalTexture("Interface\\Buttons\\UI-MinusButton-Up")
+	bu:SetHighlightTexture("Interface\\Buttons\\UI-PlusButton-Hilight")
+	if F then
+		bu:SetPoint("TOPRIGHT", 0, 14)
+		F.ReskinExpandOrCollapse(bu)
+		bu:SetNormalTexture("Interface\\Buttons\\UI-MinusButton-Up")
+	end
+	bu:SetShown(GetNumQuestWatches() > 0)
+
+	bu.Text = B.CreateFS(bu, 16, TRACKER_HEADER_OBJECTIVE, "system", "RIGHT", -24, F and 3 or 0)
+	bu.Text:Hide()
+
+	bu:SetScript("OnClick", function(self)
+		self.collapse = not self.collapse
+		if self.collapse then
+			self:SetNormalTexture("Interface\\Buttons\\UI-PlusButton-Up")
+			self.Text:Show()
+			QuestWatchFrame:Hide()
+		else
+			self:SetNormalTexture("Interface\\Buttons\\UI-MinusButton-Up")
+			self.Text:Hide()
+			if GetNumQuestWatches() > 0 then
+				QuestWatchFrame:Show()
+			end
+		end
+	end)
 
 	-- ModernQuestWatch, Ketho
 	local function onMouseUp(self)
@@ -221,12 +252,12 @@ function S:EnhancedQuestTracker()
 	end
 
 	hooksecurefunc("QuestWatch_Update", function()
-		header:SetShown(QuestWatchFrame:IsShown())
 		local numQuests = select(2, GetNumQuestLogEntries())
 		header.Text:SetFormattedText(headerString, numQuests, MAX_QUESTLOG_QUESTS)
 
 		local watchTextIndex = 1
-		for i = 1, GetNumQuestWatches() do
+		local numWatches = GetNumQuestWatches()
+		for i = 1, numWatches do
 			local questIndex = GetQuestIndexForWatch(i)
 			if questIndex then
 				local numObjectives = GetNumQuestLeaderBoards(questIndex)
@@ -255,6 +286,9 @@ function S:EnhancedQuestTracker()
 		for _, frame in pairs(ClickFrames) do
 			frame[GetQuestIndexForWatch(frame.watchIndex) and "Show" or "Hide"](frame)
 		end
+
+		bu:SetShown(numWatches > 0)
+		if bu.collapse then QuestWatchFrame:Hide() end
 	end)
 
 	local function autoQuestWatch(_, questIndex)
