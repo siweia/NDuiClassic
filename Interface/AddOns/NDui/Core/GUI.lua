@@ -203,6 +203,7 @@ local defaultSettings = {
 		Details = true,
 		QuestLogEx = true,
 		QuestTracker = true,
+		Recount = true,
 	},
 	Tooltip = {
 		CombatHide = false,
@@ -693,6 +694,7 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Skins", "WeakAuras", L["WeakAuras Skin"]},
 		{1, "Skins", "Details", L["Details Skin"], true},
 		{1, "Skins", "QuestLogEx", L["QuestLogEx Skin"], nil, nil, nil, L["ExtendedQuestLogAddons"]},
+		{1, "Skins", "Recount", L["Recount Skin"], true},
 	},
 	[11] = {
 		{1, "Tooltip", "CombatHide", L["Hide Tooltip"].."*"},

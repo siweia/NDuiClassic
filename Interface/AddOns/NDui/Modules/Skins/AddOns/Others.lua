@@ -49,6 +49,7 @@ function S:ResetRecount()
 end
 
 function S:RecountSkin()
+	if not NDuiDB["Skins"]["Recount"] then return end
 	if not IsAddOnLoaded("Recount") then return end
 
 	local frame = Recount_MainWindow
