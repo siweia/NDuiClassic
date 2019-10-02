@@ -119,7 +119,7 @@ local defaultSettings = {
 	},
 	Chat = {
 		Sticky = false,
-		Lock = false,
+		Lock = true,
 		Invite = true,
 		Freedom = true,
 		Keyword = "raid",
