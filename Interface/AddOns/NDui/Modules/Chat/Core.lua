@@ -205,6 +205,15 @@ function module:UpdateTimestamp()
 	end
 end
 
+-- Classcolor name
+function module:UpdateClassColorName()
+	if NDuiADB["ClassColorChat"] then
+		SetCVar("chatClassColorOverride", "0")
+	else
+		SetCVar("chatClassColorOverride", "1")
+	end
+end
+
 -- Sticky whisper
 function module:ChatWhisperSticky()
 	if NDuiDB["Chat"]["Sticky"] then
@@ -269,6 +278,7 @@ function module:OnLogin()
 
 	-- Add Elements
 	self:UpdateTimestamp()
+	self:UpdateClassColorName()
 	self:ChatWhisperSticky()
 	self:ChatFilter()
 	self:ChannelRename()

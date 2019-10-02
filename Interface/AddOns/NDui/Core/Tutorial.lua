@@ -30,7 +30,6 @@ local function ForceDefaultSettings()
 	SetCVar("autoQuestWatch", 1)
 	SetCVar("overrideArchive", 0)
 	SetCVar("WorldTextScale", 1)
-	SetCVar("chatClassColorOverride", "0")
 end
 
 local function ForceRaidFrame()

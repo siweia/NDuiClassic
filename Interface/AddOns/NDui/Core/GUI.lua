@@ -272,6 +272,7 @@ local accountSettings = {
 	AutoBubbles = false,
 	SystemInfoType = 0,
 	DisableInfobars = false,
+	ClassColorChat = true,
 }
 
 -- Initial settings
@@ -363,6 +364,10 @@ end
 
 local function updateChatSticky()
 	B:GetModule("Chat"):ChatWhisperSticky()
+end
+
+local function updateClassColorName()
+	B:GetModule("Chat"):UpdateClassColorName()
 end
 
 local function updateTimestamp()
@@ -638,13 +643,14 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{3, "Chat", "ChatWidth", L["LockChatWidth"].."*", nil, {200, 600, 0}, updateChatSize},
 		{3, "Chat", "ChatHeight", L["LockChatHeight"].."*", true, {100, 500, 0}, updateChatSize},
 		{},--blank
-		{1, "Chat", "Oldname", L["Default Channel"]},
+		{1, "ACCOUNT", "ClassColorChat", L["ClassColorChat"].."*", nil, nil, updateClassColorName},
 		{1, "ACCOUNT", "Timestamp", L["Timestamp"], true, nil, updateTimestamp},
 		{1, "Chat", "Sticky", L["Chat Sticky"].."*", nil, nil, updateChatSticky},
 		{1, "Chat", "WhisperColor", L["Differ WhipserColor"].."*", true},
 		{1, "Chat", "Freedom", L["Language Filter"]},
-		{1, "Chat", "Chatbar", L["ShowChatbar"], true},
-		{1, "Chat", "ChatItemLevel", "|cff00cc4c"..L["ShowChatItemLevel"]},
+		{1, "Chat", "Oldname", L["Default Channel"], true},
+		{1, "Chat", "Chatbar", L["ShowChatbar"]},
+		{1, "Chat", "ChatItemLevel", "|cff00cc4c"..L["ShowChatItemLevel"], true},
 		{},--blank
 		{1, "Chat", "EnableFilter", "|cff00cc4c"..L["Enable Chatfilter"]},
 		{1, "Chat", "BlockAddonAlert", L["Block Addon Alert"]},
