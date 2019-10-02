@@ -273,6 +273,7 @@ local accountSettings = {
 	SystemInfoType = 0,
 	DisableInfobars = false,
 	ClassColorChat = true,
+	ResetRecount = true,
 }
 
 -- Initial settings
