@@ -65,9 +65,9 @@ tinsert(C.themes["AuroraClassic"], function()
 
 	-- Text colour stuff
 
-	QuestProgressRequiredItemsText:SetTextColor(1, 1, 1)
+	QuestProgressRequiredItemsText:SetTextColor(1, .8, 0)
 	QuestProgressRequiredItemsText:SetShadowColor(0, 0, 0)
-	QuestProgressTitleText:SetTextColor(1, 1, 1)
+	QuestProgressTitleText:SetTextColor(1, .8, 0)
 	QuestProgressTitleText:SetShadowColor(0, 0, 0)
 	QuestProgressTitleText.SetTextColor = F.dummy
 	QuestProgressText:SetTextColor(1, 1, 1)
