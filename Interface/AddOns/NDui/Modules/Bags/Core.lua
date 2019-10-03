@@ -321,7 +321,7 @@ function module:OnLogin()
 	local iconSize = NDuiDB["Bags"]["IconSize"]
 	local showItemLevel = NDuiDB["Bags"]["BagsiLvl"]
 	local deleteButton = NDuiDB["Bags"]["DeleteButton"]
-	local itemSetFilter = NDuiDB["Bags"]["ItemSetFilter"]
+	--local itemSetFilter = NDuiDB["Bags"]["ItemSetFilter"]
 
 	-- Init
 	local Backpack = cargBags:NewImplementation("NDui_Backpack")
@@ -534,11 +534,11 @@ function module:OnLogin()
 		if strmatch(name, "AmmoItem$") then
 			label = INVTYPE_AMMO
 		elseif strmatch(name, "Equipment$") then
-			if itemSetFilter then
-				label = L["Equipement Set"]
-			else
+			--if itemSetFilter then
+			--	label = L["Equipement Set"]
+			--else
 				label = BAG_FILTER_EQUIPMENT
-			end
+			--end
 		elseif name == "BankLegendary" then
 			label = LOOT_JOURNAL_LEGENDARIES
 		elseif strmatch(name, "Consumble$") then
