@@ -46,10 +46,20 @@ function M:ExpBar_UpdateTooltip()
 	GameTooltip:AddLine(LEVEL.." "..UnitLevel("player"), 0,.6,1)
 
 	if UnitLevel("player") < MAX_PLAYER_LEVEL then
+		GameTooltip:AddLine(" ")
 		local xp, mxp, rxp = UnitXP("player"), UnitXPMax("player"), GetXPExhaustion()
 		GameTooltip:AddDoubleLine(XP..":", xp.." / "..mxp.." ("..floor(xp/mxp*100).."%)", .6,.8,1, 1,1,1)
 		if rxp then
 			GameTooltip:AddDoubleLine(TUTORIAL_TITLE26..":", "+"..rxp.." ("..floor(rxp/mxp*100).."%)", .6,.8,1, 1,1,1)
+		end
+	end
+
+	if DB.MyClass == "HUNTER" then
+		local currXP, nextXP = GetPetExperience()
+		if nextXP ~= 0 then
+			GameTooltip:AddLine(" ")
+			GameTooltip:AddLine(PET.." Lv"..UnitLevel("pet"), 0,.6,1)
+			GameTooltip:AddDoubleLine(XP..":", currXP.." / "..nextXP.." ("..floor(currXP/nextXP*100).."%)", .6,.8,1, 1,1,1)
 		end
 	end
 
