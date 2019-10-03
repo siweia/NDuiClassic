@@ -342,15 +342,17 @@ function UF:UpdateCodexQuestUnit(name)
 	if name and CodexMap.tooltips[name] then
 		for _, meta in pairs(CodexMap.tooltips[name]) do
 			local questData = meta["quest"]
+			local quests = CodexDB.quests.loc
+
 			if questData then
-				for questId = 1, GetNumQuestLogEntries() do
-					local title, _, _, _, _, complete = GetQuestLogTitle(questId)
-					if questData == title then
-						local objectives = GetNumQuestLeaderBoards(questId)
+				for questIndex = 1, GetNumQuestLogEntries() do
+					local _, _, _, header, _, _, _, questId = GetQuestLogTitle(questIndex)
+					if not header and quests[questId] and questData == quests[questId].T then
+						local objectives = GetNumQuestLeaderBoards(questIndex)
 						local foundObjective, progressText = nil
 						if objectives then
 							for i = 1, objectives do
-								local text, type, complete = GetQuestLogLeaderBoard(i, questId)
+								local text, type = GetQuestLogLeaderBoard(i, questIndex)
 								if type == "monster" then
 									local _, _, monsterName, objNum, objNeeded = strfind(text, Codex:SanitizePattern(QUEST_MONSTERS_KILLED))
 									if meta["spawn"] == monsterName then
@@ -360,7 +362,7 @@ function UF:UpdateCodexQuestUnit(name)
 									end
 								elseif table.getn(meta["item"]) > 0 and type == "item" and meta["dropRate"] then
 									local _, _, itemName, objNum, objNeeded = strfind(text, Codex:SanitizePattern(QUEST_OBJECTS_FOUND))
-									for mid, item in pairs(meta["item"]) do
+									for _, item in pairs(meta["item"]) do
 										if item == itemName then
 											progressText = objNeeded - objNum
 											foundObjective = true
@@ -374,7 +376,7 @@ function UF:UpdateCodexQuestUnit(name)
 						if foundObjective and progressText > 0 then
 							self.questIcon:Show()
 							self.questCount:SetText(progressText)
-						elseif not foundObjective and meta["questLevel"] and meta["texture"] then
+						elseif not foundObjective then
 							self.questIcon:Show()
 						end
 					end
