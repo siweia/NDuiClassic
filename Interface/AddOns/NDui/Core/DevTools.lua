@@ -17,7 +17,7 @@ local strfind, format, strsplit = string.find, string.format, string.split
 local pairs, tonumber, tostring = pairs, tonumber, tostring
 local floor, ceil = math.floor, math.ceil
 
-local dev = {"寧德"}
+local dev = {"寧德", "箭灵"}
 local function isDeveloper()
 	for _, name in pairs(dev) do
 		if DB.MyName == name then
