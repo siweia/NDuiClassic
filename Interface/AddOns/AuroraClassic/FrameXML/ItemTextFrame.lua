@@ -9,8 +9,8 @@ tinsert(C.themes["AuroraClassic"], function()
 	ItemTextMaterialBotLeft:SetAlpha(0)
 	ItemTextMaterialBotRight:SetAlpha(0)
 
-	F.ReskinPortraitFrame(ItemTextFrame)
-	F.ReskinClose(ItemTextCloseButton)
+	ItemTextFrame.CloseButton = ItemTextCloseButton
+	F.ReskinPortraitFrame(ItemTextFrame, 15, -15, -30, 65)
 	F.ReskinScroll(ItemTextScrollFrameScrollBar)
 	F.ReskinArrow(ItemTextPrevPageButton, "left")
 	F.ReskinArrow(ItemTextNextPageButton, "right")
