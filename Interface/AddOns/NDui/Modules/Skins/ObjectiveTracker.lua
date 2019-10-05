@@ -130,20 +130,18 @@ function S:QuestLogLevel()
 		local questIndex = i + FauxScrollFrame_GetOffset(QuestLogListScrollFrame)
 		local questLogTitle = _G["QuestLogTitle"..i]
 		local questCheck = _G["QuestLogTitle"..i.."Check"]
-
+		local questTitleTag = _G["QuestLogTitle"..i.."Tag"]
 		if questIndex <= numEntries then
-			local questLogTitleText, level, _, isHeader, _, isComplete, frequency = GetQuestLogTitle(questIndex)
-
+			local questLogTitleText, level, _, isHeader, _, isComplete = GetQuestLogTitle(questIndex)
 			if not isHeader then
-				questLogTitleText = "["..level.."] "..questLogTitleText
-				if isComplete then
-					questLogTitleText = "|cffff78ff"..questLogTitleText
-				elseif frequency == LE_QUEST_FREQUENCY_DAILY then
-					questLogTitleText = "|cff3399ff"..questLogTitleText
-				end
-
-				questLogTitle:SetText(questLogTitleText)
+				questLogTitle:SetText("["..level.."] "..questLogTitleText)
 				questCheck:SetPoint("LEFT", questLogTitle, questLogTitle:GetWidth()-22, 0)
+				if isComplete then
+					questLogTitle.r = 1
+					questLogTitle.g = .5
+					questLogTitle.b = 1
+					questTitleTag:SetTextColor(1, .5, 1)
+				end
 			end
 		end
 	end
