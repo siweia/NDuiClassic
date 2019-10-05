@@ -134,7 +134,7 @@ tinsert(C.themes["AuroraClassic"], function()
 	QuestLogCollapseAllButton:DisableDrawLayer("BACKGROUND")
 
 	F.StripTextures(QuestLogTrack)
-	QuestLogTrack:SetSize(10, 10)
+	QuestLogTrack:SetSize(8, 8)
 	QuestLogTrackTitle:SetPoint("LEFT", QuestLogTrack, "RIGHT", 3, 0)
 	QuestLogTrackTracking:SetTexture(C.media.backdrop)
 	F.CreateBDFrame(QuestLogTrackTracking)
