@@ -330,9 +330,10 @@ function module:OnLogin()
 	Backpack:HookScript("OnShow", function() PlaySound(SOUNDKIT.IG_BACKPACK_OPEN) end)
 	Backpack:HookScript("OnHide", function() PlaySound(SOUNDKIT.IG_BACKPACK_CLOSE) end)
 
+	module.BagsType = {}
+	module.BagsType[0] = 0
+
 	local f = {}
-	module.AmmoBags = {}
-	module.SpecialBags = {}
 	local onlyBags, bagAmmo, bagEquipment, bagConsumble, bagsJunk, onlyBank, bankAmmo, bankLegendary, bankEquipment, bankConsumble, onlyReagent, bagFavourite, bankFavourite = self:GetFilters()
 
 	function Backpack:OnInit()
@@ -600,7 +601,7 @@ function module:OnLogin()
 	function BagButton:OnUpdate()
 		local id = GetInventoryItemID("player", (self.GetInventorySlot and self:GetInventorySlot()) or self.invID)
 		if not id then return end
-		local _, _, quality, _, _, _, _, _, _, _, _, classID = GetItemInfo(id)
+		local _, _, quality, _, _, _, _, _, _, _, _, classID, subClassID = GetItemInfo(id)
 		quality = quality or 0
 		if quality == 1 then quality = 0 end
 		local color = BAG_ITEM_QUALITY_COLORS[quality]
@@ -610,10 +611,12 @@ function module:OnLogin()
 			self.BG:SetBackdropBorderColor(0, 0, 0)
 		end
 
-		module.AmmoBags[self.bagID] = (classID == LE_ITEM_CLASS_QUIVER)
-		local bagFamily = select(2, GetContainerNumFreeSlots(self.bagID))
-		if bagFamily then
-			module.SpecialBags[self.bagID] = bagFamily ~= 0
+		if classID == LE_ITEM_CLASS_CONTAINER then
+			module.BagsType[self.bagID] = subClassID or 0
+		elseif classID == LE_ITEM_CLASS_QUIVER then
+			module.BagsType[self.bagID] = -1
+		else
+			module.BagsType[self.bagID] = 0
 		end
 	end
 
