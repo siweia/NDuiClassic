@@ -332,6 +332,7 @@ function module:OnLogin()
 
 	module.BagsType = {}
 	module.BagsType[0] = 0
+	module.BagsType[-1] = 0
 
 	local f = {}
 	local onlyBags, bagAmmo, bagEquipment, bagConsumble, bagsJunk, onlyBank, bankAmmo, bankLegendary, bankEquipment, bankConsumble, onlyReagent, bagFavourite, bankFavourite = self:GetFilters()
@@ -533,7 +534,7 @@ function module:OnLogin()
 
 		local label
 		if strmatch(name, "AmmoItem$") then
-			label = INVTYPE_AMMO
+			label = DB.MyClass == "HUNTER" and INVTYPE_AMMO or SOUL_SHARDS
 		elseif strmatch(name, "Equipment$") then
 			--if itemSetFilter then
 			--	label = L["Equipement Set"]
