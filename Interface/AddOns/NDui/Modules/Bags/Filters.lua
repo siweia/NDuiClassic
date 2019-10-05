@@ -37,8 +37,11 @@ end
 
 local function isItemAmmo(item)
 	if not NDuiDB["Bags"]["ItemFilter"] then return end
-	if DB.MyClass ~= "HUNTER" then return end
-	return item.equipLoc == "INVTYPE_AMMO" or module.AmmoBags[item.bagID]
+	if DB.MyClass == "HUNTER" then
+		return item.equipLoc == "INVTYPE_AMMO" or module.BagsType[item.bagID] == -1
+	elseif DB.MyClass == "WARLOCK" then
+		return item.id == 6265 or module.BagsType[item.bagID] == 1
+	end
 end
 
 local function isItemEquipment(item)
@@ -68,7 +71,7 @@ end
 
 local function isEmptySlot(item)
 	if not NDuiDB["Bags"]["GatherEmpty"] then return end
-	return not item.texture and not module.SpecialBags[item.bagID]
+	return not item.texture and module.BagsType[item.bagID] == 0
 end
 
 function module:GetFilters()
