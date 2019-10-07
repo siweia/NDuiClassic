@@ -144,6 +144,8 @@ function module:SetupWorldMap()
 		if WorldMapFrame:IsShown() then WorldMapFrame:Hide() else WorldMapFrame:Show() end
 	end
 	tinsert(UISpecialFrames, "WorldMapFrame")
+
+	self:MapPartyDots()
 end
 
 local function isMouseOverMap()
@@ -156,6 +158,32 @@ function module:MapFader()
 	else
 		PlayerMovementFrameFader.RemoveFrame(WorldMapFrame)
 	end
+end
+
+function module:MapPartyDots()
+	local WorldMapUnitPin, WorldMapUnitPinSizes
+	local partyTexture = "Interface\\OptionsFrame\\VoiceChat-Record"
+
+	local function setPinTexture(self)
+		self:SetPinTexture("raid", partyTexture)
+		self:SetPinTexture("party", partyTexture)
+	end
+
+	-- Set group icon textures
+	for pin in WorldMapFrame:EnumeratePinsByTemplate("GroupMembersPinTemplate") do
+		WorldMapUnitPin = pin
+		WorldMapUnitPinSizes = pin.dataProvider:GetUnitPinSizesTable()
+		setPinTexture(WorldMapUnitPin)
+		hooksecurefunc(WorldMapUnitPin, "UpdateAppearanceData", setPinTexture)
+		break
+	end
+
+	-- Set party icon size and enable class colors
+	WorldMapUnitPinSizes.player = 24
+	WorldMapUnitPinSizes.party = 14
+	WorldMapUnitPin:SetAppearanceField("party", "useClassColor", true)
+	WorldMapUnitPin:SetAppearanceField("raid", "useClassColor", true)
+	WorldMapUnitPin:SynchronizePinSizes()
 end
 
 function module:OnLogin()
