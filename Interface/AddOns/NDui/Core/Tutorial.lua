@@ -290,6 +290,7 @@ local function ForceAddonSkins()
 	if NDuiADB["DBMRequest"] then ForceDBMOptions() end
 	if NDuiADB["SkadaRequest"] then ForceSkadaOptions() end
 	if NDuiADB["BWRequest"] then ForceBigwigs() end
+	NDuiDB["Skins"]["ResetRecount"] = true
 end
 
 -- Tutorial
