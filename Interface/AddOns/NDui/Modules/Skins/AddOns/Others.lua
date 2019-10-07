@@ -45,7 +45,7 @@ function S:ResetRecount()
 	Recount.db.profile.Font = DEFAULT
 	Recount:UpdateBarTextures()
 
-	NDuiADB["ResetRecount"] = false
+	NDuiDB["Skins"]["ResetRecount"] = false
 end
 
 function S:RecountSkin()
@@ -70,7 +70,7 @@ function S:RecountSkin()
 		Recount.MainWindow:Hide()
 	end)
 
-	if NDuiADB["ResetRecount"] then S:ResetRecount() end
+	if NDuiDB["Skins"]["ResetRecount"] then S:ResetRecount() end
 	hooksecurefunc(Recount, "ResetPositions", S.ResetRecount)
 
 	if F then

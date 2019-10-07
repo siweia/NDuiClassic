@@ -204,6 +204,7 @@ local defaultSettings = {
 		QuestLogEx = true,
 		QuestTracker = true,
 		Recount = true,
+		ResetRecount = true,
 	},
 	Tooltip = {
 		CombatHide = false,
@@ -274,7 +275,6 @@ local accountSettings = {
 	SystemInfoType = 0,
 	DisableInfobars = false,
 	ClassColorChat = true,
-	ResetRecount = true,
 }
 
 -- Initial settings
