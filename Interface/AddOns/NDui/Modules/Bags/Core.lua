@@ -482,7 +482,7 @@ function module:OnLogin()
 			end
 		end
 
-		if not NDuiDB["Bags"]["ItemFilter"] then
+		if NDuiDB["Bags"]["SpecialBagsColor"] then
 			local bagType = module.BagsType[item.bagID]
 			local color = bagTypeColor[bagType] or bagTypeColor[0]
 			self.BG:SetBackdropColor(unpack(color))

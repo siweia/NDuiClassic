@@ -46,6 +46,7 @@ local defaultSettings = {
 		DeleteButton = true,
 		FavouriteItems = {},
 		GatherEmpty = false,
+		SpecialBagsColor = true,
 	},
 	Auras = {
 		Reminder = true,
@@ -518,10 +519,11 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		--{1, "Bags", "ItemSetFilter", L["Use ItemSetFilter"], true},
 		{},--blank
 		{1, "Bags", "ItemFilter", L["Bags ItemFilter"].."*"},
-		{1, "Bags", "GatherEmpty", "|cff00cc4c"..L["Bags GatherEmpty"].."*", true},
+		{1, "Bags", "GatherEmpty", L["Bags GatherEmpty"].."*", true},
+		{1, "Bags", "SpecialBagsColor", L["SpecialBagsColor"].."*"},
+		{1, "Bags", "ReverseSort", L["Bags ReverseSort"].."*", true, nil, updateBagSortOrder},
 		{1, "Bags", "BagsiLvl", L["Bags Itemlevel"]},
 		{1, "Bags", "DeleteButton", L["Bags DeleteButton"], true},
-		{1, "Bags", "ReverseSort", L["Bags ReverseSort"].."*", nil, nil, updateBagSortOrder},
 		{},--blank
 		{3, "Bags", "BagsScale", L["Bags Scale"], false, {.5, 1.5, 1}},
 		{3, "Bags", "IconSize", L["Bags IconSize"], true, {30, 42, 0}},
