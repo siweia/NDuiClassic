@@ -9,6 +9,7 @@ local list = {
 		{AuraID = 19577, UnitID = "pet"},		-- 胁迫
 	},
 	["Target Aura"] = {		-- 目标光环组
+		{AuraID = 1513, UnitID = "target", Caster = "player"},		-- 恐吓野兽
 		{AuraID = 3355, UnitID = "target", Caster = "player"},		-- 冰冻陷阱
 		{AuraID = 5116, UnitID = "target", Caster = "player"},		-- 震荡射击
 		{AuraID = 13550, UnitID = "target", Caster = "player"},		-- 毒蛇钉刺
