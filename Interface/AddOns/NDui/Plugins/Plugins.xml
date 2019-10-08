@@ -2,6 +2,5 @@
 	<Script file="AlreadyKnown.lua"/>
 	<Script file="DragEmAll.lua"/>
 	<Script file="QuickQuest.lua"/>
-	<Script file="VendorPrice.lua"/>
 	<Script file="yClassColors.lua"/>
 </Ui>
