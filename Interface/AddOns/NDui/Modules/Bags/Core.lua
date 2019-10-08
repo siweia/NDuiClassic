@@ -404,7 +404,7 @@ function module:OnLogin()
 		self.Count:SetFont(unpack(DB.Font))
 
 		self.BG = B.CreateBG(self)
-		B.CreateBD(self.BG, .3)
+		B.CreateBD(self.BG, .25)
 
 		self.junkIcon = self:CreateTexture(nil, "ARTWORK")
 		self.junkIcon:SetAtlas("bags-junkcoin")
@@ -434,6 +434,14 @@ function module:OnLogin()
 			C_NewItems_RemoveNewItem(self.bagID, self.slotID)
 		end
 	end
+
+	local bagTypeColor = {
+		[-1] = {.67, .83, .45, .25},
+		[0] = {0, 0, 0, .25},
+		[1] = {.53, .53, .93, .25},
+		[2] = {0, .5, 0, .25},
+		[3] = {0, .5, .8, .25},
+	}
 
 	function MyButton:OnUpdate(item)
 		if MerchantFrame:IsShown() then
@@ -474,6 +482,12 @@ function module:OnLogin()
 			else
 				B.HideOverlayGlow(self.glowFrame)
 			end
+		end
+
+		if not NDuiDB["Bags"]["ItemFilter"] then
+			local bagType = module.BagsType[item.bagID]
+			local color = bagTypeColor[bagType] or bagTypeColor[0]
+			self.BG:SetBackdropColor(unpack(color))
 		end
 	end
 
