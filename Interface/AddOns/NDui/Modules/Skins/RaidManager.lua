@@ -447,7 +447,7 @@ function S:CreateRM()
 				UIErrorsFrame:AddMessage(DB.InfoColor..ERR_NOT_LEADER)
 			end
 		end},]]
-		{RAID_CONTROL, function() ToggleFriendsFrame(4) end},
+		{RAID_CONTROL, function() ToggleRaidFrame() end},
 	}
 	local bu = {}
 	for i, j in pairs(buttons) do
