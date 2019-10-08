@@ -690,6 +690,7 @@ Spell(24394, { duration = 3 }) -- Intimidation
 -- Spell(15571, { duration = 4 }) -- Daze from Aspect
 Spell(19185, { duration = 5 }) -- Entrapment
 Spell(25999, { duration = 1 }) -- Boar Charge
+Spell(1539, { duration = 20 }) -- Feed Pet Effect
 
 -------------
 -- MAGE
