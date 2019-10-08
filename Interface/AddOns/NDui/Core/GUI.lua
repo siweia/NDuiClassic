@@ -520,7 +520,7 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{},--blank
 		{1, "Bags", "ItemFilter", L["Bags ItemFilter"].."*"},
 		{1, "Bags", "GatherEmpty", L["Bags GatherEmpty"].."*", true},
-		{1, "Bags", "SpecialBagsColor", L["SpecialBagsColor"].."*"},
+		{1, "Bags", "SpecialBagsColor", L["SpecialBagsColor"].."*", nil, nil, nil, L["SpecialBagsColorTip"]},
 		{1, "Bags", "ReverseSort", L["Bags ReverseSort"].."*", true, nil, updateBagSortOrder},
 		{1, "Bags", "BagsiLvl", L["Bags Itemlevel"]},
 		{1, "Bags", "DeleteButton", L["Bags DeleteButton"], true},
