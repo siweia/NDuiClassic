@@ -17,42 +17,26 @@ function S:MicroButton_SetupTexture(icon, texcoord, texture)
 end
 
 function S:MicroButton_Create(parent, data)
-	local texture, texcoord, method, tooltip = unpack(data)
+	local texture, texcoord, tip, func = unpack(data)
 
-	local bu = CreateFrame("Frame", nil, parent)
+	local bu = CreateFrame("Button", nil, parent)
 	tinsert(buttonList, bu)
 	bu:SetSize(22, 22)
+	bu:SetFrameStrata("BACKGROUND")
+	bu:SetScript("OnClick", func)
+	B.AddTooltip(bu, "ANCHOR_TOP", tip)
 
 	local icon = bu:CreateTexture(nil, "ARTWORK")
 	S:MicroButton_SetupTexture(icon, texcoord, texture)
 
-	if type(method) == "string" then
-		local button = _G[method]
-		button:SetHitRectInsets(0, 0, 0, 0)
-		button:SetParent(bu)
-		button:ClearAllPoints(bu)
-		button:SetAllPoints(bu)
-		--button.SetPoint = B.Dummy
-		button:UnregisterAllEvents()
-		button:SetNormalTexture(nil)
-		button:SetPushedTexture(nil)
-		button:SetDisabledTexture(nil)
-		if tooltip then B.AddTooltip(button, "ANCHOR_RIGHT", tooltip) end
-
-		local hl = button:GetHighlightTexture()
-		S:MicroButton_SetupTexture(button:GetHighlightTexture(), texcoord, texture)
-		if not NDuiDB["Skins"]["ClassLine"] then hl:SetVertexColor(1, 1, 1) end
-
-		local flash = button.Flash
-		S:MicroButton_SetupTexture(flash, texcoord, texture)
-		if not NDuiDB["Skins"]["ClassLine"] then flash:SetVertexColor(1, 1, 1) end
+	bu:SetHighlightTexture(DB.MicroTex..texture)
+	local highlight = bu:GetHighlightTexture()
+	highlight:SetAllPoints(icon)
+	highlight:SetTexCoord(unpack(texcoord))
+	if NDuiDB["Skins"]["ClassLine"] then
+		highlight:SetVertexColor(r, g, b)
 	else
-		bu:SetScript("OnMouseUp", method)
-		B.AddTooltip(bu, "ANCHOR_RIGHT", tooltip)
-
-		local hl = bu:CreateTexture(nil, "HIGHLIGHT")
-		S:MicroButton_SetupTexture(hl, texcoord, texture)
-		if not NDuiDB["Skins"]["ClassLine"] then hl:SetVertexColor(1, 1, 1) end
+		highlight:SetVertexColor(1, 1, 1)
 	end
 end
 
@@ -65,15 +49,21 @@ function S:MicroMenu()
 
 	-- Generate Buttons
 	local buttonInfo = {
-		{"player", {51/256, 141/256, 86/256, 173/256}, "CharacterMicroButton"},
-		{"spellbook", {83/256, 173/256, 86/256, 173/256}, "SpellbookMicroButton"},
-		{"talents", {83/256, 173/256, 86/256, 173/256}, "TalentMicroButton"},
-		{"quests", {83/256, 173/256, 80/256, 167/256}, "QuestLogMicroButton"},
-		{"guild", {83/256, 173/256, 80/256, 167/256}, "SocialsMicroButton"},
-		{"pets", {83/256, 173/256, 83/256, 173/256}, "WorldMapMicroButton"},
-		{"help", {83/256, 173/256, 80/256, 170/256}, "HelpMicroButton"},
-		{"settings", {83/256, 173/256, 83/256, 173/256}, "MainMenuMicroButton", MicroButtonTooltipText(MAINMENU_BUTTON, "TOGGLEGAMEMENU")},
-		{"bags", {47/256, 137/256, 83/256, 173/256}, ToggleAllBags, MicroButtonTooltipText(BAGSLOT, "OPENALLBAGS")},
+		{"player", {51/256, 141/256, 86/256, 173/256}, MicroButtonTooltipText(CHARACTER_BUTTON, "TOGGLECHARACTER0"), function() ToggleFrame(CharacterFrame) end},
+		{"spellbook", {83/256, 173/256, 86/256, 173/256}, MicroButtonTooltipText(SPELLBOOK_ABILITIES_BUTTON, "TOGGLESPELLBOOK"), function() ToggleFrame(SpellBookFrame) end},
+		{"talents", {83/256, 173/256, 86/256, 173/256}, MicroButtonTooltipText(TALENTS, "TOGGLETALENTS"), function()
+			if UnitLevel("player") < SHOW_SPEC_LEVEL then
+				UIErrorsFrame:AddMessage(DB.InfoColor..format(FEATURE_BECOMES_AVAILABLE_AT_LEVEL, SHOW_SPEC_LEVEL))
+			else
+				ToggleTalentFrame()
+			end
+		end},
+		{"quests", {83/256, 173/256, 80/256, 167/256}, MicroButtonTooltipText(QUESTLOG_BUTTON, "TOGGLEQUESTLOG"), ToggleQuestLog},
+		{"guild", {83/256, 173/256, 80/256, 167/256}, MicroButtonTooltipText(SOCIAL_BUTTON, "TOGGLESOCIAL"), function() ToggleFrame(FriendsFrame) end},
+		{"pets", {83/256, 173/256, 83/256, 173/256}, MicroButtonTooltipText(WORLDMAP_BUTTON, "TOGGLEWORLDMAP"), ToggleWorldMap},
+		{"help", {83/256, 173/256, 80/256, 170/256}, MicroButtonTooltipText(HELP_BUTTON, "TOGGLEHELP"), function() ToggleFrame(HelpFrame) end},
+		{"settings", {83/256, 173/256, 83/256, 173/256}, MicroButtonTooltipText(MAINMENU_BUTTON, "TOGGLEGAMEMENU"), function() ToggleFrame(GameMenuFrame) PlaySound(SOUNDKIT.IG_MINIMAP_OPEN) end},
+		{"bags", {47/256, 137/256, 83/256, 173/256}, MicroButtonTooltipText(BAGSLOT, "OPENALLBAGS"), ToggleAllBags},
 	}
 	for _, info in pairs(buttonInfo) do
 		S:MicroButton_Create(menubar, info)
@@ -88,8 +78,7 @@ function S:MicroMenu()
 		end
 	end
 
-	-- Default elements
-	B.HideObject(MicroButtonPortrait)
-	B.HideObject(MainMenuBarDownload)
-	MainMenuMicroButton:SetScript("OnUpdate", nil)
+	-- Taint Fix
+	ToggleFrame(SpellBookFrame)
+	ToggleFrame(SpellBookFrame)
 end
