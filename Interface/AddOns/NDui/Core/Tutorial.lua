@@ -290,7 +290,6 @@ local function ForceAddonSkins()
 	if NDuiADB["DBMRequest"] then ForceDBMOptions() end
 	if NDuiADB["SkadaRequest"] then ForceSkadaOptions() end
 	if NDuiADB["BWRequest"] then ForceBigwigs() end
-	NDuiDB["Skins"]["ResetRecount"] = true
 end
 
 -- Tutorial
@@ -364,6 +363,7 @@ local function YesTutor()
 			NDuiADB["BWRequest"] = true
 			ForceAddonSkins()
 			NDuiADB["ResetDetails"] = true
+			NDuiDB["Skins"]["ResetRecount"] = true
 			UIErrorsFrame:AddMessage(DB.InfoColor..L["Tutorial Complete"])
 			pass:Hide()
 		elseif currentPage == 5 then
