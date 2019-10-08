@@ -486,6 +486,8 @@ function module:OnLogin()
 			local bagType = module.BagsType[item.bagID]
 			local color = bagTypeColor[bagType] or bagTypeColor[0]
 			self.BG:SetBackdropColor(unpack(color))
+		else
+			self.BG:SetBackdropColor(0, 0, 0, .25)
 		end
 	end
 
