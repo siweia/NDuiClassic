@@ -407,6 +407,7 @@ TT:RegisterTooltips("NDui", function()
 		FriendsTooltip,
 		GeneralDockManagerOverflowButtonList,
 		NamePlateTooltip,
+		WorldMapTooltip,
 		IMECandidatesFrame
 	}
 	for _, f in pairs(tooltips) do
