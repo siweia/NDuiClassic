@@ -108,7 +108,10 @@ C.themes["Blizzard_AuctionUI"] = function()
 		if bu and it then
 			it:SetNormalTexture("")
 			it:SetPushedTexture("")
-			it:GetHighlightTexture():SetColorTexture(1, 1, 1, .25)
+			local itemHL = it:GetHighlightTexture()
+			if itemHL then
+				itemHL:SetColorTexture(1, 1, 1, .25)
+			end
 			F.ReskinIcon(ic)
 			it.IconBorder:SetAlpha(0)
 			F.StripTextures(bu)
