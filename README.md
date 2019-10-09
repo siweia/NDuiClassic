@@ -34,7 +34,7 @@
 - NDui: Core for NDui Classic.
 
 # Skins Support
-- BigWigs, DBM, Details, PremadeGroupsFilter, Rematch, Skada, TMW, WeakAuras.
+- BigWigs, DBM, Details, Recount, Skada, TMW, WeakAuras.
 
 # Download & Setup
 1. Download and unzip the file.
