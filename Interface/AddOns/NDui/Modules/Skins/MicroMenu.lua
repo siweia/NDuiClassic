@@ -30,14 +30,9 @@ function S:MicroButton_Create(parent, data)
 	S:MicroButton_SetupTexture(icon, texcoord, texture)
 
 	bu:SetHighlightTexture(DB.MicroTex..texture)
-	local highlight = bu:GetHighlightTexture()
-	highlight:SetAllPoints(icon)
-	highlight:SetTexCoord(unpack(texcoord))
-	if NDuiDB["Skins"]["ClassLine"] then
-		highlight:SetVertexColor(r, g, b)
-	else
-		highlight:SetVertexColor(1, 1, 1)
-	end
+	local hl = bu:GetHighlightTexture()
+	S:MicroButton_SetupTexture(hl, texcoord, texture)
+	if not NDuiDB["Skins"]["ClassLine"] then hl:SetVertexColor(1, 1, 1) end
 end
 
 function S:MicroMenu()
