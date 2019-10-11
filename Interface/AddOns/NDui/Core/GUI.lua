@@ -593,8 +593,8 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{},--blank
 		{1, "Nameplate", "CustomUnitColor", "|cff00cc4c"..L["CustomUnitColor"].."*", nil, nil, updateCustomUnitList},
 		{5, "Nameplate", "CustomColor", L["Custom Color"].."*", 2},
-		{2, "Nameplate", "UnitList", L["UnitColor List"].."*", nil, nil, updateCustomUnitList},
-		{2, "Nameplate", "ShowPowerList", L["ShowPowerList"].."*", true, nil, updatePowerUnitList},
+		{2, "Nameplate", "UnitList", L["UnitColor List"].."*", nil, nil, updateCustomUnitList, L["CustomUnitTips"]},
+		{2, "Nameplate", "ShowPowerList", L["ShowPowerList"].."*", true, nil, updatePowerUnitList, L["CustomUnitTips"]},
 		{1, "Nameplate", "TankMode", "|cff00cc4c"..L["Tank Mode"].."*"},
 		{5, "Nameplate", "SecureColor", L["Secure Color"].."*", 2},
 		--{1, "Nameplate", "DPSRevertThreat", L["DPS Revert Threat"].."*", true},
@@ -741,7 +741,7 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 	},
 	[13] = {
 		{1, "ACCOUNT", "VersionCheck", L["Version Check"]},
-		{1, "ACCOUNT", "DisableInfobars", L["DisableInfobars"]},
+		{1, "ACCOUNT", "DisableInfobars", L["DisableInfobars"], true},
 		{},--blank
 		{3, "ACCOUNT", "UIScale", L["Setup UIScale"], false, {.4, 1.15, 2}},
 		{1, "ACCOUNT", "LockUIScale", "|cff00cc4c"..L["Lock UIScale"], true},
