@@ -987,6 +987,7 @@ end
 
 function UF:CreateEneryTicker(self)
 	if not NDuiDB["UFs"]["EnergyTicker"] then return end
+	if DB.MyClass == "WARRIOR" then return end
 
 	local ticker = CreateFrame("Frame", nil, self)
 	ticker:SetFrameLevel(self.Power:GetFrameLevel() + 1)
