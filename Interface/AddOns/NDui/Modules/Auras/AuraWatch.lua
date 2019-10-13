@@ -127,6 +127,19 @@ local function BuildNamesForSpellRank()
 	end
 end
 
+local function ConvertIntCDToNameTable()
+	local newTable = {}
+	for spellID, value in pairs(IntCD.List) do
+		local name = GetSpellInfo(spellID)
+		if name then
+			newTable[name] = value
+		end
+	end
+
+	wipe(IntCD.List)
+	IntCD.List = newTable
+end
+
 local function BuildUnitIDTable()
 	for _, VALUE in pairs(AuraList) do
 		for _, value in pairs(VALUE.List) do
@@ -296,6 +309,7 @@ local function InitSetup()
 	ConvertTable()
 	BuildAuraList()
 	BuildNamesForSpellRank()
+	ConvertIntCDToNameTable()
 	BuildUnitIDTable()
 	BuildCooldownTable()
 	BuildAura()
@@ -613,14 +627,14 @@ local cache = {}
 function A:AuraWatch_UpdateInt(_, ...)
 	if not IntCD.List then return end
 
-	local timestamp, eventType, _, sourceGUID, sourceName, sourceFlags, _, destGUID, destName, destFlags, _, spellID = ...
-	local value = IntCD.List[spellID]
-	if value and cache[timestamp] ~= spellID and A:IsAuraTracking(value, eventType, sourceName, sourceFlags, destName, destFlags) then
+	local timestamp, eventType, _, sourceGUID, sourceName, sourceFlags, _, destGUID, destName, destFlags, _, _, spellName = ...
+	local value = IntCD.List[spellName]
+	if value and cache[timestamp] ~= spellName and A:IsAuraTracking(value, eventType, sourceName, sourceFlags, destName, destFlags) then
 		local guid, name = destGUID, destName
 		if value.OnSuccess then guid, name = sourceGUID, sourceName end
 
 		A:AuraWatch_SetupInt(value.IntID, value.ItemID, value.Duration, value.UnitID, guid, name)
-		cache[timestamp] = spellID
+		cache[timestamp] = spellName
 	end
 
 	if #cache > 666 then wipe(cache) end
