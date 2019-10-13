@@ -393,10 +393,10 @@ function UF:UpdateQuestIndicator()
 	self.questCount:SetText("")
 
 	local name = self.unitName
-	if QuestieTooltips then
-		UF.UpdateForQuestie(self, name)
-	elseif CodexMap then
+	if CodexMap then
 		UF.UpdateCodexQuestUnit(self, name)
+	elseif QuestieTooltips then
+		UF.UpdateForQuestie(self, name)
 	end
 end
 
