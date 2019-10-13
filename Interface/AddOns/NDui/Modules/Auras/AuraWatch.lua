@@ -121,7 +121,9 @@ local function BuildNamesForSpellRank()
 			local name = GetSpellInfo(spellID)
 			if value.AuraID and name then
 				if not auraListByName[KEY] then auraListByName[KEY] = {} end
-				auraListByName[KEY][name] = value
+				if not auraListByName[KEY][name] then
+					auraListByName[KEY][name] = value
+				end
 			end
 		end
 	end
