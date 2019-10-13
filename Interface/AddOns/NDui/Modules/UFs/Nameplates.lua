@@ -13,16 +13,6 @@ local SetCVar, UIFrameFadeIn, UIFrameFadeOut = SetCVar, UIFrameFadeIn, UIFrameFa
 local UNKNOWN, INTERRUPTED = UNKNOWN, INTERRUPTED
 
 -- Init
-function UF:PlateInsideView()
-	if NDuiDB["Nameplate"]["InsideView"] then
-		SetCVar("nameplateOtherTopInset", .05)
-		SetCVar("nameplateOtherBottomInset", .08)
-	else
-		SetCVar("nameplateOtherTopInset", -1)
-		SetCVar("nameplateOtherBottomInset", -1)
-	end
-end
-
 function UF:UpdatePlateScale()
 	SetCVar("namePlateMinScale", NDuiDB["Nameplate"]["MinScale"])
 	SetCVar("namePlateMaxScale", NDuiDB["Nameplate"]["MinScale"])
@@ -48,7 +38,6 @@ function UF:UpdateClickableSize()
 end
 
 function UF:SetupCVars()
-	UF:PlateInsideView()
 	SetCVar("nameplateOverlapH", .8)
 	UF:UpdatePlateSpacing()
 	UF:UpdatePlateRange()
