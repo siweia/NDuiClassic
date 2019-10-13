@@ -144,6 +144,12 @@ function S:QuestLogLevel()
 				end
 			end
 		end
+
+		local questNumGroupMates = _G["QuestLogTitle"..i.."GroupMates"]
+		if not questNumGroupMates.anchored then
+			questNumGroupMates:SetPoint("LEFT")
+			questNumGroupMates.anchored = true
+		end
 	end
 end
 
