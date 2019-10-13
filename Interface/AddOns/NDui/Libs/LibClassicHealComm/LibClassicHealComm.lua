@@ -390,10 +390,6 @@ local function filterData(spells, filterGUID, bitFlag, time, ignoreGUID)
 	local healAmount = 0
 	local currentTime = GetTime()
 
-	if not spells then
-		return healAmount
-	end
-
 	for _, pending in pairs(spells) do
 		if( pending.bitType and bit.band(pending.bitType, bitFlag) > 0 ) then
 			for i=1, #(pending), 5 do
@@ -1375,7 +1371,6 @@ local function findAura(casterGUID, spellID, ...)
 		end
 	end
 end
-
 local function parseHotHeal(casterGUID, wasUpdated, spellID, tickAmount, duration, ...)
 	local spellName = GetSpellInfo(spellID)
 	if( not tickAmount or not spellID or select("#", ...) == 0 ) then return end
@@ -1678,6 +1673,7 @@ function HealComm:UNIT_SPELLCAST_START(casterUnit, cast, spellID)
 	-- Figure out who we are healing and for how much
 	local type, amount, ticks, localTicks = CalculateHealing(castGUID, spellID, guidToUnit[castGUID])
 	local targets, amount = GetHealTargets(type, castGUID, math.max(amount, 0), spellID)
+	if not targets then return end -- BUG FIX, NEED REVIEWED
 
 	local startTime, endTime = select(4,CastingInfo())
 
