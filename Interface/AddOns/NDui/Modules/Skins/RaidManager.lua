@@ -218,14 +218,13 @@ function S:CreateRM()
 	end]]
 
 	-- Left icon
-	local left = CreateFrame("Button", nil, header)
+	local left = CreateFrame("Frame", nil, header)
 	left:SetPoint("RIGHT", header, "LEFT", -2, 0)
 	left:SetSize(28, 28)
 	B.CreateBD(left)
 	B.CreateSD(left)
 	B.CreateTex(left)
 	B.CreateFS(left, 16, "?", true)
-	B.CreateBC(left, .5)
 
 	-- Buff checker
 	local checker = CreateFrame("Button", nil, header)
