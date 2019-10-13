@@ -10,14 +10,14 @@ local INCAP = "INCAP"
 local STUN = "STUN"
 local HORROR = "HORROR"
 local ROOT = "ROOT"
-local OPENER_STUN = "OPENER_STUN"
+-- local OPENER_STUN = "OPENER_STUN"
 local RANDOM_STUN = "RANDOM_STUN"
 local RANDOM_ROOT = "RANDOM_ROOT"
 local FROST_SHOCK = "FROST_SHOCK"
 local KIDNEY_SHOT = "KIDNEY_SHOT"
 
 lib.DR_TypesPVE = {
-    [OPENER_STUN] = true,
+    [KIDNEY_SHOT] = true,
     [STUN] = true,
 }
 
