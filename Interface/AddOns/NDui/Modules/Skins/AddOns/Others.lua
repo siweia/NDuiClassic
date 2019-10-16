@@ -2,6 +2,21 @@ local _, ns = ...
 local B, C, L, DB, F = unpack(ns)
 local S = B:GetModule("Skins")
 
+function S:CharacterStatsClassic()
+	if not IsAddOnLoaded("CharacterStatsClassic") then return end
+	if not F then return end
+
+	for i = 1, CharacterFrame:GetNumChildren() do
+		local child = select(i, CharacterFrame:GetChildren())
+		if child and child.leftStatsDropDown then
+			F.ReskinDropDown(child.leftStatsDropDown)
+		end
+		if child and child.rightStatsDropDown then
+			F.ReskinDropDown(child.rightStatsDropDown)
+		end
+	end
+end
+
 function S:WhatsTraining()
 	if not IsAddOnLoaded("WhatsTraining") then return end
 	if not F then return end

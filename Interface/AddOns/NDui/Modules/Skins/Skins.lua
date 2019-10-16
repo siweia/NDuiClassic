@@ -117,6 +117,7 @@ function S:OnLogin()
 	self:ExtraQuestSkin()
 	self:WhatsTraining()
 	self:RecountSkin()
+	self:CharacterStatsClassic()
 
 	-- Register skin
 	local media = LibStub and LibStub("LibSharedMedia-3.0", true)
