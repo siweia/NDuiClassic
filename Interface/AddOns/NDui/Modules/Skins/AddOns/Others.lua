@@ -96,13 +96,26 @@ function S:CharacterStatsClassic()
 			statsTable[i] = CreateStatLine(header, i)
 		end
 		SetCharacterStats(statsTable, category)
+		statsTable.category = category
+
+		return statsTable
 	end
 
-	CreateStatHeader(stat, 1, PLAYERSTAT_BASE_STATS)
-	CreateStatHeader(stat, 2, PLAYERSTAT_DEFENSES)
-	CreateStatHeader(stat, 3, PLAYERSTAT_MELEE_COMBAT)
-	CreateStatHeader(stat, 4, PLAYERSTAT_RANGED_COMBAT)
-	CreateStatHeader(stat, 5, PLAYERSTAT_SPELL_COMBAT)
+	local dataTable = {}
+	dataTable[1] = CreateStatHeader(stat, 1, PLAYERSTAT_BASE_STATS)
+	dataTable[2] = CreateStatHeader(stat, 2, PLAYERSTAT_DEFENSES)
+	dataTable[3] = CreateStatHeader(stat, 3, PLAYERSTAT_MELEE_COMBAT)
+	dataTable[4] = CreateStatHeader(stat, 4, PLAYERSTAT_RANGED_COMBAT)
+	dataTable[5] = CreateStatHeader(stat, 5, PLAYERSTAT_SPELL_COMBAT)
+
+	local function UpdateStats()
+		if not statPanel:IsShown() then return end
+		for i = 1, 5 do
+			SetCharacterStats(dataTable[i], dataTable[i].category)
+		end
+	end
+	hooksecurefunc("ToggleCharacter", UpdateStats)
+	PaperDollFrame:HookScript("OnEvent", UpdateStats)
 
 	-- Blank space
 	local frame = CreateFrame("Frame", nil, stat)
