@@ -244,8 +244,9 @@ function module:ButtonOnClick(btn)
 end
 
 function module:GetContainerEmptySlot(bagID)
+	local bagType = module.BagsType[bagID]
 	for slotID = 1, GetContainerNumSlots(bagID) do
-		if not GetContainerItemID(bagID, slotID) then
+		if not GetContainerItemID(bagID, slotID) and bagType == 0 then
 			return slotID
 		end
 	end
