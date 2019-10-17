@@ -722,9 +722,9 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Tooltip", "HideAllID", "|cff00cc4c"..L["HideAllID"], true},
 	},
 	[12] = {
-		{1, "Misc", "ItemLevel", "|cff00cc4c"..L["Show ItemLevel"]},
-		{1, "Misc", "GemNEnchant", L["Show GemNEnchant"].."*", true},
-		{1, "Misc", "ShowItemLevel", L["Show ItemLevel"].."*"},
+		{1, "Misc", "ItemLevel", "|cff00cc4c"..L["Show ItemQuality"]},
+		{1, "Misc", "GemNEnchant", L["Show GemNEnchant"].."*"},
+		{1, "Misc", "ShowItemLevel", L["Show ItemLevel"].."*", true},
 		{},--blank
 		{1, "Misc", "FasterLoot", L["Faster Loot"].."*", nil, nil, updateFasterLoot},
 		{1, "Misc", "HideErrors", L["Hide Error"].."*", true, nil, updateErrorBlocker},
