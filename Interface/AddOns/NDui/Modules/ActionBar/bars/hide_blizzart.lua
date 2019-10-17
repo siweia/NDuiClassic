@@ -62,7 +62,10 @@ function Bar:HideBlizz()
 		else
 			local showgrid = tonumber(GetCVar("alwaysShowActionBars"))
 			buttonShowGrid("ActionButton", showgrid)
+			buttonShowGrid("MultiBarBottomLeftButton", showgrid)
 			buttonShowGrid("MultiBarBottomRightButton", showgrid)
+			buttonShowGrid("MultiBarRightButton", showgrid)
+			buttonShowGrid("MultiBarLeftButton", showgrid)
 			if updateAfterCombat then
 				B:UnregisterEvent("PLAYER_REGEN_ENABLED", ToggleButtonGrid)
 				updateAfterCombat = false
@@ -70,4 +73,5 @@ function Bar:HideBlizz()
 		end
 	end
 	hooksecurefunc("MultiActionBar_UpdateGridVisibility", ToggleButtonGrid)
+	hooksecurefunc("MultiActionBar_HideAllGrids", ToggleButtonGrid)
 end
