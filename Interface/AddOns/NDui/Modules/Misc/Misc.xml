@@ -6,4 +6,5 @@
 	<Script file="Mail.lua"/>
 	<Script file="QuestNotifier.lua"/>
 	<Script file="AlertFrames.lua"/>
+	<Script file="TradeTabs.lua"/>
 </Ui>
