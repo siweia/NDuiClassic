@@ -64,6 +64,9 @@ local tradeList = {
 		[3910] = true,
 		[12180] = true,
 	},
+	["Poisons"] = {
+		[2842] = true,
+	},
 }
 
 local myProfessions = {}
