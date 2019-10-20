@@ -379,8 +379,14 @@ function module:OnLogin()
 		f.bankConsumble:SetFilter(bankConsumble, true)
 	end
 
+	local initBagType
 	function Backpack:OnBankOpened()
 		self:GetContainer("Bank"):Show()
+
+		if not initBagType then
+			NDui_Backpack:BAG_UPDATE() -- Initialize bagType
+			initBagType = true
+		end
 	end
 
 	function Backpack:OnBankClosed()
