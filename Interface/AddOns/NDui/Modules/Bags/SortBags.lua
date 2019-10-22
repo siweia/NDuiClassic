@@ -9,8 +9,11 @@ local min, abs, mod, ceil = min, abs, mod, ceil
 local gsub, strfind, tinsert, sort, format = gsub, strfind, tinsert, sort, format
 local GetContainerItemLink, GetContainerItemInfo, GetContainerNumSlots, GetBagName, GetItemInfo = GetContainerItemLink, GetContainerItemInfo, GetContainerNumSlots, GetBagName, GetItemInfo
 local ClearCursor, PickupContainerItem, BankButtonIDToInvSlotID = ClearCursor, PickupContainerItem, BankButtonIDToInvSlotID
+local ITEM_SPELL_CHARGES, ITEM_SPELL_TRIGGER_ONUSE = ITEM_SPELL_CHARGES, ITEM_SPELL_TRIGGER_ONUSE
+local ITEM_SOULBOUND, ITEM_BIND_QUEST, ITEM_CONJURED = ITEM_SOULBOUND, ITEM_BIND_QUEST, ITEM_CONJURED
+local BANK_CONTAINER = BANK_CONTAINER or -1
 
-local Start, LT, Move, TooltipInfo, Sort, Stack, Initialize, ContainerClass, Item
+local Start, LT, Move, TooltipInfo, Sort, Stack, Initialize, ContainerClass, Item, itemCharges
 local CONTAINERS
 
 local sortTooltip = CreateFrame("GameTooltip", "SortBagsTooltip", nil, "GameTooltipTemplate")
@@ -35,7 +38,7 @@ function _G.SortBankBags()
 	Start()
 end
 
-function _G.GetSortBagsRightToLeft(enabled)
+function _G.GetSortBagsRightToLeft()
 	return SortBagsRightToLeft
 end
 
@@ -210,10 +213,34 @@ function Move(src, dst)
     end
 end
 
-function TooltipInfo(container, position)
-	-- local chargesPattern = "^" .. gsub(gsub(ITEM_SPELL_CHARGES_P1, "%%d", "(%%d+)"), "%%%d+%$d", "(%%d+)") .. "$" TODO retail
-	local chargesPattern = "^" .. gsub(gsub(ITEM_SPELL_CHARGES, "%%d", "(%%d+)"), "%%%d+%$d", "(%%d+)") .. "$"
+do
+	local patterns = {}
+	for i = 1, 10 do
+		local text = gsub(ITEM_SPELL_CHARGES, "(-?%d+)(.-)|4([^;]-);", function(numberString, gap, numberForms)
+			local _, _, singular, dual, plural = strfind(numberForms, "(.+):(.+):(.+)");
+			if not singular then
+				_, _, singular, plural = strfind(numberForms, "(.+):(.+)")
+			end
+			local i = abs(tonumber(numberString))
+			local numberForm
+			if i == 1 then
+				numberForm = singular
+			elseif i == 2 then
+				numberForm = dual or plural
+			else
+				numberForm = plural
+			end
+			return numberString..gap..numberForm
+		end)
+		patterns[text] = i
+	end
 
+	function itemCharges(text)
+		return patterns[text]
+	end
+end
+
+function TooltipInfo(container, position)
 	sortTooltip:SetOwner(UIParent, "ANCHOR_NONE")
 	sortTooltip:ClearLines()
 
@@ -227,10 +254,10 @@ function TooltipInfo(container, position)
 	for i = 1, sortTooltip:NumLines() do
 		local text = _G[sortTooltip:GetName().."TextLeft"..i]:GetText()
 
-		local _, _, chargeString = strfind(text, chargesPattern)
-		if chargeString then
-			charges = tonumber(chargeString)
-		elseif strfind(text, "^" .. ITEM_SPELL_TRIGGER_ONUSE) then
+		local _charges = itemCharges(text)
+		if _charges then
+			charges = _charges
+		elseif strfind(text, "^"..ITEM_SPELL_TRIGGER_ONUSE) then
 			usable = true
 		elseif text == ITEM_SOULBOUND then
 			soulbound = true
@@ -394,7 +421,7 @@ function Item(container, position)
 	if link then
 		local _, _, itemID, enchantID, suffixID, uniqueID = strfind(link, "item:(%d+):(%d*):(%d*):(%d*)")
 		itemID = tonumber(itemID)
-		local _, _, quality, _, _, _, _, stack, slot, _, _, classId, subClassId = GetItemInfo("item:" .. itemID)
+		local _, _, quality, _, _, _, _, stack, slot, _, sellPrice, classId, subClassId = GetItemInfo("item:" .. itemID)
 		local charges, usable, soulbound, quest, conjured = TooltipInfo(container, position)
 
 		local sortKey = {}
@@ -458,10 +485,12 @@ function Item(container, position)
 		-- common quality
 		elseif quality == 1 then
 			tinsert(sortKey, 13)
+			tinsert(sortKey, -sellPrice)
 
 		-- junk
 		elseif quality == 0 then
 			tinsert(sortKey, 14)
+			tinsert(sortKey, sellPrice)
 		end
 		
 		tinsert(sortKey, classId)
