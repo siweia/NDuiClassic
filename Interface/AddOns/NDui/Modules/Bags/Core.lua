@@ -14,27 +14,6 @@ local IsControlKeyDown, IsAltKeyDown, DeleteCursorItem = IsControlKeyDown, IsAlt
 local SortBankBags, SortBags, InCombatLockdown, ClearCursor = SortBankBags, SortBags, InCombatLockdown, ClearCursor
 local GetContainerItemID, GetContainerNumFreeSlots = GetContainerItemID, GetContainerNumFreeSlots
 
-local sortCache = {}
-function module:ReverseSort()
-	for bag = 0, 4 do
-		local numSlots = GetContainerNumSlots(bag)
-		for slot = 1, numSlots do
-			local texture, _, locked = GetContainerItemInfo(bag, slot)
-			if (slot <= numSlots/2) and texture and not locked and not sortCache["b"..bag.."s"..slot] then
-				ClearCursor()
-				PickupContainerItem(bag, slot)
-				PickupContainerItem(bag, numSlots+1 - slot)
-				sortCache["b"..bag.."s"..slot] = true
-				C_Timer_After(.1, module.ReverseSort)
-				return
-			end
-		end
-	end
-
-	NDui_Backpack.isSorting = false
-	NDui_Backpack:BAG_UPDATE()
-end
-
 function module:UpdateAnchors(parent, bags)
 	local anchor = parent
 	for _, bag in ipairs(bags) do
@@ -148,14 +127,7 @@ function module:CreateSortButton(name)
 		if name == "Bank" then
 			SortBankBags()
 		else
-			if NDuiDB["Bags"]["ReverseSort"] then
-				SortBags()
-				wipe(sortCache)
-				NDui_Backpack.isSorting = true
-				C_Timer_After(.5, module.ReverseSort)
-			else
-				SortBags()
-			end
+			SortBags()
 		end
 	end)
 	bu.title = L["Sort"]
