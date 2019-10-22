@@ -641,7 +641,7 @@ function G:SetupUnitFrame(parent)
 		["Boss"] = {150, 22, 2},
 	}
 
-	local function createOptionGroup(parent, title, offset, value, func, default)
+	local function createOptionGroup(parent, title, offset, value, func)
 		B.CreateFS(parent, 14, title, nil, "TOP", 0, offset)
 		local l = CreateFrame("Frame", nil, parent)
 		l:SetPoint("TOPLEFT", 30, offset-20)

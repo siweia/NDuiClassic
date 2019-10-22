@@ -87,7 +87,7 @@ local function Disable(self)
 	local EnergyTicker = self.EnergyTicker
 	local Power = self.Power
 
-	if Power and EnergyTicker and (unit == "player") then
+	if Power and EnergyTicker then
 		EnergyTicker:SetAlpha(0)
 		EnergyTicker.UpdateFrame:SetScript("OnUpdate", nil)
 
