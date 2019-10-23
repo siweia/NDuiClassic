@@ -179,8 +179,8 @@ function module:MapPartyDots()
 	end
 
 	-- Set party icon size and enable class colors
-	WorldMapUnitPinSizes.player = 24
-	WorldMapUnitPinSizes.party = 14
+	WorldMapUnitPinSizes.player = 22
+	WorldMapUnitPinSizes.party = 12
 	WorldMapUnitPin:SetAppearanceField("party", "useClassColor", true)
 	WorldMapUnitPin:SetAppearanceField("raid", "useClassColor", true)
 	WorldMapUnitPin:SynchronizePinSizes()
