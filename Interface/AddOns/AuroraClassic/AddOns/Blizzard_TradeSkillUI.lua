@@ -9,7 +9,7 @@ C.themes["Blizzard_CraftUI"] = function()
 
 	F.StripTextures(CraftRankFrameBorder)
 	F.StripTextures(CraftRankFrame)
-	CraftRankFrame:SetStatusBarColor(C.media.backdrop)
+	CraftRankFrame:SetStatusBarTexture(C.media.backdrop)
 	F.CreateBDFrame(CraftRankFrame, .25)
 	CraftRankFrame:SetWidth(220)
 
@@ -53,7 +53,7 @@ C.themes["Blizzard_TradeSkillUI"] = function()
 
 	F.StripTextures(TradeSkillRankFrameBorder)
 	F.StripTextures(TradeSkillRankFrame)
-	TradeSkillRankFrame:SetStatusBarColor(C.media.backdrop)
+	TradeSkillRankFrame:SetStatusBarTexture(C.media.backdrop)
 	F.CreateBDFrame(TradeSkillRankFrame, .25)
 	TradeSkillRankFrame:SetWidth(220)
 
