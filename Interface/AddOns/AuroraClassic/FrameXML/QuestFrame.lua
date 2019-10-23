@@ -9,6 +9,13 @@ tinsert(C.themes["AuroraClassic"], function()
 	F.StripTextures(QuestFrameGreetingPanel)
 	F.StripTextures(EmptyQuestLogFrame)
 
+	hooksecurefunc("QuestFrame_SetMaterial", function(frame)
+		_G[frame:GetName().."MaterialTopLeft"]:Hide()
+		_G[frame:GetName().."MaterialTopRight"]:Hide()
+		_G[frame:GetName().."MaterialBotLeft"]:Hide()
+		_G[frame:GetName().."MaterialBotRight"]:Hide()
+	end)
+
 	local line = QuestFrameGreetingPanel:CreateTexture()
 	line:SetColorTexture(1, 1, 1, .25)
 	line:SetSize(256, C.mult)
