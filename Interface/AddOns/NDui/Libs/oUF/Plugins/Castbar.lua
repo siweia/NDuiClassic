@@ -147,8 +147,11 @@ function B:PostCastStart(unit)
 	end
 
 	-- Fix for empty icon
-	if self.Icon and not self.Icon:GetTexture() or self.Icon:GetTexture() == 136235 then
-		self.Icon:SetTexture(136243)
+	if self.Icon then
+		local texture = self.Icon:GetTexture()
+		if not texture or texture == 136235 then
+			self.Icon:SetTexture(136243)
+		end
 	end
 end
 
