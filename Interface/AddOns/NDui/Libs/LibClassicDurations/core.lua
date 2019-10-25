@@ -65,7 +65,7 @@ Usage example 2:
 --]================]
 if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then return end
 
-local MAJOR, MINOR = "LibClassicDurations", 32
+local MAJOR, MINOR = "LibClassicDurations", 34
 local lib = LibStub:NewLibrary(MAJOR, MINOR)
 if not lib then return end
 
@@ -96,6 +96,9 @@ local buffCacheValid = lib.buffCacheValid
 lib.nameplateUnitMap = lib.nameplateUnitMap or {}
 local nameplateUnitMap = lib.nameplateUnitMap
 
+lib.castLog = lib.castLog or {}
+local castLog = lib.castLog
+
 lib.guidAccessTimes = lib.guidAccessTimes or {}
 local guidAccessTimes = lib.guidAccessTimes
 
@@ -104,7 +107,7 @@ local callbacks = lib.callbacks
 local guids = lib.guids
 local spells = lib.spells
 local npc_spells = lib.npc_spells
-local indirectRefreshSpells
+local indirectRefreshSpells = lib.indirectRefreshSpells
 
 local INFINITY = math.huge
 local PURGE_INTERVAL = 900
@@ -226,6 +229,7 @@ local function purgeOldGUIDs()
             buffCacheValid[guid] = nil
             buffCache[guid] = nil
             DRInfo[guid] = nil
+            castLog[guid] = nil
             tinsert(deleted, guid)
         end
     end
@@ -468,8 +472,17 @@ local function GetLastRankSpellID(spellName)
 end
 
 local eventSnapshot
-local lastSpellCastSpellID
-local lastSpellCastTime = 0
+castLog.SetLastCast = function(self, srcGUID, spellID, timestamp)
+    self[srcGUID] = { spellID, timestamp }
+    guidAccessTimes[srcGUID] = timestamp
+end
+castLog.IsCurrent = function(self, srcGUID, spellID, timestamp, timeWindow)
+    local entry = self[srcGUID]
+    if entry then
+        local lastSpellID, lastTimestamp = entry[1], entry[2]
+        return lastSpellID == spellID and (timestamp - lastTimestamp < timeWindow)
+    end
+end
 
 local lastResistSpellID
 local lastResistTime = 0
@@ -571,7 +584,8 @@ function f:CombatLogHandler(...)
                     -- Snapshotted event now gets handled with cast pass
                     -- All the following APPLIED events are accepted while cast pass is valid
                     -- (Unconfirmed whether timestamp is the same even for a 40m raid)
-                castEventPass = lastSpellCastSpellID == spellID and lastSpellCastTime == timestamp
+                local now = GetTime()
+                castEventPass = castLog:IsCurrent(srcGUID, spellID, now, 0.4)
                 if not castEventPass and (eventType == "SPELL_AURA_REFRESH" or eventType == "SPELL_AURA_APPLIED") then
                     eventSnapshot = { timestamp, eventType, hideCaster,
                     srcGUID, srcName, srcFlags, srcFlags2,
@@ -583,8 +597,7 @@ function f:CombatLogHandler(...)
                 if eventType == "SPELL_CAST_SUCCESS" then
                     -- Aura spell ID can be different from cast spell id
                     -- But all buffs are usually simple spells and it's the same for them
-                    lastSpellCastSpellID = spellID
-                    lastSpellCastTime = timestamp
+                    castLog:SetLastCast(srcGUID, spellID, now)
                     if eventSnapshot then
                         self:CombatLogHandler(unpack(eventSnapshot))
                         eventSnapshot = nil
