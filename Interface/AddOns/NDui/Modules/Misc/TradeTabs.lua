@@ -96,7 +96,7 @@ function M:TradeTabs_Update()
 
 		local start, duration = GetSpellCooldown(spellID)
 		if start and duration and duration > 1.5 then
-			self.CD:SetCooldown(start, duration)
+			tab.CD:SetCooldown(start, duration)
 		end
 	end
 end
