@@ -124,6 +124,8 @@ tinsert(C.themes["AuroraClassic"], function()
 	QuestLogItemReceiveText.SetTextColor = F.dummy
 	QuestLogItemChooseText:SetTextColor(1, 1, 1)
 	QuestLogItemChooseText.SetTextColor = F.dummy
+	QuestLogTimerText:SetTextColor(1, .8, 0)
+	QuestLogTimerText.SetTextColor = F.dummy
 	for i = 1, 10 do
 		local text = _G["QuestLogObjective"..i]
 		text:SetTextColor(1, 1, 1)
