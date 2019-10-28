@@ -100,6 +100,8 @@ local compressGUID, decompressGUID = HealComm.compressGUID, HealComm.decompressG
 
 -- Record management, because this is getting more complicted to deal with
 local function updateRecord(pending, guid, amount, stack, endTime, ticksLeft)
+	if not pending then return end
+
 	if( pending[guid] ) then
 		local id = pending[guid]
 		
