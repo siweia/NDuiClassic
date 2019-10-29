@@ -3,7 +3,7 @@
 	<Script file="CallbackHandler-1.0\CallbackHandler-1.0.lua"/>
 	<Script file="LibClassicCasterino\LibClassicCasterino.lua"/>
 	<Include file="LibClassicDurations\LibClassicDurations.xml"/>
-	<Include file="LibClassicHealComm\LibClassicHealComm.xml"/>
+	<Include file="LibHealComm-4.0\LibHealComm-4.0.xml"/>
 
 	<Include file="cargBags\cargBags.xml"/>
 	<Include file="oUF\oUF.xml"/>
