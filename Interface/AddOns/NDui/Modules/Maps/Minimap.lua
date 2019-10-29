@@ -154,7 +154,7 @@ function module:RecycleBin()
 
 					if child:HasScript("OnDragStart") then child:SetScript("OnDragStart", nil) end
 					if child:HasScript("OnDragStop") then child:SetScript("OnDragStop", nil) end
-					if child:HasScript("OnClick") then child:HookScript("OnClick", clickFunc) end
+					--if child:HasScript("OnClick") then child:HookScript("OnClick", clickFunc) end
 
 					if child:GetObjectType() == "Button" then
 						child:SetHighlightTexture(DB.bdTex) -- prevent nil function
@@ -170,8 +170,8 @@ function module:RecycleBin()
 					if name == "DBMMinimapButton" then
 						child:SetScript("OnMouseDown", nil)
 						child:SetScript("OnMouseUp", nil)
-					elseif name == "BagSync_MinimapButton" then
-						child:HookScript("OnMouseUp", clickFunc)
+					--elseif name == "BagSync_MinimapButton" then
+					--	child:HookScript("OnMouseUp", clickFunc)
 					end
 
 					tinsert(buttons, child)
