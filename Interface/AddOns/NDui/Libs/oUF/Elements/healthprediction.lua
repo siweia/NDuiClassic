@@ -93,8 +93,8 @@ local function Update(self, event, unit)
 	if(allIncomingHeal < myIncomingHeal) then
 		myIncomingHeal = allIncomingHeal
 	else
-		--otherIncomingHeal = allIncomingHeal - myIncomingHeal
-		otherIncomingHeal = HealComm:GetOthersHealAmount(guid, HealComm.ALL_HEALS) or 0
+		otherIncomingHeal = allIncomingHeal - myIncomingHeal
+		--otherIncomingHeal = HealComm:GetOthersHealAmount(guid, HealComm.ALL_HEALS) or 0
 	end
 
 	if(element.myBar) then
