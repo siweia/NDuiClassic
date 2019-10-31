@@ -7,7 +7,7 @@ function S:CharacterStatsClassic()
 	if not F then return end
 
 	local cr, cg, cb = DB.r, DB.g, DB.b
-	if not CharacterStatsClassicDB.expandStat then
+	if CharacterStatsClassicDB.expandStat == nil then
 		CharacterStatsClassicDB.expandStat = false
 	end
 
