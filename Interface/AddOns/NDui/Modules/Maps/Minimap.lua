@@ -118,7 +118,7 @@ function module:RecycleBin()
 	local secureAddons = {
 		["HANDYNOTES"] = true,
 		["GUIDELIME"] = true,
-		["TOWNSFOLKTRACKER"] = true,
+		--["TOWNSFOLKTRACKER"] = true,
 	}
 
 	local function isButtonSecure(name)
