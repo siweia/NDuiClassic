@@ -766,13 +766,13 @@ if( playerClass == "PRIEST" ) then
 		local GreaterHealHot = GetSpellInfo(22009)
 
 		hotData[GreaterHealHot] = {coeff = 1, interval = 3, ticks = 5, level = 32, average = 315}
-		hotData[Renew] = {coeff = 1, interval = 3, ticks = 5, levels = {8, 14, 20, 26, 32, 38, 44, 50, 56, 60}, averages = {45, 100, 175, 245, 315, 400, 510, 650, 810, 970}}
+		hotData[Renew] = {coeff = 1, interval = 3, ticks = 5, levels = {8, 14, 20, 26, 32, 38, 44, 50, 56, 60}, averages = {50, 115, 200, 280, 360, 460, 585, 750, 930, 1115}}
 
-		spellData[FlashHeal] = {coeff = 1.5 / 3.5, levels = {20, 26, 32, 38, 44, 52, 58}, increase = {114, 118, 120, 117, 118, 111, 100}, averages = {avg(193, 237), avg(258, 314), avg(327, 393), avg(400, 478), avg(518, 616), avg(644, 764), avg(812, 958)}}
-		spellData[GreaterHeal] = {coeff = 3 / 3.5, levels = {40, 46, 52, 58, 60}, increase = {204, 197, 184, 165, 162}, averages = {avg(899, 1013), avg(1149, 1289), avg(1437, 1609), avg(1798, 2006), avg(1966, 2194)}}
-		spellData[Heal] = {coeff = 3 / 3.5, levels = {16, 22, 28, 34}, averages = {avg(295, 341), avg(429, 491), avg(566, 642), avg(712, 804)}, increase = {153, 185, 208, 207}}
-		spellData[LesserHeal] = {levels = {1, 4, 10}, averages = {avg(46, 56), avg(71, 85), avg(135, 157)}, increase = {71, 83, 112}}
-		spellData[PrayerofHealing] = {coeff = 0.2798, levels = {30, 40, 50, 60, 60}, increase = {65, 64, 60, 48, 50}, averages = {avg(301, 321), avg(444, 472), avg(657, 695), avg(939, 991), avg(997, 1053)}}
+		spellData[FlashHeal] = {coeff = 1.5 / 3.5, levels = {20, 26, 32, 38, 44, 52, 58}, increase = {114, 118, 120, 117, 118, 111, 100}, averages = {avg(202, 247), avg(269, 325), avg(339, 406), avg(414, 492), avg(534, 633), avg(662, 783), avg(820, 967)}}
+		spellData[GreaterHeal] = {coeff = 3 / 3.5, levels = {40, 46, 52, 58, 60}, increase = {204, 197, 184, 165, 162}, averages = {avg(924, 1039), avg(1178, 1318), avg(1470, 1642), avg(1813, 2021), avg(1966, 2194)}}
+		spellData[Heal] = {coeff = 3 / 3.5, levels = {16, 22, 28, 34}, averages = {avg(307, 353), avg(445, 507), avg(586, 662), avg(734, 827)}, increase = {153, 185, 208, 207}}
+		spellData[LesserHeal] = {levels = {1, 4, 10}, averages = {avg(47, 58), avg(76, 91), avg(143, 165)}, increase = {71, 83, 112}}
+		spellData[PrayerofHealing] = {coeff = 0.2798, levels = {30, 40, 50, 60, 60}, increase = {65, 64, 60, 48, 50}, averages = {avg(312, 333), avg(458, 487), avg(675, 713), avg(939, 991), avg(997, 1053)}}
 
 		talentData[ImprovedRenew] = {mod = 0.05, current = 0}
 		talentData[SpiritualHealing] = {mod = 0.02, current = 0}
