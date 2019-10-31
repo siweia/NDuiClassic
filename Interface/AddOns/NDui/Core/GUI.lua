@@ -647,7 +647,7 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Misc", "Interrupt", "|cff00cc4c"..L["Interrupt Alert"].."*", nil, nil, updateInterruptAlert},
 		{1, "Misc", "AlertInInstance", L["Alert In Instance"].."*", true},
 		{1, "Misc", "OwnInterrupt", L["Own Interrupt"].."*"},
-		{1, "Misc", "BrokenSpell", L["Broken Spell"].."*", true},
+		{1, "Misc", "BrokenSpell", L["Broken Spell"].."*", true, nil, nil, L["BrokenSpellTip"]},
 		{},--blank
 		{1, "Misc", "PlacedItemAlert", L["Placed Item Alert"].."*"},
 	},
