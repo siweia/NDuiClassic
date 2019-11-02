@@ -762,7 +762,7 @@ Spell( 23028, { duration = 3600, type = "BUFF", castFilter = true }) -- Arcane B
 Spell({ 6117, 22782, 22783 }, { duration = 1800, type = "BUFF", castFilter = true }) -- Mage Armor
 Spell({ 168, 7300, 7301, 7302, 7320, 10219, 10220 }, { duration = 1800, type = "BUFF", castFilter = true }) -- Frost/Ice Armor
 
-Spell( 2855, { duration = 1800, type = "BUFF" }) -- Detect Magic
+Spell( 2855, { duration = 120, type = "BUFF" }) -- Detect Magic
 Spell( 130, { duration = 1800, type = "BUFF" }) -- Slow Fall
 
 Spell({ 133, 143, 145, 3140, 8400, 8401, 8402, 10148, 10149, 10150, 10151, 25306 }, {
