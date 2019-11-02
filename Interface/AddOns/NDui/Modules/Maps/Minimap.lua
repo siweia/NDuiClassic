@@ -130,7 +130,12 @@ function module:RecycleBin()
 		end
 	end
 
+	local isCollecting
+
 	local function CollectRubbish()
+		if isCollecting then return end
+		isCollecting = true
+
 		for _, child in ipairs({Minimap:GetChildren()}) do
 			local name = child:GetName()
 			if name and not blackList[name] and not isButtonSecure(name) then
@@ -178,6 +183,8 @@ function module:RecycleBin()
 				end
 			end
 		end
+
+		isCollecting = nil
 	end
 
 	local function SortRubbish()
