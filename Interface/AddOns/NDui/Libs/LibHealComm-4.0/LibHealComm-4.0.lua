@@ -450,14 +450,14 @@ local function filterData(spells, filterGUID, bitFlag, time, ignoreGUID)
 						else
 							local secondsLeft = endTime - currentTime
 							local bandSeconds = time - currentTime
-							local ticks = math.floor(math.min(bandSeconds, secondsLeft) / pending.tickInterval)
+							local ticks = floor(min(bandSeconds, secondsLeft) / pending.tickInterval)
 							local nextTickIn = secondsLeft % pending.tickInterval
 							local fractionalBand = bandSeconds % pending.tickInterval
 							if( nextTickIn > 0 and nextTickIn < fractionalBand ) then
 								ticks = ticks + 1
 							end
 
-							healAmount = healAmount + (amount * stack) * math.min(ticks, ticksLeft)
+							healAmount = healAmount + (amount * stack) * min(ticks, ticksLeft)
 						end
 					end
 				end
@@ -1596,8 +1596,10 @@ function HealComm:COMBAT_LOG_EVENT_UNFILTERED(...)
 			local bitType, amount, totalTicks, tickInterval = CalculateHotHealing(destGUID, spellID)
 			if( bitType ) then
 				local targets, amt = GetHealTargets(type, destGUID, max(amount, 0), spellID)
-				parseHotHeal(sourceGUID, false, spellID, amt, totalTicks, tickInterval, strsplit(",", targets))
-				sendMessage(format("H:%d:%d:%d::%d:%s", totalTicks, spellID, amount, tickInterval, targets))
+				if targets then
+					parseHotHeal(sourceGUID, false, spellID, amt, totalTicks, tickInterval, strsplit(",", targets))
+					sendMessage(format("H:%d:%d:%d::%d:%s", totalTicks, spellID, amount, tickInterval, targets))
+				end
 			end
 		end
 	-- Single stack of a hot was removed, this only applies when going from 2 -> 1, when it goes from 1 -> 0 it fires SPELL_AURA_REMOVED
@@ -1613,7 +1615,7 @@ function HealComm:COMBAT_LOG_EVENT_UNFILTERED(...)
 	-- Aura faded
 	elseif( eventType == "SPELL_AURA_REMOVED" ) then
 		-- Hot faded that we cast
-		if( hotData[spellName] and bit.band(sourceFlags, COMBATLOG_OBJECT_AFFILIATION_MINE) == COMBATLOG_OBJECT_AFFILIATION_MINE ) then
+		if( hotData[spellName] and compressGUID[destGUID] and bit.band(sourceFlags, COMBATLOG_OBJECT_AFFILIATION_MINE) == COMBATLOG_OBJECT_AFFILIATION_MINE ) then
 			parseHealEnd(sourceGUID, nil, "id", spellID, false, compressGUID[destGUID])
 			sendMessage(format("HS::%d::%s", spellID, compressGUID[destGUID]))
 		end
