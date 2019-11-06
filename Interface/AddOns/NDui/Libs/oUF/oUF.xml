@@ -35,7 +35,7 @@
 	<Script file='Plugins\FloatingCombatFeedback.lua' />
 	<Script file='Plugins\RaidDebuffs.lua' />
 	<Script file='Plugins\Swing.lua' />
-	<Script file='Plugins\EnergyTicker.lua' />
+	<Script file='Plugins\EnergyManaRegen.lua' />
 
 	<Script file="finalize.lua"/>
 </Ui>
