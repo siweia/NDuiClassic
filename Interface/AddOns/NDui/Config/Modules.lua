@@ -25,9 +25,7 @@ C.Auras = {
 -- 头像相关
 C.UFs = {
 	Playercb		= {"BOTTOM", UIParent, "BOTTOM", 0, 175},			-- 玩家施法条默认位置
-	PlayercbSize	= {300, 20},										-- 玩家施法条尺寸
 	Targetcb		= {"BOTTOM", UIParent, "BOTTOM", 0, 335},			-- 目标施法条默认位置
-	TargetcbSize	= {280, 20},										-- 目标施法条尺寸
 
 	PlayerPos		= {"TOPRIGHT", UIParent, "BOTTOM", -200, 300},		-- 玩家框体默认位置
 	TargetPos		= {"TOPLEFT", UIParent, "BOTTOM", 200, 300},		-- 目标框体默认位置
