@@ -15,6 +15,7 @@ end
 
 local CastbarCompleteColor = {.1, .8, 0}
 local CastbarFailColor = {1, .1, 0}
+local NotInterruptColor = {r=1, g=.5, b=.5},
 
 local function GetSpellName(spellID)
 	local name = GetSpellInfo(spellID)
@@ -147,7 +148,7 @@ function B:PostCastStart(unit)
 		end
 		updateCastBarTicks(self, numTicks)
 	elseif not UnitIsUnit(unit, "player") and self.notInterruptible then
-		color = NDuiDB["UFs"]["NotInterruptColor"]
+		color = NotInterruptColor
 		self:SetStatusBarColor(color.r, color.g, color.b)
 	end
 
@@ -163,7 +164,7 @@ end
 function B:PostUpdateInterruptible(unit)
 	local color = NDuiDB["UFs"]["CastingColor"]
 	if not UnitIsUnit(unit, "player") and self.notInterruptible then
-		color = NDuiDB["UFs"]["NotInterruptColor"]
+		color = NotInterruptColor
 	end
 	self:SetStatusBarColor(color.r, color.g, color.b)
 end

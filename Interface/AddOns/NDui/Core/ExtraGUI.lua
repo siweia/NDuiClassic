@@ -680,8 +680,7 @@ function G:SetupCastbar(parent)
 	local scroll = G:CreateScroll(castbarGUI, 260, 540)
 
 	createOptionTitle(scroll.child, L["Castbar Colors"], -10)
-	createOptionSwatch(scroll.child, L["Interruptible Color"], NDuiDB["UFs"]["CastingColor"], 40, -40)
-	createOptionSwatch(scroll.child, L["NotInterruptible Color"], NDuiDB["UFs"]["NotInterruptColor"], 40, -70)
+	createOptionSwatch(scroll.child, "", NDuiDB["UFs"]["CastingColor"], 120, -55)
 
 	local defaultValue = {
 		["Player"] = {300, 20},
