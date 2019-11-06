@@ -13,6 +13,9 @@ if(LibClassicCasterino) then
 	end
 end
 
+local CastbarCompleteColor = {.1, .8, 0}
+local CastbarFailColor = {1, .1, 0}
+
 local function GetSpellName(spellID)
 	local name = GetSpellInfo(spellID)
 	if not name then
@@ -118,7 +121,8 @@ end
 function B:PostCastStart(unit)
 	self:SetAlpha(1)
 	self.Spark:Show()
-	self:SetStatusBarColor(unpack(self.casting and self.CastingColor or self.ChannelingColor))
+	local color = NDuiDB["UFs"]["CastingColor"]
+	self:SetStatusBarColor(color.r, color.g, color.b)
 
 	if unit == "vehicle" then
 		if self.SafeZone then self.SafeZone:Hide() end
@@ -143,7 +147,8 @@ function B:PostCastStart(unit)
 		end
 		updateCastBarTicks(self, numTicks)
 	elseif not UnitIsUnit(unit, "player") and self.notInterruptible then
-		self:SetStatusBarColor(unpack(self.notInterruptibleColor))
+		color = NDuiDB["UFs"]["NotInterruptColor"]
+		self:SetStatusBarColor(color.r, color.g, color.b)
 	end
 
 	-- Fix for empty icon
@@ -156,16 +161,16 @@ function B:PostCastStart(unit)
 end
 
 function B:PostUpdateInterruptible(unit)
+	local color = NDuiDB["UFs"]["CastingColor"]
 	if not UnitIsUnit(unit, "player") and self.notInterruptible then
-		self:SetStatusBarColor(unpack(self.notInterruptibleColor))
-	else
-		self:SetStatusBarColor(unpack(self.casting and self.CastingColor or self.ChannelingColor))
+		color = NDuiDB["UFs"]["NotInterruptColor"]
 	end
+	self:SetStatusBarColor(color.r, color.g, color.b)
 end
 
 function B:PostCastStop()
 	if not self.fadeOut then
-		self:SetStatusBarColor(unpack(self.CompleteColor))
+		self:SetStatusBarColor(unpack(CastbarCompleteColor))
 		self.fadeOut = true
 	end
 	self:SetValue(self.max or 1)
@@ -179,7 +184,7 @@ function B:PostChannelStop()
 end
 
 function B:PostCastFailed()
-	self:SetStatusBarColor(unpack(self.FailColor))
+	self:SetStatusBarColor(unpack(CastbarFailColor))
 	self:SetValue(self.max or 1)
 	self.fadeOut = true
 	self:Show()
