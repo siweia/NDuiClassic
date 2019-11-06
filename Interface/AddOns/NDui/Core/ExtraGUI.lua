@@ -55,7 +55,7 @@ local function clearEdit(options)
 	end
 end
 
-local raidDebuffsGUI, clickCastGUI, buffIndicatorGUI, plateGUI, unitframeGUI
+local raidDebuffsGUI, clickCastGUI, buffIndicatorGUI, plateGUI, unitframeGUI, castbarGUI
 
 local function updateRaidDebuffs()
 	B:GetModule("UnitFrames"):UpdateRaidDebuffs()
@@ -574,35 +574,39 @@ function G:SetupBuffIndicator(parent)
 			end
 			scroll.box:SetPoint("TOPLEFT", scroll.dd, "TOPRIGHT", 25, 0)
 
-			local r, g, b = 1, 1, 1
-			local swatch = B.CreateColorSwatch(frame)
+			local color = {r=1, g=1, b=1}
+			local swatch = B.CreateColorSwatch(frame, "", color)
 			swatch:SetPoint("LEFT", scroll.box, "RIGHT", 5, 0)
-			swatch.tex:SetVertexColor(r, g, b)
 			scroll.swatch = swatch
-
-			local function onUpdate()
-				local nr, ng, nb = ColorPickerFrame:GetColorRGB()
-				swatch.tex:SetVertexColor(nr, ng, nb)
-				r, g, b = nr, ng, nb
-			end
-			local function onCancel()
-				local pr, pg, pb = ColorPicker_GetPreviousValues()
-				swatch.tex:SetVertexColor(pr, pg, pb)
-				r, g, b = pr, pg, pb
-			end
-			swatch:SetScript("OnClick", function()
-				ColorPickerFrame.func = onUpdate
-				ColorPickerFrame.previousValues = {r = r, g = g, b = b}
-				ColorPickerFrame.cancelFunc = onCancel
-				ColorPickerFrame:SetColorRGB(r, g, b)
-				ColorPickerFrame:Show()
-			end)
 
 			for spellID, value in pairs(NDuiADB["CornerBuffs"][DB.MyClass]) do
 				createBar(scroll.child, index, spellID, value[1], unpack(value[2]))
 			end
 		end
 	end
+end
+
+local function createOptionTitle(parent, title, offset)
+	B.CreateFS(parent, 14, title, nil, "TOP", 0, offset)
+	local l = CreateFrame("Frame", nil, parent)
+	l:SetPoint("TOPLEFT", 30, offset-20)
+	B.CreateGF(l, 200, C.mult, "Horizontal", 1, 1, 1, .25, .25)
+end
+
+local function sliderValueChanged(self, v)
+	local current = tonumber(format("%.0f", v))
+	self.value:SetText(current)
+	NDuiDB["UFs"][self.__value] = current
+	self.__update()
+end
+
+local function createOptionSlider(parent, title, minV, maxV, x, y, value, func)
+	local slider = B.CreateSlider(parent, title, minV, maxV, x, y)
+	slider:SetValue(NDuiDB["UFs"][value])
+	slider.value:SetText(NDuiDB["UFs"][value])
+	slider.__value = value
+	slider.__update = func
+	slider:SetScript("OnValueChanged", sliderValueChanged)
 end
 
 function G:SetupUnitFrame(parent)
@@ -612,22 +616,6 @@ function G:SetupUnitFrame(parent)
 	unitframeGUI = createExtraGUI(parent, "NDuiGUI_UnitFrameSetup", L["UnitFrame Size"].."*")
 
 	local scroll = G:CreateScroll(unitframeGUI, 260, 540)
-
-	local function sliderValueChanged(self, v)
-		local current = tonumber(format("%.0f", v))
-		self.value:SetText(current)
-		NDuiDB["UFs"][self.__value] = current
-		self.__update()
-	end
-
-	local function createSlider(parent, title, minV, maxV, x, y, value, func)
-		local slider = B.CreateSlider(parent, title, minV, maxV, x, y)
-		slider:SetValue(NDuiDB["UFs"][value])
-		slider.value:SetText(NDuiDB["UFs"][value])
-		slider.__value = value
-		slider.__update = func
-		slider:SetScript("OnValueChanged", sliderValueChanged)
-	end
 
 	local sliderRange = {
 		["Player"] = {200, 300},
@@ -642,27 +630,24 @@ function G:SetupUnitFrame(parent)
 	}
 
 	local function createOptionGroup(parent, title, offset, value, func)
-		B.CreateFS(parent, 14, title, nil, "TOP", 0, offset)
-		local l = CreateFrame("Frame", nil, parent)
-		l:SetPoint("TOPLEFT", 30, offset-20)
-		B.CreateGF(l, 200, C.mult, "Horizontal", 1, 1, 1, .25, .25)
-		createSlider(parent, L["Health Width"].."("..defaultValue[value][1]..")", sliderRange[value][1], sliderRange[value][2], 30, offset-60, value.."Width", func)
-		createSlider(parent, L["Health Height"].."("..defaultValue[value][2]..")", 15, 50, 30, offset-130, value.."Height", func)
-		createSlider(parent, L["Power Height"].."("..defaultValue[value][3]..")", 2, 30, 30, offset-200, value.."PowerHeight", func)
+		createOptionTitle(parent, title, offset)
+		createOptionSlider(parent, L["Health Width"].."("..defaultValue[value][1]..")", sliderRange[value][1], sliderRange[value][2], 30, offset-60, value.."Width", func)
+		createOptionSlider(parent, L["Health Height"].."("..defaultValue[value][2]..")", 15, 50, 30, offset-130, value.."Height", func)
+		createOptionSlider(parent, L["Power Height"].."("..defaultValue[value][3]..")", 2, 30, 30, offset-200, value.."PowerHeight", func)
 	end
 
+	local mainFrames = {_G.oUF_Player, _G.oUF_Target}
 	local function updatePlayerSize()
-		local frames = {_G.oUF_Player, _G.oUF_Target}
-		for _, frame in pairs(frames) do
+		for _, frame in pairs(mainFrames) do
 			frame:SetSize(NDuiDB["UFs"]["PlayerWidth"], NDuiDB["UFs"]["PlayerHeight"])
 			frame.Power:SetHeight(NDuiDB["UFs"]["PlayerPowerHeight"])
 		end
 	end
 	createOptionGroup(scroll.child, L["Player&Target"], -10, "Player", updatePlayerSize)
 
+	local subFrames = {_G.oUF_Pet, _G.oUF_ToT}
 	local function updatePetSize()
-		local frames = {_G.oUF_Pet, _G.oUF_ToT}
-		for _, frame in pairs(frames) do
+		for _, frame in pairs(subFrames) do
 			frame:SetSize(NDuiDB["UFs"]["PetWidth"], NDuiDB["UFs"]["PetHeight"])
 			frame.Power:SetHeight(NDuiDB["UFs"]["PetPowerHeight"])
 		end
@@ -678,4 +663,61 @@ function G:SetupUnitFrame(parent)
 		end
 	end
 	createOptionGroup(scroll.child, L["BossFrame"], -530, "Boss", updateBossSize)
+end
+
+local function createOptionSwatch(parent, name, value, x, y)
+	local swatch = B.CreateColorSwatch(parent, name, value)
+	swatch:SetPoint("TOPLEFT", x, y)
+	swatch.text:SetTextColor(1, .8, 0)
+end
+
+function G:SetupCastbar(parent)
+	toggleExtraGUI("NDuiGUI_CastbarSetup")
+	if castbarGUI then return end
+
+	castbarGUI = createExtraGUI(parent, "NDuiGUI_CastbarSetup", L["Castbar Settings"].."*")
+
+	local scroll = G:CreateScroll(castbarGUI, 260, 540)
+
+	createOptionTitle(scroll.child, L["Castbar Colors"], -10)
+	createOptionSwatch(scroll.child, L["Interruptible Color"], NDuiDB["UFs"]["CastingColor"], 40, -40)
+	createOptionSwatch(scroll.child, L["NotInterruptible Color"], NDuiDB["UFs"]["NotInterruptColor"], 40, -70)
+
+	local defaultValue = {
+		["Player"] = {300, 20},
+		["Target"] = {280, 20},
+	}
+
+	local function createOptionGroup(parent, title, offset, value, func)
+		createOptionTitle(parent, title, offset)
+		createOptionSlider(parent, L["Castbar Width"].."("..defaultValue[value][1]..")", 200, 400, 30, offset-60, value.."CBWidth", func)
+		createOptionSlider(parent, L["Castbar Height"].."("..defaultValue[value][2]..")", 10, 50, 30, offset-130, value.."CBHeight", func)
+	end
+
+	local function updatePlayerCastbar()
+		if _G.oUF_Player then
+			local width, height = NDuiDB["UFs"]["PlayerCBWidth"], NDuiDB["UFs"]["PlayerCBHeight"]
+			_G.oUF_Player.Castbar:SetSize(width, height)
+			_G.oUF_Player.Castbar.Icon:SetSize(height, height)
+			_G.oUF_Player.Castbar.mover:Show()
+			_G.oUF_Player.Castbar.mover:SetSize(width+height+5, height+5)
+		end
+	end
+	createOptionGroup(scroll.child, L["Player Castbar"], -110, "Player", updatePlayerCastbar)
+
+	local function updateTargetCastbar()
+		if _G.oUF_Target then
+			local width, height = NDuiDB["UFs"]["TargetCBWidth"], NDuiDB["UFs"]["TargetCBHeight"]
+			_G.oUF_Target.Castbar:SetSize(width, height)
+			_G.oUF_Target.Castbar.Icon:SetSize(height, height)
+			_G.oUF_Target.Castbar.mover:Show()
+			_G.oUF_Target.Castbar.mover:SetSize(width+height+5, height+5)
+		end
+	end
+	createOptionGroup(scroll.child, L["Target Castbar"], -310, "Target", updateTargetCastbar)
+
+	castbarGUI:HookScript("OnHide", function()
+		if _G.oUF_Player then _G.oUF_Player.Castbar.mover:Hide() end
+		if _G.oUF_Target then _G.oUF_Target.Castbar.mover:Hide() end
+	end)
 end
