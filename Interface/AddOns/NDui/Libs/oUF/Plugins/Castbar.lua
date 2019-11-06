@@ -15,7 +15,7 @@ end
 
 local CastbarCompleteColor = {.1, .8, 0}
 local CastbarFailColor = {1, .1, 0}
-local NotInterruptColor = {r=1, g=.5, b=.5},
+local NotInterruptColor = {r=1, g=.5, b=.5}
 
 local function GetSpellName(spellID)
 	local name = GetSpellInfo(spellID)
