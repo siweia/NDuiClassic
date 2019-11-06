@@ -1,7 +1,7 @@
 if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then return end
 
 local major = "LibHealComm-4.0"
-local minor = 68
+local minor = 69
 assert(LibStub, format("%s requires LibStub.", major))
 
 local HealComm = LibStub:NewLibrary(major, minor)
@@ -711,6 +711,25 @@ if( playerClass == "PALADIN" ) then
 
 		local flashLibrams = {[23006] = 83, [23201] = 53}
 
+		local blessings = {
+			[19977] = {
+				[HolyLight] = 210,
+				[FlashofLight] = 60,
+			},
+			[19978] = {
+				[HolyLight] = 300,
+				[FlashofLight] = 85,
+			},
+			[19979] = {
+				[HolyLight] = 400,
+				[FlashofLight] = 115,
+			},
+			[25890] = {
+				[HolyLight] = 400,
+				[FlashofLight] = 115,
+			},
+		}
+
 		local hasDivineFavor
 
 		AuraHandler = function(unit, guid)
@@ -727,7 +746,7 @@ if( playerClass == "PALADIN" ) then
 			return compressGUID[guid], healAmount
 		end
 
-		CalculateHealing = function(guid, spellID)
+		CalculateHealing = function(guid, spellID, targetUnit)
 			local spellName, spellRank = GetSpellInfo(spellID), SpellIDToRank[spellID]
 			local healAmount = spellData[spellName].averages[spellRank]
 			local spellPower = GetSpellBonusHealing()
@@ -742,6 +761,13 @@ if( playerClass == "PALADIN" ) then
 
 			spellPower = spellPower * spellData[spellName].coeff
 			healAmount = calculateGeneralAmount(spellData[spellName].levels[rank], healAmount, spellPower, spModifier, healModifier)
+
+			for auraID, values in pairs(blessings) do
+				if unitHasAura(targetUnit, auraID) then
+					healAmount = calculateGeneralAmount(spellData[spellName].levels[rank], healAmount, values[spellName], 1, 1)
+					break
+				end
+			end
 
 			if( hasDivineFavor or GetSpellCritChance(2) >= 100 ) then
 				hasDivineFavor = nil
@@ -889,7 +915,7 @@ if( playerClass == "SHAMAN" ) then
 		end
 
 		-- If only every other class was as easy as Paladins
-		CalculateHealing = function(guid, spellID)
+		CalculateHealing = function(guid, spellID, targetUnit)
 			local spellName, spellRank = GetSpellInfo(spellID), SpellIDToRank[spellID]
 			local healAmount = spellData[spellName].averages[spellRank]
 			local spellPower = GetSpellBonusHealing()
@@ -903,7 +929,11 @@ if( playerClass == "SHAMAN" ) then
 				spellPower = spellPower * spellData[spellName].coeff
 			-- Heaing Wave
 			elseif( spellName == HealingWave ) then
-				healModifier = healModifier * (talentData[HealingWay].spent == 3 and 1.25 or talentData[HealingWay].spent == 2 and 1.16 or talentData[HealingWay].spent == 1 and 1.08 or 1)
+				local hwStacks = unitHasAura(targetUnit, 29203)
+				if( hwStacks ) then
+					healModifier = healModifier * ((hwStacks * 0.06) + 1)
+				end
+				--healModifier = healModifier * (talentData[HealingWay].spent == 3 and 1.25 or talentData[HealingWay].spent == 2 and 1.16 or talentData[HealingWay].spent == 1 and 1.08 or 1)
 
 				local castTime = spellRank > 3 and 3 or spellRank == 3 and 2.5 or spellRank == 2 and 2 or 1.5
 				spellPower = spellPower * (castTime / 3.5)
@@ -1686,12 +1716,12 @@ function HealComm:UNIT_SPELLCAST_START(unit, cast, spellID)
 	if (not spellData[spellName] or UnitIsCharmed("player") or not UnitPlayerControlled("player") ) then return end
 
 	local castGUID = castGUIDs[spellID]
-	if( not castGUID) then
+	if( not castGUID or not guidToUnit[castGUID] ) then
 		return
 	end
 
 	-- Figure out who we are healing and for how much
-	local bitType, amount, ticks, localTicks = CalculateHealing(castGUID, spellID)
+	local bitType, amount, ticks, localTicks = CalculateHealing(castGUID, spellID, guidToUnit[castGUID])
 	local targets, amt = GetHealTargets(bitType, castGUID, max(amount, 0), spellID)
 
 	if not targets then return end -- only here until I compress/decompress npcs
