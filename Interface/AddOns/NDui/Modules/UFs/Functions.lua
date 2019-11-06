@@ -922,7 +922,7 @@ function UF:CreateAddPower(self)
 end
 
 function UF:CreateSwing(self)
-	local bar = CreateFrame("StatusBar", nil, self)
+	local bar = CreateFrame("Frame", nil, self)
 	bar:SetSize(250, 3)
 	bar:SetPoint("TOP", self.Castbar, "BOTTOM", -16, -5)
 
@@ -930,6 +930,12 @@ function UF:CreateSwing(self)
 	two:Hide()
 	two:SetAllPoints()
 	B.CreateSB(two, true, .8, .8, .8)
+
+	local bg = two:CreateTexture(nil, "BACKGROUND", nil, 1)
+	bg:Hide()
+	bg:SetPoint("TOPRIGHT")
+	bg:SetPoint("BOTTOMRIGHT")
+	bg:SetColorTexture(.9, 0, 0)
 
 	local main = CreateFrame("StatusBar", nil, bar)
 	main:Hide()
@@ -952,6 +958,7 @@ function UF:CreateSwing(self)
 	self.Swing.Twohand = two
 	self.Swing.Mainhand = main
 	self.Swing.Offhand = off
+	self.Swing.bg = bg
 	self.Swing.hideOoc = true
 end
 
@@ -989,8 +996,10 @@ function UF:CreateEneryTicker(self)
 	if not NDuiDB["UFs"]["EnergyTicker"] then return end
 	if DB.MyClass == "WARRIOR" then return end
 
-	local ticker = CreateFrame("Frame", nil, self)
-	ticker:SetFrameLevel(self.Power:GetFrameLevel() + 1)
+	local ticker = CreateFrame("StatusBar", nil, self.Power)
+	ticker:SetFrameLevel(self.Power:GetFrameLevel() + 3)
+	ticker:SetAllPoints()
+	ticker.Spark = ticker:CreateTexture(nil, "OVERLAY")
 
-	self.EnergyTicker = ticker
+	self.EnergyManaRegen = ticker
 end
