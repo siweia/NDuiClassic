@@ -2018,7 +2018,12 @@ function HealComm:GROUP_ROSTER_UPDATE()
 		return
 	end
 
-	local unitType = IsInRaid() and "raid%d" or "party%d"
+	local isInRaid = IsInRaid()
+	local unitType = isInRaid and "raid%d" or "party%d"
+	if not isInRaid then
+		guidToGroup[playerGUID or UnitGUID("player")] = 1 -- Player doesn't belong to 'party%d' unit.
+	end
+
 	-- Add new members
 	for i = 1, GetNumGroupMembers() do
 		local unit = format(unitType, i)
