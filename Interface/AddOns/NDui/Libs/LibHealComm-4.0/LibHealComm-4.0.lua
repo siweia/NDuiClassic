@@ -746,7 +746,7 @@ if( playerClass == "PALADIN" ) then
 			return compressGUID[guid], healAmount
 		end
 
-		CalculateHealing = function(guid, spellID, targetUnit)
+		CalculateHealing = function(guid, spellID, unit)
 			local spellName, spellRank = GetSpellInfo(spellID), SpellIDToRank[spellID]
 			local healAmount = spellData[spellName].averages[spellRank]
 			local spellPower = GetSpellBonusHealing()
@@ -763,7 +763,7 @@ if( playerClass == "PALADIN" ) then
 			healAmount = calculateGeneralAmount(spellData[spellName].levels[rank], healAmount, spellPower, spModifier, healModifier)
 
 			for auraID, values in pairs(blessings) do
-				if unitHasAura(targetUnit, auraID) then
+				if unitHasAura(unit, auraID) then
 					healAmount = calculateGeneralAmount(spellData[spellName].levels[rank], healAmount, values[spellName], 1, 1)
 					break
 				end
@@ -915,7 +915,7 @@ if( playerClass == "SHAMAN" ) then
 		end
 
 		-- If only every other class was as easy as Paladins
-		CalculateHealing = function(guid, spellID, targetUnit)
+		CalculateHealing = function(guid, spellID, unit)
 			local spellName, spellRank = GetSpellInfo(spellID), SpellIDToRank[spellID]
 			local healAmount = spellData[spellName].averages[spellRank]
 			local spellPower = GetSpellBonusHealing()
@@ -929,7 +929,7 @@ if( playerClass == "SHAMAN" ) then
 				spellPower = spellPower * spellData[spellName].coeff
 			-- Heaing Wave
 			elseif( spellName == HealingWave ) then
-				local hwStacks = unitHasAura(targetUnit, 29203)
+				local hwStacks = unitHasAura(unit, 29203)
 				if( hwStacks ) then
 					healModifier = healModifier * ((hwStacks * 0.06) + 1)
 				end
@@ -2023,7 +2023,6 @@ function HealComm:GROUP_ROSTER_UPDATE()
 	if not isInRaid then
 		guidToGroup[playerGUID or UnitGUID("player")] = 1 -- Player doesn't belong to 'party%d' unit.
 	end
-
 	-- Add new members
 	for i = 1, GetNumGroupMembers() do
 		local unit = format(unitType, i)
