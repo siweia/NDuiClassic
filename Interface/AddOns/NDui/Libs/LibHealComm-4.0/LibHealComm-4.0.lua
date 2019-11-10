@@ -1718,12 +1718,13 @@ function HealComm:UNIT_SPELLCAST_START(unit, cast, spellID)
 	if (not spellData[spellName] or UnitIsCharmed("player") or not UnitPlayerControlled("player") ) then return end
 
 	local castGUID = castGUIDs[spellID]
-	if( not castGUID or not guidToUnit[castGUID] ) then
+	local castUnit = guidToUnit[castGUID]
+	if( not castGUID or not castUnit ) then
 		return
 	end
 
 	-- Figure out who we are healing and for how much
-	local bitType, amount, ticks, localTicks = CalculateHealing(castGUID, spellID, guidToUnit[castGUID])
+	local bitType, amount, ticks, localTicks = CalculateHealing(castGUID, spellID, castUnit)
 	local targets, amt = GetHealTargets(bitType, castGUID, max(amount, 0), spellID)
 
 	if not targets then return end -- only here until I compress/decompress npcs
