@@ -1246,18 +1246,20 @@ local function loadHealList(pending, amount, stack, endTime, ticksLeft, ...)
 
 		for i=1, select("#", ...) do
 			local guid = select(i, ...)
-			if( guid ) then
-				updateRecord(pending, decompressGUID[guid], amount, stack, endTime, ticksLeft)
-				tinsert(tempPlayerList, decompressGUID[guid])
+			local decompGUID = guid and decompressGUID[guid]
+			if( decompGUID ) then
+				updateRecord(pending, decompGUID, amount, stack, endTime, ticksLeft)
+				tinsert(tempPlayerList, decompGUID)
 			end
 		end
 	else
 		for i = 1, select("#", ...), 2 do
 			local guid = select(i, ...)
+			local decompGUID = guid and decompressGUID[guid]
 			amount = tonumber((select(i + 1, ...)))
-			if( guid and amount ) then
-				updateRecord(pending, decompressGUID[guid], amount, stack, endTime, ticksLeft)
-				tinsert(tempPlayerList, decompressGUID[guid])
+			if( decompGUID and amount ) then
+				updateRecord(pending, decompGUID, amount, stack, endTime, ticksLeft)
+				tinsert(tempPlayerList, decompGUID)
 			end
 		end
 	end
