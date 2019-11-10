@@ -835,7 +835,7 @@ if( playerClass == "PRIEST" ) then
 
 			healModifier = healModifier + talentData[SpiritualHealing].current
 
-			if( spellName == Renew ) then
+			if( spellName == Renew or spellName == GreaterHealHot ) then
 				healModifier = healModifier + talentData[ImprovedRenew].current
 
 				--if( equippedSetCache["Oracle"] >= 5 ) then ticks = ticks + 1 duration = 18 end
