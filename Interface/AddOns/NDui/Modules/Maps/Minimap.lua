@@ -270,6 +270,87 @@ function module:ShowMinimapClock()
 	end
 end
 
+function module:TrackMenu_GetTexture(spellID)
+	local texture = GetSpellTexture(spellID) or 136243
+	texture = " |T"..texture..":12:12:0:0:50:50:4:46:4:46|t "
+	return texture
+end
+
+function module:TrackMenu_OnClick(spellID)
+	CastSpellByID(spellID)
+end
+
+function module:TrackMenu_CheckStatus()
+	local texture = GetSpellTexture(self.arg1)
+	if texture == GetTrackingTexture() then
+		return true
+	end
+end
+
+function module:EasyTrackMenu()
+	local trackSpells = {
+		2383,	--Find Herbs
+		2580,	--Find Minerals
+		2481,	--Find Treasure
+		1494,	--Track Beasts
+		19883,	--Track Humanoids
+		19884,	--Track Undead
+		19885,	--Track Hidden
+		19880,	--Track Elementals
+		19878,	--Track Demons
+		19882,	--Track Giants
+		19879,	--Track Dragonkin
+		5225,	--Track Humanoids: Druid
+		5500,	--Sense Demons
+		5502,	--Sense Undead
+	}
+
+	local menuFrame = CreateFrame("Frame", "NDui_EasyTrackMenu", UIParent, "UIDropDownMenuTemplate")
+	menuFrame:SetFrameStrata("TOOLTIP")
+	menuFrame:Hide()
+	local menuList = {
+		[1] = {text = L["TrackMenu"], isTitle = true, notCheckable = true},
+	}
+
+	local function UpdateMenuList()
+		for i = 2, #menuList do
+			menuList[i] = nil
+		end
+
+		local index = 2
+		for _, spellID in pairs(trackSpells) do
+			if IsPlayerSpell(spellID) then
+				local name = GetSpellInfo(spellID)
+				menuList[index] = {text = module:TrackMenu_GetTexture(spellID)..name, arg1 = spellID, func = module.TrackMenu_OnClick, checked = module.TrackMenu_CheckStatus}
+				index = index + 1
+			end
+		end
+
+		return index
+	end
+
+	local function ToggleTrackMenu(self)
+		if DropDownList1:IsShown() then
+			DropDownList1:Hide()
+		else
+			local index = UpdateMenuList()
+			if index > 2 then
+				local offset = self:GetWidth()*self:GetScale()*.5
+				EasyMenu(menuList, menuFrame, self, -offset, offset, "MENU")
+			end
+		end
+	end
+
+	-- Click Func
+	Minimap:SetScript("OnMouseUp", function(self, btn)
+		if btn == "RightButton" then
+			ToggleTrackMenu(self)
+		else
+			Minimap_OnClick(self)
+		end
+	end)
+end
+
 function module:SetupMinimap()
 	-- Shape and Position
 	local scale = NDuiDB["Map"]["MinmapScale"]
@@ -319,6 +400,7 @@ function module:SetupMinimap()
 	self:ReskinRegions()
 	self:RecycleBin()
 	self:WhoPingsMyMap()
+	self:EasyTrackMenu()
 
 	if LibDBIcon10_TownsfolkTracker then
 		LibDBIcon10_TownsfolkTracker:DisableDrawLayer("OVERLAY")
