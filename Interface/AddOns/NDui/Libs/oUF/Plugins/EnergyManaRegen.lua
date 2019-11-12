@@ -17,6 +17,10 @@ local Mp5IgnoredSpells = {
 	[18182] = true, -- improved life tap 1
 	[18183] = true, -- improved life tap 2
 }
+local rangeWeaponSpells = {
+	[75] = true, -- auto shot
+	[5019] = true, -- shoot
+}
 
 local Update = function(self, elapsed)
 	local element = self.EnergyManaRegen
@@ -92,7 +96,7 @@ local EventHandler = function(self, event, _, _, spellID)
 		LastTickTime = Time
 	end
 
-	if event == 'UNIT_SPELLCAST_SUCCEEDED' then
+	if event == 'UNIT_SPELLCAST_SUCCEEDED' and not rangeWeaponSpells[spellID] then
 		local spellCost = false
 		local costTable = GetSpellPowerCost(spellID)
 		for _, costInfo in next, costTable do
