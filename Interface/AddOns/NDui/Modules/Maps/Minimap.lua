@@ -4,6 +4,8 @@ local module = B:GetModule("Maps")
 
 local strmatch, strfind, strupper = string.match, string.find, string.upper
 local select, pairs, ipairs, unpack = select, pairs, ipairs, unpack
+local IsPlayerSpell, GetSpellInfo, GetSpellTexture = IsPlayerSpell, GetSpellInfo, GetSpellTexture
+local CastSpellByID, GetTrackingTexture = CastSpellByID, GetTrackingTexture
 local cr, cg, cb = DB.r, DB.g, DB.b
 
 function module:CreatePulse()
@@ -312,7 +314,7 @@ function module:EasyTrackMenu()
 		[1] = {text = L["TrackMenu"], isTitle = true, notCheckable = true},
 	}
 
-	local function UpdateMenuList()
+	local function updateMenuList()
 		for i = 2, #menuList do
 			menuList[i] = nil
 		end
@@ -329,11 +331,11 @@ function module:EasyTrackMenu()
 		return index
 	end
 
-	local function ToggleTrackMenu(self)
+	local function toggleTrackMenu(self)
 		if DropDownList1:IsShown() then
 			DropDownList1:Hide()
 		else
-			local index = UpdateMenuList()
+			local index = updateMenuList()
 			if index > 2 then
 				local offset = self:GetWidth()*self:GetScale()*.5
 				EasyMenu(menuList, menuFrame, self, -offset, offset, "MENU")
@@ -344,7 +346,7 @@ function module:EasyTrackMenu()
 	-- Click Func
 	Minimap:SetScript("OnMouseUp", function(self, btn)
 		if btn == "RightButton" then
-			ToggleTrackMenu(self)
+			toggleTrackMenu(self)
 		else
 			Minimap_OnClick(self)
 		end
