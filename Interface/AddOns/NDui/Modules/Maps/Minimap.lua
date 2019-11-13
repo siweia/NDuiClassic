@@ -272,10 +272,11 @@ function module:ShowMinimapClock()
 	end
 end
 
-function module:TrackMenu_GetTexture(spellID)
-	local texture = GetSpellTexture(spellID) or 136243
-	texture = " |T"..texture..":12:12:0:0:50:50:4:46:4:46|t "
-	return texture
+function module:TrackMenu_SetText()
+	local name = GetSpellInfo(self.arg1)
+	local texture = GetSpellTexture(self.arg1) or 136243
+	name = " |T"..texture..":12:12:0:0:50:50:4:46:4:46|t "..name
+	return name
 end
 
 function module:TrackMenu_OnClick(spellID)
@@ -316,14 +317,18 @@ function module:EasyTrackMenu()
 
 	local function updateMenuList()
 		for i = 2, #menuList do
-			menuList[i] = nil
+			if menuList[i] then wipe(menuList[i]) end
 		end
 
 		local index = 2
 		for _, spellID in pairs(trackSpells) do
 			if IsPlayerSpell(spellID) then
-				local name = GetSpellInfo(spellID)
-				menuList[index] = {text = module:TrackMenu_GetTexture(spellID)..name, arg1 = spellID, func = module.TrackMenu_OnClick, checked = module.TrackMenu_CheckStatus}
+				if not menuList[index] then menuList[index] = {} end
+				menuList[index].arg1 = spellID
+				menuList[index].text = module.TrackMenu_SetText
+				menuList[index].func = module.TrackMenu_OnClick
+				menuList[index].checked = module.TrackMenu_CheckStatus
+
 				index = index + 1
 			end
 		end
