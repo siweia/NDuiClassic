@@ -130,7 +130,7 @@ function module:SetupWorldMap()
 
 	B.CreateMF(WorldMapFrame, nil, true)
 	self.UpdateMapScale(WorldMapFrame)
-	hooksecurefunc(WorldMapFrame, "HandleUserActionToggleSelf", self.UpdateMapAnchor)
+	WorldMapFrame:HookScript("OnShow", self.UpdateMapAnchor)
 
 	-- Default elements
 	WorldMapFrame.BlackoutFrame:Hide()
