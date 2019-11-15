@@ -4,7 +4,9 @@ tinsert(C.themes["AuroraClassic"], function()
 	F.ReskinPortraitFrame(CharacterFrame, 15, -15, -35, 73)
 	F.ReskinRotationButtons(CharacterModelFrame)
 
-	for i = 1, 4 do
+	local CHARACTERFRAME_SUBFRAMES = CHARACTERFRAME_SUBFRAMES or 5
+
+	for i = 1, #CHARACTERFRAME_SUBFRAMES do
 		local tab = _G["CharacterFrameTab"..i]
 		tab.bg = F.ReskinTab(tab)
 		if i == 1 then
