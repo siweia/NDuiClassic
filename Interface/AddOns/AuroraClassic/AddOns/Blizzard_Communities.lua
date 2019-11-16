@@ -100,6 +100,7 @@ C.themes["Blizzard_Communities"] = function()
 	do
 		local dialog = CommunitiesFrame.NotificationSettingsDialog
 		F.StripTextures(dialog)
+		dialog.BG:Hide()
 		F.SetBD(dialog)
 		F.ReskinDropDown(dialog.CommunitiesListDropDownMenu)
 		F.Reskin(dialog.OkayButton)
@@ -109,6 +110,7 @@ C.themes["Blizzard_Communities"] = function()
 		F.Reskin(dialog.ScrollFrame.Child.AllButton)
 		F.Reskin(dialog.ScrollFrame.Child.NoneButton)
 		F.ReskinScroll(dialog.ScrollFrame.ScrollBar)
+		dialog.ScrollFrame.ScrollBar.Background:Hide()
 
 		hooksecurefunc(dialog, "Refresh", function(self)
 			local frame = self.ScrollFrame.Child
