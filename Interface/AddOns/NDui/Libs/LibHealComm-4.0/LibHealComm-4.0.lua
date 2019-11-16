@@ -1,7 +1,7 @@
 if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then return end
 
 local major = "LibHealComm-4.0"
-local minor = 76
+local minor = 77
 assert(LibStub, format("%s requires LibStub.", major))
 
 local HealComm = LibStub:NewLibrary(major, minor)
@@ -532,9 +532,9 @@ end
  -- UnitBuff priortizes our buffs over everyone elses when there is a name conflict, so yay for that
 local function unitHasAura(unit, name)
 	if type(name) == "number" then
-		return select(7, AuraUtil.FindAuraBySpellId(name, unit))
+		return AuraUtil.FindAuraBySpellId(name, unit)
 	else
-		return select(7, AuraUtil.FindAuraByName(name, unit))
+		return AuraUtil.FindAuraByName(name, unit)
 	end
 end
 
