@@ -118,7 +118,7 @@ function module:RecycleBin()
 	end
 
 	local secureAddons = {
-		["HANDYNOTES"] = true,
+		["HANDYNOTESPIN"] = true,
 		["GUIDELIME"] = true,
 		["TRACKINGEYE"] = true,
 	}
