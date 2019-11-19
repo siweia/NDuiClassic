@@ -115,9 +115,7 @@ function S:OnLogin()
 	self:BigWigsSkin()
 	self:PostalSkin()
 	self:ExtraQuestSkin()
-	self:WhatsTraining()
-	self:RecountSkin()
-	self:CharacterStatsClassic()
+	self:LoadOtherSkins()
 
 	-- Register skin
 	local media = LibStub and LibStub("LibSharedMedia-3.0", true)

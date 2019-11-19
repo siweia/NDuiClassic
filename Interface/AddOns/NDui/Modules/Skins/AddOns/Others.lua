@@ -232,3 +232,9 @@ function S:RecountSkin()
 		F.ReskinClose(frame.CloseButton, "TOPRIGHT", frame.bg, "TOPRIGHT", -2, -2)
 	end
 end
+
+function S:LoadOtherSkins()
+	self:CharacterStatsClassic()
+	self:WhatsTraining()
+	self:RecountSkin()
+end
