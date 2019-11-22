@@ -61,7 +61,7 @@ local defaultSettings = {
 		DebuffsPerRow = 16,
 	},
 	AuraWatch = {
-		Enable = false,
+		Enable = true,
 		ClickThrough = false,
 		IconScale = 1,
 		WatchSpellRank = true,
