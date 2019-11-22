@@ -1,7 +1,7 @@
 local lib = LibStub and LibStub("LibClassicDurations", true)
 if not lib then return end
 
-local Type, Version = "SpellTable", 44
+local Type, Version = "SpellTable", 45
 if lib:GetDataVersion(Type) >= Version then return end  -- older versions didn't have that function
 
 local Spell = lib.AddAura
@@ -508,8 +508,12 @@ Spell( 14251 , { duration = 6 }) -- Riposte (disarm)
 ------------
 
 Spell({ 20707, 20762, 20763, 20764, 20765 }, { duration = 1800, type = "BUFF" }) -- Soulstone Resurrection
-Spell({ 687, 696, 706, 1086, 11733, 11734, 11735 }, { duration = 1800, type = "BUFF", castFilter = true }) -- Demon SKin/Armor
--- Spell({ 18791, 18789, 18792, 18790 }, { duration = 1800, type = "BUFF" })  -- Touch of Shadow, Burning Wish, Fel Energy, Fel Stamina
+Spell({ 687, 696 }, { duration = 1800, type = "BUFF", castFilter = true }) -- Demon SKin
+Spell({ 706, 1086, 11733, 11734, 11735 }, { duration = 1800, type = "BUFF", castFilter = true }) -- Demon Armor
+Spell({ 18791 }, { duration = 1800, type = "BUFF", castFilter = true })  -- Touch of Shadow
+Spell({ 18789 }, { duration = 1800, type = "BUFF", castFilter = true })  -- Burning Wish
+Spell({ 18792 }, { duration = 1800, type = "BUFF", castFilter = true })  -- Fel Energy
+Spell({ 18790 }, { duration = 1800, type = "BUFF", castFilter = true })  -- Fel Stamina
 
 --SKIPPING: Drain Life, Mana, Soul, Enslave, Health funnel, kilrog
 Spell( 24259 ,{ duration = 3 }) -- Spell Lock Silence
@@ -517,8 +521,8 @@ Spell({ 17767, 17850, 17851, 17852, 17853, 17854 }, { duration = 10 }) -- Consum
 Spell( 18118, { duration = 5 }) -- Aftermath Proc
 Spell({ 132, 2970, 11743 }, { duration = 600 }) -- Detect Invisibility
 Spell( 5697, { duration = 600 }) -- Unending Breath
--- Spell({ 17794, 17798, 17797, 17799, 17800 }, { duration = 12 }) -- Shadow Vulnerability (Imp Shadow Bolt)
--- SKIPPING: Amplify Curse
+Spell({ 17794, 17798, 17797, 17799, 17800 }, { duration = 12 }) -- Shadow Vulnerability (Imp Shadow Bolt)
+Spell({ 18288 }, { duration = 1800, type = "BUFF", castFilter = true })  -- Amplify Curse
 Spell({ 1714, 11719 }, { duration = 30 }) -- Curse of Tongues
 Spell({ 702, 1108, 6205, 7646, 11707, 11708 },{ duration = 120 }) -- Curse of Weakness
 Spell({ 17862, 17937 }, { duration = 300 }) -- Curse of Shadows
@@ -791,7 +795,8 @@ Spell( 12043, { duration = INFINITY, type = "BUFF" }) -- Presence of Mind
 Spell({ 1459, 1460, 1461, 10156, 10157 }, { duration = 1800, type = "BUFF", castFilter = true }) -- Arcane Intellect
 Spell( 23028, { duration = 3600, type = "BUFF", castFilter = true }) -- Arcane Brilliance
 Spell({ 6117, 22782, 22783 }, { duration = 1800, type = "BUFF", castFilter = true }) -- Mage Armor
-Spell({ 168, 7300, 7301, 7302, 7320, 10219, 10220 }, { duration = 1800, type = "BUFF", castFilter = true }) -- Frost/Ice Armor
+Spell({ 168, 7300, 7301 }, { duration = 1800, type = "BUFF", castFilter = true }) -- Frost Armor
+Spell({ 7302, 7320, 10219, 10220 }, { duration = 1800, type = "BUFF", castFilter = true }) -- Ice Armor
 
 Spell( 2855, { duration = 120, type = "BUFF" }) -- Detect Magic
 Spell( 130, { duration = 1800, type = "BUFF" }) -- Slow Fall
