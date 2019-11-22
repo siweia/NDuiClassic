@@ -7,10 +7,6 @@ local B, C, L, DB = unpack(ns)
 local oUF = ns.oUF or oUF
 assert(oUF, "oUF FloatingCombatFeedback was unable to locate oUF install")
 
--- Libs
-DB.LibClassicDurations = LibStub("LibClassicDurations")
-DB.LibClassicDurations:RegisterFrame("NDui")
-
 local _G = getfenv(0)
 local select, tremove, tinsert, wipe = _G.select, _G.table.remove, _G.table.insert, _G.table.wipe
 local m_cos, m_sin, m_pi, m_random = _G.math.cos, _G.math.sin, _G.math.pi, _G.math.random
