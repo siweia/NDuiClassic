@@ -29,6 +29,7 @@ end
 local channelingTicks = {
 	[GetSpellName(740)] = 4,		-- 宁静
 	[GetSpellName(755)] = 3,		-- 生命通道
+	[GetSpellName(1510)] = 6,		-- 乱射
 	[GetSpellName(5143)] = 5, 		-- 奥术飞弹
 	[GetSpellName(12051)] = 3, 		-- 唤醒
 	[GetSpellName(15407)] = 4,		-- 精神鞭笞
