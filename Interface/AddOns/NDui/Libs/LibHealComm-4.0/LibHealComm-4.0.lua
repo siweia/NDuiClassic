@@ -1,7 +1,7 @@
 if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then return end
 
 local major = "LibHealComm-4.0"
-local minor = 81
+local minor = 82
 assert(LibStub, format("%s requires LibStub.", major))
 
 local HealComm = LibStub:NewLibrary(major, minor)
@@ -917,7 +917,7 @@ if( playerClass == "PRIEST" ) then
 
 				for groupGUID, id in pairs(guidToGroup) do
 					local unit = guidToUnit[groupGUID]
-					if( id == group and guid ~= groupGUID and (IsSpellInRange(CureDisease, unit) or CheckInteractDistance(unit, 4)) ) then
+					if( id == group and guid ~= groupGUID and (IsSpellInRange(CureDisease, unit) == 1 or CheckInteractDistance(unit, 4)) ) then
 						targets = targets .. "," .. compressGUID[groupGUID]
 					end
 				end
@@ -1663,22 +1663,9 @@ function HealComm:COMBAT_LOG_EVENT_UNFILTERED(...)
 
 	if( not eventRegistered[eventType] ) then return end
 
-	local _, spellName, spellSchool, auraType = select(12, ...)
+	local _, spellName = select(12, ...)
 	local destUnit = guidToUnit[destGUID]
 	local spellID = destUnit and select(10, unitHasAura(destUnit, spellName)) or select(7, GetSpellInfo(spellName))
-
--- check for a downranked hot
-	if auraType and guidToUnit[destGUID] then
-		for i=1,32 do
-			local name = UnitBuff(guidToUnit[destGUID],i)
-			if name == spellName then
-				spellID = select(10, UnitBuff(guidToUnit[destGUID],i))
-				break
-			elseif not name then
-				break
-			end
-		end
-	end
 
 	-- Heal or hot ticked that the library is tracking
 	-- It's more efficient/accurate to have the library keep track of this locally, spamming the comm channel would not be a very good thing especially when a single player can have 4 - 8 hots/channels going on them.
