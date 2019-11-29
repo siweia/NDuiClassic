@@ -19,7 +19,7 @@ Usage example 1:
 --]================]
 if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then return end
 
-local MAJOR, MINOR = "LibClassicDurations", 38
+local MAJOR, MINOR = "LibClassicDurations", 39
 local lib = LibStub:NewLibrary(MAJOR, MINOR)
 if not lib then return end
 
@@ -820,7 +820,7 @@ function lib:GetAuraDurationByGUID(dstGUID, spellID, srcGUID, spellName)
 end
 
 function lib:GetLastRankSpellIDByName(spellName)
-    return spellNameToID[spellName]
+    return GetLastRankSpellID(spellName)
 end
 
 -- Will not work for cp-based durations, KS and Rupture
