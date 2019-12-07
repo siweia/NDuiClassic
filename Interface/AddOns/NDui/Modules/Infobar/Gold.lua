@@ -68,6 +68,8 @@ info.onMouseUp = function(self, btn)
 	elseif btn == "MiddleButton" then
 		NDuiADB["AutoSell"] = not NDuiADB["AutoSell"]
 		self:onEnter()
+	else
+		ToggleAllBags()
 	end
 end
 
