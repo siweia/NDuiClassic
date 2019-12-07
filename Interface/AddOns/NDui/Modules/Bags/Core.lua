@@ -294,6 +294,7 @@ function module:OnLogin()
 	local iconSize = NDuiDB["Bags"]["IconSize"]
 	local showItemLevel = NDuiDB["Bags"]["BagsiLvl"]
 	local deleteButton = NDuiDB["Bags"]["DeleteButton"]
+	local showNewItem = NDuiDB["Bags"]["ShowNewItem"]
 	--local itemSetFilter = NDuiDB["Bags"]["ItemSetFilter"]
 
 	-- Init
@@ -401,8 +402,10 @@ function module:OnLogin()
 			self.iLvl = B.CreateFS(self, 12, "", false, "BOTTOMLEFT", 1, 1)
 		end
 
-		self.glowFrame = B.CreateBG(self, 4)
-		self.glowFrame:SetSize(iconSize+8, iconSize+8)
+		if showNewItem then
+			self.glowFrame = B.CreateBG(self, 4)
+			self.glowFrame:SetSize(iconSize+8, iconSize+8)
+		end
 
 		self:HookScript("OnClick", module.ButtonOnClick)
 	end
