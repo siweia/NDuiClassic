@@ -107,6 +107,7 @@ local defaultSettings = {
 		BuffIndicatorType = 1,
 		BI_IconSize = 10,
 		EnergyTicker = true,
+		UFTextScale = 1,
 
 		PlayerWidth = 245,
 		PlayerHeight = 24,
@@ -439,6 +440,10 @@ local function updatePlayerPlate()
 	B:GetModule("UnitFrames"):ResizePlayerPlate()
 end
 
+local function updateUFTextScale()
+	B:GetModule("UnitFrames"):UpdateTextScale()
+end
+
 local function updateMapFader()
 	B:GetModule("Maps"):MapFader()
 end
@@ -551,9 +556,10 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{1, "UFs", "Portrait", L["UFs Portrait"]},
 		{1, "UFs", "ClassPower", L["UFs ClassPower"], true},
 		{1, "UFs", "PlayerDebuff", L["Player Debuff"]},
-		{1, "UFs", "ToTAuras", L["ToT Debuff"]},
-		{4, "UFs", "HealthColor", L["HealthColor"], true, {L["Default Dark"], L["ClassColorHP"], L["GradientHP"]}},
+		{1, "UFs", "ToTAuras", L["ToT Debuff"], true},
 		{1, "UFs", "EnergyTicker", L["EnergyTicker"]},
+		{4, "UFs", "HealthColor", L["HealthColor"], nil, {L["Default Dark"], L["ClassColorHP"], L["GradientHP"]}},
+		{3, "UFs", "UFTextScale", L["UFTextScale"], true, {.8, 2, 2}, updateUFTextScale},
 		{},--blank
 		{1, "UFs", "CombatText", "|cff00cc4c"..L["UFs CombatText"]},
 		{1, "UFs", "AutoAttack", L["CombatText AutoAttack"]},
