@@ -215,6 +215,8 @@ function UF:OnLogin()
 				boss[i].mover = B.Mover(boss[i], L["BossFrame"]..i, "Boss"..i, {"BOTTOM", boss[i-1], "TOP", 0, 50}, moverWidth, moverHeight)
 			end
 		end
+
+		UF:UpdateTextScale()
 	end
 
 	if NDuiDB["UFs"]["RaidFrame"] then
