@@ -167,7 +167,7 @@ tinsert(C.themes["AuroraClassic"], function()
 			F.ReskinSlider(slider)
 		end
 
-		if IsAddOnLoaded("Blizzard_CompactRaidFrames") then
+		if IsAddOnLoaded("Blizzard_CUFProfiles") then
 			CompactUnitFrameProfilesGeneralOptionsFrameAutoActivateBG:Hide()
 
 			local boxes = {
