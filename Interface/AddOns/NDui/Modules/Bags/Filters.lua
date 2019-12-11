@@ -71,7 +71,7 @@ end
 
 local function isEmptySlot(item)
 	if not NDuiDB["Bags"]["GatherEmpty"] then return end
-	return not item.texture and module.BagsType[item.bagID] == 0
+	return module.initComplete and not item.texture and module.BagsType[item.bagID] == 0
 end
 
 function module:GetFilters()
