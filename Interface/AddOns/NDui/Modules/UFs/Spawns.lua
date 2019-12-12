@@ -28,7 +28,7 @@ local function CreatePlayerStyle(self)
 	end
 	if NDuiDB["UFs"]["Castbars"] then
 		UF:ReskinMirrorBars()
-		UF:ReskinTimerTrakcer(self)
+		--UF:ReskinTimerTrakcer(self)
 	end
 	if NDuiDB["UFs"]["ClassPower"] and not NDuiDB["Nameplate"]["ShowPlayerPlate"] then
 		UF:CreateClassPower(self)
