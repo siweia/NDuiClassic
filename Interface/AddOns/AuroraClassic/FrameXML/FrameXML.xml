@@ -2,6 +2,7 @@
 	<Script file="AlertFrames.lua"/>
 	<Script file="AudioOptionsFrame.lua"/>
 	<Script file="BankFrame.lua"/>
+	<Script file="BattlefieldFrame.lua"/>
 	<Script file="BNet.lua"/>
 	<Script file="CharacterFrame.lua"/>
 	<Script file="ChatBubbles.lua"/>
