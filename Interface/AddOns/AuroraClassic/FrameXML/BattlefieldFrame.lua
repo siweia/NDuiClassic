@@ -7,4 +7,10 @@ tinsert(C.themes["AuroraClassic"], function()
 	F.Reskin(BattlefieldFrameCancelButton)
 	F.Reskin(BattlefieldFrameGroupJoinButton)
 	BattlefieldFrameZoneDescription:SetTextColor(1, 1, 1)
+
+	F.ReskinPortraitFrame(WorldStateScoreFrame, 13, -15, -120, 70)
+	F.ReskinScroll(WorldStateScoreScrollFrameScrollBar)
+	for i = 1, 3 do
+		F.ReskinTab(_G["WorldStateScoreFrameTab"..i])
+	end
 end)
