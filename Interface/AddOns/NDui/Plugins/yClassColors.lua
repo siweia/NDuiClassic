@@ -5,7 +5,7 @@ local oUF = ns.oUF
 -- yClassColors, by yleaf
 -- NDui MOD
 ----------------------------
-local format, ipairs, tinsert = string.format, ipairs, table.insert
+local format, ipairs, tinsert, strsplit = string.format, ipairs, table.insert, string.split
 
 -- Colors
 local function classColor(class, showRGB)
@@ -152,3 +152,30 @@ local function updateWhoList()
 	end
 end
 hooksecurefunc("WhoList_Update", updateWhoList)
+
+-- Battlefield board
+local MAX_SCORE_BUTTONS = MAX_SCORE_BUTTONS or 22
+
+hooksecurefunc("WorldStateScoreFrame_Update", function()
+	local offset = FauxScrollFrame_GetOffset(WorldStateScoreScrollFrame)
+
+	for i = 1, MAX_SCORE_BUTTONS do
+		local index = offset + i
+		local fullName, _, _, _, _, faction, _, _, class = GetBattlefieldScore(index)
+		if fullName then
+			local name, realm = strsplit(" - ", fullName)
+			name = classColor(class)..name.."|r"
+			if fullName == DB.MyName then name = "> "..name.." <" end
+
+			if realm then
+				local color = "|cffff1919"
+				if faction == 1 then color = "|cff00adf0" end
+				realm = color..realm.."|r"
+				name = name.." - "..realm
+			end
+
+			local button = _G["WorldStateScoreButton"..i]
+			button.name.text:SetText(name)
+		end
+	end
+end)
