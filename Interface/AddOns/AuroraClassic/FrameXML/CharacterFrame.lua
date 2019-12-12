@@ -18,4 +18,13 @@ tinsert(C.themes["AuroraClassic"], function()
 		hl:SetPoint("TOPLEFT", tab.bg, C.mult, -C.mult)
 		hl:SetPoint("BOTTOMRIGHT", tab.bg, -C.mult, C.mult)
 	end
+
+	HonorFrameProgressBar:SetWidth(320)
+	HonorFrameProgressBar:SetStatusBarTexture(C.media.backdrop)
+	F.CreateBDFrame(HonorFrameProgressBar, .25)
+	HonorFrameProgressBar:SetPoint("TOPLEFT", 22, -73)
+
+	local bg = F.CreateBDFrame(HonorFrame, .25)
+	bg:SetPoint("TOPLEFT", 21, -105)
+	bg:SetPoint("BOTTOMRIGHT", -41, 80)
 end)
