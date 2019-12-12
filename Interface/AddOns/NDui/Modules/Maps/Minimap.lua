@@ -50,7 +50,7 @@ function module:ReskinRegions()
 	-- Tracking icon
 	MiniMapTrackingFrame:SetScale(.7)
 	MiniMapTrackingFrame:ClearAllPoints()
-	MiniMapTrackingFrame:SetPoint("BOTTOMLEFT", Minimap, 0, 5)
+	MiniMapTrackingFrame:SetPoint("BOTTOMRIGHT", Minimap, -5, 5)
 	MiniMapTrackingBorder:Hide()
 	MiniMapTrackingIcon:SetTexCoord(unpack(DB.TexCoord))
 	local bg = B.CreateBG(MiniMapTrackingIcon)
@@ -63,6 +63,37 @@ function module:ReskinRegions()
 	MiniMapMailIcon:SetTexture(DB.mailTex)
 	MiniMapMailIcon:SetSize(21, 21)
 	MiniMapMailIcon:SetVertexColor(1, 1, 0)
+
+	-- Battlefield
+	MiniMapBattlefieldFrame:ClearAllPoints()
+	MiniMapBattlefieldFrame:SetPoint("BOTTOMLEFT", Minimap, "BOTTOMLEFT", -5, -5)
+	MiniMapBattlefieldBorder:Hide()
+	MiniMapBattlefieldIcon:SetAlpha(0)
+	BattlegroundShine:SetTexture(nil)
+
+	local queueIcon = Minimap:CreateTexture(nil, "ARTWORK")
+	queueIcon:SetPoint("CENTER", MiniMapBattlefieldFrame)
+	queueIcon:SetSize(50, 50)
+	queueIcon:SetTexture(DB.eyeTex)
+	queueIcon:Hide()
+	local anim = queueIcon:CreateAnimationGroup()
+	anim:SetLooping("REPEAT")
+	anim.rota = anim:CreateAnimation("Rotation")
+	anim.rota:SetDuration(2)
+	anim.rota:SetDegrees(360)
+
+	hooksecurefunc("BattlefieldFrame_UpdateStatus", function()
+		queueIcon:SetShown(MiniMapBattlefieldFrame:IsShown())
+
+		anim:Play()
+		for i = 1, MAX_BATTLEFIELD_QUEUES do
+			local status = GetBattlefieldStatus(i)
+			if status == "confirm" then
+				anim:Stop()
+				break
+			end
+		end
+	end)
 end
 
 function module:RecycleBin()
