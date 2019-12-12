@@ -309,7 +309,7 @@ function module:OnLogin()
 	module.BagsType[-1] = 0
 
 	local f = {}
-	local onlyBags, bagAmmo, bagEquipment, bagConsumble, bagsJunk, onlyBank, bankAmmo, bankLegendary, bankEquipment, bankConsumble, onlyReagent, bagFavourite, bankFavourite = self:GetFilters()
+	local onlyBags, bagAmmo, bagEquipment, bagConsumble, bagsJunk, onlyBank, bankAmmo, bankLegendary, bankEquipment, bankConsumble, onlyReagent, bagFavourite, bankFavourite, onlyKeyring = self:GetFilters()
 
 	function Backpack:OnInit()
 		local MyContainer = self:GetContainerClass()
@@ -332,6 +332,9 @@ function module:OnLogin()
 
 		f.consumble = MyContainer:New("Consumble", {Columns = bagsWidth, Parent = f.main})
 		f.consumble:SetFilter(bagConsumble, true)
+
+		f.keyring = MyContainer:New("Keyring", {Columns = bagsWidth, Parent = f.main})
+		f.keyring:SetFilter(onlyKeyring, true)
 
 		f.bank = MyContainer:New("Bank", {Columns = bankWidth, Bags = "bank"})
 		f.bank:SetFilter(onlyBank, true)
@@ -524,7 +527,7 @@ function module:OnLogin()
 		end
 		self:SetSize(width + xOffset*2, height + offset)
 
-		module:UpdateAnchors(f.main, {f.ammoItem, f.equipment, f.bagFavourite, f.consumble, f.junk})
+		module:UpdateAnchors(f.main, {f.ammoItem, f.equipment, f.bagFavourite, f.consumble, f.keyring, f.junk})
 		module:UpdateAnchors(f.bank, {f.bankAmmoItem, f.bankEquipment, f.bankLegendary, f.bankFavourite, f.bankConsumble})
 	end
 
@@ -553,6 +556,8 @@ function module:OnLogin()
 			label = BAG_FILTER_JUNK
 		elseif strmatch(name, "Favourite") then
 			label = PREFERENCES
+		elseif name == "Keyring" then
+			label = KEYRING
 		end
 		if label then B.CreateFS(self, 14, label, true, "TOPLEFT", 5, -8) return end
 
