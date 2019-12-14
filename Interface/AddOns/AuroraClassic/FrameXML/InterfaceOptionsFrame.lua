@@ -75,6 +75,7 @@ tinsert(C.themes["AuroraClassic"], function()
 			InterfaceOptionsActionBarsPanelAlwaysShowActionBars,
 			InterfaceOptionsActionBarsPanelCountdownCooldowns,
 			InterfaceOptionsNamesPanelMyName,
+			InterfaceOptionsNamesPanelGuildNames,
 			InterfaceOptionsNamesPanelNonCombatCreature,
 			InterfaceOptionsNamesPanelFriendlyPlayerNames,
 			InterfaceOptionsNamesPanelFriendlyMinions,
