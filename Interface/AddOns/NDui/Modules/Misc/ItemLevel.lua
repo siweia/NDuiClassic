@@ -162,24 +162,6 @@ function M:ItemLevel_SetupLevel(frame, strType, unit)
 						pending[index] = slotFrame
 						M.QualityUpdater:Show()
 					end
-
-					if NDuiDB["Misc"]["GemNEnchant"] then
-						local _, enchant, gems = B.GetItemLevel(link, unit, index, true)
-						if enchant then
-							slotFrame.enchantText:SetText(enchant)
-						end
-
-						for i = 1, 5 do
-							local texture = slotFrame["textureIcon"..i]
-							if gems and next(gems) then
-								local index, gem = next(gems)
-								texture:SetTexture(gem)
-								texture.bg:Show()
-
-								gems[index] = nil
-							end
-						end
-					end
 				else
 					pending[index] = slotFrame
 					M.QualityUpdater:Show()

@@ -231,7 +231,6 @@ local defaultSettings = {
 	Misc = {
 		Mail = true,
 		ItemLevel = true,
-		GemNEnchant = true,
 		ShowItemLevel = true,
 		HideErrors = true,
 		ExpRep = true,
@@ -746,7 +745,6 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 	},
 	[12] = {
 		{1, "Misc", "ItemLevel", "|cff00cc4c"..L["Show ItemQuality"]},
-		{1, "Misc", "GemNEnchant", L["Show GemNEnchant"].."*"},
 		{1, "Misc", "ShowItemLevel", L["Show ItemLevel"].."*", true},
 		{},--blank
 		{1, "Misc", "FasterLoot", L["Faster Loot"].."*", nil, nil, updateFasterLoot},
