@@ -107,6 +107,7 @@ function module:CreateBagToggle()
 		if self.BagBar:IsShown() then
 			bu:SetBackdropBorderColor(1, .8, 0)
 			PlaySound(SOUNDKIT.IG_BACKPACK_OPEN)
+			if self.keyring and self.keyring:IsShown() then self.keyToggle:Click() end
 		else
 			bu:SetBackdropBorderColor(0, 0, 0)
 			PlaySound(SOUNDKIT.IG_BACKPACK_CLOSE)
@@ -114,6 +115,27 @@ function module:CreateBagToggle()
 	end)
 	bu.title = BACKPACK_TOOLTIP
 	B.AddTooltip(bu, "ANCHOR_TOP")
+	self.bagToggle = bu
+
+	return bu
+end
+
+function module:CreateKeyToggle()
+	local bu = B.CreateButton(self, 24, 24, true, "Interface\\ICONS\\INV_Misc_Key_12")
+	bu:SetScript("OnClick", function()
+		ToggleFrame(self.keyring)
+		if self.keyring:IsShown() then
+			bu:SetBackdropBorderColor(1, .8, 0)
+			PlaySound(SOUNDKIT.KEY_RING_OPEN)
+			if self.BagBar and self.BagBar:IsShown() then self.bagToggle:Click() end
+		else
+			bu:SetBackdropBorderColor(0, 0, 0)
+			PlaySound(SOUNDKIT.KEY_RING_CLOSE)
+		end
+	end)
+	bu.title = KEYRING
+	B.AddTooltip(bu, "ANCHOR_TOP")
+	self.keyToggle = bu
 
 	return bu
 end
@@ -333,8 +355,11 @@ function module:OnLogin()
 		f.consumble = MyContainer:New("Consumble", {Columns = bagsWidth, Parent = f.main})
 		f.consumble:SetFilter(bagConsumble, true)
 
-		f.keyring = MyContainer:New("Keyring", {Columns = bagsWidth, Parent = f.main})
-		f.keyring:SetFilter(onlyKeyring, true)
+		local keyring = MyContainer:New("Keyring", {Columns = bagsWidth, Parent = f.main})
+		keyring:SetFilter(onlyKeyring, true)
+		keyring:SetPoint("TOPRIGHT", f.main, "BOTTOMRIGHT", 0, -5)
+		keyring:Hide()
+		f.main.keyring = keyring
 
 		f.bank = MyContainer:New("Bank", {Columns = bankWidth, Bags = "bank"})
 		f.bank:SetFilter(onlyBank, true)
@@ -527,7 +552,7 @@ function module:OnLogin()
 		end
 		self:SetSize(width + xOffset*2, height + offset)
 
-		module:UpdateAnchors(f.main, {f.ammoItem, f.equipment, f.bagFavourite, f.consumble, f.keyring, f.junk})
+		module:UpdateAnchors(f.main, {f.ammoItem, f.equipment, f.bagFavourite, f.consumble, f.junk})
 		module:UpdateAnchors(f.bank, {f.bankAmmoItem, f.bankEquipment, f.bankLegendary, f.bankFavourite, f.bankConsumble})
 	end
 
@@ -569,16 +594,17 @@ function module:OnLogin()
 			module.CreateBagBar(self, settings, NUM_BAG_SLOTS)
 			buttons[2] = module.CreateRestoreButton(self, f)
 			buttons[3] = module.CreateBagToggle(self)
-			buttons[4] = module.CreateSortButton(self, name)
-			buttons[5] = module.CreateFavouriteButton(self)
-			if deleteButton then buttons[6] = module.CreateDeleteButton(self) end
+			buttons[4] = module.CreateKeyToggle(self)
+			buttons[5] = module.CreateSortButton(self, name)
+			buttons[6] = module.CreateFavouriteButton(self)
+			if deleteButton then buttons[7] = module.CreateDeleteButton(self) end
 		elseif name == "Bank" then
 			module.CreateBagBar(self, settings, NUM_BANKBAGSLOTS)
 			buttons[2] = module.CreateBagToggle(self)
 			buttons[3] = module.CreateSortButton(self, name)
 		end
 
-		for i = 1, 6 do
+		for i = 1, #buttons do
 			local bu = buttons[i]
 			if not bu then break end
 			if i == 1 then
