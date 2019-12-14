@@ -7,10 +7,8 @@ C.themes["Blizzard_GMChatUI"] = function()
 	F.SetBD(frame):SetPoint("BOTTOMRIGHT", C.mult, -5)
 
 	local eb = frame.editBox
+	F.StripTextures(eb)
 	eb:SetAltArrowKeyMode(false)
-	for i = 3, 8 do
-		select(i, eb:GetRegions()):SetAlpha(0)
-	end
 	eb:ClearAllPoints()
 	eb:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 0, -7)
 	eb:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -28, -32)
