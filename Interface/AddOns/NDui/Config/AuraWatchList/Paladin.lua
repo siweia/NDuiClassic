@@ -12,6 +12,7 @@ local list = {
 	["Special Aura"] = {	-- 玩家重要光环组
 		{AuraID = 498, UnitID = "player"},		-- 圣佑术
 		{AuraID = 642, UnitID = "player"},		-- 圣盾术
+		{AuraID = 20154, UnitID = "player"},	-- 正义圣印
 	},
 	["Focus Aura"] = {		-- 焦点光环组
 	},
