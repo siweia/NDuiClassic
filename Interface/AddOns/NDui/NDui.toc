@@ -3,7 +3,7 @@
 ## X-Credits: Elv, Freebaser, Haleth, Haste, Leatrix, lightspark, Loshine, Neavo, p3lim, Paopao001, Qulight, Ray, Rubgrsch, Tuller, zork.
 ## Author: Siweia
 ## Notes: More than an UI.
-## Version: 1.13.0
+## Version: 1.13.1
 ## X-Support: Classic
 ## X-Website: https://github.com/siweia/NDuiClassic
 ## SavedVariables: NDuiADB
