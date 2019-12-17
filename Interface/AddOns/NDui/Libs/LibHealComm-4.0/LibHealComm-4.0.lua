@@ -1,7 +1,7 @@
 if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then return end
 
 local major = "LibHealComm-4.0"
-local minor = 83
+local minor = 84
 assert(LibStub, format("%s requires LibStub.", major))
 
 local HealComm = LibStub:NewLibrary(major, minor)
@@ -141,8 +141,9 @@ if( not HealComm.compressGUID  ) then
 			local str
 			if strsub(guid,1,6) ~= "Player" then
 				for unit,pguid in pairs(activePets) do
-					if pguid == guid then
-						str = "p-" .. strmatch(UnitGUID(unit), "^%w*-([-%w]*)$")
+					local cguid = UnitGUID(unit)
+					if pguid == guid and cguid then
+						str = "p-" .. strmatch(cguid, "^%w*-([-%w]*)$")
 					end
 				end
 				if not str then
@@ -2185,7 +2186,11 @@ function HealComm:OnInitialize()
 				local healAmount =  spellData[spellName].averages[spellRank]
 				local ticks = spellData[spellName].ticks[spellRank]
 
-				return CHANNEL_HEALS, ceil(healAmount / ticks), ticks, spellData[spellName].interval
+				if healAmount then
+					return CHANNEL_HEALS, ceil(healAmount / ticks), ticks, spellData[spellName].interval
+				else
+					return
+				end
 			end
 
 			if _CalculateHealing then
