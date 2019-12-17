@@ -141,7 +141,7 @@ function module:CreateKeyToggle()
 end
 
 function module:CreateSortButton(name)
-	local bu = B.CreateButton(self, 24, 24, true, "Interface\\Icons\\ABILITY_SEAL")
+	local bu = B.CreateButton(self, 24, 24, true, DB.sortTex)
 	bu:SetScript("OnClick", function()
 		if InCombatLockdown() then
 			UIErrorsFrame:AddMessage(DB.InfoColor..ERR_NOT_IN_COMBAT)

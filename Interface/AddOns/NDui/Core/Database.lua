@@ -51,6 +51,7 @@ DB.flatTex = Media.."flatTex"
 DB.bgTex = Media.."bgTex"
 DB.MicroTex = Media.."MicroMenu\\micro_"
 DB.arrowTex = Media.."NeonRedArrow"
+DB.sortTex = Media.."SortIcon"
 DB.mailTex = "Interface\\Minimap\\Tracking\\Mailbox"
 DB.gearTex = "Interface\\WorldMap\\Gear_64"
 DB.eyeTex = "Interface\\Minimap\\Raid_Icon"		-- blue: \\Dungeon_Icon
