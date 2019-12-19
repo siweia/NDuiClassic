@@ -30,7 +30,7 @@ function M:ExpBar_Update()
 		end
 	elseif GetWatchedFactionInfo() then
 		local _, standing, barMin, barMax, value, factionID = GetWatchedFactionInfo()
-		if standing == MAX_REPUTATION_REACTION then barMin, barMax, value = 0, 1, 1 end
+		--if standing == MAX_REPUTATION_REACTION then barMin, barMax, value = 0, 1, 1 end
 		self:SetStatusBarColor(FACTION_BAR_COLORS[standing].r, FACTION_BAR_COLORS[standing].g, FACTION_BAR_COLORS[standing].b, .85)
 		self:SetMinMaxValues(barMin, barMax)
 		self:SetValue(value)
@@ -65,10 +65,10 @@ function M:ExpBar_UpdateTooltip()
 
 	if GetWatchedFactionInfo() then
 		local name, standing, barMin, barMax, value, factionID = GetWatchedFactionInfo()
-		if standing == MAX_REPUTATION_REACTION then
+		--[[if standing == MAX_REPUTATION_REACTION then
 			barMax = barMin + 1e3
 			value = barMax - 1
-		end
+		end]]
 		local standingtext = GetText("FACTION_STANDING_LABEL"..standing, UnitSex("player"))
 		GameTooltip:AddLine(" ")
 		GameTooltip:AddLine(name, 0,.6,1)
