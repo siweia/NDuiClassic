@@ -171,7 +171,7 @@ local function buttonOnClick(self, btn)
 
 				local numGameAccounts = BNGetNumFriendGameAccounts(self.data[1])
 				local lastGameAccountID, lastGameAccountGUID
-				if numGameAccounts > 1 then
+				if numGameAccounts > 0 then
 					for i = 1, numGameAccounts do
 						local _, charName, client, _, _, _, _, class, _, _, _, _, _, _, _, bnetIDGameAccount, _, _, _, guid = BNGetFriendGameAccountInfo(self.data[1], i)
 						if client == BNET_CLIENT_WOW and CanCooperateWithGameAccount(bnetIDGameAccount) then
