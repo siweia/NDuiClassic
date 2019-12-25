@@ -871,6 +871,7 @@ function UF:CreatePrediction(self)
 	myBar:SetPoint("LEFT", self.Health:GetStatusBarTexture(), "RIGHT")
 	myBar:SetStatusBarTexture(DB.normTex)
 	myBar:SetStatusBarColor(0, 1, .5, .5)
+	myBar:Hide()
 
 	local otherBar = CreateFrame("StatusBar", nil, self)
 	otherBar:SetWidth(self:GetWidth())
@@ -879,6 +880,7 @@ function UF:CreatePrediction(self)
 	otherBar:SetPoint("LEFT", myBar:GetStatusBarTexture(), "RIGHT")
 	otherBar:SetStatusBarTexture(DB.normTex)
 	otherBar:SetStatusBarColor(0, 1, 0, .5)
+	otherBar:Hide()
 
 	self.HealthPrediction = {
 		myBar = myBar,
