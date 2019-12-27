@@ -1952,7 +1952,7 @@ function HealComm:UNIT_SPELLCAST_START(unit, cast, spellID)
 
 	-- Figure out who we are healing and for how much
 	local bitType, amount, ticks, tickInterval = CalculateHealing(castGUID, spellID, castUnit)
-	local targets, amt = GetHealTargets(bitType, castGUID, max(amount, 0), spellID)
+	local targets, amt = GetHealTargets(bitType, castGUID, max(amount or 0, 0), spellID)
 
 	if not targets then return end -- only here until I compress/decompress npcs
 
