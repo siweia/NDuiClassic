@@ -567,3 +567,7 @@ L["HideUFWarning"] = "|nIf unchecked, the Castbar and SimpleCombatText will be d
 L["UFTextScale"] = "UFs Text Scale"
 L["Bags ShowNewItem"] = "Show new item glow"
 L["InstantDelete"] = "Skip DELETE when delete items"
+L["PartyPetFrame"] = "PartyPetFrame"
+L["UFs PartyPetFrame"] = "Show PartyPetFrame"
+L["PartyPetFrame Width"] = "PartyPet Width"
+L["PartyPetFrame Height"] = "PartyPet Height"
