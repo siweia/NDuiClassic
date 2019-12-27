@@ -248,6 +248,7 @@ local defaultSettings = {
 		EnhancedMenu = true,
 		AutoDismount = true,
 		TradeTabs = true,
+		InstantDelete = true,
 	},
 	Tutorial = {
 		Complete = false,
@@ -754,6 +755,7 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Misc", "EnhancedMenu", L["TargetEnhancedMenu"], nil, nil, nil, L["MenuEnhancedTips"]},
 		{1, "Misc", "AutoDismount", L["AutoDismount"], true},
 		{1, "Misc", "TradeTabs", L["TradeTabs"], nil, nil, nil, L["TradeTabsTips"]},
+		{1, "Misc", "InstantDelete", L["InstantDelete"].."*", true},
 	},
 	[13] = {
 		{1, "ACCOUNT", "VersionCheck", L["Version Check"]},
