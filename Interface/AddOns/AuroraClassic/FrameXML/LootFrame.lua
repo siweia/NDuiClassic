@@ -45,6 +45,48 @@ tinsert(C.themes["AuroraClassic"], function()
 	F.ReskinArrow(LootFrameUpButton, "up")
 	F.ReskinArrow(LootFrameDownButton, "down")
 
+	-- Master looter frame
+
+	local MasterLooterFrame = MasterLooterFrame
+
+	F.StripTextures(MasterLooterFrame)
+	MasterLooterFrame.Background:Hide()
+	F.StripTextures(MasterLooterFrame.Item)
+	MasterLooterFrame.Item.Icon:SetTexCoord(.08, .92, .08, .92)
+	MasterLooterFrame.Item.bg = F.CreateBDFrame(MasterLooterFrame.Item.Icon)
+
+	MasterLooterFrame:HookScript("OnShow", function(self)
+		local color = BAG_ITEM_QUALITY_COLORS[LootFrame.selectedQuality or 1]
+		self.Item.bg:SetBackdropBorderColor(color.r, color.g, color.b)
+		LootFrame:SetAlpha(.4)
+	end)
+
+	MasterLooterFrame:HookScript("OnHide", function(self)
+		LootFrame:SetAlpha(1)
+	end)
+
+	F.ReskinClose(select(3, MasterLooterFrame:GetChildren()))
+	F.SetBD(MasterLooterFrame)
+
+	hooksecurefunc("MasterLooterFrame_UpdatePlayers", function()
+		for i = 1, MAX_RAID_MEMBERS do
+			local playerFrame = MasterLooterFrame["player"..i]
+			if playerFrame then
+				if not playerFrame.styled then
+					playerFrame.Bg:Hide()
+					local bg = F.CreateBDFrame(playerFrame, .25)
+					playerFrame.Highlight:SetPoint("TOPLEFT", bg, C.mult, -C.mult)
+					playerFrame.Highlight:SetPoint("BOTTOMRIGHT", bg, -C.mult, C.mult)
+					playerFrame.Highlight:SetColorTexture(1, 1, 1, .25)
+
+					playerFrame.styled = true
+				end
+			else
+				break
+			end
+		end
+	end)
+
 	-- Loot Roll Frame
 
 	hooksecurefunc("GroupLootFrame_OpenNewFrame", function()
