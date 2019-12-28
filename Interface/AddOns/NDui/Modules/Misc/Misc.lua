@@ -138,6 +138,7 @@ function M:DoFasterLoot()
 		lootDelay = GetTime()
 		if GetCVarBool("autoLootDefault") ~= IsModifiedClick("AUTOLOOTTOGGLE") then
 			for i = GetNumLootItems(), 1, -1 do
+				LootFrame.selectedQuality = LootFrame.selectedQuality or 1	-- need reviewed
 				LootSlot(i)
 			end
 			lootDelay = GetTime()
