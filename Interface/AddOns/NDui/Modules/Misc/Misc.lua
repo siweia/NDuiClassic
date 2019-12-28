@@ -134,11 +134,12 @@ end
 -- Faster Looting
 local lootDelay = 0
 function M:DoFasterLoot()
+	if GetLootMethod() == "master" then return end
+
 	if GetTime() - lootDelay >= .3 then
 		lootDelay = GetTime()
 		if GetCVarBool("autoLootDefault") ~= IsModifiedClick("AUTOLOOTTOGGLE") then
 			for i = GetNumLootItems(), 1, -1 do
-				LootFrame.selectedQuality = LootFrame.selectedQuality or 1	-- need reviewed
 				LootSlot(i)
 			end
 			lootDelay = GetTime()
