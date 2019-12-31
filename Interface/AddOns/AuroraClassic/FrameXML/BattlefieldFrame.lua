@@ -13,4 +13,5 @@ tinsert(C.themes["AuroraClassic"], function()
 	for i = 1, 3 do
 		F.ReskinTab(_G["WorldStateScoreFrameTab"..i])
 	end
+	F.Reskin(WorldStateScoreFrameLeaveButton)
 end)
