@@ -414,17 +414,21 @@ function module:OnLogin()
 		self.BG = B.CreateBG(self)
 		B.CreateBD(self.BG, .25)
 
-		self.junkIcon = self:CreateTexture(nil, "ARTWORK")
+		local parentFrame = CreateFrame("Frame", nil, self)
+		parentFrame:SetAllPoints()
+		parentFrame:SetFrameLevel(5)
+
+		self.junkIcon = parentFrame:CreateTexture(nil, "ARTWORK")
 		self.junkIcon:SetAtlas("bags-junkcoin")
 		self.junkIcon:SetSize(20, 20)
 		self.junkIcon:SetPoint("TOPRIGHT", 1, 0)
 
-		self.Quest = B.CreateFS(self, 26, "!", "system", "LEFT", 2, 0)
-
-		self.Favourite = self:CreateTexture(nil, "ARTWORK", nil, 2)
+		self.Favourite = parentFrame:CreateTexture(nil, "ARTWORK", nil, 2)
 		self.Favourite:SetAtlas("collections-icon-favorites")
 		self.Favourite:SetSize(30, 30)
 		self.Favourite:SetPoint("TOPLEFT", -12, 9)
+
+		self.Quest = B.CreateFS(self, 26, "!", "system", "LEFT", 2, 0)
 
 		if showItemLevel then
 			self.iLvl = B.CreateFS(self, 12, "", false, "BOTTOMLEFT", 1, 1)
