@@ -19,7 +19,7 @@ Usage example 1:
 --]================]
 if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then return end
 
-local MAJOR, MINOR = "LibClassicDurations", 44
+local MAJOR, MINOR = "LibClassicDurations", 48
 local lib = LibStub:NewLibrary(MAJOR, MINOR)
 if not lib then return end
 
@@ -633,7 +633,8 @@ local makeBuffInfo = function(spellID, applicationTable, dstGUID, srcGUID)
     end
     local now = GetTime()
     if expirationTime > now then
-        return { name, icon, 0, nil, duration, expirationTime, nil, nil, nil, spellID, false, false, false, false, 1 }
+        local buffType = spells[spellID] and spells[spellID].buffType
+        return { name, icon, 0, buffType, duration, expirationTime, nil, nil, nil, spellID, false, false, false, false, 1 }
     end
 end
 
