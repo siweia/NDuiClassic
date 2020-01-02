@@ -406,7 +406,7 @@ function A:AuraWatch_UpdateCD()
 					end
 				elseif value.TotemID then
 					local haveTotem, name, start, duration, icon, id = GetTotemInfo(value.TotemID)
-					if haveTotem then
+					if haveTotem and start > 0 and duration > 0 then
 						if group.Mode:lower() == "icon" then name = nil end
 						A:AuraWatch_SetupCD(KEY, name, icon, start, duration, false, 1, id)
 					end
