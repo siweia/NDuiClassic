@@ -288,6 +288,7 @@ local accountSettings = {
 	SystemInfoType = 0,
 	DisableInfobars = false,
 	ClassColorChat = true,
+	ContactList = {},
 }
 
 -- Initial settings
