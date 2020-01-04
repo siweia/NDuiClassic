@@ -12,7 +12,7 @@ local GetContainerNumSlots, GetContainerItemInfo, PickupContainerItem = GetConta
 local C_NewItems_IsNewItem, C_NewItems_RemoveNewItem, C_Timer_After = C_NewItems.IsNewItem, C_NewItems.RemoveNewItem, C_Timer.After
 local IsControlKeyDown, IsAltKeyDown, DeleteCursorItem = IsControlKeyDown, IsAltKeyDown, DeleteCursorItem
 local SortBankBags, SortBags, InCombatLockdown, ClearCursor = SortBankBags, SortBags, InCombatLockdown, ClearCursor
-local GetContainerItemID, GetContainerNumFreeSlots = GetContainerItemID, GetContainerNumFreeSlots
+local GetContainerItemID, GetContainerNumFreeSlots, SplitContainerItem = GetContainerItemID, GetContainerNumFreeSlots, SplitContainerItem
 local NUM_BAG_SLOTS = NUM_BAG_SLOTS or 4
 local NUM_BANKBAGSLOTS = NUM_BANKBAGSLOTS or 6
 
@@ -233,12 +233,6 @@ local function favouriteOnClick(self)
 	end
 end
 
-function module:ButtonOnClick(btn)
-	if btn ~= "LeftButton" then return end
-	deleteButtonOnClick(self)
-	favouriteOnClick(self)
-end
-
 function module:GetContainerEmptySlot(bagID)
 	local bagType = module.BagsType[bagID]
 	for slotID = 1, GetContainerNumSlots(bagID) do
@@ -304,6 +298,72 @@ function module:CreateFreeSlots()
 	tag.__name = name
 
 	self.freeSlot = slot
+end
+
+local function saveSplitCount(self)
+	local count = self:GetText() or ""
+	NDuiDB["Bags"]["SplitCount"] = tonumber(count) or 1
+end
+
+local splitEnable
+function module:CreateSplitButton()
+	local enabledText = DB.InfoColor..L["SplitMode Enabled"]
+
+	local splitFrame = CreateFrame("Frame", nil, self)
+	splitFrame:SetSize(100, 50)
+	splitFrame:SetPoint("TOPRIGHT", self, "TOPLEFT", -5, 0)
+	B.CreateFS(splitFrame, 14, L["SplitCount"], "system", "TOP", 1, -5)
+	B.SetBackground(splitFrame)
+	splitFrame:Hide()
+	local editbox = B.CreateEditBox(splitFrame, 90, 20)
+	editbox:SetPoint("BOTTOMLEFT", 5, 5)
+	editbox:SetJustifyH("CENTER")
+	editbox:SetScript("OnTextChanged", saveSplitCount)
+
+	local bu = B.CreateButton(self, 24, 24, true, "Interface\\HELPFRAME\\ReportLagIcon-AuctionHouse")
+	bu.Icon:SetPoint("TOPLEFT", -1, 3)
+	bu.Icon:SetPoint("BOTTOMRIGHT", 1, -3)
+	bu:SetScript("OnClick", function(self, btn)
+		splitEnable = not splitEnable
+		if splitEnable then
+			self:SetBackdropBorderColor(1, .8, 0)
+			self.text = enabledText
+			splitFrame:Show()
+			editbox:SetText(NDuiDB["Bags"]["SplitCount"])
+		else
+			self:SetBackdropBorderColor(0, 0, 0)
+			self.text = nil
+			splitFrame:Hide()
+		end
+		self:GetScript("OnEnter")(self)
+	end)
+	bu.title = L["QuickSplit"]
+	B.AddTooltip(bu, "ANCHOR_TOP")
+
+	return bu
+end
+
+local function splitOnClick(self)
+	if not splitEnable then return end
+
+	PickupContainerItem(self.bagID, self.slotID)
+
+	local texture, itemCount, locked = GetContainerItemInfo(self.bagID, self.slotID)
+	if texture and not locked and itemCount and itemCount > NDuiDB["Bags"]["SplitCount"] then
+		SplitContainerItem(self.bagID, self.slotID, NDuiDB["Bags"]["SplitCount"])
+
+		local bagID, slotID = module:GetEmptySlot("Main")
+		if slotID then
+			PickupContainerItem(bagID, slotID)
+		end
+	end
+end
+
+function module:ButtonOnClick(btn)
+	if btn ~= "LeftButton" then return end
+	deleteButtonOnClick(self)
+	favouriteOnClick(self)
+	splitOnClick(self)
 end
 
 function module:OnLogin()
@@ -600,8 +660,9 @@ function module:OnLogin()
 			buttons[3] = module.CreateBagToggle(self)
 			buttons[4] = module.CreateKeyToggle(self)
 			buttons[5] = module.CreateSortButton(self, name)
-			buttons[6] = module.CreateFavouriteButton(self)
-			if deleteButton then buttons[7] = module.CreateDeleteButton(self) end
+			buttons[6] = module.CreateSplitButton(self)
+			buttons[7] = module.CreateFavouriteButton(self)
+			if deleteButton then buttons[8] = module.CreateDeleteButton(self) end
 		elseif name == "Bank" then
 			module.CreateBagBar(self, settings, NUM_BANKBAGSLOTS)
 			buttons[2] = module.CreateBagToggle(self)

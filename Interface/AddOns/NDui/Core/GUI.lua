@@ -48,6 +48,7 @@ local defaultSettings = {
 		GatherEmpty = false,
 		SpecialBagsColor = true,
 		ShowNewItem = true,
+		SplitCount = 1,
 	},
 	Auras = {
 		Reminder = true,
