@@ -5,7 +5,7 @@ local UF = B:GetModule("UnitFrames")
 local LCD = DB.LibClassicDurations
 
 local strmatch, format, wipe, tinsert = string.match, string.format, table.wipe, table.insert
-local pairs, ipairs, next, tonumber, unpack = pairs, ipairs, next, tonumber, unpack
+local pairs, ipairs, next, tonumber, unpack, gsub = pairs, ipairs, next, tonumber, unpack, gsub
 local UnitAura = UnitAura
 local GetSpellInfo, GetSpellTexture = GetSpellInfo, GetSpellTexture
 local InCombatLockdown = InCombatLockdown
@@ -266,6 +266,7 @@ local function setupClickSets(self)
 					self:SetAttribute(format(v[3], "macrotext"), "/follow mouseover")
 				elseif strmatch(value, "/") then
 					self:SetAttribute(format(v[3], "type"), "macro")
+					value = gsub(value, "~", "\n")
 					self:SetAttribute(format(v[3], "macrotext"), value)
 				end
 				break
