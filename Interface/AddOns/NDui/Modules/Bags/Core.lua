@@ -380,7 +380,6 @@ function module:OnLogin()
 	local bagsWidth = NDuiDB["Bags"]["BagsWidth"]
 	local bankWidth = NDuiDB["Bags"]["BankWidth"]
 	local iconSize = NDuiDB["Bags"]["IconSize"]
-	local showItemLevel = NDuiDB["Bags"]["BagsiLvl"]
 	local deleteButton = NDuiDB["Bags"]["DeleteButton"]
 	local showNewItem = NDuiDB["Bags"]["ShowNewItem"]
 	--local itemSetFilter = NDuiDB["Bags"]["ItemSetFilter"]
@@ -496,10 +495,7 @@ function module:OnLogin()
 		self.Favourite:SetPoint("TOPLEFT", -12, 9)
 
 		self.Quest = B.CreateFS(self, 26, "!", "system", "LEFT", 2, 0)
-
-		if showItemLevel then
-			self.iLvl = B.CreateFS(self, 12, "", false, "BOTTOMLEFT", 1, 1)
-		end
+		self.iLvl = B.CreateFS(self, 12, "", false, "BOTTOMLEFT", 1, 1)
 
 		if showNewItem then
 			self.glowFrame = B.CreateBG(self, 4)
@@ -524,6 +520,10 @@ function module:OnLogin()
 		[3] = {0, .5, .8, .25},
 	}
 
+	local function isItemNeedsLevel(item)
+		return item.link and item.level and item.rarity > 1 and (item.classID == LE_ITEM_CLASS_WEAPON or item.classID == LE_ITEM_CLASS_ARMOR)
+	end
+
 	function MyButton:OnUpdate(item)
 		if MerchantFrame:IsShown() then
 			if item.isInSet then
@@ -545,16 +545,13 @@ function module:OnLogin()
 			self.Favourite:SetAlpha(0)
 		end
 
-		if showItemLevel then
-			if item.link and item.level and item.rarity > 1 and (item.classID == LE_ITEM_CLASS_WEAPON or item.classID == LE_ITEM_CLASS_ARMOR) then
-				--local level = B.GetItemLevel(item.link, item.bagID, item.slotID) or item.level
-				local level = item.level
-				local color = BAG_ITEM_QUALITY_COLORS[item.rarity]
-				self.iLvl:SetText(level)
-				self.iLvl:SetTextColor(color.r, color.g, color.b)
-			else
-				self.iLvl:SetText("")
-			end
+		if NDuiDB["Bags"]["BagsiLvl"] and isItemNeedsLevel(item) then
+			--local level = B.GetItemLevel(item.link, item.bagID, item.slotID) or item.level
+			local color = BAG_ITEM_QUALITY_COLORS[item.rarity]
+			self.iLvl:SetText(item.level)
+			self.iLvl:SetTextColor(color.r, color.g, color.b)
+		else
+			self.iLvl:SetText("")
 		end
 
 		if self.glowFrame then
