@@ -229,7 +229,7 @@ local function favouriteOnClick(self)
 			NDuiDB["Bags"]["FavouriteItems"][itemID] = true
 		end
 		ClearCursor()
-		NDui_Backpack:BAG_UPDATE()
+		module:UpdateAllBags()
 	end
 end
 
@@ -366,6 +366,12 @@ function module:ButtonOnClick(btn)
 	splitOnClick(self)
 end
 
+function module:UpdateAllBags()
+	if self.Bags and self.Bags:IsShown() then
+		self.Bags:BAG_UPDATE()
+	end
+end
+
 function module:OnLogin()
 	if not NDuiDB["Bags"]["Enable"] then return end
 
@@ -386,9 +392,10 @@ function module:OnLogin()
 	Backpack:HookScript("OnShow", function() PlaySound(SOUNDKIT.IG_BACKPACK_OPEN) end)
 	Backpack:HookScript("OnHide", function() PlaySound(SOUNDKIT.IG_BACKPACK_CLOSE) end)
 
+	module.Bags = Backpack
 	module.BagsType = {}
-	module.BagsType[0] = 0
-	module.BagsType[-1] = 0
+	module.BagsType[0] = 0	-- backpack
+	module.BagsType[-1] = 0	-- bank
 
 	local f = {}
 	local onlyBags, bagAmmo, bagEquipment, bagConsumble, bagsJunk, onlyBank, bankAmmo, bankLegendary, bankEquipment, bankConsumble, onlyReagent, bagFavourite, bankFavourite, onlyKeyring = self:GetFilters()
@@ -447,7 +454,7 @@ function module:OnLogin()
 		self:GetContainer("Bank"):Show()
 
 		if not initBagType then
-			NDui_Backpack:BAG_UPDATE() -- Initialize bagType
+			module:UpdateAllBags() -- Initialize bagType
 			initBagType = true
 		end
 	end
@@ -703,8 +710,7 @@ function module:OnLogin()
 		local id = GetInventoryItemID("player", (self.GetInventorySlot and self:GetInventorySlot()) or self.invID)
 		if not id then return end
 		local _, _, quality, _, _, _, _, _, _, _, _, classID, subClassID = GetItemInfo(id)
-		quality = quality or 0
-		if quality == 1 then quality = 0 end
+		if not quality or quality == 1 then quality = 0 end
 		local color = BAG_ITEM_QUALITY_COLORS[quality]
 		if not self.hidden and not self.notBought then
 			self.BG:SetBackdropBorderColor(color.r, color.g, color.b)

@@ -386,6 +386,18 @@ local function updateBagSortOrder()
 	SetSortBagsRightToLeft(not NDuiDB["Bags"]["ReverseSort"])
 end
 
+local function updateBagStatus()
+	B:GetModule("Bags"):UpdateAllBags()
+end
+
+local function updateActionbarScale()
+	B:GetModule("Actionbar"):UpdateAllScale()
+end
+
+local function updateReminder()
+	B:GetModule("Auras"):InitReminder()
+end
+
 local function updateChatSticky()
 	B:GetModule("Chat"):ChatWhisperSticky()
 end
@@ -482,14 +494,6 @@ local function updateErrorBlocker()
 	B:GetModule("Misc"):UpdateErrorBlocker()
 end
 
-local function updateActionbarScale()
-	B:GetModule("Actionbar"):UpdateAllScale()
-end
-
-local function updateReminder()
-	B:GetModule("Auras"):InitReminder()
-end
-
 StaticPopupDialogs["RESET_DETAILS"] = {
 	text = L["Reset Details check"],
 	button1 = YES,
@@ -543,9 +547,9 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Bags", "Enable", "|cff00cc4c"..L["Enable Bags"]},
 		--{1, "Bags", "ItemSetFilter", L["Use ItemSetFilter"], true},
 		{},--blank
-		{1, "Bags", "ItemFilter", L["Bags ItemFilter"].."*"},
-		{1, "Bags", "GatherEmpty", L["Bags GatherEmpty"].."*", true},
-		{1, "Bags", "SpecialBagsColor", L["SpecialBagsColor"].."*", nil, nil, nil, L["SpecialBagsColorTip"]},
+		{1, "Bags", "ItemFilter", L["Bags ItemFilter"].."*", nil, nil, updateBagStatus},
+		{1, "Bags", "GatherEmpty", L["Bags GatherEmpty"].."*", true, nil, updateBagStatus},
+		{1, "Bags", "SpecialBagsColor", L["SpecialBagsColor"].."*", nil, nil, updateBagStatus, L["SpecialBagsColorTip"]},
 		{1, "Bags", "ReverseSort", L["Bags ReverseSort"].."*", true, nil, updateBagSortOrder},
 		{1, "Bags", "BagsiLvl", L["Bags Itemlevel"]},
 		{1, "Bags", "DeleteButton", L["Bags DeleteButton"], true},
