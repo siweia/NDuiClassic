@@ -19,8 +19,11 @@ function module:TabSetAlpha(alpha)
 	end
 end
 
+local isScaling = false
 function module:UpdateChatSize()
 	if not NDuiDB["Chat"]["Lock"] then return end
+	if isScaling then return end
+	isScaling = true
 
 	ChatFrame1:ClearAllPoints()
 	ChatFrame1:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 0, 28)
@@ -30,6 +33,7 @@ function module:UpdateChatSize()
 	if bg then
 		bg:SetHeight(NDuiDB["Chat"]["ChatHeight"] + 30)
 	end
+	isScaling = false
 end
 
 function module:SkinChat()
@@ -81,6 +85,8 @@ function module:SkinChat()
 	B.HideObject(self.buttonFrame)
 	--B.HideObject(self.ScrollBar)
 	B.HideObject(self.ScrollToBottomButton)
+
+	self.oldAlpha = self.oldAlpha or 0 -- fix blizz error, need reviewed
 
 	self.styled = true
 end
@@ -226,18 +232,6 @@ function module:ChatWhisperSticky()
 	end
 end
 
-local isScaling = false
-function module:FixChatFrameAnchor()
-	if isScaling then return end
-	isScaling = true
-
-	local x, y = select(4, ChatFrame1:GetPoint())
-	if x ~= 0 or y ~= 28 then
-		ChatFrame1:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 0, 28)
-	end
-	isScaling = false
-end
-
 function module:UpdateTabColors(selected)
 	if selected then
 		self:GetFontString():SetTextColor(1, .8, 0)
@@ -277,11 +271,6 @@ function module:OnLogin()
 	SetCVar("chatStyle", "classic")
 	B.HideOption(InterfaceOptionsSocialPanelChatStyle)
 	CombatLogQuickButtonFrame_CustomTexture:SetTexture(nil)
-
-	-- Fix chatframe anchor after scaling
-	if NDuiDB["Chat"]["Lock"] then
-		B:RegisterEvent("UI_SCALE_CHANGED", self.FixChatFrameAnchor)
-	end
 
 	-- Add Elements
 	self:UpdateTimestamp()
