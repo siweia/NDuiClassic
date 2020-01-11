@@ -166,7 +166,6 @@ end
 local function colorStack(ret)
 	ret = tostring(ret) or "" -- Yes, it gets called with nonstring from somewhere /mikk
 	ret = ret:gsub("[%.I][%.n][%.t][%.e][%.r]face\\", "")
-	ret = ret:gsub("%.?%.?%.?\\?AddOns\\", "")
 	ret = ret:gsub("|([^chHr])", "||%1"):gsub("|$", "||") -- Pipes
 	ret = ret:gsub("<(.-)>", "|cffffd200<%1>|r") -- Things wrapped in <>
 	ret = ret:gsub("%[(.-)%]", "|cffffd200[%1]|r") -- Things wrapped in []
