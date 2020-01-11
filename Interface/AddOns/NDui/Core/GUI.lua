@@ -218,6 +218,7 @@ local defaultSettings = {
 		QuestTracker = true,
 		Recount = true,
 		ResetRecount = true,
+		ToggleDirection = 1,
 	},
 	Tooltip = {
 		CombatHide = false,
@@ -425,6 +426,10 @@ end
 
 local function updateChatSize()
 	B:GetModule("Chat"):UpdateChatSize()
+end
+
+local function updateToggleDirection()
+	B:GetModule("Skins"):RefreshToggleDirection()
 end
 
 local function updatePlateSpacing()
@@ -738,14 +743,15 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Skins", "MicroMenu", L["Micromenu"]},
 		{1, "Skins", "QuestTracker", L["EnhancedQuestLog"], true, nil, nil, L["EnhancedQuestLogTips"]},
 		{},--blank
+		{1, "Skins", "Skada", L["Skada Skin"]},
+		{1, "Skins", "Details", L["Details Skin"], nil, resetDetails},
+		{4, "Skins", "ToggleDirection", L["ToggleDirection"].."*", true, {L["LEFT"], L["RIGHT"], L["TOP"], L["BOTTOM"]}, updateToggleDirection},
+		{1, "Skins", "Recount", L["Recount Skin"]},
+		{1, "Skins", "QuestLogEx", L["QuestLogEx Skin"], true, nil, nil, L["ExtendedQuestLogAddons"]},
 		{1, "Skins", "DBM", L["DBM Skin"]},
-		{1, "Skins", "Skada", L["Skada Skin"], true},
-		{1, "Skins", "Bigwigs", L["Bigwigs Skin"]},
-		{1, "Skins", "TMW", L["TMW Skin"], true},
-		{1, "Skins", "WeakAuras", L["WeakAuras Skin"]},
-		{1, "Skins", "Details", L["Details Skin"], true, resetDetails},
-		{1, "Skins", "QuestLogEx", L["QuestLogEx Skin"], nil, nil, nil, L["ExtendedQuestLogAddons"]},
-		{1, "Skins", "Recount", L["Recount Skin"], true},
+		{1, "Skins", "Bigwigs", L["Bigwigs Skin"], true},
+		{1, "Skins", "TMW", L["TMW Skin"]},
+		{1, "Skins", "WeakAuras", L["WeakAuras Skin"], true},
 	},
 	[11] = {
 		{1, "Tooltip", "CombatHide", L["Hide Tooltip"].."*"},
