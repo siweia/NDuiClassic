@@ -605,9 +605,9 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{3, "UFs", "PartyPetWidth", L["PartyPetFrame Width"].."*(100)", false, {80, 200, 0}, updatePartyPetSize},
 		{3, "UFs", "PartyPetHeight", L["PartyPetFrame Height"].."*(22)", true, {20, 60, 0}, updatePartyPetSize},
 		{},--blank
-		{1, "UFs", "RaidBuffIndicator", "|cff00cc4c"..L["RaidBuffIndicator"], nil, setupBuffIndicator},
+		{1, "UFs", "RaidBuffIndicator", "|cff00cc4c"..L["RaidBuffIndicator"], nil, setupBuffIndicator, nil, L["RaidBuffIndicatorTip"]},
 		{1, "UFs", "RaidClickSets", "|cff00cc4c"..L["Enable ClickSets"], true, setupClickCast},
-		{4, "UFs", "BuffIndicatorType", L["BuffIndicatorType"], nil, {L["BI_Blocks"], L["BI_Icons"], L["BI_Numbers"]}},
+		{4, "UFs", "BuffIndicatorType", L["BuffIndicatorType"].."*", nil, {L["BI_Blocks"], L["BI_Icons"], L["BI_Numbers"]}, refreshRaidFrameIcons},
 		{3, "UFs", "BuffIndicatorScale", L["BuffIndicatorScale"].."*", true, {1, 2, 1}, refreshRaidFrameIcons},
 		{1, "UFs", "InstanceAuras", "|cff00cc4c"..L["Instance Auras"], nil, setupRaidDebuffs},
 		{1, "UFs", "AurasClickThrough", L["RaidAuras ClickThrough"], true},

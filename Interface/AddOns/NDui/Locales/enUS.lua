@@ -421,6 +421,7 @@ L["Prio Editbox"] = "|nPriority limit in 1-6.|n|nPress KEY ENTER when you finish
 L["Player Count"] = "%s players"
 L["BfA Invasion"] = "Faction Assults"
 L["RaidBuffIndicator"] = "Show Corner BuffIndicator"
+L["RaidBuffIndicatorTip"] = "|nIf unchecked, the buffs on raidframes would filter via settings of Corner BuffIndicator as well."
 L["BuffIndicatorType"] = "BuffIndicator Type"
 L["BuffIndicatorScale"] = "BuffIndicator Scale"
 L["BI_Blocks"] = "Blocks"

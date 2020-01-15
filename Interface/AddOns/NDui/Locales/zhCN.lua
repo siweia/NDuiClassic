@@ -421,6 +421,7 @@ L["Prio Editbox"] = "|n优先级仅限1-6。|n|n输入完毕后，按Enter键生
 L["Player Count"] = "%s名玩家"
 L["BfA Invasion"] = "阵营突袭"
 L["RaidBuffIndicator"] = "启用边角增益指示器"
+L["RaidBuffIndicatorTip"] = "|n禁用后，团队框体的增益显示，也将使用边角指示器内的法术设置。"
 L["BuffIndicatorType"] = "边角指示器模式"
 L["BuffIndicatorScale"] = "边角指示器缩放"
 L["BI_Blocks"] = "色块模式"
