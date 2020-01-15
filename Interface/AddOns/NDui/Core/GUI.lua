@@ -88,9 +88,10 @@ local defaultSettings = {
 		HorizonRaid = false,
 		HorizonParty = false,
 		ReverseRaid = false,
-		RaidScale = 1,
+		SimpleRaidScale = 10,
 		RaidWidth = 80,
 		RaidHeight = 32,
+		RaidPowerHeight = 2,
 		RaidHPMode = 1,
 		AurasClickThrough = false,
 		CombatText = true,
@@ -107,9 +108,11 @@ local defaultSettings = {
 		PWOnRight = false,
 		PartyWidth = 100,
 		PartyHeight = 32,
+		PartyPowerHeight = 2,
 		PartyPetFrame = false,
 		PartyPetWidth = 100,
 		PartyPetHeight = 22,
+		PartyPetPowerHeight = 2,
 		HealthColor = 1,
 		BuffIndicatorType = 1,
 		BuffIndicatorScale = 1,
@@ -345,6 +348,10 @@ loader:SetScript("OnEvent", function(self, _, addon)
 end)
 
 -- Callbacks
+local function setupRaidFrame()
+	G:SetupRaidFrame(guiPage[4])
+end
+
 local function setupRaidDebuffs()
 	G:SetupRaidDebuffs(guiPage[4])
 end
@@ -363,18 +370,6 @@ end
 
 local function setupUnitFrame()
 	G:SetupUnitFrame(guiPage[3])
-end
-
-local function updatePartySize()
-	B:GetModule("UnitFrames"):ResizePartyFrame()
-end
-
-local function updatePartyPetSize()
-	B:GetModule("UnitFrames"):ResizePartyPetFrame()
-end
-
-local function updateRaidSize()
-	B:GetModule("UnitFrames"):ResizeRaidFrame()
 end
 
 local function setupCastbar()
@@ -596,15 +591,11 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{1, "UFs", "FCTOverHealing", L["CombatText OverHealing"], true},
 	},
 	[4] = {
-		{1, "UFs", "RaidFrame", "|cff00cc4c"..L["UFs RaidFrame"]},
+		{1, "UFs", "RaidFrame", "|cff00cc4c"..L["UFs RaidFrame"], nil, setupRaidFrame},
 		{},--blank
 		{1, "UFs", "PartyFrame", "|cff00cc4c"..L["UFs PartyFrame"]},
 		{1, "UFs", "HorizonParty", L["Horizon PartyFrame"], true},
-		{3, "UFs", "PartyWidth", L["PartyFrame Width"].."*(100)", false, {60, 200, 0}, updatePartySize},
-		{3, "UFs", "PartyHeight", L["PartyFrame Height"].."*(32)", true, {25, 60, 0}, updatePartySize},
 		{1, "UFs", "PartyPetFrame", "|cff00cc4c"..L["UFs PartyPetFrame"]},
-		{3, "UFs", "PartyPetWidth", L["PartyPetFrame Width"].."*(100)", false, {80, 200, 0}, updatePartyPetSize},
-		{3, "UFs", "PartyPetHeight", L["PartyPetFrame Height"].."*(22)", true, {20, 60, 0}, updatePartyPetSize},
 		{},--blank
 		{1, "UFs", "RaidBuffIndicator", "|cff00cc4c"..L["RaidBuffIndicator"], nil, setupBuffIndicator, nil, L["RaidBuffIndicatorTip"]},
 		{1, "UFs", "RaidClickSets", "|cff00cc4c"..L["Enable ClickSets"], true, setupClickCast},
@@ -621,12 +612,9 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		--{1, "UFs", "SpecRaidPos", L["Spec RaidPos"]},
 		{4, "UFs", "RaidHPMode", L["RaidHPMode"].."*", nil, {L["DisableRaidHP"], L["RaidHPPercent"], L["RaidHPCurrent"], L["RaidHPLost"]}, updateRaidNameText},
 		{3, "UFs", "NumGroups", L["Num Groups"], true, {4, 8, 0}},
-		{3, "UFs", "RaidWidth", L["RaidFrame Width"].."*(80)", false, {60, 200, 0}, updateRaidSize},
-		{3, "UFs", "RaidHeight", L["RaidFrame Height"].."*(32)", true, {25, 60, 0}, updateRaidSize},
 		{},--blank
 		{1, "UFs", "SimpleMode", "|cff00cc4c"..L["Simple RaidFrame"]},
-		{1, "UFs", "SimpleModeSortByRole", L["SimpleMode SortByRole"]},
-		{3, "UFs", "RaidScale", L["SimpleMode Scale"].."*", true, {.8, 1.5, 1}, updateRaidSize},
+		{1, "UFs", "SimpleModeSortByRole", L["SimpleMode SortByRole"], true},
 	},
 	[5] = {
 		{1, "Nameplate", "Enable", "|cff00cc4c"..L["Enable Nameplate"], nil, setupNameplateFilter},
