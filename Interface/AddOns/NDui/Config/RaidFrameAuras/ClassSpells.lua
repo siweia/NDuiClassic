@@ -46,32 +46,5 @@ local list = {
 		[1022] = true,		-- 保护祝福
 		[27827] = true,		-- 救赎之魂
 	},
-	["DRUID"] = {		-- 德鲁伊
-		[774] = true,		-- 回春
-		[8936] = true,		-- 愈合
-	},
-	["HUNTER"] = {		-- 猎人
-	},
-	["ROGUE"] = {		-- 盗贼
-	},
-	["WARRIOR"] = {		-- 战士
-	},
-	["SHAMAN"] = {		-- 萨满
-	},
-	["PALADIN"] = {		-- 圣骑士
-		[1022] = true,		-- 保护祝福
-		[1044] = true,		-- 自由祝福
-		[6940] = true,		-- 牺牲祝福
-		[25771] = true,		-- 自律
-	},
-	["PRIEST"] = {		-- 牧师
-		[17] = true,		-- 真言术盾
-		[139] = true,		-- 恢复
-	},
-	["MAGE"] = {		-- 法师
-	},
-	["WARLOCK"] = {		-- 术士
-	},
 }
-
 module:AddClassSpells(list)

@@ -38,9 +38,9 @@ function module:AddNewAuraWatch(class, list)
 				local name = GetSpellInfo(spellID)
 				if not name then
 					wipe(v)
-					--if DB.isDeveloper then
+					if DB.isDeveloper then
 						print(format("|cffFF0000Invalid spellID:|r '%s' %s", class, spellID))
-					--end
+					end
 				end
 			end
 		end
@@ -68,7 +68,7 @@ end
 local RaidBuffs = {}
 function module:AddClassSpells(list)
 	for class, value in pairs(list) do
-		if class == "ALL" or class == DB.MyClass then
+		if class == "ALL" then
 			if not RaidBuffs[class] then RaidBuffs[class] = {} end
 			for spellID in pairs(value) do
 				local name = GetSpellInfo(spellID)

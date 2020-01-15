@@ -560,7 +560,7 @@ function UF.CustomFilter(element, unit, button, name, _, _, _, _, _, caster, isS
 		if NDuiDB["UFs"]["RaidBuffIndicator"] then
 			return C.RaidBuffs["ALL"][name] or NDuiADB["RaidAuraWatch"][spellID]
 		else
-			return (button.isPlayer or caster == "pet") and C.RaidBuffs[DB.MyClass][name] or C.RaidBuffs["ALL"][name]
+			return (button.isPlayer or caster == "pet") and C.CornerBuffsByName[name] or C.RaidBuffs["ALL"][name]
 		end
 	elseif style == "nameplate" or style == "boss" then
 		if NDuiADB["NameplateFilter"][2][spellID] or C.BlackList[spellID] then
