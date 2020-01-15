@@ -82,6 +82,7 @@ local defaultSettings = {
 		SimpleMode = false,
 		SimpleModeSortByRole = true,
 		InstanceAuras = true,
+		RaidDebuffScale = 1,
 		SpecRaidPos = false,
 		RaidClassColor = false,
 		HorizonRaid = false,
@@ -472,6 +473,10 @@ local function updateUFTextScale()
 	B:GetModule("UnitFrames"):UpdateTextScale()
 end
 
+local function resizeRaidDebuffs()
+	B:GetModule("UnitFrames"):ResizeRaidDebuffs()
+end
+
 local function updateMapFader()
 	B:GetModule("Maps"):MapFader()
 end
@@ -606,6 +611,7 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{4, "UFs", "BuffIndicatorType", L["BuffIndicatorType"], true, {L["BI_Blocks"], L["BI_Icons"], L["BI_Numbers"]}},
 		{1, "UFs", "InstanceAuras", "|cff00cc4c"..L["Instance Auras"], nil, setupRaidDebuffs},
 		{1, "UFs", "AurasClickThrough", L["RaidAuras ClickThrough"], true},
+		{3, "UFs", "RaidDebuffScale", L["RaidDebuffScale"].."*", nil, {1, 2, 1}, resizeRaidDebuffs},
 		{},--blank
 		{1, "UFs", "ShowTeamIndex", L["RaidFrame TeamIndex"]},
 		{1, "UFs", "RaidClassColor", L["ClassColor RaidFrame"], true},
