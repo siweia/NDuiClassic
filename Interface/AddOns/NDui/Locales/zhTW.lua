@@ -580,3 +580,5 @@ L["SplitMode Enabled"] = "|n點擊拆分背包的堆叠物品，可在左側輸�
 L["iLvlToShow"] = "物品等級閾值"
 L["iLvlToShowTip"] = "|n只在大於所設閾值時顯示裝備等級。"
 L["RaidDebuffScale"] = "副本減益圖標縮放"
+L["BlockStranger"] = "屏蔽陌生人密語"
+L["BlockStrangerTip"] = "|n啓用后，只接受來自隊友、好友以及公會成員的密語。"

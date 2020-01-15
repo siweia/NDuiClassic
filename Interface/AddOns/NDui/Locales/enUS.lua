@@ -580,4 +580,5 @@ L["SplitMode Enabled"] = "|nClick to split stacked items in you bags, you can ch
 L["iLvlToShow"] = "iLvl Threshold"
 L["iLvlToShowTip"] = "|nOnly show iLvl info if higher than threshold."
 L["RaidDebuffScale"] = "RaidDebuffs Scale"
-L["RaidDebuffScale"] = "副本減益圖標縮放"
+L["BlockStranger"] = "Block stranger whipser"
+L["BlockStrangerTip"] = "|nIf checked, only accept whispers from party or raid members, friends and guild members."
