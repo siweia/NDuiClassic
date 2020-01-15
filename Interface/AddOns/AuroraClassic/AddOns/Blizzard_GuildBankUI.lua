@@ -79,7 +79,8 @@ C.themes["Blizzard_GuildBankUI"] = function()
 
 			searchOverlay:SetPoint("TOPLEFT", -C.mult, C.mult)
 			searchOverlay:SetPoint("BOTTOMRIGHT", C.mult, -C.mult)
-			F.CreateBDFrame(bu, .25)
+			local bg = F.CreateBDFrame(bu, .3)
+			bg:SetBackdropColor(.3, .3, .3, .3)
 		end
 	end
 

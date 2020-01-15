@@ -286,6 +286,7 @@ function module:CreateFreeSlots()
 	slot:GetHighlightTexture():SetVertexColor(1, 1, 1, .25)
 	local bg = B.CreateBG(slot)
 	B.CreateBD(bg, .3)
+	bg:SetBackdropColor(.3, .3, .3, .3)
 	slot:SetScript("OnMouseUp", module.FreeSlotOnDrop)
 	slot:SetScript("OnReceiveDrag", module.FreeSlotOnDrop)
 	B.AddTooltip(slot, "ANCHOR_RIGHT", L["FreeSlots"])
@@ -479,6 +480,7 @@ function module:OnLogin()
 
 		self.BG = B.CreateBG(self)
 		B.CreateBD(self.BG, .25)
+		self.BG:SetBackdropColor(.3, .3, .3, .3)
 
 		local parentFrame = CreateFrame("Frame", nil, self)
 		parentFrame:SetAllPoints()
@@ -514,7 +516,7 @@ function module:OnLogin()
 
 	local bagTypeColor = {
 		[-1] = {.67, .83, .45, .25},
-		[0] = {0, 0, 0, .25},
+		[0] = {.3, .3, .3, .3},
 		[1] = {.53, .53, .93, .25},
 		[2] = {0, .5, 0, .25},
 		[3] = {0, .5, .8, .25},
@@ -569,7 +571,7 @@ function module:OnLogin()
 			local color = bagTypeColor[bagType] or bagTypeColor[0]
 			self.BG:SetBackdropColor(unpack(color))
 		else
-			self.BG:SetBackdropColor(0, 0, 0, .25)
+			self.BG:SetBackdropColor(.3, .3, .3, .3)
 		end
 	end
 
