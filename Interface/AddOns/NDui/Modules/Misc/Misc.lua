@@ -81,6 +81,14 @@ function M:OnLogin()
 
 	-- Fix blizz error
 	MAIN_MENU_MICRO_ALERT_PRIORITY = MAIN_MENU_MICRO_ALERT_PRIORITY or {}
+
+	-- Fix blizz bug in addon list
+	local _AddonTooltip_Update = AddonTooltip_Update
+	function AddonTooltip_Update(owner)
+		if not owner then return end
+		if owner:GetID() < 1 then return end
+		_AddonTooltip_Update(owner)
+	end
 end
 
 -- Reanchor Vehicle
