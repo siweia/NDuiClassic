@@ -1,7 +1,7 @@
 if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then return end
 
 local major = "LibHealComm-4.0"
-local minor = 85
+local minor = 88
 assert(LibStub, format("%s requires LibStub.", major))
 
 local HealComm = LibStub:NewLibrary(major, minor)
@@ -877,6 +877,8 @@ if( playerClass == "DRUID" ) then
 	end
 end
 
+local hasDivineFavor
+
 if( playerClass == "PALADIN" ) then
 	LoadClassData = function()
 		local DivineFavor = GetSpellInfo(20216)
@@ -925,16 +927,10 @@ if( playerClass == "PALADIN" ) then
 			},
 		}
 
-		local hasDivineFavor
-
 		AuraHandler = function(unit, guid)
 			if( unit == "player" ) then
 				hasDivineFavor = unitHasAura("player", DivineFavor)
 			end
-		end
-
-		ResetChargeData = function(guid)
-			hasDivineFavor = unitHasAura("player", DivineFavor)
 		end
 
 		GetHealTargets = function(bitType, guid, healAmount, spellID)
@@ -964,7 +960,6 @@ if( playerClass == "PALADIN" ) then
 			end
 
 			if( hasDivineFavor or GetSpellCritChance(2) >= 100 ) then
-				hasDivineFavor = nil
 				healAmount = healAmount * 1.50
 			end
 
@@ -1257,11 +1252,17 @@ HealComm.currentModifiers = HealComm.currentModifiers or {}
 HealComm.healingModifiers = HealComm.healingModifiers or {
 	[28776] = 0.10, -- Necrotic Poison
 	[19716] = 0.25, -- Gehennas' Curse
-	[13218] = 0.50, -- Wound Poison1
-	[13222] = 0.50, -- Wound Poison2
-	[13223] = 0.50, -- Wound Poison3
-	[13224] = 0.50, -- Wound Poison4
-	[21551] = 0.50, -- Mortal Strike
+	[13737] = 0.50, -- Mortal Strike
+	[15708] = 0.50, -- Mortal Strike
+	[16856] = 0.50, -- Mortal Strike
+	[17547] = 0.50, -- Mortal Strike
+	[19643] = 0.50, -- Mortal Strike
+	[24573] = 0.50, -- Mortal Strike
+	[26652] = 0.50, -- Mortal Strike
+	[12294] = 0.50, -- Mortal Strike (Rank 1)
+	[21551] = 0.50, -- Mortal Strike (Rank 2)
+	[21552] = 0.50, -- Mortal Strike (Rank 3)
+	[21553] = 0.50, -- Mortal Strike (Rank 4)
 	[23169] = 0.50, -- Brood Affliction: Green
 	[22859] = 0.50, -- Mortal Cleave
 	[17820] = 0.25, -- Veil of Shadow
@@ -1271,6 +1272,7 @@ HealComm.healingModifiers = HealComm.healingModifiers or {
 	[28440] = 0.25, -- Veil of Shadow
 	[13583] = 0.50, -- Curse of the Deadwood
 	[23230] = 0.50, -- Blood Fury
+	[10060] = 1.20, -- Power Infusion
 }
 
 HealComm.healingStackMods = HealComm.healingStackMods or {
@@ -1341,7 +1343,7 @@ function HealComm:UNIT_AURA(unit)
 	-- Scan buffs
 	local id = 1
 	while( true ) do
-		local name, _, _, stack, _, _, _, _, _, _, spellID = UnitAura(unit, id, "HELPFUL")
+		local name, _, stack, _, _, _, _, _, _, spellID = UnitAura(unit, id, "HELPFUL")
 		if( not name ) then break end
 		-- Prevent buffs like Tree of Life that have the same name for the shapeshift/healing increase from being calculated twice
 		if( not alreadyAdded[name] ) then
@@ -1360,7 +1362,7 @@ function HealComm:UNIT_AURA(unit)
 	-- Scan debuffs
 	id = 1
 	while( true ) do
-		local name, _, _, stack, _, _, _, _, _, _, spellID = UnitAura(unit, id, "HARMFUL")
+		local name, _, stack, _, _, _, _, _, _, spellID = UnitAura(unit, id, "HARMFUL")
 		if( not name ) then break end
 
 		if( healingModifiers[spellID] ) then
@@ -1952,8 +1954,9 @@ function HealComm:UNIT_SPELLCAST_START(unit, cast, spellID)
 
 	-- Figure out who we are healing and for how much
 	local bitType, amount, ticks, tickInterval = CalculateHealing(castGUID, spellID, castUnit)
-	local targets, amt = GetHealTargets(bitType, castGUID, max(amount or 0, 0), spellID)
+	if not amount then return end
 
+	local targets, amt = GetHealTargets(bitType, castGUID, max(amount, 0), spellID)
 	if not targets then return end -- only here until I compress/decompress npcs
 
 	if( bitType == DIRECT_HEALS ) then
@@ -1971,9 +1974,16 @@ function HealComm:UNIT_SPELLCAST_SUCCEEDED(unit, cast, spellID)
 	if( unit ~= "player") then return end
 	local spellName = GetSpellInfo(spellID)
 
+	if spellID == 20216 then
+		hasDivineFavor = true
+	end
+
 	if spellData[spellName] and not spellData[spellName]._isChanneled then
+		hasDivineFavor = nil
 		parseHealEnd(playerGUID, nil, "name", spellID, false)
 		sendMessage(format("S::%d:0", spellID or 0))
+	elseif spellID == 20473 or spellID == 20929 or spellID == 20930 then -- Holy Shock
+		hasDivineFavor = nil
 	end
 end
 
