@@ -307,8 +307,10 @@ function B.Numb(n)
 	end
 end
 
-function B:Round(number)
-	return floor(number + .5)
+function B:Round(number, idp)
+	idp = idp or 0
+	local mult = 10 ^ idp
+	return floor(number * mult + .5) / mult
 end
 
 -- Color code
