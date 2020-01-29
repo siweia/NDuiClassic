@@ -1,5 +1,5 @@
 local _, ns = ...
-local B, C, L, DB, F = unpack(ns)
+local B, C, L, DB, F, T = unpack(ns)
 local S = B:GetModule("Skins")
 
 function S:CharacterStatsClassic()
@@ -233,8 +233,97 @@ function S:RecountSkin()
 	end
 end
 
+function S:BindPad()
+	if not IsAddOnLoaded("BindPad") then return end
+	if not F then return end
+
+	BindPadFrame.bg = F.ReskinPortraitFrame(BindPadFrame, 10, -10, -30, 70)
+	for i = 1, 4 do
+		F.ReskinTab(_G["BindPadFrameTab"..i])
+	end
+	F.ReskinScroll(BindPadScrollFrameScrollBar)
+	F.ReskinCheck(BindPadFrameCharacterButton)
+	F.ReskinCheck(BindPadFrameSaveAllKeysButton)
+	F.ReskinCheck(BindPadFrameShowHotkeyButton)
+	F.Reskin(BindPadFrameExitButton)
+	F.ReskinArrow(BindPadShowLessSlotButton, "left")
+	F.ReskinArrow(BindPadShowMoreSlotButton, "right")
+
+	F.StripTextures(BindPadDialogFrame)
+	F.SetBD(BindPadDialogFrame)
+	F.Reskin(BindPadDialogFrame.cancelbutton)
+	F.Reskin(BindPadDialogFrame.okaybutton)
+
+	hooksecurefunc("BindPadSlot_UpdateState", function(slot)
+		if slot.styled then return end
+
+		slot:DisableDrawLayer("ARTWORK")
+		slot:GetHighlightTexture():SetColorTexture(1, 1, 1, .25)
+		slot.icon:SetTexCoord(unpack(DB.TexCoord))
+		F.CreateBDFrame(slot, .25)
+		slot.border:SetTexture()
+
+		F.StripTextures(slot.addbutton)
+		local nt = slot.addbutton:GetNormalTexture()
+		nt:SetTexture("Interface\\Buttons\\UI-PlusMinus-Buttons")
+		nt:SetTexCoord(0, .4375, 0, .4375)
+
+		slot.styled = true
+	end)
+
+	F.StripTextures(BindPadMacroPopupFrame)
+	BindPadMacroPopupFrame:SetPoint("TOPLEFT", BindPadFrame.bg, "TOPRIGHT", 3, -40)
+	F.SetBD(BindPadMacroPopupFrame)
+	F.StripTextures(BindPadMacroPopupEditBox)
+	F.CreateBD(BindPadMacroPopupEditBox, .25)
+	F.ReskinScroll(BindPadMacroPopupScrollFrameScrollBar)
+	F.Reskin(BindPadMacroPopupOkayButton)
+	F.Reskin(BindPadMacroPopupCancelButton)
+
+	hooksecurefunc("BindPadMacroPopupFrame_Update", function()
+		for i = 1, 20 do
+			local bu = _G["BindPadMacroPopupButton"..i]
+			local ic = _G["BindPadMacroPopupButton"..i.."Icon"]
+
+			if not bu.styled then
+				bu:SetCheckedTexture(T.media.checked)
+				select(2, bu:GetRegions()):Hide()
+				local hl = bu:GetHighlightTexture()
+				hl:SetColorTexture(1, 1, 1, .25)
+				hl:SetAllPoints(ic)
+
+				ic:SetPoint("TOPLEFT", C.mult, -C.mult)
+				ic:SetPoint("BOTTOMRIGHT", -C.mult, C.mult)
+				ic:SetTexCoord(unpack(DB.TexCoord))
+				F.CreateBD(bu, .25)
+
+				bu.styled = true
+			end
+		end
+	end)
+
+	F.StripTextures(BindPadBindFrame)
+	F.SetBD(BindPadBindFrame)
+	F.ReskinClose(BindPadBindFrameCloseButton)
+	F.ReskinCheck(BindPadBindFrameForAllCharacterButton)
+	F.Reskin(BindPadBindFrameUnbindButton)
+	F.Reskin(BindPadBindFrameExitButton)
+
+	F.ReskinPortraitFrame(BindPadMacroFrame, 10, -10, -30, 70)
+	F.ReskinScroll(BindPadMacroFrameScrollFrameScrollBar)
+	F.Reskin(BindPadMacroFrameEditButton)
+	F.Reskin(BindPadMacroDeleteButton)
+	F.Reskin(BindPadMacroFrameTestButton)
+	F.Reskin(BindPadMacroFrameExitButton)
+	F.StripTextures(BindPadMacroFrameTextBackground)
+	F.CreateBDFrame(BindPadMacroFrameTextBackground, .25)
+	F.StripTextures(BindPadMacroFrameSlotButton)
+	F.ReskinIcon(BindPadMacroFrameSlotButtonIcon)
+end
+
 function S:LoadOtherSkins()
 	self:CharacterStatsClassic()
 	self:WhatsTraining()
 	self:RecountSkin()
+	self:BindPad()
 end
