@@ -171,7 +171,7 @@ tinsert(C.themes["AuroraClassic"], function()
 		F.StripTextures(_G["WhoFrameColumnHeader"..i])
 	end
 
-	WhoFrameListInset:Hide()
+	F.StripTextures(WhoFrameListInset)
 	WhoFrameEditBoxInset:Hide()
 
 	for i = 1, 2 do
