@@ -291,6 +291,32 @@ function TT:GameTooltip_SetDefaultAnchor(parent)
 	end
 end
 
+-- Fix comparison error on cursor
+function TT:GameTooltip_ComparisonFix(anchorFrame, shoppingTooltip1, shoppingTooltip2, _, secondaryItemShown)
+	local point = shoppingTooltip1:GetPoint(2)
+	if secondaryItemShown then
+		if point == "TOP" then
+			shoppingTooltip1:ClearAllPoints()
+			shoppingTooltip1:SetPoint("TOPLEFT", anchorFrame, "TOPRIGHT", 3, 0)
+			shoppingTooltip2:ClearAllPoints()
+			shoppingTooltip2:SetPoint("TOPLEFT", shoppingTooltip1, "TOPRIGHT", 3, 0)
+		elseif point == "RIGHT" then
+			shoppingTooltip1:ClearAllPoints()
+			shoppingTooltip1:SetPoint("TOPRIGHT", anchorFrame, "TOPLEFT", -3, 0)
+			shoppingTooltip2:ClearAllPoints()
+			shoppingTooltip2:SetPoint("TOPRIGHT", shoppingTooltip1, "TOPLEFT", -3, 0)
+		end
+	else
+		if point == "LEFT" then
+			shoppingTooltip1:ClearAllPoints()
+			shoppingTooltip1:SetPoint("TOPLEFT", anchorFrame, "TOPRIGHT", 3, 0)
+		elseif point == "RIGHT" then
+			shoppingTooltip1:ClearAllPoints()
+			shoppingTooltip1:SetPoint("TOPRIGHT", anchorFrame, "TOPLEFT", -3, 0)
+		end
+	end
+end
+
 -- Tooltip skin
 local function getBackdrop(self) return self.bg:GetBackdrop() end
 local function getBackdropColor() return 0, 0, 0, .7 end
@@ -360,6 +386,7 @@ function TT:OnLogin()
 	hooksecurefunc("GameTooltip_ShowProgressBar", self.GameTooltip_ShowProgressBar)
 	hooksecurefunc("GameTooltip_SetDefaultAnchor", self.GameTooltip_SetDefaultAnchor)
 	hooksecurefunc("GameTooltip_SetBackdropStyle", self.GameTooltip_SetBackdropStyle)
+	hooksecurefunc("GameTooltip_AnchorComparisonTooltips", self.GameTooltip_ComparisonFix)
 
 	-- Elements
 	self:ReskinTooltipIcons()
