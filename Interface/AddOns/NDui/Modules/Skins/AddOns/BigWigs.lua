@@ -88,6 +88,11 @@ function S:BigWigsSkin()
 			BarStopped = removeStyle,
 			GetStyleName = function() return "NDui" end,
 		})
+		hooksecurefunc(bars, "SetBarStyle", function(self, style)
+			if style ~= "NDui" then
+				self:SetBarStyle("NDui")
+			end
+		end)
 	end
 
 	if IsAddOnLoaded("BigWigs_Plugins") then
