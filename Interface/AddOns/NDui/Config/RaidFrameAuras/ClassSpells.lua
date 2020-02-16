@@ -5,9 +5,9 @@ local module = B:GetModule("AurasTable")
 -- 角标的相关法术 [spellID] = {anchor, {r, g, b}}
 C.CornerBuffs = {
 	["PRIEST"] = {
-		[17]     = {"LEFT", {.7, .7, .7}},				-- 真言术盾
+		[17]     = {"BOTTOMLEFT", {.7, .7, .7}},		-- 真言术盾
 		[139]    = {"TOPLEFT", {.4, .7, .2}},			-- 恢复
-		[6788]   = {"TOP", {.8, .1, .1}, true},			-- 虚弱灵魂
+		[6788]   = {"BOTTOMRIGHT", {.8, .1, .1}, true},	-- 虚弱灵魂
 	},
 	["DRUID"] = {
 		[467]    = {"BOTTOMRIGHT", {.3, 1, .3}},		-- 荆棘术
