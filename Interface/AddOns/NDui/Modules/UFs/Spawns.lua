@@ -81,21 +81,6 @@ local function CreatePetStyle(self)
 	UF:CreateRaidMark(self)
 end
 
-local function CreateBossStyle(self)
-	self.mystyle = "boss"
-	self:SetSize(NDuiDB["UFs"]["BossWidth"], NDuiDB["UFs"]["BossHeight"])
-
-	UF:CreateHeader(self)
-	UF:CreateHealthBar(self)
-	UF:CreateHealthText(self)
-	UF:CreatePowerBar(self)
-	UF:CreatePowerText(self)
-	UF:CreateCastBar(self)
-	UF:CreateRaidMark(self)
-	UF:CreateBuffs(self)
-	UF:CreateDebuffs(self)
-end
-
 local function CreateRaidStyle(self)
 	self.mystyle = "raid"
 	self.Range = {
@@ -201,19 +186,6 @@ function UF:OnLogin()
 		oUF:SetActiveStyle("Pet")
 		local pet = oUF:Spawn("pet", "oUF_Pet")
 		B.Mover(pet, L["PetUF"], "PetUF", C.UFs.PetPos)
-
-		oUF:RegisterStyle("Boss", CreateBossStyle)
-		oUF:SetActiveStyle("Boss")
-		local boss = {}
-		for i = 1, MAX_BOSS_FRAMES do
-			boss[i] = oUF:Spawn("boss"..i, "oUF_Boss"..i)
-			local moverWidth, moverHeight = boss[i]:GetWidth(), boss[i]:GetHeight()+8
-			if i == 1 then
-				boss[i].mover = B.Mover(boss[i], L["BossFrame"]..i, "Boss1", {"RIGHT", UIParent, "RIGHT", -350, -90}, moverWidth, moverHeight)
-			else
-				boss[i].mover = B.Mover(boss[i], L["BossFrame"]..i, "Boss"..i, {"BOTTOM", boss[i-1], "TOP", 0, 50}, moverWidth, moverHeight)
-			end
-		end
 
 		UF:UpdateTextScale()
 	end

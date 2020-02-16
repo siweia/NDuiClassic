@@ -619,13 +619,11 @@ function G:SetupUnitFrame(parent)
 	local sliderRange = {
 		["Player"] = {200, 300},
 		["Pet"] = {100, 200},
-		["Boss"] = {100, 250},
 	}
 
 	local defaultValue = {
 		["Player"] = {245, 24, 4},
 		["Pet"] = {120, 18, 2},
-		["Boss"] = {150, 22, 2},
 	}
 
 	local function createOptionGroup(parent, title, offset, value, func)
@@ -652,16 +650,6 @@ function G:SetupUnitFrame(parent)
 		end
 	end
 	createOptionGroup(scroll.child, L["Pet&*Target"], -270, "Pet", updatePetSize)
-
-	local function updateBossSize()
-		for _, frame in next, ns.oUF.objects do
-			if frame.mystyle == "boss" then
-				frame:SetSize(NDuiDB["UFs"]["BossWidth"], NDuiDB["UFs"]["BossHeight"])
-				frame.Power:SetHeight(NDuiDB["UFs"]["BossPowerHeight"])
-			end
-		end
-	end
-	createOptionGroup(scroll.child, L["BossFrame"], -530, "Boss", updateBossSize)
 end
 
 function G:SetupRaidFrame(parent)

@@ -125,9 +125,6 @@ local defaultSettings = {
 		PetWidth = 120,
 		PetHeight = 18,
 		PetPowerHeight = 2,
-		BossWidth = 150,
-		BossHeight = 22,
-		BossPowerHeight = 2,
 
 		CastingColor = {r=.3, g=.7, b=1},
 		PlayerCBWidth = 300,

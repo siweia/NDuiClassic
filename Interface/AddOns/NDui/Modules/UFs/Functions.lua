@@ -16,19 +16,17 @@ oUF.colors.power.CHI = {0, 1, .59}
 oUF.colors.power.ARCANE_CHARGES = {.41, .8, .94}
 
 -- Various values
-local function retVal(self, val1, val2, val3, val4, val5)
+local function retVal(self, val1, val2, val3, val4)
 	local mystyle = self.mystyle
 	if mystyle == "player" or mystyle == "target" then
 		return val1
 	elseif mystyle == "focus" then
 		return val2
-	elseif mystyle == "boss" then
-		return val3
 	else
-		if mystyle == "nameplate" and val5 then
-			return val5
-		else
+		if mystyle == "nameplate" and val4 then
 			return val4
+		else
+			return val3
 		end
 	end
 end
@@ -93,7 +91,7 @@ function UF:CreateHealthText(self)
 	local textFrame = CreateFrame("Frame", nil, self)
 	textFrame:SetAllPoints()
 
-	local name = B.CreateFS(textFrame, retVal(self, 13, 12, 12, 12, NDuiDB["Nameplate"]["NameTextSize"]), "", false, "LEFT", 3, -1)
+	local name = B.CreateFS(textFrame, retVal(self, 13, 12, 12, NDuiDB["Nameplate"]["NameTextSize"]), "", false, "LEFT", 3, -1)
 	name:SetJustifyH("LEFT")
 	if mystyle == "raid" then
 		name:SetWidth(self:GetWidth()*.95)
@@ -128,7 +126,7 @@ function UF:CreateHealthText(self)
 		self:Tag(name, "[nplevel][color][name]")
 	end
 
-	local hpval = B.CreateFS(textFrame, retVal(self, 14, 13, 13, 13, NDuiDB["Nameplate"]["HealthTextSize"]), "", false, "RIGHT", -3, -1)
+	local hpval = B.CreateFS(textFrame, retVal(self, 14, 13, 13, NDuiDB["Nameplate"]["HealthTextSize"]), "", false, "RIGHT", -3, -1)
 	if mystyle == "raid" then
 		if NDuiDB["UFs"]["SimpleMode"] and not self.isPartyFrame then
 			hpval:SetPoint("RIGHT", -4, 0)
@@ -189,7 +187,7 @@ function UF:CreatePowerBar(self)
 	elseif mystyle == "partypet" then
 		powerHeight = NDuiDB["UFs"]["PartyPetPowerHeight"]
 	else
-		powerHeight = retVal(self, NDuiDB["UFs"]["PlayerPowerHeight"], NDuiDB["UFs"]["FocusPowerHeight"], NDuiDB["UFs"]["BossPowerHeight"], NDuiDB["UFs"]["PetPowerHeight"])
+		powerHeight = retVal(self, NDuiDB["UFs"]["PlayerPowerHeight"], NDuiDB["UFs"]["FocusPowerHeight"], NDuiDB["UFs"]["PetPowerHeight"])
 	end
 	power:SetHeight(powerHeight)
 	power:SetWidth(self:GetWidth())
@@ -223,7 +221,7 @@ function UF:CreatePowerText(self)
 	local textFrame = CreateFrame("Frame", nil, self)
 	textFrame:SetAllPoints(self.Power)
 
-	local ppval = B.CreateFS(textFrame, retVal(self, 13, 12, 12, 12), "", false, "RIGHT", -3, 2)
+	local ppval = B.CreateFS(textFrame, retVal(self, 13, 12, 12), "", false, "RIGHT", -3, 2)
 	self:Tag(ppval, "[color][power]")
 	self.powerText = ppval
 end
@@ -233,7 +231,6 @@ local textScaleFrames = {
 	["target"] = true,
 	["pet"] = true,
 	["tot"] = true,
-	["boss"] = true,
 }
 function UF:UpdateTextScale()
 	local scale = NDuiDB["UFs"]["UFTextScale"]
@@ -328,7 +325,7 @@ function UF:CreateRaidMark(self)
 	else
 		ri:SetPoint("TOPRIGHT", self, "TOPRIGHT", -30, 10)
 	end
-	local size = retVal(self, 14, 13, 12, 12, 20)
+	local size = retVal(self, 14, 13, 12, 20)
 	ri:SetSize(size, size)
 	self.RaidTargetIndicator = ri
 end
@@ -355,27 +352,22 @@ function UF:CreateCastBar(self)
 	elseif mystyle == "target" then
 		cb:SetSize(NDuiDB["UFs"]["TargetCBWidth"], NDuiDB["UFs"]["TargetCBHeight"])
 		createBarMover(cb, L["Target Castbar"], "TargetCB", C.UFs.Targetcb)
-	elseif mystyle == "boss" then
-		cb:SetPoint("TOPRIGHT", self.Power, "BOTTOMRIGHT", 0, -8)
-		cb:SetSize(self:GetWidth(), 10)
 	elseif mystyle == "nameplate" then
 		cb:SetPoint("TOPLEFT", self, "BOTTOMLEFT", 0, -5)
 		cb:SetPoint("TOPRIGHT", self, "BOTTOMRIGHT", 0, -5)
 		cb:SetHeight(self:GetHeight())
 	end
 
-	local timer = B.CreateFS(cb, retVal(self, 12, 12, 12, 12, NDuiDB["Nameplate"]["NameTextSize"]), "", false, "RIGHT", -2, 0)
-	local name = B.CreateFS(cb, retVal(self, 12, 12, 12, 12, NDuiDB["Nameplate"]["NameTextSize"]), "", false, "LEFT", 2, 0)
+	local timer = B.CreateFS(cb, retVal(self, 12, 12, 12, NDuiDB["Nameplate"]["NameTextSize"]), "", false, "RIGHT", -2, 0)
+	local name = B.CreateFS(cb, retVal(self, 12, 12, 12, NDuiDB["Nameplate"]["NameTextSize"]), "", false, "LEFT", 2, 0)
 	name:SetPoint("RIGHT", timer, "LEFT", -5, 0)
 	name:SetJustifyH("LEFT")
 
-	if mystyle ~= "boss" then
-		cb.Icon = cb:CreateTexture(nil, "ARTWORK")
-		cb.Icon:SetSize(cb:GetHeight(), cb:GetHeight())
-		cb.Icon:SetPoint("BOTTOMRIGHT", cb, "BOTTOMLEFT", -5, 0)
-		cb.Icon:SetTexCoord(unpack(DB.TexCoord))
-		B.CreateSD(cb.Icon, 3, 3)
-	end
+	cb.Icon = cb:CreateTexture(nil, "ARTWORK")
+	cb.Icon:SetSize(cb:GetHeight(), cb:GetHeight())
+	cb.Icon:SetPoint("BOTTOMRIGHT", cb, "BOTTOMLEFT", -5, 0)
+	cb.Icon:SetTexCoord(unpack(DB.TexCoord))
+	B.CreateSD(cb.Icon, 3, 3)
 
 	if mystyle == "player" then
 		local safe = cb:CreateTexture(nil,"OVERLAY")
@@ -406,7 +398,7 @@ function UF:CreateCastBar(self)
 		cb.timeToHold = .5
 	end
 
-	if mystyle == "nameplate" or mystyle == "boss" then
+	if mystyle == "nameplate" then
 		cb.decimal = "%.1f"
 	else
 		cb.decimal = "%.2f"
@@ -497,7 +489,6 @@ end
 local filteredStyle = {
 	["target"] = true,
 	["nameplate"] = true,
-	["boss"] = true,
 }
 
 function UF.PostUpdateIcon(element, unit, button, index, _, duration, expiration, debuffType)
@@ -572,7 +563,7 @@ function UF.CustomFilter(element, unit, button, name, _, _, _, _, _, caster, isS
 		else
 			return (button.isPlayer or caster == "pet") and C.CornerBuffsByName[name] or C.RaidBuffs["ALL"][name]
 		end
-	elseif style == "nameplate" or style == "boss" then
+	elseif style == "nameplate" then
 		if NDuiADB["NameplateFilter"][2][spellID] or C.BlackList[spellID] then
 			return false
 		elseif element.showStealableBuffs and isStealable and not UnitIsPlayer(unit) then
@@ -693,11 +684,6 @@ function UF:CreateDebuffs(self)
 		bu.num = 14
 		bu.iconsPerRow = 7
 		bu.showDebuffType = true
-	elseif mystyle == "boss" then
-		bu:SetPoint("TOPRIGHT", self, "TOPLEFT", -5, 0)
-		bu.num = 10
-		bu.iconsPerRow = 5
-		bu.CustomFilter = UF.CustomFilter
 	end
 
 	local width = self:GetWidth()
