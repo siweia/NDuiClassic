@@ -364,8 +364,8 @@ function UF:CreateCastBar(self)
 		cb:SetHeight(self:GetHeight())
 	end
 
-	local timer = B.CreateFS(cb, retVal(self, 12, 12, 12, 12, 10), "", false, "RIGHT", -2, 0)
-	local name = B.CreateFS(cb, retVal(self, 12, 12, 12, 12, 10), "", false, "LEFT", 2, 0)
+	local timer = B.CreateFS(cb, retVal(self, 12, 12, 12, 12, NDuiDB["Nameplate"]["NameTextSize"]), "", false, "RIGHT", -2, 0)
+	local name = B.CreateFS(cb, retVal(self, 12, 12, 12, 12, NDuiDB["Nameplate"]["NameTextSize"]), "", false, "LEFT", 2, 0)
 	name:SetPoint("RIGHT", timer, "LEFT", -5, 0)
 	name:SetJustifyH("LEFT")
 
