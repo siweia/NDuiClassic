@@ -98,7 +98,7 @@ local function CreateRaidStyle(self)
 	UF:CreatePrediction(self)
 	UF:CreateClickSets(self)
 	UF:CreateRaidDebuffs(self)
-	--UF:CreateThreatBorder(self)
+	UF:CreateThreatBorder(self)
 	UF:CreateAuras(self)
 	UF:CreateBuffIndicator(self)
 end

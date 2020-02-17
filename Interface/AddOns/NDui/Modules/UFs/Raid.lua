@@ -52,24 +52,20 @@ function UF:CreateTargetBorder(self)
 	self:RegisterEvent("GROUP_ROSTER_UPDATE", UF.UpdateTargetBorder, true)
 end
 
-function UF:UpdateThreatBorder(_, unit)
-	if unit ~= self.unit then return end
-
-	local element = self.Health.Shadow
-	local status = UnitThreatSituation(unit)
-
-	if status and status > 1 then
-		local r, g, b = GetThreatStatusColor(status)
-		element:SetBackdropBorderColor(r, g, b)
+local function postUpdateThreat(element, _, status)
+	local self = element.__owner
+	local shadow = self.Health.Shadow
+	if status then
+		shadow:SetBackdropBorderColor(1, 0, 0)
 	else
-		element:SetBackdropBorderColor(0, 0, 0)
+		shadow:SetBackdropBorderColor(0, 0, 0)
 	end
 end
 
 function UF:CreateThreatBorder(self)
 	local threatIndicator = CreateFrame("Frame", nil, self)
 	self.ThreatIndicator = threatIndicator
-	self.ThreatIndicator.Override = UF.UpdateThreatBorder
+	self.ThreatIndicator.PostUpdate = postUpdateThreat
 end
 
 local debuffList = {}
