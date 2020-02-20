@@ -202,9 +202,6 @@ function TT:OnTooltipSetUnit()
 
 			if GameTooltipStatusBar.text then
 				local value, max = UnitHealth(unit), UnitHealthMax(unit)
-				if RealMobHealth and RealMobHealth.UnitHasHealthData(unit) then
-					value, max = RealMobHealth.GetUnitHealth(unit)
-				end
 				GameTooltipStatusBar.text:SetText(B.Numb(value).." | "..B.Numb(max))
 			end
 		else
@@ -230,9 +227,6 @@ function TT:StatusBar_OnValueChanged(value)
 		self.text:SetFormattedText("%d%%", value*100)
 	else
 		local unit = TT.GetUnit(GameTooltip)
-		if RealMobHealth and RealMobHealth.UnitHasHealthData(unit) then
-			value, max = RealMobHealth.GetUnitHealth(unit)
-		end
 		self.text:SetText(B.Numb(value).." | "..B.Numb(max))
 	end
 end
@@ -392,11 +386,6 @@ function TT:OnLogin()
 	self:ReskinTooltipIcons()
 	self:SetupTooltipID()
 	self:TargetedInfo()
-
-	-- RealMobHealth override
-	if RealMobHealth and RealMobHealth.OverrideOption then
-		RealMobHealth.OverrideOption("ShowTooltipHealthText", false)
-	end
 end
 
 -- Tooltip Skin Registration
