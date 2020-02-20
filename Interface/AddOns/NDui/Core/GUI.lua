@@ -42,7 +42,6 @@ local defaultSettings = {
 		BagsiLvl = true,
 		ReverseSort = false,
 		ItemFilter = true,
-		--ItemSetFilter = false,
 		DeleteButton = true,
 		FavouriteItems = {},
 		GatherEmpty = false,
@@ -50,6 +49,15 @@ local defaultSettings = {
 		ShowNewItem = true,
 		SplitCount = 1,
 		iLvlToShow = 1,
+
+		FilterJunk = true,
+		FilterAmmo = true,
+		FilterConsumble = true,
+		FilterEquipment = true,
+		FilterLegendary = true,
+		FilterFavourite = true,
+		FilterGoods = false,
+		FilterQuest = false,
 	},
 	Auras = {
 		Reminder = true,
@@ -345,6 +353,10 @@ loader:SetScript("OnEvent", function(self, _, addon)
 end)
 
 -- Callbacks
+local function setupBagFilter()
+	G:SetupBagFilter(guiPage[2])
+end
+
 local function setupRaidFrame()
 	G:SetupRaidFrame(guiPage[4])
 end
@@ -549,9 +561,8 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 	},
 	[2] = {
 		{1, "Bags", "Enable", "|cff00cc4c"..L["Enable Bags"]},
-		--{1, "Bags", "ItemSetFilter", L["Use ItemSetFilter"], true},
 		{},--blank
-		{1, "Bags", "ItemFilter", L["Bags ItemFilter"].."*", nil, nil, updateBagStatus},
+		{1, "Bags", "ItemFilter", L["Bags ItemFilter"].."*", nil, setupBagFilter, updateBagStatus},
 		{1, "Bags", "GatherEmpty", L["Bags GatherEmpty"].."*", true, nil, updateBagStatus},
 		{1, "Bags", "ReverseSort", L["Bags ReverseSort"].."*", nil, nil, updateBagSortOrder},
 		{1, "Bags", "BagsiLvl", L["Bags Itemlevel"].."*", true, nil, updateBagStatus},

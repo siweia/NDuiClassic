@@ -383,7 +383,6 @@ function module:OnLogin()
 	local iconSize = NDuiDB["Bags"]["IconSize"]
 	local deleteButton = NDuiDB["Bags"]["DeleteButton"]
 	local showNewItem = NDuiDB["Bags"]["ShowNewItem"]
-	--local itemSetFilter = NDuiDB["Bags"]["ItemSetFilter"]
 
 	-- Init
 	local Backpack = cargBags:NewImplementation("NDui_Backpack")
@@ -398,55 +397,70 @@ function module:OnLogin()
 	module.BagsType[-1] = 0	-- bank
 
 	local f = {}
-	local onlyBags, bagAmmo, bagEquipment, bagConsumble, bagsJunk, onlyBank, bankAmmo, bankLegendary, bankEquipment, bankConsumble, onlyReagent, bagFavourite, bankFavourite, onlyKeyring = self:GetFilters()
+	local filters = self:GetFilters()
 
 	function Backpack:OnInit()
 		local MyContainer = self:GetContainerClass()
 
 		f.main = MyContainer:New("Main", {Columns = bagsWidth, Bags = "bags"})
-		f.main:SetFilter(onlyBags, true)
+		f.main:SetFilter(filters.onlyBags, true)
 		f.main:SetPoint("BOTTOMRIGHT", -50, 320)
 
 		f.junk = MyContainer:New("Junk", {Columns = bagsWidth, Parent = f.main})
-		f.junk:SetFilter(bagsJunk, true)
+		f.junk:SetFilter(filters.bagsJunk, true)
 
 		f.bagFavourite = MyContainer:New("BagFavourite", {Columns = bagsWidth, Parent = f.main})
-		f.bagFavourite:SetFilter(bagFavourite, true)
+		f.bagFavourite:SetFilter(filters.bagFavourite, true)
 
 		f.ammoItem = MyContainer:New("AmmoItem", {Columns = bagsWidth, Parent = f.main})
-		f.ammoItem:SetFilter(bagAmmo, true)
+		f.ammoItem:SetFilter(filters.bagAmmo, true)
 
 		f.equipment = MyContainer:New("Equipment", {Columns = bagsWidth, Parent = f.main})
-		f.equipment:SetFilter(bagEquipment, true)
+		f.equipment:SetFilter(filters.bagEquipment, true)
 
 		f.consumble = MyContainer:New("Consumble", {Columns = bagsWidth, Parent = f.main})
-		f.consumble:SetFilter(bagConsumble, true)
+		f.consumble:SetFilter(filters.bagConsumble, true)
+
+		f.bagGoods = MyContainer:New("BagGoods", {Columns = bagsWidth, Parent = f.main})
+		f.bagGoods:SetFilter(filters.bagGoods, true)
+
+		f.bagQuest = MyContainer:New("BagQuest", {Columns = bagsWidth, Parent = f.main})
+		f.bagQuest:SetFilter(filters.bagQuest, true)
 
 		local keyring = MyContainer:New("Keyring", {Columns = bagsWidth, Parent = f.main})
-		keyring:SetFilter(onlyKeyring, true)
+		keyring:SetFilter(filters.onlyKeyring, true)
 		keyring:SetPoint("TOPRIGHT", f.main, "BOTTOMRIGHT", 0, -5)
 		keyring:Hide()
 		f.main.keyring = keyring
 
 		f.bank = MyContainer:New("Bank", {Columns = bankWidth, Bags = "bank"})
-		f.bank:SetFilter(onlyBank, true)
+		f.bank:SetFilter(filters.onlyBank, true)
 		f.bank:SetPoint("BOTTOMRIGHT", f.main, "BOTTOMLEFT", -10, 0)
 		f.bank:Hide()
 
 		f.bankFavourite = MyContainer:New("BankFavourite", {Columns = bankWidth, Parent = f.bank})
-		f.bankFavourite:SetFilter(bankFavourite, true)
+		f.bankFavourite:SetFilter(filters.bankFavourite, true)
 
 		f.bankAmmoItem = MyContainer:New("BankAmmoItem", {Columns = bankWidth, Parent = f.bank})
-		f.bankAmmoItem:SetFilter(bankAmmo, true)
+		f.bankAmmoItem:SetFilter(filters.bankAmmo, true)
 
 		f.bankLegendary = MyContainer:New("BankLegendary", {Columns = bankWidth, Parent = f.bank})
-		f.bankLegendary:SetFilter(bankLegendary, true)
+		f.bankLegendary:SetFilter(filters.bankLegendary, true)
 
 		f.bankEquipment = MyContainer:New("BankEquipment", {Columns = bankWidth, Parent = f.bank})
-		f.bankEquipment:SetFilter(bankEquipment, true)
+		f.bankEquipment:SetFilter(filters.bankEquipment, true)
 
 		f.bankConsumble = MyContainer:New("BankConsumble", {Columns = bankWidth, Parent = f.bank})
-		f.bankConsumble:SetFilter(bankConsumble, true)
+		f.bankConsumble:SetFilter(filters.bankConsumble, true)
+
+		f.bankGoods = MyContainer:New("BankGoods", {Columns = bankWidth, Parent = f.bank})
+		f.bankGoods:SetFilter(filters.bankGoods, true)
+
+		f.bankQuest = MyContainer:New("BankQuest", {Columns = bankWidth, Parent = f.bank})
+		f.bankQuest:SetFilter(filters.bankQuest, true)
+
+		module.BagGroup = {f.ammoItem, f.equipment, f.bagFavourite, f.bagGoods, f.consumble, f.bagQuest, f.junk}
+		module.BankGroup = {f.bankAmmoItem, f.bankEquipment, f.bankLegendary, f.bankFavourite, f.bankGoods, f.bankConsumble, f.bankQuest}
 	end
 
 	local initBagType
@@ -624,8 +638,8 @@ function module:OnLogin()
 		end
 		self:SetSize(width + xOffset*2, height + offset)
 
-		module:UpdateAnchors(f.main, {f.ammoItem, f.equipment, f.bagFavourite, f.consumble, f.junk})
-		module:UpdateAnchors(f.bank, {f.bankAmmoItem, f.bankEquipment, f.bankLegendary, f.bankFavourite, f.bankConsumble})
+		module:UpdateAnchors(f.main, module.BagGroup)
+		module:UpdateAnchors(f.bank, module.BankGroup)
 	end
 
 	function MyContainer:OnCreate(name, settings)
@@ -640,11 +654,7 @@ function module:OnLogin()
 		if strmatch(name, "AmmoItem$") then
 			label = DB.MyClass == "HUNTER" and INVTYPE_AMMO or SOUL_SHARDS
 		elseif strmatch(name, "Equipment$") then
-			--if itemSetFilter then
-			--	label = L["Equipement Set"]
-			--else
-				label = BAG_FILTER_EQUIPMENT
-			--end
+			label = BAG_FILTER_EQUIPMENT
 		elseif name == "BankLegendary" then
 			label = LOOT_JOURNAL_LEGENDARIES
 		elseif strmatch(name, "Consumble$") then
@@ -655,6 +665,10 @@ function module:OnLogin()
 			label = PREFERENCES
 		elseif name == "Keyring" then
 			label = KEYRING
+		elseif strmatch(name, "Goods") then
+			label = AUCTION_CATEGORY_TRADE_GOODS
+		elseif strmatch(name, "Quest") then
+			label = QUESTS_LABEL
 		end
 		if label then B.CreateFS(self, 14, label, true, "TOPLEFT", 5, -8) return end
 
@@ -739,6 +753,19 @@ function module:OnLogin()
 	-- Sort order
 	SetSortBagsRightToLeft(not NDuiDB["Bags"]["ReverseSort"])
 	SetInsertItemsLeftToRight(false)
+
+	-- Shift key alert
+	local function onUpdate(self, elapsed)
+		if IsShiftKeyDown() then
+			self.elapsed = (self.elapsed or 0) + elapsed
+			if self.elapsed > 5 then
+				UIErrorsFrame:AddMessage(DB.InfoColor..L["StupidShiftKey"])
+				self.elapsed = 0
+			end
+		end
+	end
+	local shiftUpdater = CreateFrame("Frame", nil, f.main)
+	shiftUpdater:SetScript("OnUpdate", onUpdate)
 
 	-- Override AuroraClassic
 	if F then
