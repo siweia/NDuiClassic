@@ -5,26 +5,19 @@ if DB.Client ~= "zhCN" then return end
 local strsplit, pairs = string.split, pairs
 
 local hx = {
-	"更新各法术库；",
-	"修正对LibTotemInfo的支持；",
-	"添加背包堆叠物品快速拆分的功能；",
-	"背包银行等背景色微调；",
-	"添加邮件联系人列表的功能；",
-	"UI缩放调整；",
-	"点击施法中现在使用~来进行换行；",
-	"背包选项调整时刷新状态；",
-	"添加背包装备装等的阈值选项；",
-	"BaudErrorFrame更新；",
-	"小地图回收站微调，防止一些奇葩插件报错；",
-	"添加伤害统计插件的皮肤开关的方向；",
-	"禁用边角指示器后，使用其过滤显示buff；",
-	"添加选项以缩放边角指示器和副本减益图标；",
-	"边角指示器的模式切换即时生效；",
-	"给团队等尺寸的调整添加独立窗口；",
-	"团队工具根据位置自动调整展开方向；",
-	"添加选项以屏蔽陌生人密语，默认关闭；",
-	"Details美化更新；",
-	"控制台及本地文本更新。",
+	"添加BindPad的美化；",
+	"调整大于1小时的buff时间显示；",
+	"修复边角增益指示器无法保存的问题；",
+	"界面美化更新；",
+	"Details和Bigwigs美化更新；",
+	"鼠标提示调整；",
+	"移除BOSS框体的相关信息；",
+	"更新牧师的初始边角指示器增益；",
+	"姓名板的施法条字号跟随其名字字号；",
+	"团队框架添加目标高亮；",
+	"移除RealMobHealth的支持；",
+	"背包过滤更新，添加更多可选分类；",
+	"Shift键卡住提示调整。",
 }
 
 local f
@@ -39,8 +32,8 @@ local function changelog()
 	B.CreateBD(f)
 	B.CreateSD(f)
 	B.CreateTex(f)
-	B.CreateFS(f, 30, "NDui", true, "TOPLEFT", 10, 26)
-	B.CreateFS(f, 14, DB.Version, true, "TOPLEFT", 90, 14)
+	B.CreateFS(f, 30, "|cff0080ffNDui|rClassic", true, "TOPLEFT", 10, 26)
+	B.CreateFS(f, 14, DB.Version, true, "TOPRIGHT", -10, 14)
 	B.CreateFS(f, 16, L["Changelog"], true, "TOP", 0, -10)
 	local ll = CreateFrame("Frame", nil, f)
 	ll:SetPoint("TOP", -50, -35)
