@@ -51,13 +51,13 @@ local function Update(self, event, unit)
 	local status
 
 	if(unitExists(unit) and UnitIsFriend("player", unit)) then
-		if(UnitIsUnit(unit, "targettarget") and UnitIsEnemy("player", "target")) then
+		if(UnitIsUnit(unit, "targettarget") and UnitCanAttack("player", "target")) then
 			status = true
 		end
 		if(IsInGroup() and not status) then
 			for i=1,GetNumGroupMembers() do
 				local target = IsInRaid() and "raid"..i.."target" or "party"..i.."target"
-				if(UnitIsUnit(unit, target.."target") and UnitIsEnemy("player", target)) then
+				if(UnitIsUnit(unit, target.."target") and UnitCanAttack("player", target)) then
 					status = true
 					break
 				end
@@ -111,10 +111,18 @@ local function Enable(self)
 		element.__owner = self
 		element.ForceUpdate = ForceUpdate
 
-		self:RegisterEvent("UNIT_AURA", Path)
-		self:RegisterEvent("UNIT_HEALTH_FREQUENT", Path)
-		self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED", Path)
-
+		--self:RegisterEvent("UNIT_TARGET", Path)
+		if(self.unit == "targettarget" or self.unit == "targettargettarget") then
+			self:RegisterEvent("UNIT_TARGET", Path)
+		else
+			self.elapsed = 0.2
+			self:SetScript("OnUpdate", function(self, elapsed)
+				self.elapsed = self.elapsed - elapsed
+				if(self.elapsed > 0) then return end
+				self.elapsed = 0.2
+				ForceUpdate(element)
+			end)
+		end
 		if(element:IsObjectType('Texture') and not element:GetTexture()) then
 			element:SetTexture([[Interface\RAIDFRAME\UI-RaidFrame-Threat]])
 		end
@@ -127,10 +135,11 @@ local function Disable(self)
 	local element = self.ThreatIndicator
 	if(element) then
 		element:Hide()
-
-		self:UnregisterEvent("UNIT_AURA", Path)
-		self:UnregisterEvent("UNIT_HEALTH_FREQUENT", Path)
-		self:UnregisterEvent("UNIT_SPELLCAST_SUCCEEDED", Path)
+		if(self.unit == "targettarget" or "targettargettarget") then
+			self:UnregisterEvent("UNIT_TARGET", Path)
+		else
+			self:SetScript("OnUpdate", nil)
+		end
 	end
 end
 
