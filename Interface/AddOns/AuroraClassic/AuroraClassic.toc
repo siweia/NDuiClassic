@@ -1,4 +1,4 @@
-## Interface: 11303
+## Interface: 11304
 ## Title: |cff0080ffAuroraClassic|r
 ## Title-zhCN: |cff0080ffAuroraClassic|r 材质美化
 ## Title-zhTW: |cff0080ffAuroraClassic|r 材質美化
