@@ -229,6 +229,7 @@ local defaultSettings = {
 		Recount = true,
 		ResetRecount = true,
 		ToggleDirection = 1,
+		TradeSkills = true,
 	},
 	Tooltip = {
 		CombatHide = false,
@@ -746,6 +747,7 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{},--blank
 		{1, "Skins", "MicroMenu", L["Micromenu"]},
 		{1, "Skins", "QuestTracker", L["EnhancedQuestLog"], true, nil, nil, L["EnhancedQuestLogTips"]},
+		{1, "Skins", "TradeSkills", L["EnhancedTradeSkills"]},
 		{},--blank
 		{1, "Skins", "Skada", L["Skada Skin"]},
 		{1, "Skins", "Details", L["Details Skin"], nil, resetDetails},

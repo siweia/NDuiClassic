@@ -109,6 +109,7 @@ function S:OnLogin()
 	self:MicroMenu()
 	self:CreateRM()
 	self:QuestTracker()
+	self:TradeSkillSkin()
 
 	self:DBMSkin()
 	self:SkadaSkin()
