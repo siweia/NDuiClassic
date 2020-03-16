@@ -56,7 +56,7 @@ tinsert(C.themes["AuroraClassic"], function()
 	MasterLooterFrame.Item.bg = F.CreateBDFrame(MasterLooterFrame.Item.Icon)
 
 	MasterLooterFrame:HookScript("OnShow", function(self)
-		local color = BAG_ITEM_QUALITY_COLORS[LootFrame.selectedQuality or 1]
+		local color = C.QualityColors[LootFrame.selectedQuality or 1]
 		self.Item.bg:SetBackdropBorderColor(color.r, color.g, color.b)
 		LootFrame:SetAlpha(.4)
 	end)
@@ -124,7 +124,7 @@ tinsert(C.themes["AuroraClassic"], function()
 
 			if frame:IsShown() then
 				local quality = select(4, GetLootRollItemInfo(frame.rollID))
-				local color = BAG_ITEM_QUALITY_COLORS[quality or 1]
+				local color = C.QualityColors[quality or 1]
 				frame.bg:SetBackdropBorderColor(color.r, color.g, color.b)
 			end
 		end

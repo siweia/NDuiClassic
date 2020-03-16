@@ -50,6 +50,20 @@ C.frames = {}
 
 C.isClassic = select(4, GetBuildInfo()) < 20000
 
+-- Replace default contants
+C.QualityColors = {}
+local qualityColors = BAG_ITEM_QUALITY_COLORS
+for index, value in pairs(qualityColors) do
+	C.QualityColors[index] = {r = value.r, g = value.g, b = value.b}
+end
+C.QualityColors[-1] = {r = 0, g = 0, b = 0}
+C.QualityColors[LE_ITEM_QUALITY_POOR] = {r = .61, g = .61, b = .61}
+C.QualityColors[LE_ITEM_QUALITY_COMMON] = {r = 0, g = 0, b = 0}
+
+NORMAL_QUEST_DISPLAY = gsub(NORMAL_QUEST_DISPLAY, "000000", "ffffff")
+TRIVIAL_QUEST_DISPLAY = gsub(TRIVIAL_QUEST_DISPLAY, "000000", "ffffff")
+IGNORED_QUEST_DISPLAY = gsub(IGNORED_QUEST_DISPLAY, "000000", "ffffff")
+
 -- [[ Functions ]]
 
 local useButtonGradientColour

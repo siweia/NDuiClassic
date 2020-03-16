@@ -41,7 +41,7 @@ tinsert(C.themes["AuroraClassic"], function()
 
 		local texture, _, _, quality = GetContainerItemInfo(container, buttonID)
 		if texture and quality and quality > 1 then
-			local color = BAG_ITEM_QUALITY_COLORS[quality]
+			local color = C.QualityColors[quality]
 			button.bg:SetBackdropBorderColor(color.r, color.g, color.b)
 		else
 			button.bg:SetBackdropBorderColor(0, 0, 0)

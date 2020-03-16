@@ -9,7 +9,7 @@ C.themes["Blizzard_ScrappingMachineUI"] = function()
 		if self.itemLocation and not self.item:IsItemEmpty() and self.item:GetItemName() then
 			quality = self.item:GetItemQuality()
 		end
-		local color = BAG_ITEM_QUALITY_COLORS[quality]
+		local color = C.QualityColors[quality]
 		self.bg:SetBackdropBorderColor(color.r, color.g, color.b)
 	end
 
