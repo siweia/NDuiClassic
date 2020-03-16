@@ -132,7 +132,7 @@ function UF:OnLogin()
 	local numGroups = NDuiDB["UFs"]["NumGroups"]
 	local scale = NDuiDB["UFs"]["SimpleRaidScale"]/10
 	local raidWidth, raidHeight = NDuiDB["UFs"]["RaidWidth"], NDuiDB["UFs"]["RaidHeight"]
-	local reverse = NDuiDB["UFs"]["ReverseRaid"]
+	local raidPowerHeight = NDuiDB["UFs"]["RaidPowerHeight"]
 	local showPartyFrame = NDuiDB["UFs"]["PartyFrame"]
 	local partyWidth, partyHeight = NDuiDB["UFs"]["PartyWidth"], NDuiDB["UFs"]["PartyHeight"]
 	local showPartyPetFrame = NDuiDB["UFs"]["PartyPetFrame"]
@@ -342,31 +342,15 @@ function UF:OnLogin()
 				groups[i] = CreateGroup("oUF_Raid"..i, i)
 				if i == 1 then
 					if horizonRaid then
-						raidMover = B.Mover(groups[i], L["RaidFrame"], "RaidFrame", {"TOPLEFT", UIParent, 35, -50}, (raidWidth+5)*5, (raidHeight+(NDuiDB["UFs"]["ShowTeamIndex"] and 25 or 15))*numGroups)
-						if reverse then
-							groups[i]:ClearAllPoints()
-							groups[i]:SetPoint("BOTTOMLEFT", raidMover)
-						end
+						groups[i].mover = B.Mover(groups[i], L["RaidFrame"]..i, "RaidFrame"..i, {"TOPLEFT", UIParent, 35, -50}, (raidWidth+5)*5, raidHeight + raidPowerHeight + 3)
 					else
-						raidMover = B.Mover(groups[i], L["RaidFrame"], "RaidFrame", {"TOPLEFT", UIParent, 35, -50}, (raidWidth+5)*numGroups, (raidHeight+10)*5)
-						if reverse then
-							groups[i]:ClearAllPoints()
-							groups[i]:SetPoint("TOPRIGHT", raidMover)
-						end
+						groups[i].mover = B.Mover(groups[i], L["RaidFrame"]..i, "RaidFrame"..i, {"TOPLEFT", UIParent, 35, -50}, raidWidth, (raidHeight + raidPowerHeight + 3)*5)
 					end
 				else
 					if horizonRaid then
-						if reverse then
-							groups[i]:SetPoint("BOTTOMLEFT", groups[i-1], "TOPLEFT", 0, NDuiDB["UFs"]["ShowTeamIndex"] and 25 or 15)
-						else
-							groups[i]:SetPoint("TOPLEFT", groups[i-1], "BOTTOMLEFT", 0, NDuiDB["UFs"]["ShowTeamIndex"] and -25 or -15)
-						end
+						groups[i].mover = B.Mover(groups[i], L["RaidFrame"]..i, "RaidFrame"..i, {"TOPLEFT", groups[i-1], "BOTTOMLEFT", 0, NDuiDB["UFs"]["ShowTeamIndex"] and -25 or -15}, (raidWidth+5)*5, raidHeight + raidPowerHeight + 3)
 					else
-						if reverse then
-							groups[i]:SetPoint("TOPRIGHT", groups[i-1], "TOPLEFT", -5, 0)
-						else
-							groups[i]:SetPoint("TOPLEFT", groups[i-1], "TOPRIGHT", 5, 0)
-						end
+						groups[i].mover = B.Mover(groups[i], L["RaidFrame"]..i, "RaidFrame"..i, {"TOPLEFT", groups[i-1], "TOPRIGHT", 5, 0}, raidWidth, (raidHeight + raidPowerHeight + 3)*5)
 					end
 				end
 
