@@ -5,7 +5,6 @@ local module = B:RegisterModule("Bags")
 local cargBags = ns.cargBags
 
 local ipairs, strmatch, unpack, pairs, ceil = ipairs, string.match, unpack, pairs, math.ceil
-local BAG_ITEM_QUALITY_COLORS = BAG_ITEM_QUALITY_COLORS
 local LE_ITEM_QUALITY_POOR, LE_ITEM_QUALITY_RARE = LE_ITEM_QUALITY_POOR, LE_ITEM_QUALITY_RARE
 local LE_ITEM_CLASS_WEAPON, LE_ITEM_CLASS_ARMOR, LE_ITEM_CLASS_QUIVER = LE_ITEM_CLASS_WEAPON, LE_ITEM_CLASS_ARMOR, LE_ITEM_CLASS_QUIVER
 local GetContainerNumSlots, GetContainerItemInfo, PickupContainerItem = GetContainerNumSlots, GetContainerItemInfo, PickupContainerItem
@@ -565,7 +564,7 @@ function module:OnLogin()
 			--local level = B.GetItemLevel(item.link, item.bagID, item.slotID) or item.level
 			local level = item.level
 			if level < NDuiDB["Bags"]["iLvlToShow"] then level = "" end
-			local color = BAG_ITEM_QUALITY_COLORS[item.rarity]
+			local color = DB.QualityColors[item.rarity]
 			self.iLvl:SetText(level)
 			self.iLvl:SetTextColor(color.r, color.g, color.b)
 		else
@@ -596,7 +595,7 @@ function module:OnLogin()
 			self.BG:SetBackdropBorderColor(.8, .8, 0)
 			self.Quest:SetAlpha(1)
 		elseif item.rarity and item.rarity > -1 then
-			local color = BAG_ITEM_QUALITY_COLORS[item.rarity]
+			local color = DB.QualityColors[item.rarity]
 			self.BG:SetBackdropBorderColor(color.r, color.g, color.b)
 		else
 			self.BG:SetBackdropBorderColor(0, 0, 0)
@@ -726,7 +725,7 @@ function module:OnLogin()
 		if not id then return end
 		local _, _, quality, _, _, _, _, _, _, _, _, classID, subClassID = GetItemInfo(id)
 		if not quality or quality == 1 then quality = 0 end
-		local color = BAG_ITEM_QUALITY_COLORS[quality]
+		local color = DB.QualityColors[quality]
 		if not self.hidden and not self.notBought then
 			self.BG:SetBackdropBorderColor(color.r, color.g, color.b)
 		else
