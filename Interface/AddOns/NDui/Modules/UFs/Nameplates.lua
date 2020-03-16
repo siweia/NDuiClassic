@@ -534,7 +534,7 @@ function UF:CreatePlates()
 	local health = CreateFrame("StatusBar", nil, self)
 	health:SetAllPoints()
 	B.CreateSB(health)
-	B.SmoothBar(health)
+	B:SmoothBar(health)
 	self.Health = health
 	self.Health.frequentUpdates = true
 	self.Health.UpdateColor = UF.UpdateColor
