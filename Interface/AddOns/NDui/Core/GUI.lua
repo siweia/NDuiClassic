@@ -592,11 +592,11 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{1, "UFs", "Portrait", L["UFs Portrait"]},
 		{1, "UFs", "ClassPower", L["UFs ClassPower"], true},
 		{1, "UFs", "PlayerDebuff", L["Player Debuff"]},
-		{1, "UFs", "ToTAuras", L["ToT Debuff"], true},
+		{1, "UFs", "ToTAuras", L["ToT Debuff"]},
 		{1, "UFs", "EnergyTicker", L["EnergyTicker"]},
+		{3, "UFs", "SmoothAmount", "|cff00cc4c"..L["SmoothAmount"], true, {.15, .6, 2}, updateSmoothingAmount, L["SmoothAmountTip"]},
 		{4, "UFs", "HealthColor", L["HealthColor"], nil, {L["Default Dark"], L["ClassColorHP"], L["GradientHP"]}},
 		{3, "UFs", "UFTextScale", L["UFTextScale"], true, {.8, 2, 2}, updateUFTextScale},
-		{3, "UFs", "SmoothAmount", "|cff00cc4c"..L["SmoothAmount"], nil, {.15, .6, 2}, updateSmoothingAmount, L["SmoothAmountTip"]},
 		{},--blank
 		{1, "UFs", "CombatText", "|cff00cc4c"..L["UFs CombatText"]},
 		{1, "UFs", "AutoAttack", L["CombatText AutoAttack"]},
