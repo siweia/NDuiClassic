@@ -71,6 +71,8 @@ end
 
 -- Init
 B:RegisterEvent("PLAYER_LOGIN", function()
+	B:SetSmoothingAmount(NDuiDB["UFs"]["SmoothAmount"])
+
 	for _, module in next, initQueue do
 		if module.OnLogin then
 			module:OnLogin()

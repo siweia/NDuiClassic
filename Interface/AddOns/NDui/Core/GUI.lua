@@ -125,6 +125,7 @@ local defaultSettings = {
 		BuffIndicatorScale = 1,
 		EnergyTicker = true,
 		UFTextScale = 1,
+		SmoothAmount = .3,
 
 		PlayerWidth = 245,
 		PlayerHeight = 24,
@@ -482,6 +483,10 @@ local function refreshRaidFrameIcons()
 	B:GetModule("UnitFrames"):RefreshRaidFrameIcons()
 end
 
+local function updateSmoothingAmount()
+	B:SetSmoothingAmount(NDuiDB["UFs"]["SmoothAmount"])
+end
+
 local function updateMapFader()
 	B:GetModule("Maps"):MapFader()
 end
@@ -591,6 +596,7 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{1, "UFs", "EnergyTicker", L["EnergyTicker"]},
 		{4, "UFs", "HealthColor", L["HealthColor"], nil, {L["Default Dark"], L["ClassColorHP"], L["GradientHP"]}},
 		{3, "UFs", "UFTextScale", L["UFTextScale"], true, {.8, 2, 2}, updateUFTextScale},
+		{3, "UFs", "SmoothAmount", "|cff00cc4c"..L["SmoothAmount"], nil, {.15, .6, 2}, updateSmoothingAmount, L["SmoothAmountTip"]},
 		{},--blank
 		{1, "UFs", "CombatText", "|cff00cc4c"..L["UFs CombatText"]},
 		{1, "UFs", "AutoAttack", L["CombatText AutoAttack"]},
