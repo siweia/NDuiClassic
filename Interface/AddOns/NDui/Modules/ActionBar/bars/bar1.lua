@@ -134,5 +134,6 @@ function Bar:OnLogin()
 	self:HideBlizz()
 	self:ReskinBars()
 	self:UpdateAllScale()
+	-- Credit: ShowActionCount, prozhong
 	hooksecurefunc("ActionButton_UpdateCount", self.FixActionCount)
 end
