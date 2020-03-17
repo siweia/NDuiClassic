@@ -23,6 +23,39 @@ function Bar:UpdateAllScale()
 	UpdateActionbarScale("BarStance")
 end
 
+local tip = CreateFrame("GameTooltip", "NDui_ActionCountTooltip", nil, "GameTooltipTemplate")
+local REAGENTS_STRING = gsub(SPELL_REAGENTS, HEADER_COLON.."(.+)", "").."(.+)"
+function Bar:GetActionCount(action)
+	tip:SetOwner(UIParent, "ANCHOR_NONE")
+	tip:SetAction(action)
+	for i = 1, tip:NumLines() do
+		local line = _G[tip:GetName().."TextLeft"..i]
+		if not line then break end
+		local text = line:GetText()
+		local itemName = text and strmatch(text, REAGENTS_STRING)
+		if itemName then
+			return GetItemCount(itemName)
+		end
+	end
+end
+
+function Bar:FixActionCount()
+	local action = self.action
+	local texture = GetActionTexture(action)
+	if not texture then return end
+
+	if not IsItemAction(action) and GetActionCount(action) == 0 then
+		local count = Bar:GetActionCount(action)
+		if count then
+			if count > 999 then
+				self.Count:SetText("*")
+			else
+				self.Count:SetText(count)
+			end
+		end
+	end
+end
+
 function Bar:OnLogin()
 	if not NDuiDB["Actionbar"]["Enable"] then return end
 
@@ -101,4 +134,5 @@ function Bar:OnLogin()
 	self:HideBlizz()
 	self:ReskinBars()
 	self:UpdateAllScale()
+	hooksecurefunc("ActionButton_UpdateCount", self.FixActionCount)
 end
