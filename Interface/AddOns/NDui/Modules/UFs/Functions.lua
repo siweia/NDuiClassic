@@ -919,6 +919,7 @@ function UF:CreateAddPower(self)
 	self.AdditionalPower.bg = bg
 	self.AdditionalPower.Text = text
 	self.AdditionalPower.PostUpdate = UF.PostUpdateAddPower
+	self.AdditionalPower.frequentUpdates = true
 end
 
 function UF:CreateSwing(self)
