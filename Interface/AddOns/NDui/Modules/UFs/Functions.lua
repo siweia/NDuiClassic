@@ -903,8 +903,9 @@ function UF:CreateAddPower(self)
 	if DB.MyClass ~= "DRUID" then return end
 
 	local bar = CreateFrame("StatusBar", nil, self)
-	bar:SetSize(150, 4)
-	bar:SetPoint("TOPLEFT", self, "BOTTOMLEFT", 0, -10)
+	bar:SetPoint("TOPLEFT", self.Power, "BOTTOMLEFT", 0, -3)
+	bar:SetPoint("TOPRIGHT", self.Power, "BOTTOMRIGHT", 0, -3)
+	bar:SetHeight(4)
 	bar:SetStatusBarTexture(DB.normTex)
 	B.CreateSD(bar, 3, 3)
 	bar.colorPower = true
