@@ -70,6 +70,17 @@ local function CreateToTStyle(self)
 	if NDuiDB["UFs"]["ToTAuras"] then UF:CreateAuras(self) end
 end
 
+local function CreateToToT(self)
+	self.mystyle = "tot"
+	self:SetSize(NDuiDB["UFs"]["PetWidth"], NDuiDB["UFs"]["PetHeight"])
+
+	UF:CreateHeader(self)
+	UF:CreateHealthBar(self)
+	UF:CreateHealthText(self)
+	UF:CreatePowerBar(self)
+	UF:CreateRaidMark(self)
+end
+
 local function CreatePetStyle(self)
 	self.mystyle = "pet"
 	self:SetSize(NDuiDB["UFs"]["PetWidth"], NDuiDB["UFs"]["PetHeight"])
@@ -186,6 +197,13 @@ function UF:OnLogin()
 		oUF:SetActiveStyle("Pet")
 		local pet = oUF:Spawn("pet", "oUF_Pet")
 		B.Mover(pet, L["PetUF"], "PetUF", C.UFs.PetPos)
+
+		if NDuiDB["UFs"]["ToToT"] then
+			oUF:RegisterStyle("ToToT", CreateToToT)
+			oUF:SetActiveStyle("ToToT")
+			local targettargettarget = oUF:Spawn("targettargettarget", "oUF_ToToT")
+			B.Mover(targettargettarget, L["TototUF"], "TototUF", C.UFs.ToToTPos)
+		end
 
 		UF:UpdateTextScale()
 	end

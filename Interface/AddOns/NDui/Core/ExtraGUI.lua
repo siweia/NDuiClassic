@@ -652,7 +652,7 @@ function G:SetupUnitFrame(parent)
 	end
 	createOptionGroup(scroll.child, L["Player&Target"], -10, "Player", updatePlayerSize)
 
-	local subFrames = {_G.oUF_Pet, _G.oUF_ToT}
+	local subFrames = {_G.oUF_Pet, _G.oUF_ToT, _G.oUF_ToToT}
 	local function updatePetSize()
 		for _, frame in pairs(subFrames) do
 			frame:SetSize(NDuiDB["UFs"]["PetWidth"], NDuiDB["UFs"]["PetHeight"])
