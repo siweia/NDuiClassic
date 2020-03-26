@@ -28,6 +28,8 @@ end
 function TT:UpdateItemSellPrice()
 	local frame = GetMouseFocus()
 	if frame and frame.GetName then
+		if frame:IsForbidden() then return end -- Forbidden on blizz store
+
 		local name = frame:GetName()
 		if not MerchantFrame:IsShown() or name and (strfind(name, "Character") or strfind(name, "TradeSkill")) then
 			local link = select(2, self:GetItem())
