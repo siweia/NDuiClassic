@@ -92,7 +92,7 @@ local defaultSettings = {
 		InstanceAuras = true,
 		RaidDebuffScale = 1,
 		--SpecRaidPos = false,
-		RaidClassColor = false,
+		RaidHealthColor = 1,
 		HorizonRaid = false,
 		HorizonParty = false,
 		SimpleRaidScale = 10,
@@ -127,6 +127,7 @@ local defaultSettings = {
 		UFTextScale = 1,
 		SmoothAmount = .3,
 		ToToT = false,
+		RaidTextScale = 1,
 
 		PlayerWidth = 245,
 		PlayerHeight = 24,
@@ -481,6 +482,10 @@ local function updateUFTextScale()
 	B:GetModule("UnitFrames"):UpdateTextScale()
 end
 
+local function updateRaidTextScale()
+	B:GetModule("UnitFrames"):UpdateRaidTextScale()
+end
+
 local function refreshRaidFrameIcons()
 	B:GetModule("UnitFrames"):RefreshRaidFrameIcons()
 end
@@ -597,9 +602,9 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{1, "UFs", "ToTAuras", L["ToT Debuff"], true},
 		{1, "UFs", "EnergyTicker", L["EnergyTicker"]},
 		{1, "UFs", "ToToT", "|cff00cc4c"..L["UFs ToToT"]},
+		{4, "UFs", "HealthColor", L["HealthColor"], true, {L["Default Dark"], L["ClassColorHP"], L["GradientHP"]}},
+		{3, "UFs", "UFTextScale", L["UFTextScale"], nil, {.8, 1.5, 2}, updateUFTextScale},
 		{3, "UFs", "SmoothAmount", "|cff00cc4c"..L["SmoothAmount"], true, {.15, .6, 2}, updateSmoothingAmount, L["SmoothAmountTip"]},
-		{4, "UFs", "HealthColor", L["HealthColor"], nil, {L["Default Dark"], L["ClassColorHP"], L["GradientHP"]}},
-		{3, "UFs", "UFTextScale", L["UFTextScale"], true, {.8, 2, 2}, updateUFTextScale},
 		{},--blank
 		{1, "UFs", "CombatText", "|cff00cc4c"..L["UFs CombatText"]},
 		{1, "UFs", "AutoAttack", L["CombatText AutoAttack"]},
@@ -622,11 +627,12 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{1, "UFs", "AurasClickThrough", L["RaidAuras ClickThrough"], nil},
 		{3, "UFs", "RaidDebuffScale", L["RaidDebuffScale"].."*", true, {1, 2, 1}, refreshRaidFrameIcons},
 		{},--blank
-		{4, "UFs", "RaidHPMode", L["RaidHPMode"].."*", nil, {L["DisableRaidHP"], L["RaidHPPercent"], L["RaidHPCurrent"], L["RaidHPLost"]}, updateRaidNameText},
-		{3, "UFs", "NumGroups", L["Num Groups"], true, {4, 8, 0}},
 		{1, "UFs", "ShowTeamIndex", L["RaidFrame TeamIndex"]},
-		{1, "UFs", "RaidClassColor", L["ClassColor RaidFrame"], true},
-		{1, "UFs", "HorizonRaid", L["Horizon RaidFrame"]},
+		{1, "UFs", "HorizonRaid", L["Horizon RaidFrame"], true},
+		{4, "UFs", "RaidHealthColor", L["HealthColor"], nil, {L["Default Dark"], L["ClassColorHP"], L["GradientHP"]}},
+		{4, "UFs", "RaidHPMode", L["RaidHPMode"].."*", true, {L["DisableRaidHP"], L["RaidHPPercent"], L["RaidHPCurrent"], L["RaidHPLost"]}, updateRaidNameText},
+		{3, "UFs", "NumGroups", L["Num Groups"], nil, {4, 8, 0}},
+		{3, "UFs", "RaidTextScale", L["UFTextScale"], true, {.8, 1.5, 2}, updateRaidTextScale},
 		--{1, "UFs", "SpecRaidPos", L["Spec RaidPos"]},
 		{},--blank
 		{1, "UFs", "SimpleMode", "|cff00cc4c"..L["Simple RaidFrame"]},

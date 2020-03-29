@@ -691,7 +691,7 @@ function G:SetupRaidFrame(parent)
 
 	local function resizeRaidFrame()
 		for _, frame in pairs(ns.oUF.objects) do
-			if frame.mystyle == "raid" and not frame.isPartyFrame then
+			if frame.mystyle == "raid" and not frame.isPartyFrame and not frame.isPartyPet then
 				if NDuiDB["UFs"]["SimpleMode"] then
 					frame:SetSize(100*NDuiDB["UFs"]["SimpleRaidScale"]/10, 20*NDuiDB["UFs"]["SimpleRaidScale"]/10)
 				else
@@ -716,7 +716,7 @@ function G:SetupRaidFrame(parent)
 
 	local function resizePartyPetFrame()
 		for _, frame in pairs(ns.oUF.objects) do
-			if frame.mystyle == "partypet" then
+			if frame.isPartyPet then
 				frame:SetSize(NDuiDB["UFs"]["PartyPetWidth"], NDuiDB["UFs"]["PartyPetHeight"])
 				frame.Power:SetHeight(NDuiDB["UFs"]["PartyPetPowerHeight"])
 			end

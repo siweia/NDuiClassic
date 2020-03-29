@@ -120,7 +120,8 @@ local function CreatePartyStyle(self)
 end
 
 local function CreatePartyPetStyle(self)
-	self.mystyle = "partypet"
+	self.mystyle = "raid"
+	self.isPartyPet = true
 	self.Range = {
 		insideAlpha = 1, outsideAlpha = .4,
 	}
