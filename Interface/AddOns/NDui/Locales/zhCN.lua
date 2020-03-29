@@ -587,3 +587,5 @@ L["SmoothAmountTip"] = "|n调节头像和姓名板血量等平滑变化的频率
 L["ShowAllTip"] = "|n默认不勾选，只显示玩家自己施放的Buff。|n|n勾选后，则将显示所有人释放的Buff。"
 L["TototUF"] = "目标的目标的目标"
 L["UFs ToToT"] = "启用目标的目标的目标"
+L["AllowFriendsSpam"] = "允许来自好友的广告"
+L["AllowFriendsSpamTip"] = "|n勾选后，将允许来自队友、好友以及公会成员发布的广告。"

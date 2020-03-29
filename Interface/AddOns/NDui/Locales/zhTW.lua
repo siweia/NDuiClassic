@@ -587,3 +587,5 @@ L["SmoothAmountTip"] = "|n調節頭像和名條血量等平滑變化的頻率。
 L["ShowAllTip"] = "|n默認不勾選，只顯示玩家自己施放的Buff。|n|n勾選後，則將顯示所有人施放的Buff。"
 L["TototUF"] = "目標的目標的目標"
 L["UFs ToToT"] = "啟用目標的目標的目標"
+L["AllowFriendsSpam"] = "允許來自好友的廣告"
+L["AllowFriendsSpamTip"] = "|n勾選后，將允許來自隊友、好友以及公會成員發佈的廣告。"

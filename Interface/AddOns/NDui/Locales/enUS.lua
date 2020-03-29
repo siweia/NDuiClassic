@@ -587,3 +587,5 @@ L["SmoothAmountTip"] = "|nSetup healthbar smooth frequency for unitframes and na
 L["ShowAllTip"] = "|nIf unchecked, you can only see the aura you cast.|n|nIf checked, the aura would be tracked from all casters."
 L["TototUF"] = "TargetTargetTarget"
 L["UFs ToToT"] = "Show TargetTargetTarget"
+L["AllowFriendsSpam"] = "Allow Friends' Spam"
+L["AllowFriendsSpamTip"] = "|nAllow spam messages from party members, frineds and guild members, if checked."
