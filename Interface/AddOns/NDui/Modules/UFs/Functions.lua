@@ -158,7 +158,7 @@ end
 
 function UF:UpdateRaidNameText()
 	for _, frame in pairs(oUF.objects) do
-		if frame.mystyle == "raid" then
+		if frame.mystyle == "raid" and not frame.isPartyPet then
 			local name = frame.nameText
 			name:ClearAllPoints()
 			if NDuiDB["UFs"]["SimpleMode"] and not frame.isPartyFrame then
