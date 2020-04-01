@@ -622,10 +622,10 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{1, "UFs", "RaidBuffIndicator", "|cff00cc4c"..L["RaidBuffIndicator"], nil, setupBuffIndicator, nil, L["RaidBuffIndicatorTip"]},
 		{1, "UFs", "RaidClickSets", "|cff00cc4c"..L["Enable ClickSets"], true, setupClickCast},
 		{4, "UFs", "BuffIndicatorType", L["BuffIndicatorType"].."*", nil, {L["BI_Blocks"], L["BI_Icons"], L["BI_Numbers"]}, refreshRaidFrameIcons},
-		{3, "UFs", "BuffIndicatorScale", L["BuffIndicatorScale"].."*", true, {1, 2, 1}, refreshRaidFrameIcons},
+		{3, "UFs", "BuffIndicatorScale", L["BuffIndicatorScale"].."*", true, {.8, 2, 1}, refreshRaidFrameIcons},
 		{1, "UFs", "InstanceAuras", "|cff00cc4c"..L["Instance Auras"], nil, setupRaidDebuffs},
 		{1, "UFs", "AurasClickThrough", L["RaidAuras ClickThrough"], nil},
-		{3, "UFs", "RaidDebuffScale", L["RaidDebuffScale"].."*", true, {1, 2, 1}, refreshRaidFrameIcons},
+		{3, "UFs", "RaidDebuffScale", L["RaidDebuffScale"].."*", true, {.8, 2, 1}, refreshRaidFrameIcons},
 		{},--blank
 		{1, "UFs", "ShowTeamIndex", L["RaidFrame TeamIndex"]},
 		{1, "UFs", "HorizonRaid", L["Horizon RaidFrame"], true},
