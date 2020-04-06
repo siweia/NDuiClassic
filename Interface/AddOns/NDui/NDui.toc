@@ -2,8 +2,8 @@
 ## Title: |cff0080ffNDui|r Classic
 ## X-Credits: Elv, Freebaser, Haleth, Haste, Leatrix, lightspark, Loshine, Neavo, p3lim, Paopao001, Qulight, Ray, Rubgrsch, Tuller, zork.
 ## Author: Siweia
-## Notes: More than an UI.
-## Version: 1.17.7
+## Notes: More than a UI.
+## Version: 1.18.0
 ## X-Support: Classic
 ## X-Website: https://github.com/siweia/NDuiClassic
 ## SavedVariables: NDuiADB
