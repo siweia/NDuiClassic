@@ -1,7 +1,7 @@
 local lib = LibStub and LibStub("LibClassicDurations", true)
 if not lib then return end
 
-local Type, Version = "SpellTable", 54
+local Type, Version = "SpellTable", 55
 if lib:GetDataVersion(Type) >= Version then return end  -- older versions didn't have that function
 
 local Spell = lib.AddAura
@@ -660,7 +660,7 @@ Spell(20217, { duration = 300, type = "BUFF", castFilter = true, buffType = "Mag
 Spell(25898, { duration = 900, type = "BUFF", castFilter = true, buffType = "Magic" }) -- Greater Blessing of Kings
 
 Spell({ 20911, 20912, 20913 }, { duration = 300, type = "BUFF", castFilter = true, buffType = "Magic" }) -- Blessing of Sanctuary
-Spell(25899, { duration = 900, type = "BUFF", castFilter = tru, buffType = "Magic" }) -- Greater Blessing of Sanctuary
+Spell(25899, { duration = 900, type = "BUFF", castFilter = true, buffType = "Magic" }) -- Greater Blessing of Sanctuary
 
 Spell(1038, { duration = 300, type = "BUFF", castFilter = true, buffType = "Magic" }) -- Blessing of Salvation
 Spell(25895, { duration = 900, type = "BUFF", castFilter = true, buffType = "Magic" }) -- Greater Blessing of Salvation
