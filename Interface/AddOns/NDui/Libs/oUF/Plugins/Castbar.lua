@@ -60,6 +60,12 @@ local channelingTicks = { -- ElvUI data
 	[17314] = 3, -- Mind Flay(Rank 5)
 	[18807] = 3, -- Mind Flay(Rank 6)
 	-- Mage
+	[10] = 8, --Blizzard(Rank 1)
+	[6141] = 8, --Blizzard(Rank 2)
+	[8427] = 8, --Blizzard(Rank 3)
+	[10185] = 8, --Blizzard(Rank 4)
+	[10186] = 8, --Blizzard(Rank 5)
+	[10187] = 8, --Blizzard(Rank 6)
 	[5143] = 3, -- Arcane Missiles(Rank 1)
 	[5144] = 4, -- Arcane Missiles(Rank 2)
 	[5145] = 5, -- Arcane Missiles(Rank 3)
