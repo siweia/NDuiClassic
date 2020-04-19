@@ -28,7 +28,10 @@ function module:UpdateChannelNames(text, ...)
 
 	-- Timestamp
 	if NDuiADB["TimestampFormat"] > 1 then
-		local timeStamp = BetterDate(DB.GreyColor..timestampFormat[NDuiADB["TimestampFormat"]].."|r", time())
+		local currentTime = time()
+		local oldTimeStamp = gsub(BetterDate(CHAT_TIMESTAMP_FORMAT, currentTime), "%[([^]]*)%]", "%%[%1%%]")
+		local timeStamp = BetterDate(DB.GreyColor..timestampFormat[NDuiADB["TimestampFormat"]].."|r", currentTime)
+		text = gsub(text, oldTimeStamp, "")
 		text = timeStamp..text
 	end
 
