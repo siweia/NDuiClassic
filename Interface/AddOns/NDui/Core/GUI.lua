@@ -278,7 +278,7 @@ local defaultSettings = {
 local accountSettings = {
 	ChatFilterList = "%*",
 	ChatFilterWhiteList = "",
-	TimestampFormat = 5,
+	TimestampFormat = 4,
 	NameplateFilter = {[1]={}, [2]={}},
 	RaidDebuffs = {},
 	Changelog = {},
@@ -721,7 +721,7 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Chat", "Oldname", L["Default Channel"], true},
 		{1, "Chat", "Chatbar", L["ShowChatbar"]},
 		{1, "Chat", "ChatItemLevel", "|cff00cc4c"..L["ShowChatItemLevel"], true},
-		{4, "ACCOUNT", "TimestampFormat", L["TimestampFormat"], nil, {DISABLE, "03:27 PM", "03:27:32 PM", "15:27", "15:27:32"}},
+		{4, "ACCOUNT", "TimestampFormat", L["TimestampFormat"].."*", nil, {DISABLE, "03:27 PM", "03:27:32 PM", "15:27", "15:27:32"}},
 		{},--blank
 		{1, "Chat", "EnableFilter", "|cff00cc4c"..L["Enable Chatfilter"]},
 		{1, "Chat", "BlockAddonAlert", L["Block Addon Alert"], true},
