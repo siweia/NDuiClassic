@@ -202,16 +202,6 @@ function module:WhipserInvite()
 	B:RegisterEvent("CHAT_MSG_BN_WHISPER", module.OnChatWhisper)
 end
 
--- Timestamp
-function module:UpdateTimestamp()
-	local greyStamp = DB.GreyColor.."[%H:%M:%S]|r "
-	if NDuiADB["Timestamp"] then
-		SetCVar("showTimestamps", greyStamp)
-	elseif GetCVar("showTimestamps") == greyStamp then
-		SetCVar("showTimestamps", "none")
-	end
-end
-
 -- Classcolor name
 function module:UpdateClassColorName()
 	if NDuiADB["ClassColorChat"] then
@@ -273,7 +263,6 @@ function module:OnLogin()
 	CombatLogQuickButtonFrame_CustomTexture:SetTexture(nil)
 
 	-- Add Elements
-	self:UpdateTimestamp()
 	self:UpdateClassColorName()
 	self:ChatWhisperSticky()
 	self:ChatFilter()

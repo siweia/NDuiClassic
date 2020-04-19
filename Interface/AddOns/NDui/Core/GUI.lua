@@ -278,7 +278,6 @@ local defaultSettings = {
 local accountSettings = {
 	ChatFilterList = "%*",
 	ChatFilterWhiteList = "",
-	Timestamp = true,
 	TimestampFormat = 5,
 	NameplateFilter = {[1]={}, [2]={}},
 	RaidDebuffs = {},
@@ -417,10 +416,6 @@ end
 
 local function updateClassColorName()
 	B:GetModule("Chat"):UpdateClassColorName()
-end
-
-local function updateTimestamp()
-	B:GetModule("Chat"):UpdateTimestamp()
 end
 
 local function updateWhisperList()
@@ -720,7 +715,6 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{3, "Chat", "ChatHeight", L["LockChatHeight"].."*", true, {100, 500, 0}, updateChatSize},
 		{},--blank
 		{1, "ACCOUNT", "ClassColorChat", L["ClassColorChat"].."*", nil, nil, updateClassColorName},
-		{1, "ACCOUNT", "Timestamp", L["Timestamp"], true, nil, updateTimestamp},
 		{1, "Chat", "Sticky", L["Chat Sticky"].."*", nil, nil, updateChatSticky},
 		{1, "Chat", "WhisperColor", L["Differ WhipserColor"].."*", true},
 		{1, "Chat", "Freedom", L["Language Filter"]},
