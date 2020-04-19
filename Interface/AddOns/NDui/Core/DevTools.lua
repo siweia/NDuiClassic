@@ -17,13 +17,11 @@ local strfind, format, strsplit = string.find, string.format, string.split
 local pairs, tonumber, tostring = pairs, tonumber, tostring
 local floor, ceil = math.floor, math.ceil
 
-local dev = {"寧德", "箭灵"}
+DB.Devs = {
+	["箭灵-法尔班克斯"] = true,
+}
 local function isDeveloper()
-	for _, name in pairs(dev) do
-		if DB.MyName == name then
-			return true
-		end
-	end
+	return DB.Devs[DB.MyName.."-"..DB.MyRealm]
 end
 DB.isDeveloper = isDeveloper()
 
