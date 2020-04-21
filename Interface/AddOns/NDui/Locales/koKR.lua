@@ -1,7 +1,7 @@
 local _, ns = ...
 local _, _, L = unpack(ns)
 if GetLocale() ~= "koKR" then return end
-
+-- Credit: yycafhoon
 L["From"] = "From"
 L["Tell"] = "Tell"
 L["Ghost"] = "Ghost"
