@@ -195,7 +195,7 @@ function module.OnChatWhisper(event, ...)
 	end
 end
 
-function module:WhipserInvite()
+function module:WhisperInvite()
 	if not NDuiDB["Chat"]["Invite"] then return end
 	self:UpdateWhisperList()
 	B:RegisterEvent("CHAT_MSG_WHISPER", module.OnChatWhisper)
@@ -270,7 +270,7 @@ function module:OnLogin()
 	self:Chatbar()
 	self:ChatCopy()
 	self:UrlCopy()
-	self:WhipserInvite()
+	self:WhisperInvite()
 
 	-- Lock chatframe
 	if NDuiDB["Chat"]["Lock"] then
