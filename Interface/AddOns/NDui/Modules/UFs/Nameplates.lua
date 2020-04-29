@@ -31,12 +31,6 @@ function UF:UpdatePlateSpacing()
 	SetCVar("nameplateOverlapV", NDuiDB["Nameplate"]["VerticalSpacing"])
 end
 
-function UF:UpdateClickableSize()
-	if InCombatLockdown() then return end
-	C_NamePlate.SetNamePlateEnemySize(NDuiDB["Nameplate"]["PlateWidth"], NDuiDB["Nameplate"]["PlateHeight"]+40)
-	C_NamePlate.SetNamePlateFriendlySize(NDuiDB["Nameplate"]["PlateWidth"], NDuiDB["Nameplate"]["PlateHeight"]+40)
-end
-
 function UF:SetupCVars()
 	SetCVar("nameplateOverlapH", .8)
 	UF:UpdatePlateSpacing()
@@ -47,9 +41,6 @@ function UF:SetupCVars()
 	UF:UpdatePlateScale()
 	SetCVar("nameplateSelectedScale", 1)
 	SetCVar("nameplateLargerScale", 1)
-
-	UF:UpdateClickableSize()
-	hooksecurefunc(NamePlateDriverFrame, "UpdateNamePlateOptions", UF.UpdateClickableSize)
 end
 
 function UF:BlockAddons()
@@ -608,7 +599,6 @@ function UF:RefreshAllPlates()
 		nameplate.healthValue:SetFont(DB.Font[1], NDuiDB["Nameplate"]["HealthTextSize"], DB.Font[3])
 		nameplate.healthValue:UpdateTag()
 		nameplate.Auras.showDebuffType = NDuiDB["Nameplate"]["ColorBorder"]
-		UF:UpdateClickableSize()
 		UF:UpdateTargetIndicator(nameplate)
 	end
 end
