@@ -390,7 +390,7 @@ function S:CreateRM()
 	-- Others
 	local menu = CreateFrame("Frame", nil, header)
 	menu:SetPoint("TOP", header, "BOTTOM", 0, -2)
-	menu:SetSize(180, 70)
+	menu:SetSize(180, 38)
 	B.CreateBD(menu)
 	B.CreateSD(menu)
 	B.CreateTex(menu)
@@ -460,7 +460,7 @@ function S:CreateRM()
 				UIErrorsFrame:AddMessage(DB.InfoColor..ERR_NOT_LEADER)
 			end
 		end},]]
-		{RAID_CONTROL, function() ToggleRaidFrame() end},
+		--{RAID_CONTROL, function() ToggleRaidFrame() end},
 	}
 	local bu = {}
 	for i, j in pairs(buttons) do
