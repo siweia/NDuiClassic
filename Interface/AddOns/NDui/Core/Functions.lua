@@ -767,3 +767,100 @@ function B:CreateSlider(name, minValue, maxValue, x, y, width)
 
 	return slider
 end
+
+-- Add API
+do
+	function B:Scale(x)
+		local mult = C.mult
+		return mult * floor(x / mult + .5)
+	end
+
+	local function WatchPixelSnap(frame, snap)
+		if (frame and not frame:IsForbidden()) and frame.PixelSnapDisabled and snap then
+			frame.PixelSnapDisabled = nil
+		end
+	end
+
+	local function DisablePixelSnap(frame)
+		if (frame and not frame:IsForbidden()) and not frame.PixelSnapDisabled then
+			if frame.SetSnapToPixelGrid then
+				frame:SetSnapToPixelGrid(false)
+				frame:SetTexelSnappingBias(0)
+			elseif frame.GetStatusBarTexture then
+				local texture = frame:GetStatusBarTexture()
+				if texture and texture.SetSnapToPixelGrid then
+					texture:SetSnapToPixelGrid(false)
+					texture:SetTexelSnappingBias(0)
+				end
+			end
+
+			frame.PixelSnapDisabled = true
+		end
+	end
+
+	local function Point(frame, arg1, arg2, arg3, arg4, arg5, ...)
+		if arg2 == nil then arg2 = frame:GetParent() end
+
+		if type(arg2) == "number" then arg2 = B:Scale(arg2) end
+		if type(arg3) == "number" then arg3 = B:Scale(arg3) end
+		if type(arg4) == "number" then arg4 = B:Scale(arg4) end
+		if type(arg5) == "number" then arg5 = B:Scale(arg5) end
+
+		frame:SetPoint(arg1, arg2, arg3, arg4, arg5, ...)
+	end
+
+	local function SetInside(frame, anchor, xOffset, yOffset, anchor2)
+		xOffset = xOffset or C.mult
+		yOffset = yOffset or C.mult
+		anchor = anchor or frame:GetParent()
+
+		DisablePixelSnap(frame)
+		frame:ClearAllPoints()
+		frame:Point("TOPLEFT", anchor, "TOPLEFT", xOffset, -yOffset)
+		frame:Point("BOTTOMRIGHT", anchor2 or anchor, "BOTTOMRIGHT", -xOffset, yOffset)
+	end
+
+	local function SetOutside(frame, anchor, xOffset, yOffset, anchor2)
+		xOffset = xOffset or C.mult
+		yOffset = yOffset or C.mult
+		anchor = anchor or frame:GetParent()
+
+		DisablePixelSnap(frame)
+		frame:ClearAllPoints()
+		frame:Point("TOPLEFT", anchor, "TOPLEFT", -xOffset, yOffset)
+		frame:Point("BOTTOMRIGHT", anchor2 or anchor, "BOTTOMRIGHT", xOffset, -yOffset)
+	end
+
+	local function addapi(object)
+		local mt = getmetatable(object).__index
+		if not object.Point then mt.Point = Point end
+		if not object.SetInside then mt.SetInside = SetInside end
+		if not object.SetOutside then mt.SetOutside = SetOutside end
+		if not object.DisabledPixelSnap then
+			if mt.SetTexture then hooksecurefunc(mt, "SetTexture", DisablePixelSnap) end
+			if mt.SetTexCoord then hooksecurefunc(mt, "SetTexCoord", DisablePixelSnap) end
+			if mt.CreateTexture then hooksecurefunc(mt, "CreateTexture", DisablePixelSnap) end
+			if mt.SetVertexColor then hooksecurefunc(mt, "SetVertexColor", DisablePixelSnap) end
+			if mt.SetColorTexture then hooksecurefunc(mt, "SetColorTexture", DisablePixelSnap) end
+			if mt.SetSnapToPixelGrid then hooksecurefunc(mt, "SetSnapToPixelGrid", WatchPixelSnap) end
+			if mt.SetStatusBarTexture then hooksecurefunc(mt, "SetStatusBarTexture", DisablePixelSnap) end
+			mt.DisabledPixelSnap = true
+		end
+	end
+
+	local handled = {["Frame"] = true}
+	local object = CreateFrame("Frame")
+	addapi(object)
+	addapi(object:CreateTexture())
+	addapi(object:CreateMaskTexture())
+
+	object = EnumerateFrames()
+	while object do
+		if not object:IsForbidden() and not handled[object:GetObjectType()] then
+			addapi(object)
+			handled[object:GetObjectType()] = true
+		end
+
+		object = EnumerateFrames(object)
+	end
+end
