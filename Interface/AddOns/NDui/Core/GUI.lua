@@ -91,7 +91,6 @@ local defaultSettings = {
 		SimpleModeSortByRole = true,
 		InstanceAuras = true,
 		RaidDebuffScale = 1,
-		--SpecRaidPos = false,
 		RaidHealthColor = 1,
 		HorizonRaid = false,
 		HorizonParty = false,
@@ -629,7 +628,6 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{4, "UFs", "RaidHPMode", L["RaidHPMode"].."*", true, {L["DisableRaidHP"], L["RaidHPPercent"], L["RaidHPCurrent"], L["RaidHPLost"]}, updateRaidNameText},
 		{3, "UFs", "NumGroups", L["Num Groups"], nil, {4, 8, 0}},
 		{3, "UFs", "RaidTextScale", L["UFTextScale"], true, {.8, 1.5, 2}, updateRaidTextScale},
-		--{1, "UFs", "SpecRaidPos", L["Spec RaidPos"]},
 		{},--blank
 		{1, "UFs", "SimpleMode", "|cff00cc4c"..L["Simple RaidFrame"]},
 		{1, "UFs", "SimpleModeSortByRole", L["SimpleMode SortByRole"], true},

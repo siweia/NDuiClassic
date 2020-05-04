@@ -382,31 +382,5 @@ function UF:OnLogin()
 				end
 			end
 		end
-
-		if raidMover then
-			if DB.isClassic then return end
-			if not NDuiDB["UFs"]["SpecRaidPos"] then return end
-
-			local function UpdateSpecPos(event, ...)
-				local unit, _, spellID = ...
-				if (event == "UNIT_SPELLCAST_SUCCEEDED" and unit == "player" and spellID == 200749) or event == "PLAYER_ENTERING_WORLD" then
-					if not GetSpecialization() then return end
-					local specIndex = GetSpecialization()
-					if not NDuiDB["Mover"]["RaidPos"..specIndex] then
-						NDuiDB["Mover"]["RaidPos"..specIndex] = {"TOPLEFT", "UIParent", "TOPLEFT", 35, -50}
-					end
-					raidMover:ClearAllPoints()
-					raidMover:SetPoint(unpack(NDuiDB["Mover"]["RaidPos"..specIndex]))
-				end
-			end
-			B:RegisterEvent("PLAYER_ENTERING_WORLD", UpdateSpecPos)
-			B:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED", UpdateSpecPos)
-
-			raidMover:HookScript("OnDragStop", function()
-				if not GetSpecialization() then return end
-				local specIndex = GetSpecialization()
-				NDuiDB["Mover"]["RaidPos"..specIndex] = NDuiDB["Mover"]["RaidFrame"]
-			end)
-		end
 	end
 end
