@@ -32,6 +32,7 @@ local IsGuildMember, BNGetGameAccountInfoByGUID, C_FriendList_IsFriend = IsGuild
 	Miscellaneous 各种有用没用的小玩意儿
 ]]
 function M:OnLogin()
+	self:LoginAnimation()
 	self:AddAlerts()
 	self:Expbar()
 	self:MailBox()
