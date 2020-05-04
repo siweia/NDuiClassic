@@ -6,18 +6,17 @@ local _G = getfenv(0)
 local tinsert, pairs, type = table.insert, pairs, type
 local buttonList = {}
 
-function S:MicroButton_SetupTexture(icon, texcoord, texture)
+function S:MicroButton_SetupTexture(icon, texture)
 	local r, g, b = DB.r, DB.g, DB.b
 	if not NDuiDB["Skins"]["ClassLine"] then r, g, b = 0, 0, 0 end
 
-	icon:SetAllPoints()
+	icon:SetOutside(nil, 3, 3)
 	icon:SetTexture(DB.MicroTex..texture)
-	icon:SetTexCoord(unpack(texcoord))
 	icon:SetVertexColor(r, g, b)
 end
 
 function S:MicroButton_Create(parent, data)
-	local texture, texcoord, tip, func = unpack(data)
+	local texture, tip, func = unpack(data)
 
 	local bu = CreateFrame("Button", nil, parent)
 	tinsert(buttonList, bu)
@@ -27,11 +26,11 @@ function S:MicroButton_Create(parent, data)
 	B.AddTooltip(bu, "ANCHOR_TOP", tip)
 
 	local icon = bu:CreateTexture(nil, "ARTWORK")
-	S:MicroButton_SetupTexture(icon, texcoord, texture)
+	S:MicroButton_SetupTexture(icon, texture)
 
 	bu:SetHighlightTexture(DB.MicroTex..texture)
 	local hl = bu:GetHighlightTexture()
-	S:MicroButton_SetupTexture(hl, texcoord, texture)
+	S:MicroButton_SetupTexture(hl, texture)
 	if not NDuiDB["Skins"]["ClassLine"] then hl:SetVertexColor(1, 1, 1) end
 end
 
@@ -44,21 +43,21 @@ function S:MicroMenu()
 
 	-- Generate Buttons
 	local buttonInfo = {
-		{"player", {51/256, 141/256, 86/256, 173/256}, MicroButtonTooltipText(CHARACTER_BUTTON, "TOGGLECHARACTER0"), function() ToggleFrame(CharacterFrame) end},
-		{"spellbook", {83/256, 173/256, 86/256, 173/256}, MicroButtonTooltipText(SPELLBOOK_ABILITIES_BUTTON, "TOGGLESPELLBOOK"), function() ToggleFrame(SpellBookFrame) end},
-		{"talents", {83/256, 173/256, 86/256, 173/256}, MicroButtonTooltipText(TALENTS, "TOGGLETALENTS"), function()
+		{"player", MicroButtonTooltipText(CHARACTER_BUTTON, "TOGGLECHARACTER0"), function() ToggleFrame(CharacterFrame) end},
+		{"spellbook", MicroButtonTooltipText(SPELLBOOK_ABILITIES_BUTTON, "TOGGLESPELLBOOK"), function() ToggleFrame(SpellBookFrame) end},
+		{"talents", MicroButtonTooltipText(TALENTS, "TOGGLETALENTS"), function()
 			if UnitLevel("player") < SHOW_SPEC_LEVEL then
 				UIErrorsFrame:AddMessage(DB.InfoColor..format(FEATURE_BECOMES_AVAILABLE_AT_LEVEL, SHOW_SPEC_LEVEL))
 			else
 				ToggleTalentFrame()
 			end
 		end},
-		{"quests", {83/256, 173/256, 80/256, 167/256}, MicroButtonTooltipText(QUESTLOG_BUTTON, "TOGGLEQUESTLOG"), ToggleQuestLog},
-		{"guild", {83/256, 173/256, 80/256, 167/256}, MicroButtonTooltipText(SOCIAL_BUTTON, "TOGGLESOCIAL"), function() ToggleFrame(FriendsFrame) end},
-		{"pets", {83/256, 173/256, 83/256, 173/256}, MicroButtonTooltipText(WORLDMAP_BUTTON, "TOGGLEWORLDMAP"), ToggleWorldMap},
-		{"help", {83/256, 173/256, 80/256, 170/256}, MicroButtonTooltipText(HELP_BUTTON, "TOGGLEHELP"), function() ToggleFrame(HelpFrame) end},
-		{"settings", {83/256, 173/256, 83/256, 173/256}, MicroButtonTooltipText(MAINMENU_BUTTON, "TOGGLEGAMEMENU"), function() ToggleFrame(GameMenuFrame) PlaySound(SOUNDKIT.IG_MINIMAP_OPEN) end},
-		{"bags", {47/256, 137/256, 83/256, 173/256}, MicroButtonTooltipText(BAGSLOT, "OPENALLBAGS"), ToggleAllBags},
+		{"quests", MicroButtonTooltipText(QUESTLOG_BUTTON, "TOGGLEQUESTLOG"), ToggleQuestLog},
+		{"guild", MicroButtonTooltipText(SOCIAL_BUTTON, "TOGGLESOCIAL"), function() ToggleFrame(FriendsFrame) end},
+		{"LFG", MicroButtonTooltipText(WORLDMAP_BUTTON, "TOGGLEWORLDMAP"), ToggleWorldMap},
+		{"collections", MicroButtonTooltipText(HELP_BUTTON, "TOGGLEHELP"), function() ToggleFrame(HelpFrame) end},
+		{"help", MicroButtonTooltipText(MAINMENU_BUTTON, "TOGGLEGAMEMENU"), function() ToggleFrame(GameMenuFrame) PlaySound(SOUNDKIT.IG_MINIMAP_OPEN) end},
+		{"bags", MicroButtonTooltipText(BAGSLOT, "OPENALLBAGS"), ToggleAllBags},
 	}
 	for _, info in pairs(buttonInfo) do
 		S:MicroButton_Create(menubar, info)
