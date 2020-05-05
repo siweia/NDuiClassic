@@ -225,7 +225,7 @@ function module:RecycleBin()
 		if #buttons == 0 then return end
 		local lastbutton
 		for _, button in pairs(buttons) do
-			if next(button) then -- fix for fuxking AHDB
+			if next(button) and button:IsShown() then -- fix for fuxking AHDB
 				button:ClearAllPoints()
 				if not lastbutton then
 					button:SetPoint("RIGHT", bin, -3, 0)
