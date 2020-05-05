@@ -11,7 +11,7 @@ local function setupCheckButton()
 	local mono = CreateFrame("CheckButton", nil, WorldMapFrame, "OptionsCheckButtonTemplate")
 	mono:SetPoint("TOPRIGHT", -140, 0)
 	mono:SetSize(26, 26)
-	B.CreateCB(mono, .25)
+	B.ReskinCheck(mono, .25)
 	mono.text = B.CreateFS(mono, 14, L["Auto Quest"], false, "LEFT", 25, 0)
 	mono:SetChecked(NDuiDB["Misc"]["AutoQuest"])
 	mono:SetScript("OnClick", function(self)
@@ -77,6 +77,7 @@ local ignoreQuestNPC = {
 	[154534] = true,	-- 大杂院阿畅
 	[150987] = true,	-- 肖恩·维克斯，斯坦索姆
 	[150563] = true,	-- 斯卡基特，麦卡贡订单日常
+	[143555] = true,	-- 山德·希尔伯曼，祖达萨PVP军需官
 }
 
 local function GetQuestLogQuests(onlyComplete)
@@ -171,6 +172,8 @@ local ignoreGossipNPC = {
 	[117871] = true, -- War Councilor Victoria (Class Challenges @ Broken Shore)
 	[155101] = true, -- 元素精华融合器
 	[155261] = true, -- 肖恩·维克斯，斯坦索姆
+	[150122] = true, -- 荣耀堡法师
+	[150131] = true, -- 萨尔玛法师
 }
 
 local rogueClassHallInsignia = {

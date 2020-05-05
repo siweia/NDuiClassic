@@ -1,5 +1,5 @@
 local _, ns = ...
-local B, C, L, DB, F = unpack(ns)
+local B, C, L, DB = unpack(ns)
 local G = B:GetModule("GUI")
 
 local r, g, b = DB.r, DB.g, DB.b
@@ -80,17 +80,14 @@ function G:CreateScroll(parent, width, height, text)
 	local scroll = CreateFrame("ScrollFrame", nil, parent, "UIPanelScrollFrameTemplate")
 	scroll:SetSize(width, height)
 	scroll:SetPoint("BOTTOMLEFT", 10, 10)
-	local bg = B.CreateBG(scroll)
-	B.CreateBD(bg, .2)
+	B.CreateBDFrame(scroll, .2)
 	if text then
 		B.CreateFS(scroll, 15, text, false, "TOPLEFT", 5, 20)
 	end
 	scroll.child = CreateFrame("Frame", nil, scroll)
 	scroll.child:SetSize(width, 1)
 	scroll:SetScrollChild(scroll.child)
-	if F then
-		F.ReskinScroll(scroll.ScrollBar)
-	end
+	B.ReskinScroll(scroll.ScrollBar)
 
 	return scroll
 end
@@ -127,7 +124,7 @@ local function CreatePanel()
 	f = CreateFrame("Frame", "NDui_AWConfig", UIParent)
 	f:SetPoint("CENTER")
 	f:SetSize(800, 500)
-	B.SetBackground(f)
+	B.SetBD(f)
 	B.CreateMF(f)
 	B.CreateFS(f, 17, L["AWConfig Title"], true, "TOP", 0, -10)
 	B.CreateFS(f, 15, L["Groups"], true, "TOPLEFT", 30, -50)

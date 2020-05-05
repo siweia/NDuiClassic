@@ -8,4 +8,5 @@
 	<Script file="QuestNotifier.lua"/>
 	<Script file="AlertFrames.lua"/>
 	<Script file="TradeTabs.lua"/>
+	<Script file="RaidManager.lua"/>
 </Ui>

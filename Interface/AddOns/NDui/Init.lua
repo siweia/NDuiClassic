@@ -3,13 +3,13 @@ ns[1] = {}			-- B, Basement
 ns[2] = {}			-- C, Config
 ns[3] = {}			-- L, Locales
 ns[4] = {}			-- DB, Database
-if IsAddOnLoaded("AuroraClassic") then
-	ns[5], ns[6] = unpack(AuroraClassic)
-end
+
 NDuiDB, NDuiADB = {}, {}
 
 local B, C, L, DB = unpack(ns)
 local pairs, next, tinsert = pairs, next, table.insert
+local min, max = math.min, math.max
+local CombatLogGetCurrentEventInfo, GetPhysicalScreenSize = CombatLogGetCurrentEventInfo, GetPhysicalScreenSize
 
 -- Events
 local events = {}
@@ -70,7 +70,40 @@ function B:GetModule(name)
 end
 
 -- Init
+local function GetBestScale()
+	return max(.4, min(1.15, 768 / DB.ScreenHeight))
+end
+
+function B:SetupUIScale(init)
+	if NDuiADB["LockUIScale"] then NDuiADB["UIScale"] = GetBestScale() end
+	local scale = NDuiADB["UIScale"]
+	if init then
+		local pixel = 1
+		local ratio = 768 / DB.ScreenHeight
+		C.mult = (pixel / scale) - ((pixel - ratio) / scale)
+	elseif not InCombatLockdown() then
+		UIParent:SetScale(scale)
+	end
+end
+
+local isScaling = false
+local function UpdatePixelScale(event)
+	if isScaling then return end
+	isScaling = true
+
+	if event == "UI_SCALE_CHANGED" then
+		DB.ScreenWidth, DB.ScreenHeight = GetPhysicalScreenSize()
+	end
+	B:SetupUIScale(true)
+	B:SetupUIScale()
+
+	isScaling = false
+end
+
 B:RegisterEvent("PLAYER_LOGIN", function()
+	-- Initial
+	B:SetupUIScale()
+	B:RegisterEvent("UI_SCALE_CHANGED", UpdatePixelScale)
 	B:SetSmoothingAmount(NDuiDB["UFs"]["SmoothAmount"])
 
 	for _, module in next, initQueue do

@@ -1,5 +1,5 @@
 ﻿local _, ns = ...
-local B, C, L, DB, F = unpack(ns)
+local B, C, L, DB = unpack(ns)
 
 local module = B:RegisterModule("Bags")
 local cargBags = ns.cargBags
@@ -49,11 +49,10 @@ function module:CreateInfoFrame()
 	search.isGlobal = true
 	search:SetPoint("LEFT", 0, 5)
 	search:DisableDrawLayer("BACKGROUND")
-	local bg = B.CreateBG(search)
+	local bg = B.CreateBDFrame(search, 0)
 	bg:SetPoint("TOPLEFT", -5, -5)
 	bg:SetPoint("BOTTOMRIGHT", 5, 5)
-	B.CreateBD(bg, .3)
-	if F then F.CreateGradient(bg) end
+	B.CreateGradient(bg)
 
 	local tag = self:SpawnPlugin("TagDisplay", "[money]", infoFrame)
 	tag:SetFont(unpack(DB.Font))
@@ -65,7 +64,7 @@ function module:CreateBagBar(settings, columns)
 	local width, height = bagBar:LayoutButtons("grid", columns, 5, 5, -5)
 	bagBar:SetSize(width + 10, height + 10)
 	bagBar:SetPoint("TOPRIGHT", self, "BOTTOMRIGHT", 0, -5)
-	B.SetBackground(bagBar)
+	B.SetBD(bagBar)
 	bagBar.highlightFunction = highlightFunction
 	bagBar.isGlobal = true
 	bagBar:Hide()
@@ -283,9 +282,9 @@ function module:CreateFreeSlots()
 	slot:SetSize(self.iconSize, self.iconSize)
 	slot:SetHighlightTexture(DB.bdTex)
 	slot:GetHighlightTexture():SetVertexColor(1, 1, 1, .25)
-	local bg = B.CreateBG(slot)
-	B.CreateBD(bg, .3)
-	bg:SetBackdropColor(.3, .3, .3, .3)
+	slot:GetHighlightTexture():SetInside()
+	B.CreateBD(slot, .3)
+	slot:SetBackdropColor(.3, .3, .3, .3)
 	slot:SetScript("OnMouseUp", module.FreeSlotOnDrop)
 	slot:SetScript("OnReceiveDrag", module.FreeSlotOnDrop)
 	B.AddTooltip(slot, "ANCHOR_RIGHT", L["FreeSlots"])
@@ -300,12 +299,12 @@ function module:CreateFreeSlots()
 	self.freeSlot = slot
 end
 
+local splitEnable
 local function saveSplitCount(self)
 	local count = self:GetText() or ""
 	NDuiDB["Bags"]["SplitCount"] = tonumber(count) or 1
 end
 
-local splitEnable
 function module:CreateSplitButton()
 	local enabledText = DB.InfoColor..L["SplitMode Enabled"]
 
@@ -313,7 +312,7 @@ function module:CreateSplitButton()
 	splitFrame:SetSize(100, 50)
 	splitFrame:SetPoint("TOPRIGHT", self, "TOPLEFT", -5, 0)
 	B.CreateFS(splitFrame, 14, L["SplitCount"], "system", "TOP", 1, -5)
-	B.SetBackground(splitFrame)
+	B.SetBD(splitFrame)
 	splitFrame:Hide()
 	local editbox = B.CreateEditBox(splitFrame, 90, 20)
 	editbox:SetPoint("BOTTOMLEFT", 5, 5)
@@ -484,16 +483,17 @@ function module:OnLogin()
 		self:SetPushedTexture(nil)
 		self:SetHighlightTexture(DB.bdTex)
 		self:GetHighlightTexture():SetVertexColor(1, 1, 1, .25)
+		self:GetHighlightTexture():SetInside()
 		self:SetSize(iconSize, iconSize)
 
-		self.Icon:SetAllPoints()
+		self.Icon:SetInside()
 		self.Icon:SetTexCoord(unpack(DB.TexCoord))
-		self.Count:SetPoint("BOTTOMRIGHT", 1, 1)
+		self.Count:SetPoint("BOTTOMRIGHT", -1, 2)
 		self.Count:SetFont(unpack(DB.Font))
+		self.Cooldown:SetInside()
 
-		self.BG = B.CreateBG(self)
-		B.CreateBD(self.BG, .25)
-		self.BG:SetBackdropColor(.3, .3, .3, .3)
+		B.CreateBD(self, .3)
+		self:SetBackdropColor(.3, .3, .3, .3)
 
 		local parentFrame = CreateFrame("Frame", nil, self)
 		parentFrame:SetAllPoints()
@@ -509,12 +509,11 @@ function module:OnLogin()
 		self.Favourite:SetSize(30, 30)
 		self.Favourite:SetPoint("TOPLEFT", -12, 9)
 
-		self.Quest = B.CreateFS(self, 26, "!", "system", "LEFT", 2, 0)
-		self.iLvl = B.CreateFS(self, 12, "", false, "BOTTOMLEFT", 1, 1)
+		self.Quest = B.CreateFS(self, 30, "!", "system", "LEFT", 3, 0)
+		self.iLvl = B.CreateFS(self, 12, "", false, "BOTTOMLEFT", 1, 2)
 
 		if showNewItem then
-			self.glowFrame = B.CreateBG(self, 4)
-			self.glowFrame:SetSize(iconSize+8, iconSize+8)
+			self.glowFrame = B.CreateGlowFrame(self, iconSize)
 		end
 
 		self:HookScript("OnClick", module.ButtonOnClick)
@@ -582,9 +581,9 @@ function module:OnLogin()
 		if NDuiDB["Bags"]["SpecialBagsColor"] then
 			local bagType = module.BagsType[item.bagID]
 			local color = bagTypeColor[bagType] or bagTypeColor[0]
-			self.BG:SetBackdropColor(unpack(color))
+			self:SetBackdropColor(unpack(color))
 		else
-			self.BG:SetBackdropColor(.3, .3, .3, .3)
+			self:SetBackdropColor(.3, .3, .3, .3)
 		end
 	end
 
@@ -592,13 +591,13 @@ function module:OnLogin()
 		self.Quest:SetAlpha(0)
 
 		if item.isQuestItem then
-			self.BG:SetBackdropBorderColor(.8, .8, 0)
+			self:SetBackdropBorderColor(.8, .8, 0)
 			self.Quest:SetAlpha(1)
 		elseif item.rarity and item.rarity > -1 then
 			local color = DB.QualityColors[item.rarity]
-			self.BG:SetBackdropBorderColor(color.r, color.g, color.b)
+			self:SetBackdropBorderColor(color.r, color.g, color.b)
 		else
-			self.BG:SetBackdropBorderColor(0, 0, 0)
+			self:SetBackdropBorderColor(0, 0, 0)
 		end
 	end
 
@@ -608,9 +607,9 @@ function module:OnLogin()
 
 		local columns = self.Settings.Columns
 		local offset = 38
-		local spacing = 5
+		local spacing = 3
 		local xOffset = 5
-		local yOffset = -offset + spacing
+		local yOffset = -offset + xOffset
 		local _, height = self:LayoutButtons("grid", columns, spacing, xOffset, yOffset)
 		local width = columns * (iconSize+spacing)-spacing
 		if self.freeSlot then
@@ -646,7 +645,7 @@ function module:OnLogin()
 		self:SetParent(settings.Parent or Backpack)
 		self:SetFrameStrata("HIGH")
 		self:SetClampedToScreen(true)
-		B.SetBackground(self)
+		B.SetBD(self)
 		B.CreateMF(self, settings.Parent, true)
 
 		local label
@@ -712,10 +711,10 @@ function module:OnLogin()
 		self:SetPushedTexture(nil)
 		self:SetHighlightTexture(DB.bdTex)
 		self:GetHighlightTexture():SetVertexColor(1, 1, 1, .25)
+		self:GetHighlightTexture():SetInside()
 
 		self:SetSize(iconSize, iconSize)
-		self.BG = B.CreateBG(self)
-		B.CreateBD(self.BG, 0)
+		B.CreateBD(self, .25)
 		self.Icon:SetAllPoints()
 		self.Icon:SetTexCoord(unpack(DB.TexCoord))
 	end
@@ -727,9 +726,9 @@ function module:OnLogin()
 		if not quality or quality == 1 then quality = 0 end
 		local color = DB.QualityColors[quality]
 		if not self.hidden and not self.notBought then
-			self.BG:SetBackdropBorderColor(color.r, color.g, color.b)
+			self:SetBackdropBorderColor(color.r, color.g, color.b)
 		else
-			self.BG:SetBackdropBorderColor(0, 0, 0)
+			self:SetBackdropBorderColor(0, 0, 0)
 		end
 
 		if classID == LE_ITEM_CLASS_CONTAINER then
@@ -765,11 +764,4 @@ function module:OnLogin()
 	end
 	local shiftUpdater = CreateFrame("Frame", nil, f.main)
 	shiftUpdater:SetScript("OnUpdate", onUpdate)
-
-	-- Override AuroraClassic
-	if F then
-		AuroraOptionsbags:SetAlpha(0)
-		AuroraOptionsbags:Disable()
-		AuroraConfig.bags = false
-	end
 end

@@ -55,22 +55,16 @@ function module:SkinChat()
 	local eb = _G[name.."EditBox"]
 	eb:SetAltArrowKeyMode(false)
 	eb:ClearAllPoints()
-	eb:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 2, 24)
-	eb:SetPoint("TOPRIGHT", self, "TOPRIGHT", -13, 52)
-	B.CreateBD(eb)
-	B.CreateSD(eb)
-	B.CreateTex(eb)
-	for i = 3, 8 do
-		select(i, eb:GetRegions()):SetAlpha(0)
-	end
+	eb:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 4, 26)
+	eb:SetPoint("TOPRIGHT", self, "TOPRIGHT", -17, 50)
+	B.StripTextures(eb)
+	B.SetBD(eb)
 
 	local lang = _G[name.."EditBoxLanguage"]
 	lang:GetRegions():SetAlpha(0)
-	lang:SetPoint("TOPLEFT", eb, "TOPRIGHT", 2, 0)
-	lang:SetPoint("BOTTOMRIGHT", eb, "BOTTOMRIGHT", 30, 0)
-	B.CreateBD(lang)
-	B.CreateSD(lang)
-	B.CreateTex(lang)
+	lang:SetPoint("TOPLEFT", eb, "TOPRIGHT", 5, 0)
+	lang:SetPoint("BOTTOMRIGHT", eb, "BOTTOMRIGHT", 29, 0)
+	B.SetBD(lang)
 
 	local tab = _G[name.."Tab"]
 	tab:SetAlpha(1)
@@ -230,12 +224,30 @@ function module:UpdateTabColors(selected)
 	end
 end
 
+function module:ChatFrameBackground()
+	if not NDuiDB["Chat"]["Lock"] then return end
+	if not NDuiDB["Skins"]["ChatLine"] then return end
+
+	local cr, cg, cb = 0, 0, 0
+	if NDuiDB["Skins"]["ClassLine"] then cr, cg, cb = DB.r, DB.g, DB.b end
+
+	local Linfobar = CreateFrame("Frame", nil, UIParent)
+	Linfobar:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 0, 3)
+	B.CreateGF(Linfobar, 450, ChatFrame1:GetHeight() + 30, "Horizontal", 0, 0, 0, .5, 0)
+	local Linfobar1 = CreateFrame("Frame", nil, Linfobar)
+	Linfobar1:SetPoint("BOTTOM", Linfobar, "TOP")
+	B.CreateGF(Linfobar1, 450, C.mult, "Horizontal", cr, cg, cb, .7, 0)
+	local Linfobar2 = CreateFrame("Frame", nil, Linfobar)
+	Linfobar2:SetPoint("BOTTOM", Linfobar, "BOTTOM", 0, 18)
+	B.CreateGF(Linfobar2, 450, C.mult, "Horizontal", cr, cg, cb, .7, 0)
+	local Linfobar3 = CreateFrame("Frame", nil, Linfobar)
+	Linfobar3:SetPoint("TOP", Linfobar, "BOTTOM")
+	B.CreateGF(Linfobar3, 450, C.mult, "Horizontal", cr, cg, cb, .7, 0)
+	ChatFrame1.gradientBG = Linfobar
+end
+
 function module:OnLogin()
-	if AuroraConfig and not AuroraConfig.reskinFont then
-		fontOutline = ""
-	else
-		fontOutline = "OUTLINE"
-	end
+	fontOutline = NDuiDB["Skins"]["FontOutline"] and "OUTLINE" or ""
 
 	for i = 1, NUM_CHAT_WINDOWS do
 		self.SkinChat(_G["ChatFrame"..i])
@@ -271,6 +283,7 @@ function module:OnLogin()
 	self:ChatCopy()
 	self:UrlCopy()
 	self:WhisperInvite()
+	self:ChatFrameBackground()
 
 	-- Lock chatframe
 	if NDuiDB["Chat"]["Lock"] then

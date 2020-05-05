@@ -1,6 +1,9 @@
 local _, ns = ...
 local B, C, L, DB = unpack(ns)
 
+local bit_band, bit_bor = bit.band, bit.bor
+local COMBATLOG_OBJECT_AFFILIATION_MINE = COMBATLOG_OBJECT_AFFILIATION_MINE or 0x00000001
+
 DB.Version = GetAddOnMetadata("NDui", "Version")
 DB.Support = GetAddOnMetadata("NDui", "X-Support")
 DB.Client = GetLocale()
@@ -11,6 +14,7 @@ DB.isClassic = select(4, GetBuildInfo()) < 20000
 DB.MyName = UnitName("player")
 DB.MyRealm = GetRealmName()
 DB.MyClass = select(2, UnitClass("player"))
+DB.MyFaction = UnitFactionGroup("player")
 DB.ClassList = {}
 for k, v in pairs(LOCALIZED_CLASS_NAMES_MALE) do
 	DB.ClassList[v] = k
@@ -39,7 +43,6 @@ DB.QualityColors[LE_ITEM_QUALITY_COMMON] = {r = 0, g = 0, b = 0}
 
 -- Fonts
 DB.Font = {STANDARD_TEXT_FONT, 12, "OUTLINE"}
-DB.TipFont = {GameTooltipText:GetFont(), 14, "OUTLINE"}
 DB.LineString = DB.GreyColor.."---------------"
 
 -- Textures
@@ -52,9 +55,14 @@ DB.flatTex = Media.."flatTex"
 DB.bgTex = Media.."bgTex"
 DB.arrowTex = Media.."NeonRedArrow"
 DB.MicroTex = Media.."Hutu\\Menu\\"
+DB.rolesTex = Media.."Hutu\\RoleIcons"
 DB.chatLogo = Media.."Hutu\\logoSmall"
 DB.logoTex = Media.."Hutu\\logoClassic"
 DB.sortTex = Media.."SortIcon"
+DB.arrowUp = Media.."arrow-up-active"
+DB.arrowDown = Media.."arrow-down-active"
+DB.arrowLeft = Media.."arrow-left-active"
+DB.arrowRight = Media.."arrow-right-active"
 DB.mailTex = "Interface\\Minimap\\Tracking\\Mailbox"
 DB.gearTex = "Interface\\WorldMap\\Gear_64"
 DB.eyeTex = "Interface\\Minimap\\Raid_Icon"		-- blue: \\Dungeon_Icon
@@ -72,7 +80,6 @@ DB.textures = {
 	flash		= Media.."ActionBar\\flash",
 	pushed		= Media.."ActionBar\\pushed",
 	checked		= Media.."ActionBar\\checked",
-	equipped	= Media.."ActionBar\\gloss",
 }
 DB.LeftButton = " |TInterface\\TUTORIALFRAME\\UI-TUTORIAL-FRAME:13:11:0:-1:512:512:12:66:230:307|t "
 DB.RightButton = " |TInterface\\TUTORIALFRAME\\UI-TUTORIAL-FRAME:13:11:0:-1:512:512:12:66:333:411|t "
@@ -81,10 +88,11 @@ DB.AFKTex = "|T"..FRIENDS_TEXTURE_AFK..":14:14:0:0:16:16:1:15:1:15|t"
 DB.DNDTex = "|T"..FRIENDS_TEXTURE_DND..":14:14:0:0:16:16:1:15:1:15|t"
 
 -- Flags
-DB.MyPetFlags = bit.bor(COMBATLOG_OBJECT_AFFILIATION_MINE, COMBATLOG_OBJECT_REACTION_FRIENDLY, COMBATLOG_OBJECT_CONTROL_PLAYER, COMBATLOG_OBJECT_TYPE_PET)
-DB.PartyPetFlags = bit.bor(COMBATLOG_OBJECT_AFFILIATION_PARTY, COMBATLOG_OBJECT_REACTION_FRIENDLY, COMBATLOG_OBJECT_CONTROL_PLAYER, COMBATLOG_OBJECT_TYPE_PET)
-DB.RaidPetFlags = bit.bor(COMBATLOG_OBJECT_AFFILIATION_RAID, COMBATLOG_OBJECT_REACTION_FRIENDLY, COMBATLOG_OBJECT_CONTROL_PLAYER, COMBATLOG_OBJECT_TYPE_PET)
-DB.GuardianFlags = bit.bor(COMBATLOG_OBJECT_AFFILIATION_MINE, COMBATLOG_OBJECT_REACTION_FRIENDLY, COMBATLOG_OBJECT_CONTROL_PLAYER, COMBATLOG_OBJECT_TYPE_GUARDIAN)
+function DB:IsMyPet(flags)
+	return bit_band(flags, COMBATLOG_OBJECT_AFFILIATION_MINE) > 0
+end
+DB.PartyPetFlags = bit_bor(COMBATLOG_OBJECT_AFFILIATION_PARTY, COMBATLOG_OBJECT_REACTION_FRIENDLY, COMBATLOG_OBJECT_CONTROL_PLAYER, COMBATLOG_OBJECT_TYPE_PET)
+DB.RaidPetFlags = bit_bor(COMBATLOG_OBJECT_AFFILIATION_RAID, COMBATLOG_OBJECT_REACTION_FRIENDLY, COMBATLOG_OBJECT_CONTROL_PLAYER, COMBATLOG_OBJECT_TYPE_PET)
 
 --[[ RoleUpdater
 local function CheckRole()
@@ -109,10 +117,10 @@ B:RegisterEvent("CHARACTER_POINTS_CHANGED", CheckRole)]]
 -- Raidbuff Checklist
 DB.BuffList = {
 	[1] = {		-- 合剂
-		251836,	-- 敏捷238
-		251837,	-- 智力238
-		251838,	-- 耐力238
-		251839,	-- 力量238
+		--251836,	-- 敏捷238
+		--251837,	-- 智力238
+		--251838,	-- 耐力238
+		--251839,	-- 力量238
 		298836,	-- 敏捷360
 		298837,	-- 智力360
 		298839,	-- 耐力360

@@ -1,10 +1,10 @@
 local _, ns = ...
-local B, C, L, DB, F, T = unpack(ns)
+local B, C, L, DB = unpack(ns)
 local S = B:GetModule("Skins")
 
 function S:CharacterStatsClassic()
 	if not IsAddOnLoaded("CharacterStatsClassic") then return end
-	if not F then return end
+	if not NDuiDB["Skins"]["BlizzardSkins"] then return end
 
 	local cr, cg, cb = DB.r, DB.g, DB.b
 	if CharacterStatsClassicDB.expandStat == nil then
@@ -15,11 +15,11 @@ function S:CharacterStatsClassic()
 	for i = 1, CharacterFrame:GetNumChildren() do
 		local child = select(i, CharacterFrame:GetChildren())
 		if child and child.leftStatsDropDown then
-			F.ReskinDropDown(child.leftStatsDropDown)
+			B.ReskinDropDown(child.leftStatsDropDown)
 			leftDropDown = child.leftStatsDropDown
 		end
 		if child and child.rightStatsDropDown then
-			F.ReskinDropDown(child.rightStatsDropDown)
+			B.ReskinDropDown(child.rightStatsDropDown)
 			rightDropDown = child.rightStatsDropDown
 		end
 	end
@@ -29,7 +29,7 @@ function S:CharacterStatsClassic()
 	local statPanel = CreateFrame("Frame", nil, PaperDollFrame)
 	statPanel:SetSize(200, 422)
 	statPanel:SetPoint("TOPLEFT", PaperDollFrame, "TOPRIGHT", -32, -15-C.mult)
-	F.SetBD(statPanel)
+	B.SetBD(statPanel)
 
 	local scrollFrame = CreateFrame("ScrollFrame", nil, statPanel, "UIPanelScrollFrameTemplate")
 	scrollFrame:SetAllPoints()
@@ -127,7 +127,7 @@ function S:CharacterStatsClassic()
 	bu:SetSize(17, 17)
 	bu:SetPoint("RIGHT", CharacterFrameCloseButton, "LEFT", -3, 0)
 	bu:SetNormalTexture("Interface\\Buttons\\UI-MinusButton-Up")
-	F.ReskinExpandOrCollapse(bu)
+	B.ReskinExpandOrCollapse(bu)
 	bu.bg:SetSize(17, 17)
 	bu:SetNormalTexture("Interface\\Buttons\\UI-MinusButton-Up")
 	bu.collapse = not CharacterStatsClassicDB.expandStat
@@ -157,23 +157,23 @@ end
 
 function S:WhatsTraining()
 	if not IsAddOnLoaded("WhatsTraining") then return end
-	if not F then return end
+	if not NDuiDB["Skins"]["BlizzardSkins"] then return end
 
 	local done
 	SpellBookFrame:HookScript("OnShow", function()
 		if done then return end
 
-		F.StripTextures(WhatsTrainingFrame)
-		local bg = F.CreateBDFrame(WhatsTrainingFrameScrollBar, 1)
+		B.StripTextures(WhatsTrainingFrame)
+		local bg = B.CreateBDFrame(WhatsTrainingFrameScrollBar, 1)
 		bg:SetPoint("TOPLEFT", 20, 0)
 		bg:SetPoint("BOTTOMRIGHT", 4, 0)
-		F.ReskinScroll(WhatsTrainingFrameScrollBarScrollBar)
+		B.ReskinScroll(WhatsTrainingFrameScrollBarScrollBar)
 		B:GetModule("Tooltip").ReskinTooltip(WhatsTrainingTooltip)
 
 		for i = 1, 22 do
 			local bar = _G["WhatsTrainingFrameRow"..i.."Spell"]
 			if bar and bar.icon then
-				F.ReskinIcon(bar.icon)
+				B.ReskinIcon(bar.icon)
 			end
 		end
 
@@ -226,33 +226,33 @@ function S:RecountSkin()
 	if NDuiDB["Skins"]["ResetRecount"] then S:ResetRecount() end
 	hooksecurefunc(Recount, "ResetPositions", S.ResetRecount)
 
-	if F then
-		F.ReskinArrow(frame.LeftButton, "left")
-		F.ReskinArrow(frame.RightButton, "right")
-		F.ReskinClose(frame.CloseButton, "TOPRIGHT", frame.bg, "TOPRIGHT", -2, -2)
+	if NDuiDB["Skins"]["BlizzardSkins"] then
+		B.ReskinArrow(frame.LeftButton, "left")
+		B.ReskinArrow(frame.RightButton, "right")
+		B.ReskinClose(frame.CloseButton, "TOPRIGHT", frame.bg, "TOPRIGHT", -2, -2)
 	end
 end
 
 function S:BindPad()
 	if not IsAddOnLoaded("BindPad") then return end
-	if not F then return end
+	if not NDuiDB["Skins"]["BlizzardSkins"] then return end
 
-	BindPadFrame.bg = F.ReskinPortraitFrame(BindPadFrame, 10, -10, -30, 70)
+	BindPadFrame.bg = B.ReskinPortraitFrame(BindPadFrame, 10, -10, -30, 70)
 	for i = 1, 4 do
-		F.ReskinTab(_G["BindPadFrameTab"..i])
+		B.ReskinTab(_G["BindPadFrameTab"..i])
 	end
-	F.ReskinScroll(BindPadScrollFrameScrollBar)
-	F.ReskinCheck(BindPadFrameCharacterButton)
-	F.ReskinCheck(BindPadFrameSaveAllKeysButton)
-	F.ReskinCheck(BindPadFrameShowHotkeyButton)
-	F.Reskin(BindPadFrameExitButton)
-	F.ReskinArrow(BindPadShowLessSlotButton, "left")
-	F.ReskinArrow(BindPadShowMoreSlotButton, "right")
+	B.ReskinScroll(BindPadScrollFrameScrollBar)
+	B.ReskinCheck(BindPadFrameCharacterButton)
+	B.ReskinCheck(BindPadFrameSaveAllKeysButton)
+	B.ReskinCheck(BindPadFrameShowHotkeyButton)
+	B.Reskin(BindPadFrameExitButton)
+	B.ReskinArrow(BindPadShowLessSlotButton, "left")
+	B.ReskinArrow(BindPadShowMoreSlotButton, "right")
 
-	F.StripTextures(BindPadDialogFrame)
-	F.SetBD(BindPadDialogFrame)
-	F.Reskin(BindPadDialogFrame.cancelbutton)
-	F.Reskin(BindPadDialogFrame.okaybutton)
+	B.StripTextures(BindPadDialogFrame)
+	B.SetBD(BindPadDialogFrame)
+	B.Reskin(BindPadDialogFrame.cancelbutton)
+	B.Reskin(BindPadDialogFrame.okaybutton)
 
 	hooksecurefunc("BindPadSlot_UpdateState", function(slot)
 		if slot.styled then return end
@@ -260,10 +260,10 @@ function S:BindPad()
 		slot:DisableDrawLayer("ARTWORK")
 		slot:GetHighlightTexture():SetColorTexture(1, 1, 1, .25)
 		slot.icon:SetTexCoord(unpack(DB.TexCoord))
-		F.CreateBDFrame(slot, .25)
+		B.CreateBDFrame(slot, .25)
 		slot.border:SetTexture()
 
-		F.StripTextures(slot.addbutton)
+		B.StripTextures(slot.addbutton)
 		local nt = slot.addbutton:GetNormalTexture()
 		nt:SetTexture("Interface\\Buttons\\UI-PlusMinus-Buttons")
 		nt:SetTexCoord(0, .4375, 0, .4375)
@@ -271,14 +271,14 @@ function S:BindPad()
 		slot.styled = true
 	end)
 
-	F.StripTextures(BindPadMacroPopupFrame)
+	B.StripTextures(BindPadMacroPopupFrame)
 	BindPadMacroPopupFrame:SetPoint("TOPLEFT", BindPadFrame.bg, "TOPRIGHT", 3, -40)
-	F.SetBD(BindPadMacroPopupFrame)
-	F.StripTextures(BindPadMacroPopupEditBox)
-	F.CreateBD(BindPadMacroPopupEditBox, .25)
-	F.ReskinScroll(BindPadMacroPopupScrollFrameScrollBar)
-	F.Reskin(BindPadMacroPopupOkayButton)
-	F.Reskin(BindPadMacroPopupCancelButton)
+	B.SetBD(BindPadMacroPopupFrame)
+	B.StripTextures(BindPadMacroPopupEditBox)
+	B.CreateBD(BindPadMacroPopupEditBox, .25)
+	B.ReskinScroll(BindPadMacroPopupScrollFrameScrollBar)
+	B.Reskin(BindPadMacroPopupOkayButton)
+	B.Reskin(BindPadMacroPopupCancelButton)
 
 	hooksecurefunc("BindPadMacroPopupFrame_Update", function()
 		for i = 1, 20 do
@@ -286,7 +286,7 @@ function S:BindPad()
 			local ic = _G["BindPadMacroPopupButton"..i.."Icon"]
 
 			if not bu.styled then
-				bu:SetCheckedTexture(T.media.checked)
+				bu:SetCheckedTexture(DB.textures.pushed)
 				select(2, bu:GetRegions()):Hide()
 				local hl = bu:GetHighlightTexture()
 				hl:SetColorTexture(1, 1, 1, .25)
@@ -295,30 +295,30 @@ function S:BindPad()
 				ic:SetPoint("TOPLEFT", C.mult, -C.mult)
 				ic:SetPoint("BOTTOMRIGHT", -C.mult, C.mult)
 				ic:SetTexCoord(unpack(DB.TexCoord))
-				F.CreateBD(bu, .25)
+				B.CreateBD(bu, .25)
 
 				bu.styled = true
 			end
 		end
 	end)
 
-	F.StripTextures(BindPadBindFrame)
-	F.SetBD(BindPadBindFrame)
-	F.ReskinClose(BindPadBindFrameCloseButton)
-	F.ReskinCheck(BindPadBindFrameForAllCharacterButton)
-	F.Reskin(BindPadBindFrameUnbindButton)
-	F.Reskin(BindPadBindFrameExitButton)
+	B.StripTextures(BindPadBindFrame)
+	B.SetBD(BindPadBindFrame)
+	B.ReskinClose(BindPadBindFrameCloseButton)
+	B.ReskinCheck(BindPadBindFrameForAllCharacterButton)
+	B.Reskin(BindPadBindFrameUnbindButton)
+	B.Reskin(BindPadBindFrameExitButton)
 
-	F.ReskinPortraitFrame(BindPadMacroFrame, 10, -10, -30, 70)
-	F.ReskinScroll(BindPadMacroFrameScrollFrameScrollBar)
-	F.Reskin(BindPadMacroFrameEditButton)
-	F.Reskin(BindPadMacroDeleteButton)
-	F.Reskin(BindPadMacroFrameTestButton)
-	F.Reskin(BindPadMacroFrameExitButton)
-	F.StripTextures(BindPadMacroFrameTextBackground)
-	F.CreateBDFrame(BindPadMacroFrameTextBackground, .25)
-	F.StripTextures(BindPadMacroFrameSlotButton)
-	F.ReskinIcon(BindPadMacroFrameSlotButtonIcon)
+	B.ReskinPortraitFrame(BindPadMacroFrame, 10, -10, -30, 70)
+	B.ReskinScroll(BindPadMacroFrameScrollFrameScrollBar)
+	B.Reskin(BindPadMacroFrameEditButton)
+	B.Reskin(BindPadMacroDeleteButton)
+	B.Reskin(BindPadMacroFrameTestButton)
+	B.Reskin(BindPadMacroFrameExitButton)
+	B.StripTextures(BindPadMacroFrameTextBackground)
+	B.CreateBDFrame(BindPadMacroFrameTextBackground, .25)
+	B.StripTextures(BindPadMacroFrameSlotButton)
+	B.ReskinIcon(BindPadMacroFrameSlotButtonIcon)
 end
 
 function S:LoadOtherSkins()

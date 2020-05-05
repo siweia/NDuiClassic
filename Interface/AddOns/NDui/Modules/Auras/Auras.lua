@@ -7,7 +7,7 @@ local format, floor, strmatch, select, unpack = format, floor, strmatch, select,
 local DebuffTypeColor = _G.DebuffTypeColor
 local UnitAura, GetTime = UnitAura, GetTime
 local GetInventoryItemQuality, GetInventoryItemTexture, GetItemQualityColor, GetWeaponEnchantInfo = GetInventoryItemQuality, GetInventoryItemTexture, GetItemQualityColor, GetWeaponEnchantInfo
-local margin, offset, settings = 6, 12
+local margin, offset, settings = 3, 12
 
 function A:OnLogin()
 	-- Config
@@ -123,9 +123,9 @@ function A:UpdateAuras(button, index)
 
 		if filter == "HARMFUL" then
 			local color = DebuffTypeColor[debuffType or "none"]
-			button.Shadow:SetBackdropBorderColor(color.r, color.g, color.b)
+			button:SetBackdropBorderColor(color.r, color.g, color.b)
 		else
-			button.Shadow:SetBackdropBorderColor(0, 0, 0)
+			button:SetBackdropBorderColor(0, 0, 0)
 		end
 
 		button.icon:SetTexture(texture)
@@ -245,7 +245,7 @@ function A:CreateAuraIcon(button)
 	local fontSize = floor(cfg.size/30*12 + .5)
 
 	button.icon = button:CreateTexture(nil, "BORDER")
-	button.icon:SetAllPoints()
+	button.icon:SetInside()
 	button.icon:SetTexCoord(unpack(DB.TexCoord))
 
 	button.count = button:CreateFontString(nil, "ARTWORK")
@@ -258,10 +258,10 @@ function A:CreateAuraIcon(button)
 
 	button.highlight = button:CreateTexture(nil, "HIGHLIGHT")
 	button.highlight:SetColorTexture(1, 1, 1, .25)
-	button.highlight:SetAllPoints(button.icon)
+	button.highlight:SetInside()
 
-	local bg = B.CreateBG(button)
-	button.Shadow = B.CreateSD(bg)
+	B.CreateBD(button, .25)
+	B.CreateSD(button)
 
 	button:SetScript("OnAttributeChanged", A.OnAttributeChanged)
 end

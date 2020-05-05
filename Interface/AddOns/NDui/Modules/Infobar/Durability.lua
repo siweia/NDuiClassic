@@ -1,5 +1,5 @@
 local _, ns = ...
-local B, C, L, DB, F = unpack(ns)
+local B, C, L, DB = unpack(ns)
 if not C.Infobar.Durability then return end
 
 local module = B:GetModule("Infobar")
@@ -80,7 +80,7 @@ info.eventList = {
 
 info.onEvent = function(self, event)
 	if event == "PLAYER_ENTERING_WORLD" then
-		if F then F.ReskinClose(inform.CloseButton) end
+		B.ReskinClose(inform.CloseButton)
 		self:UnregisterEvent("PLAYER_ENTERING_WORLD")
 	end
 

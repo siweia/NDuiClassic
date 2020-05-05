@@ -49,6 +49,7 @@ function M:OnLogin()
 	self:AutoDismount()
 	self:BidPriceHighlight()
 	self:TradeTabs()
+	self:BlockStrangerInvite()
 
 	-- Max camera distancee
 	if tonumber(GetCVar("cameraDistanceMaxZoomFactor")) ~= 2.6 then
@@ -443,4 +444,14 @@ function M:AutoDismount()
 		end
 	end
 	B:RegisterEvent("UI_ERROR_MESSAGE", updateEvent)
+end
+
+-- Block invite from strangers
+function M:BlockStrangerInvite()
+	B:RegisterEvent("PARTY_INVITE_REQUEST", function(_, _, _, _, _, _, _, guid)
+		if NDuiDB["Misc"]["BlockInvite"] and not (IsGuildMember(guid) or BNGetGameAccountInfoByGUID(guid) or C_FriendList_IsFriend(guid)) then
+			DeclineGroup()
+			StaticPopup_Hide("PARTY_INVITE")
+		end
+	end)
 end

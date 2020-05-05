@@ -50,7 +50,7 @@ for spellID in pairs(spellBlackList) do
 end
 
 function M:IsAllyPet(sourceFlags)
-	if sourceFlags == DB.MyPetFlags or (not NDuiDB["Misc"]["OwnInterrupt"] and (sourceFlags == DB.PartyPetFlags or sourceFlags == DB.RaidPetFlags)) then
+	if DB:IsMyPet(sourceFlags) or (not NDuiDB["Misc"]["OwnInterrupt"] and (sourceFlags == DB.PartyPetFlags or sourceFlags == DB.RaidPetFlags)) then
 		return true
 	end
 end
@@ -100,17 +100,14 @@ end
 	NDui版本过期提示
 ]]
 function M:VersionCheck_Compare(new, old)
-	local new1, new2 = strsplit(".", new)
-	new1, new2 = tonumber(new1), tonumber(new2)
-	if new1 >= 2 then new1, new2 = 0, 0 end
-
-	local old1, old2 = strsplit(".", old)
-	old1, old2 = tonumber(old1), tonumber(old2)
-	if old1 >= 2 then old1, old2 = 0, 0 end
-
-	if new1 > old1 or (new1 == old1 and new2 > old2) then
+	new = gsub(new, "(%.%d+)$", "")
+	new = tonumber(new) or 0
+	if new > 2 then new = 0 end -- Version must below 2.0
+	old = gsub(old, "(%.%d+)$", "")
+	old = tonumber(old)
+	if new > old then
 		return "IsNew"
-	elseif new1 < old1 or (new1 == old1 and new2 < old2) then
+	elseif new < old then
 		return "IsOld"
 	end
 end
@@ -126,7 +123,7 @@ local hasChecked
 function M:VersionCheck_Initial()
 	if not hasChecked then
 		if M:VersionCheck_Compare(NDuiADB["DetectVersion"], DB.Version) == "IsNew" then
-			local release = gsub(NDuiADB["DetectVersion"], "(%d)$", "0")
+			local release = gsub(NDuiADB["DetectVersion"], "(%d+)$", "0")
 			M:VersionCheck_Create(format(L["Outdated NDui"], release))
 		end
 

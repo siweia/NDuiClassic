@@ -1,0 +1,19 @@
+local _, ns = ...
+local B, C, L, DB = unpack(ns)
+
+tinsert(C.defaultThemes, function()
+	ScriptErrorsFrame:SetScale(UIParent:GetScale())
+	ScriptErrorsFrame:SetSize(386, 274)
+	ScriptErrorsFrame:DisableDrawLayer("OVERLAY")
+	ScriptErrorsFrameTitleBG:Hide()
+	ScriptErrorsFrameDialogBG:Hide()
+	B.CreateBD(ScriptErrorsFrame)
+	B.CreateSD(ScriptErrorsFrame)
+
+	B.Reskin(select(4, ScriptErrorsFrame:GetChildren()))
+	B.ReskinArrow(select(5, ScriptErrorsFrame:GetChildren()), "left")
+	B.ReskinArrow(select(6, ScriptErrorsFrame:GetChildren()), "right")
+	B.Reskin(select(7, ScriptErrorsFrame:GetChildren()))
+	B.ReskinScroll(ScriptErrorsFrameScrollBar)
+	B.ReskinClose(ScriptErrorsFrameClose)
+end)

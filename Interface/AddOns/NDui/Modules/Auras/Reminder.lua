@@ -5,7 +5,7 @@ local A = B:GetModule("Auras")
 local groups = DB.ReminderBuffs[DB.MyClass]
 local iconSize = C.Auras.IconSize + 4
 local frames, parentFrame = {}
-local InCombatLockdown, GetZonePVPInfo = InCombatLockdown, GetZonePVPInfo
+local InCombatLockdown, GetZonePVPInfo, UnitIsDeadOrGhost = InCombatLockdown, GetZonePVPInfo, UnitIsDeadOrGhost
 local IsInInstance, IsPlayerSpell, UnitBuff, GetSpellTexture = IsInInstance, IsPlayerSpell, UnitBuff, GetSpellTexture
 local pairs, tinsert, next = pairs, table.insert, next
 
@@ -38,7 +38,7 @@ function A:Reminder_Update(cfg)
 	if not combat and not instance and not pvp then isInCombat, isInInst, isInPVP = true, true, true end
 
 	frame:Hide()
-	if isPlayerSpell and (isInCombat or isInInst or isInPVP) then
+	if isPlayerSpell and (isInCombat or isInInst or isInPVP) and not UnitIsDeadOrGhost("player") then
 		for i = 1, 32 do
 			local name = UnitBuff("player", i)
 			if not name then break end

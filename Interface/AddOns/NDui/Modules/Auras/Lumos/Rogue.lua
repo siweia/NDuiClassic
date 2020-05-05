@@ -22,7 +22,7 @@ function A:PostCreateLumos(self)
 		bu.Text = B.CreateFS(bu, 12, diceSpells[i].text, false, "TOP", 1, 12)
 		B.AuraIcon(bu)
 		if i == 1 then
-			bu:SetPoint("BOTTOMLEFT", self.ClassPower[1], "TOPLEFT", 0, 5)
+			bu:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", 0, 8 + self.Health:GetHeight())
 		else
 			bu:SetPoint("LEFT", buttons[i-1], "RIGHT", 2, 0)
 		end
@@ -85,34 +85,21 @@ function A:ChantLumos(self)
 		UpdateDebuff(self.bu[5], 79140, 79140, true, true)
 	elseif GetSpecialization() == 2 then
 		UpdateBuff(self.bu[1], 195627, 195627)
+		UpdateCooldown(self.bu[2], 199804, true)
 
 		do
-			local button = self.bu[2]
+			local button = self.bu[3]
 			if IsPlayerSpell(5171) then
 				UpdateBuff(button, 5171, 5171)
 			elseif IsPlayerSpell(193539) then
 				UpdateBuff(button, 193539, 193538)
 			else
-				UpdateCooldown(button, 199804, true)
+				UpdateBuff(button, 31224, 31224, true, true)
 			end
 		end
 
-		local hasBlade
-		do
-			local button = self.bu[3]
-			if IsPlayerSpell(51690) then
-				UpdateBuff(button, 51690, 51690, true)
-			elseif IsPlayerSpell(271877) then
-				UpdateCooldown(button, 271877, true)
-			else
-				UpdateBuff(button, 13877, 13877, true, true)
-				hasBlade = true
-			end
-		end
 		UpdateBuff(self.bu[4], 13750, 13750, true, true)
-
-		local spellID = hasBlade and 31224 or 13877
-		UpdateBuff(self.bu[5], spellID, spellID, true, true)
+		UpdateBuff(self.bu[5], 13877, 13877, true, true)
 
 		-- Dices
 		for i = 1, 6 do

@@ -1,5 +1,5 @@
 local _, ns = ...
-local B, C, L, DB, F, T = unpack(ns)
+local B, C, L, DB = unpack(ns)
 local M = B:GetModule("Misc")
 
 local pairs, unpack, tinsert = pairs, unpack, tinsert
@@ -102,13 +102,14 @@ function M:TradeTabs_Update()
 end
 
 function M:TradeTabs_Reskin()
-	if not F then return end
+	if not NDuiDB["Skins"]["BlizzardSkins"] then return end
 
 	for _, tab in pairs(tabList) do
-		tab:SetCheckedTexture(T.media.checked)
+		tab:SetCheckedTexture(DB.textures.pushed)
 		tab:GetRegions():Hide()
-		F.CreateBG(tab)
-		tab:GetNormalTexture():SetTexCoord(unpack(DB.TexCoord))
+		B.CreateBDFrame(tab)
+		local texture = tab:GetNormalTexture()
+		if texture then texture:SetTexCoord(unpack(DB.TexCoord)) end
 	end
 end
 
@@ -133,7 +134,7 @@ function M:TradeTabs_Create(spellID)
 	cover:EnableMouse(true)
 	tab.cover = cover
 
-	tab:SetPoint("TOPLEFT", TradeSkillFrame, "TOPRIGHT", F and -30 or -33, -70 - (index-1)*45)
+	tab:SetPoint("TOPLEFT", TradeSkillFrame, "TOPRIGHT", NDuiDB["Skins"]["BlizzardSkins"] and -30 or -33, -70 - (index-1)*45)
 	tinsert(tabList, tab)
 	index = index + 1
 

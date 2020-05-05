@@ -1,5 +1,5 @@
 local _, ns = ...
-local B, C, L, DB, F = unpack(ns)
+local B, C, L, DB = unpack(ns)
 local S = B:GetModule("Skins")
 
 local skinIndex = 0
@@ -125,7 +125,7 @@ function S:EnhancedTradeSkill()
 
 	-- Position close box
 	TradeSkillFrameCloseButton:ClearAllPoints()
-	TradeSkillFrameCloseButton:SetPoint("TOPRIGHT", TradeSkillFrame, "TOPRIGHT", -30, -8)
+	TradeSkillFrameCloseButton:SetPoint("TOPRIGHT", TradeSkillFrame, "TOPRIGHT", -34, -13)
 
 	-- Position dropdown menus
 	TradeSkillInvSlotDropDown:ClearAllPoints()
@@ -133,8 +133,8 @@ function S:EnhancedTradeSkill()
 	TradeSkillSubClassDropDown:ClearAllPoints()
 	TradeSkillSubClassDropDown:SetPoint("RIGHT", TradeSkillInvSlotDropDown, "LEFT", 0, 0)
 
-	-- AuroraClassic
-	if F then
+	-- Reskin
+	if NDuiDB["Skins"]["BlizzardSkins"] then
 		regions[2]:Hide()
 		regions[3]:Hide()
 		RecipeInset:Hide()
@@ -258,9 +258,10 @@ function S:EnhancedCraft()
 
 	-- Position close box
 	CraftFrameCloseButton:ClearAllPoints()
-	CraftFrameCloseButton:SetPoint("TOPRIGHT", CraftFrame, "TOPRIGHT", -30, -8)
+	CraftFrameCloseButton:SetPoint("TOPRIGHT", CraftFrame, "TOPRIGHT", -34, -13)
 
-	if F then
+	-- Reskin
+	if NDuiDB["Skins"]["BlizzardSkins"] then
 		regions[2]:Hide()
 		regions[3]:Hide()
 		RecipeInset:Hide()

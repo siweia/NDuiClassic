@@ -209,24 +209,25 @@ local function BuildICON(iconSize)
 
 	local frame = CreateFrame("Frame", nil, PetBattleFrameHider)
 	frame:SetSize(iconSize, iconSize)
-	B.CreateSD(frame, 3, 3)
+	frame.bg = B.SetBD(frame)
 
 	frame.Icon = frame:CreateTexture(nil, "ARTWORK")
-	frame.Icon:SetAllPoints()
+	frame.Icon:SetInside(frame.bg)
 	frame.Icon:SetTexCoord(unpack(DB.TexCoord))
 
 	frame.Cooldown = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate")
-	frame.Cooldown:SetAllPoints()
+	frame.Cooldown:SetInside(frame.bg)
 	frame.Cooldown:SetReverse(true)
 
 	local parentFrame = CreateFrame("Frame", nil, frame)
 	parentFrame:SetAllPoints()
-	parentFrame:SetFrameLevel(frame:GetFrameLevel() + 5)
+	parentFrame:SetFrameLevel(frame:GetFrameLevel() + 6)
 
 	frame.Spellname = B.CreateFS(parentFrame, 13, "", false, "TOP", 0, 5)
 	frame.Count = B.CreateFS(parentFrame, iconSize*.55, "", false, "BOTTOMRIGHT", 6, -3)
-	frame.glowFrame = B.CreateBG(frame, 4)
-	frame.glowFrame:SetSize(iconSize+8, iconSize+8)
+
+	frame.glowFrame = B.CreateGlowFrame(frame, iconSize)
+
 	if not NDuiDB["AuraWatch"]["ClickThrough"] then enableTooltip(frame) end
 
 	frame:Hide()
@@ -237,7 +238,7 @@ end
 local function BuildBAR(barWidth, iconSize)
 	local frame = CreateFrame("Frame", nil, PetBattleFrameHider)
 	frame:SetSize(iconSize, iconSize)
-	B.CreateSD(frame, 2, 2)
+	B.SetBD(frame)
 
 	frame.Icon = frame:CreateTexture(nil, "ARTWORK")
 	frame.Icon:SetAllPoints()
@@ -383,8 +384,7 @@ function A:AuraWatch_UpdateCD()
 					if group.Mode:lower() == "icon" then name = nil end
 					if charges and maxCharges and maxCharges > 1 and charges < maxCharges then
 						A:AuraWatch_SetupCD(KEY, name, icon, chargeStart, chargeDuration, true, 1, value.SpellID, charges)
-					--elseif start and duration > 1.5 then
-					elseif start and duration > 3 then -- FOR CLASSIC WOW
+					elseif start and duration > 3 then
 						A:AuraWatch_SetupCD(KEY, name, icon, start, duration, true, 1, value.SpellID)
 					end
 				elseif value.ItemID then
@@ -599,7 +599,7 @@ local eventList = {
 }
 
 local function checkPetFlags(sourceFlags, all)
-	if sourceFlags == DB.MyPetFlags or (all and (sourceFlags == DB.PartyPetFlags or sourceFlags == DB.RaidPetFlags)) then
+	if DB:IsMyPet(sourceFlags) or (all and (sourceFlags == DB.PartyPetFlags or sourceFlags == DB.RaidPetFlags)) then
 		return true
 	end
 end
@@ -695,16 +695,6 @@ end
 updater:SetScript("OnUpdate", A.AuraWatch_OnUpdate)
 
 -- Mover
-StaticPopupDialogs["RESET_AURAWATCH_MOVER"] = {
-	text = L["Reset AuraWatch Mover Confirm"],
-	button1 = OKAY,
-	button2 = CANCEL,
-	OnAccept = function()
-		wipe(NDuiDB["AuraWatchMover"])
-		ReloadUI()
-	end,
-}
-
 SlashCmdList.AuraWatch = function(msg)
 	if msg:lower() == "move" then
 		updater:SetScript("OnUpdate", nil)

@@ -1,5 +1,5 @@
 local _, ns = ...
-local B, C, L, DB, F = unpack(ns)
+local B, C, L, DB = unpack(ns)
 local G = B:RegisterModule("GUI")
 
 local tonumber, tostring, pairs, ipairs, next, select, type = tonumber, tostring, pairs, ipairs, next, select, type
@@ -32,6 +32,7 @@ local defaultSettings = {
 		Scale = 1,
 		BindType = 1,
 		OverrideWA = false,
+		MicroMenu = true,
 	},
 	Bags = {
 		Enable = true,
@@ -45,9 +46,9 @@ local defaultSettings = {
 		DeleteButton = true,
 		FavouriteItems = {},
 		GatherEmpty = false,
-		SpecialBagsColor = true,
 		ShowNewItem = true,
 		SplitCount = 1,
+		SpecialBagsColor = false,
 		iLvlToShow = 1,
 
 		FilterJunk = true,
@@ -68,7 +69,7 @@ local defaultSettings = {
 		BuffSize = 30,
 		BuffsPerRow = 16,
 		ReverseDebuffs = false,
-		DebuffSize = 34,
+		DebuffSize = 30,
 		DebuffsPerRow = 16,
 	},
 	AuraWatch = {
@@ -175,14 +176,14 @@ local defaultSettings = {
 	Nameplate = {
 		Enable = true,
 		maxAuras = 5,
-		AuraSize = 22,
+		AuraSize = 28,
 		FriendlyCC = false,
 		HostileCC = true,
 		TankMode = false,
 		TargetIndicator = 5,
 		Distance = 42,
-		PlateWidth = 135,
-		PlateHeight = 5,
+		PlateWidth = 190,
+		PlateHeight = 8,
 		CustomUnitColor = true,
 		CustomColor = {r=0, g=.8, b=.3},
 		UnitList = "",
@@ -192,7 +193,7 @@ local defaultSettings = {
 		PPHeight = 5,
 		PPPHeight = 5,
 		PPPowerText = false,
-		FullHealth = false,
+		FullHealth = true,
 		SecureColor = {r=1, g=0, b=1},
 		--TransColor = {r=1, g=.8, b=0},
 		--InsecureColor = {r=1, g=0, b=0},
@@ -201,8 +202,8 @@ local defaultSettings = {
 		PPIconSize = 32,
 		PPHideOOC = true,
 		NameplateClassPower = false,
-		NameTextSize = 10,
-		HealthTextSize = 12,
+		NameTextSize = 14,
+		HealthTextSize = 16,
 		MinScale = 1,
 		MinAlpha = 1,
 		ColorBorder = false,
@@ -211,13 +212,8 @@ local defaultSettings = {
 	},
 	Skins = {
 		DBM = true,
-		MicroMenu = true,
 		Skada = true,
 		Bigwigs = true,
-		RM = true,
-		RMRune = false,
-		DBMCount = "10",
-		EasyMarking = true,
 		TMW = true,
 		WeakAuras = true,
 		BarLine = true,
@@ -232,6 +228,13 @@ local defaultSettings = {
 		ResetRecount = true,
 		ToggleDirection = 1,
 		TradeSkills = true,
+		BlizzardSkins = true,
+		SkinAlpha = .5,
+		DefaultBags = false,
+		FlatMode = false,
+		FontOutline = true,
+		Loot = true,
+		Shadow = true,
 	},
 	Tooltip = {
 		CombatHide = false,
@@ -268,6 +271,11 @@ local defaultSettings = {
 		AutoDismount = true,
 		TradeTabs = true,
 		InstantDelete = true,
+		RaidTool = true,
+		RMRune = false,
+		DBMCount = "10",
+		EasyMarking = true,
+		BlockInvite = false,
 	},
 	Tutorial = {
 		Complete = false,
@@ -350,6 +358,7 @@ loader:SetScript("OnEvent", function(self, _, addon)
 
 	InitialSettings(defaultSettings, NDuiDB, true)
 	InitialSettings(accountSettings, NDuiADB)
+	B:SetupUIScale(true)
 	DB.normTex = textureList[NDuiADB["TexStyle"]]
 
 	self:UnregisterAllEvents()
@@ -358,6 +367,14 @@ end)
 -- Callbacks
 local function setupBagFilter()
 	G:SetupBagFilter(guiPage[2])
+end
+
+local function setupUnitFrame()
+	G:SetupUnitFrame(guiPage[3])
+end
+
+local function setupCastbar()
+	G:SetupCastbar(guiPage[3])
 end
 
 local function setupRaidFrame()
@@ -380,14 +397,6 @@ local function setupNameplateFilter()
 	G:SetupNameplateFilter(guiPage[5])
 end
 
-local function setupUnitFrame()
-	G:SetupUnitFrame(guiPage[3])
-end
-
-local function setupCastbar()
-	G:SetupCastbar(guiPage[3])
-end
-
 local function setupAuraWatch()
 	f:Hide()
 	SlashCmdList["NDUI_AWCONFIG"]()
@@ -399,6 +408,13 @@ end
 
 local function updateBagStatus()
 	B:GetModule("Bags"):UpdateAllBags()
+
+	local label = BAG_FILTER_EQUIPMENT
+	if NDuiDB["Bags"]["ItemSetFilter"] then
+		label = L["Equipement Set"]
+	end
+	_G.NDui_BackpackEquipment.label:SetText(label)
+	_G.NDui_BackpackBankEquipment.label:SetText(label)
 end
 
 local function updateActionbarScale()
@@ -517,6 +533,12 @@ local function updateErrorBlocker()
 	B:GetModule("Misc"):UpdateErrorBlocker()
 end
 
+local function updateSkinAlpha()
+	for _, frame in pairs(C.frames) do
+		B:SetBackdropColor(frame, 0, 0, 0, NDuiDB["Skins"]["SkinAlpha"])
+	end
+end
+
 StaticPopupDialogs["RESET_DETAILS"] = {
 	text = L["Reset Details check"],
 	button1 = YES,
@@ -551,6 +573,7 @@ local tabList = {
 local optionList = { -- type, key, value, name, horizon, doubleline
 	[1] = {
 		{1, "Actionbar", "Enable", "|cff00cc4c"..L["Enable Actionbar"]},
+		{1, "Actionbar", "MicroMenu", L["Micromenu"], true},
 		{},--blank
 		{1, "Actionbar", "Bar4Fade", L["Bar4 Fade"]},
 		{1, "Actionbar", "Bar5Fade", L["Bar5 Fade"], true},
@@ -580,8 +603,8 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{},--blank
 		{3, "Bags", "BagsScale", L["Bags Scale"], false, {.5, 1.5, 1}},
 		{3, "Bags", "IconSize", L["Bags IconSize"], true, {30, 42, 0}},
-		{3, "Bags", "BagsWidth", L["Bags Width"], false, {10, 20, 0}},
-		{3, "Bags", "BankWidth", L["Bank Width"], true, {10, 20, 0}},
+		{3, "Bags", "BagsWidth", L["Bags Width"], false, {12, 40, 0}},
+		{3, "Bags", "BankWidth", L["Bank Width"], true, {12, 40, 0}},
 	},
 	[3] = {
 		{1, "UFs", "Enable", "|cff00cc4c"..L["Enable UFs"], nil, setupUnitFrame, nil, L["HideUFWarning"]},
@@ -608,7 +631,7 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{1, "UFs", "FCTOverHealing", L["CombatText OverHealing"], true},
 	},
 	[4] = {
-		{1, "UFs", "RaidFrame", "|cff00cc4c"..L["UFs RaidFrame"], nil, setupRaidFrame},
+		{1, "UFs", "RaidFrame", "|cff00cc4c"..L["UFs RaidFrame"], nil, setupRaidFrame, nil, L["RaidFrameTip"]},
 		{},--blank
 		{1, "UFs", "PartyFrame", "|cff00cc4c"..L["UFs PartyFrame"]},
 		{1, "UFs", "HorizonParty", L["Horizon PartyFrame"], true},
@@ -657,12 +680,12 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		--{3, "Nameplate", "Distance", L["Nameplate Distance"].."*", true, {20, 100, 0}, updatePlateRange},
 		{3, "Nameplate", "MinScale", L["Nameplate MinScale"].."*", true, {.5, 1, 1}, updatePlateScale},
 		--{3, "Nameplate", "MinAlpha", L["Nameplate MinAlpha"].."*", true, {.5, 1, 1}, updatePlateAlpha},
-		{3, "Nameplate", "PlateWidth", L["NP Width"].."*(135)", false, {50, 200, 0}, refreshNameplates},
-		{3, "Nameplate", "PlateHeight", L["NP Height"].."*(5)", true, {5, 20, 0}, refreshNameplates},
-		{3, "Nameplate", "NameTextSize", L["NameTextSize"].."*", false, {8, 16, 0}, refreshNameplates},
-		{3, "Nameplate", "HealthTextSize", L["HealthTextSize"].."*", true, {8, 16, 0}, refreshNameplates},
+		{3, "Nameplate", "PlateWidth", L["NP Width"].."*(190)", false, {50, 250, 0}, refreshNameplates},
+		{3, "Nameplate", "PlateHeight", L["NP Height"].."*(8)", true, {5, 30, 0}, refreshNameplates},
+		{3, "Nameplate", "NameTextSize", L["NameTextSize"].."*(14)", false, {10, 30, 0}, refreshNameplates},
+		{3, "Nameplate", "HealthTextSize", L["HealthTextSize"].."*(16)", true, {10, 30, 0}, refreshNameplates},
 		{3, "Nameplate", "maxAuras", L["Max Auras"], false, {0, 10, 0}},
-		{3, "Nameplate", "AuraSize", L["Auras Size"], true, {18, 40, 0}},
+		{3, "Nameplate", "AuraSize", L["Auras Size"].."(28)", true, {18, 40, 0}},
 	},
 	[6] = {
 		{1, "AuraWatch", "Enable", "|cff00cc4c"..L["Enable AuraWatch"], nil, setupAuraWatch},
@@ -691,10 +714,10 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		--{1, "Auras", "Totems", L["Enable Totems"]},
 	},
 	[7] = {
-		{1, "Skins", "RM", "|cff00cc4c"..L["Raid Manger"]},
-		{1, "Skins", "RMRune", L["Runes Check"].."*"},
-		{1, "Skins", "EasyMarking", L["Easy Mark"].."*"},
-		{2, "Skins", "DBMCount", L["Countdown Sec"].."*", true},
+		{1, "Misc", "RaidTool", "|cff00cc4c"..L["Raid Manger"]},
+		{1, "Misc", "RMRune", L["Runes Check"].."*"},
+		{1, "Misc", "EasyMarking", L["Easy Mark"].."*"},
+		{2, "Misc", "DBMCount", L["Countdown Sec"].."*", true},
 		{},--blank
 		{1, "Misc", "QuestNotifier", "|cff00cc4c"..L["QuestNotifier"].."*", nil, nil, updateQuestNotifier},
 		{1, "Misc", "QuestProgress", L["QuestProgress"].."*"},
@@ -747,15 +770,23 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{3, "Map", "MinmapScale", L["Minimap Scale"].."*", true, {1, 2, 1}, updateMinimapScale},
 	},
 	[10] = {
+		{1, "Skins", "FlatMode", L["FlatMode"]},
+		{1, "Skins", "Shadow", L["Shadow"]},
+		{3, "Skins", "SkinAlpha", L["SkinAlpha"].."*", true, {0, 1, 1}, updateSkinAlpha},
+		{1, "Skins", "FontOutline", L["FontOutline"]},
+		{1, "Skins", "DefaultBags", L["DefaultBags"], true, nil, nil, L["DefaultBagsTips"]},
+		{1, "Skins", "Loot", L["Loot"]},
+		{1, "Skins", "BlizzardSkins", "|cff00cc4c"..L["BlizzardSkins"], true, nil, nil, L["BlizzardSkinsTips"]},
+		{},--blank
+
 		{1, "Skins", "BarLine", L["Bar Line"]},
 		{1, "Skins", "InfobarLine", L["Infobar Line"], true},
 		{1, "Skins", "ChatLine", L["Chat Line"]},
 		{1, "Skins", "MenuLine", L["Menu Line"], true},
 		{1, "Skins", "ClassLine", L["ClassColor Line"]},
 		{},--blank
-		{1, "Skins", "MicroMenu", L["Micromenu"]},
-		{1, "Skins", "QuestTracker", L["EnhancedQuestLog"], true, nil, nil, L["EnhancedQuestLogTips"]},
 		{1, "Skins", "TradeSkills", L["EnhancedTradeSkills"]},
+		{1, "Skins", "QuestTracker", L["EnhancedQuestLog"], true, nil, nil, L["EnhancedQuestLogTips"]},
 		{},--blank
 		{1, "Skins", "Skada", L["Skada Skin"]},
 		{1, "Skins", "Details", L["Details Skin"], nil, resetDetails},
@@ -922,6 +953,7 @@ local function CreateOption(i)
 		-- Slider
 		elseif optType == 3 then
 			local min, max, step = unpack(data)
+			local decimal = step > 2 and 2 or step
 			local x, y
 			if horizon then
 				x, y = 350, -offset + 40
@@ -934,10 +966,10 @@ local function CreateOption(i)
 			s:SetScript("OnValueChanged", function(_, v)
 				local current = tonumber(format("%."..step.."f", v))
 				NDUI_VARIABLE(key, value, current)
-				s.value:SetText(current)
+				s.value:SetText(format("%."..decimal.."f", current))
 				if callback then callback() end
 			end)
-			s.value:SetText(format("%."..step.."f", NDUI_VARIABLE(key, value)))
+			s.value:SetText(format("%."..decimal.."f", NDUI_VARIABLE(key, value)))
 			if tooltip then
 				s.title = L["Tips"]
 				B.AddTooltip(s, "ANCHOR_RIGHT", tooltip, "info")
@@ -1219,14 +1251,14 @@ local function createDataFrame()
 	dataFrame:SetSize(500, 500)
 	dataFrame:SetFrameStrata("DIALOG")
 	B.CreateMF(dataFrame)
-	B.SetBackground(dataFrame)
+	B.SetBD(dataFrame)
 	dataFrame.Header = B.CreateFS(dataFrame, 16, L["Export Header"], true, "TOP", 0, -5)
 
 	local scrollArea = CreateFrame("ScrollFrame", nil, dataFrame, "UIPanelScrollFrameTemplate")
 	scrollArea:SetPoint("TOPLEFT", 10, -30)
 	scrollArea:SetPoint("BOTTOMRIGHT", -28, 40)
-	B.CreateBD(B.CreateBG(scrollArea), .25)
-	if F then F.ReskinScroll(scrollArea.ScrollBar) end
+	B.CreateBDFrame(scrollArea, .25)
+	B.ReskinScroll(scrollArea.ScrollBar)
 
 	local editBox = CreateFrame("EditBox", nil, dataFrame)
 	editBox:SetMultiLine(true)
@@ -1287,7 +1319,7 @@ local function OpenGUI()
 	f:SetFrameStrata("HIGH")
 	f:SetFrameLevel(10)
 	B.CreateMF(f)
-	B.SetBackground(f)
+	B.SetBD(f)
 	B.CreateFS(f, 18, L["NDui Console"], true, "TOP", 0, -10)
 	B.CreateFS(f, 16, DB.Version.." ("..DB.Support..")", false, "TOP", 0, -30)
 
@@ -1295,14 +1327,10 @@ local function OpenGUI()
 	close:SetPoint("BOTTOMRIGHT", -20, 15)
 	close:SetScript("OnClick", function() f:Hide() end)
 
-	local scaleOld = NDuiADB["UIScale"]
 	local ok = B.CreateButton(f, 80, 20, OKAY)
 	ok:SetPoint("RIGHT", close, "LEFT", -10, 0)
 	ok:SetScript("OnClick", function()
-		local scale = NDuiADB["UIScale"]
-		if scale ~= scaleOld then
-			UIParent:SetScale(scale)
-		end
+		B:SetupUIScale()
 		f:Hide()
 		StaticPopup_Show("RELOAD_NDUI")
 	end)
@@ -1313,14 +1341,12 @@ local function OpenGUI()
 		guiPage[i] = CreateFrame("ScrollFrame", nil, f, "UIPanelScrollFrameTemplate")
 		guiPage[i]:SetPoint("TOPLEFT", 160, -50)
 		guiPage[i]:SetSize(610, 500)
-		local bg = B.CreateBG(guiPage[i])
-		B.CreateBD(bg, .3)
+		B.CreateBDFrame(guiPage[i], .3)
 		guiPage[i]:Hide()
 		guiPage[i].child = CreateFrame("Frame", nil, guiPage[i])
 		guiPage[i].child:SetSize(610, 1)
 		guiPage[i]:SetScrollChild(guiPage[i].child)
-		-- AuroraClassic
-		if F then F.ReskinScroll(guiPage[i].ScrollBar) end
+		B.ReskinScroll(guiPage[i].ScrollBar)
 
 		CreateOption(i)
 	end
@@ -1413,6 +1439,5 @@ function G:OnLogin()
 		PlaySound(SOUNDKIT.IG_MAINMENU_OPTION)
 	end)
 
-	-- AuroraClassic
-	if F then F.Reskin(gui) end
+	if NDuiDB["Skins"]["BlizzardSkins"] then B.Reskin(gui) end
 end

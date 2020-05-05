@@ -19,7 +19,7 @@ local function createExtraGUI(parent, name, title, bgFrame)
 	local frame = CreateFrame("Frame", name, parent)
 	frame:SetSize(300, 600)
 	frame:SetPoint("TOPLEFT", parent:GetParent(), "TOPRIGHT", 3, 0)
-	B.SetBackground(frame)
+	B.SetBD(frame)
 	parent:HookScript("OnHide", function()
 		if frame:IsShown() then frame:Hide() end
 	end)
@@ -42,7 +42,7 @@ end
 local function toggleExtraGUI(name)
 	for _, frame in next, extraGUIs do
 		if frame:GetName() == name then
-			ToggleFrame(frame)
+			B:TogglePanel(frame)
 		else
 			frame:Hide()
 		end
@@ -555,6 +555,7 @@ function G:SetupBuffIndicator(parent)
 		scroll.add:SetScript("OnClick", function()
 			addClick(scroll, index)
 		end)
+
 		scroll.reset = B.CreateButton(frame, 45, 25, RESET)
 		scroll.reset:SetPoint("RIGHT", scroll.add, "LEFT", -5, 0)
 		scroll.reset:SetScript("OnClick", function()
@@ -618,6 +619,14 @@ local function createOptionSlider(parent, title, minV, maxV, x, y, value, func)
 	slider:SetScript("OnValueChanged", sliderValueChanged)
 end
 
+local function SetUnitFrameSize(self, unit)
+	local width = NDuiDB["UFs"][unit.."Width"]
+	local height = NDuiDB["UFs"][unit.."Height"] + NDuiDB["UFs"][unit.."PowerHeight"] + C.mult
+	self:SetSize(width, height)
+	self.Health:SetHeight(NDuiDB["UFs"][unit.."Height"])
+	self.Power:SetHeight(NDuiDB["UFs"][unit.."PowerHeight"])
+end
+
 function G:SetupUnitFrame(parent)
 	toggleExtraGUI("NDuiGUI_UnitFrameSetup")
 	if unitframeGUI then return end
@@ -646,8 +655,7 @@ function G:SetupUnitFrame(parent)
 	local mainFrames = {_G.oUF_Player, _G.oUF_Target}
 	local function updatePlayerSize()
 		for _, frame in pairs(mainFrames) do
-			frame:SetSize(NDuiDB["UFs"]["PlayerWidth"], NDuiDB["UFs"]["PlayerHeight"])
-			frame.Power:SetHeight(NDuiDB["UFs"]["PlayerPowerHeight"])
+			SetUnitFrameSize(frame, "Player")
 		end
 	end
 	createOptionGroup(scroll.child, L["Player&Target"], -10, "Player", updatePlayerSize)
@@ -655,8 +663,7 @@ function G:SetupUnitFrame(parent)
 	local subFrames = {_G.oUF_Pet, _G.oUF_ToT, _G.oUF_ToToT}
 	local function updatePetSize()
 		for _, frame in pairs(subFrames) do
-			frame:SetSize(NDuiDB["UFs"]["PetWidth"], NDuiDB["UFs"]["PetHeight"])
-			frame.Power:SetHeight(NDuiDB["UFs"]["PetPowerHeight"])
+			SetUnitFrameSize(frame, "Pet")
 		end
 	end
 	createOptionGroup(scroll.child, L["Pet&*Target"], -270, "Pet", updatePetSize)
@@ -693,10 +700,16 @@ function G:SetupRaidFrame(parent)
 		for _, frame in pairs(ns.oUF.objects) do
 			if frame.mystyle == "raid" and not frame.isPartyFrame and not frame.isPartyPet then
 				if NDuiDB["UFs"]["SimpleMode"] then
-					frame:SetSize(100*NDuiDB["UFs"]["SimpleRaidScale"]/10, 20*NDuiDB["UFs"]["SimpleRaidScale"]/10)
+					local scale = NDuiDB["UFs"]["SimpleRaidScale"]/10
+					local frameWidth = 100*scale
+					local frameHeight = 20*scale
+					local powerHeight = 2*scale
+					local healthHeight = frameHeight - powerHeight
+					frame:SetSize(frameWidth, frameHeight)
+					frame.Health:SetHeight(healthHeight)
+					frame.Power:SetHeight(powerHeight)
 				else
-					frame:SetSize(NDuiDB["UFs"]["RaidWidth"], NDuiDB["UFs"]["RaidHeight"])
-					frame.Power:SetHeight(NDuiDB["UFs"]["RaidPowerHeight"])
+					SetUnitFrameSize(frame, "Raid")
 				end
 			end
 		end
@@ -707,8 +720,7 @@ function G:SetupRaidFrame(parent)
 	local function resizePartyFrame()
 		for _, frame in pairs(ns.oUF.objects) do
 			if frame.isPartyFrame then
-				frame:SetSize(NDuiDB["UFs"]["PartyWidth"], NDuiDB["UFs"]["PartyHeight"])
-				frame.Power:SetHeight(NDuiDB["UFs"]["PartyPowerHeight"])
+				SetUnitFrameSize(frame, "Party")
 			end
 		end
 	end
@@ -717,8 +729,7 @@ function G:SetupRaidFrame(parent)
 	local function resizePartyPetFrame()
 		for _, frame in pairs(ns.oUF.objects) do
 			if frame.isPartyPet then
-				frame:SetSize(NDuiDB["UFs"]["PartyPetWidth"], NDuiDB["UFs"]["PartyPetHeight"])
-				frame.Power:SetHeight(NDuiDB["UFs"]["PartyPetPowerHeight"])
+				SetUnitFrameSize(frame, "PartyPet")
 			end
 		end
 	end

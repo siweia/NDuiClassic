@@ -1,12 +1,13 @@
 local _, ns = ...
 local B, C, L, DB = unpack(ns)
-local S = B:GetModule("Skins")
+local Bar = B:GetModule("Actionbar")
 
+-- Texture credit: 胡里胡涂
 local _G = getfenv(0)
 local tinsert, pairs, type = table.insert, pairs, type
 local buttonList = {}
 
-function S:MicroButton_SetupTexture(icon, texture)
+function Bar:MicroButton_SetupTexture(icon, texture)
 	local r, g, b = DB.r, DB.g, DB.b
 	if not NDuiDB["Skins"]["ClassLine"] then r, g, b = 0, 0, 0 end
 
@@ -15,7 +16,7 @@ function S:MicroButton_SetupTexture(icon, texture)
 	icon:SetVertexColor(r, g, b)
 end
 
-function S:MicroButton_Create(parent, data)
+function Bar:MicroButton_Create(parent, data)
 	local texture, tip, func = unpack(data)
 
 	local bu = CreateFrame("Button", nil, parent)
@@ -26,20 +27,43 @@ function S:MicroButton_Create(parent, data)
 	B.AddTooltip(bu, "ANCHOR_TOP", tip)
 
 	local icon = bu:CreateTexture(nil, "ARTWORK")
-	S:MicroButton_SetupTexture(icon, texture)
+	Bar:MicroButton_SetupTexture(icon, texture)
 
 	bu:SetHighlightTexture(DB.MicroTex..texture)
 	local hl = bu:GetHighlightTexture()
-	S:MicroButton_SetupTexture(hl, texture)
+	Bar:MicroButton_SetupTexture(hl, texture)
 	if not NDuiDB["Skins"]["ClassLine"] then hl:SetVertexColor(1, 1, 1) end
 end
 
-function S:MicroMenu()
-	if not NDuiDB["Skins"]["MicroMenu"] then return end
+function Bar:MicroMenu_Lines()
+	if not NDuiDB["Skins"]["MenuLine"] then return end
+
+	local cr, cg, cb = 0, 0, 0
+	if NDuiDB["Skins"]["ClassLine"] then cr, cg, cb = DB.r, DB.g, DB.b end
+
+	-- MICROMENU
+	local mmbottomL = CreateFrame("Frame", nil, UIParent)
+	mmbottomL:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOM", 0, 3)
+	B.CreateGF(mmbottomL, 210, C.mult, "Horizontal", cr, cg, cb, 0, .7)
+	local mmbottomR = CreateFrame("Frame", nil, UIParent)
+	mmbottomR:SetPoint("BOTTOMLEFT", UIParent, "BOTTOM", 0, 3)
+	B.CreateGF(mmbottomR, 210, C.mult, "Horizontal", cr, cg, cb, .7, 0)
+
+	local mmtopL = CreateFrame("Frame", nil, UIParent)
+	mmtopL:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOM", 0, 24)
+	B.CreateGF(mmtopL, 230, C.mult, "Horizontal", cr, cg, cb, 0, .7)
+	local mmtopR = CreateFrame("Frame", nil, UIParent)
+	mmtopR:SetPoint("BOTTOMLEFT", UIParent, "BOTTOM", 0, 24)
+	B.CreateGF(mmtopR, 230, C.mult, "Horizontal", cr, cg, cb, .7, 0)
+end
+
+function Bar:MicroMenu()
+	if not NDuiDB["Actionbar"]["MicroMenu"] then return end
 
 	local menubar = CreateFrame("Frame", nil, UIParent)
 	menubar:SetSize(238, 22)
 	B.Mover(menubar, L["Menubar"], "Menubar", C.Skins.MicroMenuPos)
+	Bar:MicroMenu_Lines()
 
 	-- Generate Buttons
 	local buttonInfo = {
@@ -60,7 +84,7 @@ function S:MicroMenu()
 		{"bags", MicroButtonTooltipText(BAGSLOT, "OPENALLBAGS"), ToggleAllBags},
 	}
 	for _, info in pairs(buttonInfo) do
-		S:MicroButton_Create(menubar, info)
+		Bar:MicroButton_Create(menubar, info)
 	end
 
 	-- Order Positions

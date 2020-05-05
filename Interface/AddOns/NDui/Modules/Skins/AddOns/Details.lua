@@ -22,14 +22,11 @@ local function ReskinDetails()
 		instance:MenuAnchor(16, 3)
 		instance:ToolbarMenuButtonsSize(1)
 		instance:AttributeMenu(true, 0, 3, DB.Font[1], 13, {1, 1, 1}, 1, true)
-		instance:SetBarSettings(18, NDuiADB["ResetDetails"] and "normTex" or nil)
+		instance:SetBarSettings(NDuiADB["ResetDetails"] and 18 or nil, NDuiADB["ResetDetails"] and "normTex" or nil)
 		instance:SetBarTextSettings(NDuiADB["ResetDetails"] and 14 or nil, DB.Font[1], nil, nil, nil, true, true, nil, nil, nil, nil, nil, nil, false, nil, false, nil)
 
-		local bg = B.CreateBG(instance.baseframe)
+		local bg = B.SetBD(instance.baseframe)
 		bg:SetPoint("TOPLEFT", -1, 18)
-		B.CreateBD(bg)
-		B.CreateSD(bg)
-		B.CreateTex(bg)
 		instance.baseframe.bg = bg
 
 		if instance:GetId() <= 2 then

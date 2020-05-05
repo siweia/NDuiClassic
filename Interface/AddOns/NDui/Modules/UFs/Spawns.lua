@@ -6,9 +6,15 @@ local UF = B:GetModule("UnitFrames")
 local format, tostring = string.format, tostring
 
 -- Units
+local function SetUnitFrameSize(self, unit)
+	local width = NDuiDB["UFs"][unit.."Width"]
+	local height = NDuiDB["UFs"][unit.."Height"] + NDuiDB["UFs"][unit.."PowerHeight"] + C.mult
+	self:SetSize(width, height)
+end
+
 local function CreatePlayerStyle(self)
 	self.mystyle = "player"
-	self:SetSize(NDuiDB["UFs"]["PlayerWidth"], NDuiDB["UFs"]["PlayerHeight"])
+	SetUnitFrameSize(self, "Player")
 
 	UF:CreateHeader(self)
 	UF:CreateHealthBar(self)
@@ -41,7 +47,7 @@ end
 
 local function CreateTargetStyle(self)
 	self.mystyle = "target"
-	self:SetSize(NDuiDB["UFs"]["PlayerWidth"], NDuiDB["UFs"]["PlayerHeight"])
+	SetUnitFrameSize(self, "Player")
 
 	UF:CreateHeader(self)
 	UF:CreateHealthBar(self)
@@ -59,7 +65,7 @@ end
 
 local function CreateToTStyle(self)
 	self.mystyle = "tot"
-	self:SetSize(NDuiDB["UFs"]["PetWidth"], NDuiDB["UFs"]["PetHeight"])
+	SetUnitFrameSize(self, "Pet")
 
 	UF:CreateHeader(self)
 	UF:CreateHealthBar(self)
@@ -83,7 +89,7 @@ end
 
 local function CreatePetStyle(self)
 	self.mystyle = "pet"
-	self:SetSize(NDuiDB["UFs"]["PetWidth"], NDuiDB["UFs"]["PetHeight"])
+	SetUnitFrameSize(self, "Pet")
 
 	UF:CreateHeader(self)
 	UF:CreateHealthBar(self)
@@ -149,6 +155,7 @@ function UF:OnLogin()
 	local partyWidth, partyHeight = NDuiDB["UFs"]["PartyWidth"], NDuiDB["UFs"]["PartyHeight"]
 	local showPartyPetFrame = NDuiDB["UFs"]["PartyPetFrame"]
 	local petWidth, petHeight = NDuiDB["UFs"]["PartyPetWidth"], NDuiDB["UFs"]["PartyPetHeight"]
+	local showTeamIndex = NDuiDB["UFs"]["ShowTeamIndex"]
 
 	if NDuiDB["Nameplate"]["Enable"] then
 		self:SetupCVars()
@@ -225,9 +232,10 @@ function UF:OnLogin()
 			oUF:RegisterStyle("Party", CreatePartyStyle)
 			oUF:SetActiveStyle("Party")
 
-			local xOffset, yOffset = 5, 10
+			local xOffset, yOffset = 5, 5
+			local partyFrameHeight = partyHeight + NDuiDB["UFs"]["PartyPowerHeight"] + C.mult
 			local moverWidth = horizonParty and (partyWidth*5+xOffset*4) or partyWidth
-			local moverHeight = horizonParty and partyHeight or (partyHeight*5+yOffset*4)
+			local moverHeight = horizonParty and partyFrameHeight or (partyFrameHeight*5+yOffset*4)
 			local groupingOrder = horizonParty and "TANK,HEALER,DAMAGER,NONE" or "NONE,DAMAGER,HEALER,TANK"
 
 			local party = oUF:SpawnHeader("oUF_Party", nil, "solo,party",
@@ -245,7 +253,7 @@ function UF:OnLogin()
 			"oUF-initialConfigFunction", ([[
 			self:SetWidth(%d)
 			self:SetHeight(%d)
-			]]):format(partyWidth, partyHeight))
+			]]):format(partyWidth, partyFrameHeight))
 
 			local partyMover = B.Mover(party, L["PartyFrame"], "PartyFrame", {"LEFT", UIParent, 350, 0}, moverWidth, moverHeight)
 			party:ClearAllPoints()
@@ -255,8 +263,9 @@ function UF:OnLogin()
 				oUF:RegisterStyle("PartyPet", CreatePartyPetStyle)
 				oUF:SetActiveStyle("PartyPet")
 
+				local petFrameHeight = petHeight + NDuiDB["UFs"]["PartyPetPowerHeight"] + C.mult
 				local petMoverWidth = horizonParty and (petWidth*5+xOffset*4) or petWidth
-				local petMoverHeight = horizonParty and petHeight or (petHeight*5+yOffset*4)
+				local petMoverHeight = horizonParty and petFrameHeight or (petFrameHeight*5+yOffset*4)
 
 				local partyPet = oUF:SpawnHeader("oUF_PartyPet", nil, "solo,party",
 				"showPlayer", true,
@@ -271,7 +280,7 @@ function UF:OnLogin()
 				self:SetWidth(%d)
 				self:SetHeight(%d)
 				self:SetAttribute("unitsuffix", "pet")
-				]]):format(petWidth, petHeight))
+				]]):format(petWidth, petFrameHeight))
 
 				local moverAnchor = horizonParty and {"TOPLEFT", partyMover, "BOTTOMLEFT", 0, -20} or {"BOTTOMRIGHT", partyMover, "BOTTOMLEFT", -10, 0}
 				local petMover = B.Mover(partyPet, L["PartyPetFrame"], "PartyPetFrame", moverAnchor, petMoverWidth, petMoverHeight)
@@ -297,7 +306,7 @@ function UF:OnLogin()
 				"showParty", not showPartyFrame,
 				"showRaid", true,
 				"xoffset", 5,
-				"yOffset", -10,
+				"yOffset", -5,
 				"groupFilter", tostring(i),
 				"groupingOrder", groupingOrder,
 				"groupBy", groupBy,
@@ -332,6 +341,8 @@ function UF:OnLogin()
 			local moverHeight = 20*scale*20 + 10*19
 			raidMover = B.Mover(group, L["RaidFrame"], "RaidFrame", {"TOPLEFT", UIParent, 35, -50}, moverWidth, moverHeight)
 		else
+			local raidFrameHeight = raidHeight + NDuiDB["UFs"]["RaidPowerHeight"] + C.mult
+
 			local function CreateGroup(name, i)
 				local group = oUF:SpawnHeader(name, nil, "solo,party,raid",
 				"showPlayer", true,
@@ -339,7 +350,7 @@ function UF:OnLogin()
 				"showParty", not showPartyFrame,
 				"showRaid", true,
 				"xoffset", 5,
-				"yOffset", -10,
+				"yOffset", -5,
 				"groupFilter", tostring(i),
 				"groupingOrder", "1,2,3,4,5,6,7,8",
 				"groupBy", "GROUP",
@@ -352,7 +363,7 @@ function UF:OnLogin()
 				"oUF-initialConfigFunction", ([[
 				self:SetWidth(%d)
 				self:SetHeight(%d)
-				]]):format(raidWidth, raidHeight))
+				]]):format(raidWidth, raidFrameHeight))
 				return group
 			end
 
@@ -361,19 +372,19 @@ function UF:OnLogin()
 				groups[i] = CreateGroup("oUF_Raid"..i, i)
 				if i == 1 then
 					if horizonRaid then
-						groups[i].mover = B.Mover(groups[i], L["RaidFrame"]..i, "RaidFrame"..i, {"TOPLEFT", UIParent, 35, -50}, (raidWidth+5)*5, raidHeight + raidPowerHeight + 3)
+						groups[i].mover = B.Mover(groups[i], L["RaidFrame"]..i, "RaidFrame"..i, {"TOPLEFT", UIParent, 35, -50}, (raidWidth+5)*5, raidFrameHeight)
 					else
-						groups[i].mover = B.Mover(groups[i], L["RaidFrame"]..i, "RaidFrame"..i, {"TOPLEFT", UIParent, 35, -50}, raidWidth, (raidHeight + raidPowerHeight + 3)*5)
+						groups[i].mover = B.Mover(groups[i], L["RaidFrame"]..i, "RaidFrame"..i, {"TOPLEFT", UIParent, 35, -50}, raidWidth, raidFrameHeight*5)
 					end
 				else
 					if horizonRaid then
-						groups[i].mover = B.Mover(groups[i], L["RaidFrame"]..i, "RaidFrame"..i, {"TOPLEFT", groups[i-1], "BOTTOMLEFT", 0, NDuiDB["UFs"]["ShowTeamIndex"] and -25 or -15}, (raidWidth+5)*5, raidHeight + raidPowerHeight + 3)
+						groups[i].mover = B.Mover(groups[i], L["RaidFrame"]..i, "RaidFrame"..i, {"TOPLEFT", groups[i-1], "BOTTOMLEFT", 0, showTeamIndex and -25 or -15}, (raidWidth+5)*5, raidFrameHeight)
 					else
-						groups[i].mover = B.Mover(groups[i], L["RaidFrame"]..i, "RaidFrame"..i, {"TOPLEFT", groups[i-1], "TOPRIGHT", 5, 0}, raidWidth, (raidHeight + raidPowerHeight + 3)*5)
+						groups[i].mover = B.Mover(groups[i], L["RaidFrame"]..i, "RaidFrame"..i, {"TOPLEFT", groups[i-1], "TOPRIGHT", 5, 0}, raidWidth, raidFrameHeight*5)
 					end
 				end
 
-				if NDuiDB["UFs"]["ShowTeamIndex"] then
+				if showTeamIndex then
 					local parent = _G["oUF_Raid"..i.."UnitButton1"]
 					local teamIndex = B.CreateFS(parent, 12, format(GROUP_NUMBER, i))
 					teamIndex:ClearAllPoints()

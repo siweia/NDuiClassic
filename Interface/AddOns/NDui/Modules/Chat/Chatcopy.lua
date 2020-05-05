@@ -1,10 +1,9 @@
 local _, ns = ...
-local B, C, L, DB, F = unpack(ns)
+local B, C, L, DB = unpack(ns)
 local module = B:GetModule("Chat")
 
 local _G = getfenv(0)
 local gsub, format, tconcat, tostring = string.gsub, string.format, table.concat, tostring
-local ToggleFrame = ToggleFrame
 local FCF_SetChatWindowFontSize = FCF_SetChatWindowFontSize
 local ScrollFrameTemplate_OnMouseWheel = ScrollFrameTemplate_OnMouseWheel
 
@@ -58,7 +57,7 @@ function module:ChatCopy_OnClick(btn)
 			frame:Hide()
 		end
 	elseif btn == "RightButton" then
-		ToggleFrame(menu)
+		B:TogglePanel(menu)
 		NDuiDB["Chat"]["ChatMenu"] = menu:IsShown()
 	end
 end
@@ -66,7 +65,7 @@ end
 function module:ChatCopy_CreateMenu()
 	menu = CreateFrame("Frame", nil, UIParent)
 	menu:SetSize(25, 100)
-	menu:SetPoint("TOPRIGHT", _G.ChatFrame1, 22, 0)
+	menu:SetPoint("TOPRIGHT", _G.ChatFrame1, 25, 0)
 	menu:SetShown(NDuiDB["Chat"]["ChatMenu"])
 
 	_G.ChatFrameMenuButton:ClearAllPoints()
@@ -86,7 +85,7 @@ function module:ChatCopy_Create()
 	frame:Hide()
 	frame:SetFrameStrata("DIALOG")
 	B.CreateMF(frame)
-	B.SetBackground(frame)
+	B.SetBD(frame)
 	frame.close = CreateFrame("Button", nil, frame, "UIPanelCloseButton")
 	frame.close:SetPoint("TOPRIGHT", frame)
 
@@ -125,15 +124,13 @@ function module:ChatCopy_Create()
 	copy.Icon:SetTexture(DB.copyTex)
 	copy:RegisterForClicks("AnyUp")
 	copy:SetScript("OnClick", self.ChatCopy_OnClick)
-	B.AddTooltip(copy, "ANCHOR_RIGHT", L["Chat Copy"])
+	local copyStr = format(L["Chat Copy"], DB.LeftButton, DB.RightButton)
+	B.AddTooltip(copy, "ANCHOR_RIGHT", copyStr)
 	copy:HookScript("OnEnter", function() copy:SetAlpha(1) end)
 	copy:HookScript("OnLeave", function() copy:SetAlpha(.5) end)
 
-	-- Aurora Reskin
-	if F then
-		F.ReskinClose(frame.close)
-		F.ReskinScroll(ChatCopyScrollFrameScrollBar)
-	end
+	B.ReskinClose(frame.close)
+	B.ReskinScroll(ChatCopyScrollFrameScrollBar)
 end
 
 function module:ChatCopy()

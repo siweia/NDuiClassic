@@ -1,5 +1,5 @@
 local _, ns = ...
-local B, C, L, DB, F = unpack(ns)
+local B, C, L, DB = unpack(ns)
 local M = B:GetModule("Misc")
 
 local strsplit, pairs, tonumber, sub, strfind = string.split, pairs, tonumber, string.sub, string.find
@@ -202,7 +202,7 @@ function M:MailBox_ContactList()
 	list:SetSize(200, 424)
 	list:SetPoint("TOPLEFT", MailFrame, "TOPRIGHT", 5, 0)
 	list:SetFrameStrata("Tooltip")
-	B.SetBackground(list)
+	B.SetBD(list)
 	B.CreateFS(list, 14, L["ContactList"], "system", "TOP", 0, -5)
 
 	local editbox = B.CreateEditBox(list, 120, 25)
@@ -341,11 +341,10 @@ function M:MailBox()
 		InboxTooMuchMail:SetPoint("BOTTOM", MailFrame, "TOP", 0, 5)
 	end
 
-	-- Aurora Reskin
-	if F then
-		F.Reskin(button1)
-		F.Reskin(button2)
-		F.Reskin(button3)
+	if NDuiDB["Skins"]["BlizzardSkins"] then
+		B.Reskin(button1)
+		B.Reskin(button2)
+		B.Reskin(button3)
 	end
 
 	-- Hide Blizz

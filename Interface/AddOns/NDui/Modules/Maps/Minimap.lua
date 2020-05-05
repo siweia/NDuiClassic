@@ -11,9 +11,8 @@ local cr, cg, cb = DB.r, DB.g, DB.b
 function module:CreatePulse()
 	if not NDuiDB["Map"]["CombatPulse"] then return end
 
-	local MBG = B.CreateBG(Minimap, 1)
-	B.CreateSD(MBG)
-	local anim = MBG:CreateAnimationGroup()
+	local bg = B.CreateBDFrame(Minimap, nil, true)
+	local anim = bg:CreateAnimationGroup()
 	anim:SetLooping("BOUNCE")
 	anim.fader = anim:CreateAnimation("Alpha")
 	anim.fader:SetFromAlpha(.8)
@@ -23,15 +22,15 @@ function module:CreatePulse()
 
 	local function updateMinimapAnim(event)
 		if event == "PLAYER_REGEN_DISABLED" then
-			MBG.Shadow:SetBackdropBorderColor(1, 0, 0)
+			bg:SetBackdropBorderColor(1, 0, 0)
 			anim:Play()
 		elseif not InCombatLockdown() then
 			if MiniMapMailFrame:IsShown() then
-				MBG.Shadow:SetBackdropBorderColor(1, 1, 0)
+				bg:SetBackdropBorderColor(1, 1, 0)
 				anim:Play()
 			else
 				anim:Stop()
-				MBG.Shadow:SetBackdropBorderColor(0, 0, 0)
+				bg:SetBackdropBorderColor(0, 0, 0)
 			end
 		end
 	end
@@ -42,7 +41,7 @@ function module:CreatePulse()
 	MiniMapMailFrame:HookScript("OnHide", function()
 		if InCombatLockdown() then return end
 		anim:Stop()
-		MBG.Shadow:SetBackdropBorderColor(0, 0, 0)
+		bg:SetBackdropBorderColor(0, 0, 0)
 	end)
 end
 
@@ -53,8 +52,7 @@ function module:ReskinRegions()
 	MiniMapTrackingFrame:SetPoint("BOTTOMRIGHT", Minimap, -5, 5)
 	MiniMapTrackingBorder:Hide()
 	MiniMapTrackingIcon:SetTexCoord(unpack(DB.TexCoord))
-	local bg = B.CreateBG(MiniMapTrackingIcon)
-	B.CreateBD(bg)
+	local bg = B.CreateBDFrame(MiniMapTrackingIcon)
 	bg:SetBackdropBorderColor(cr, cg, cb)
 
 	-- Mail icon

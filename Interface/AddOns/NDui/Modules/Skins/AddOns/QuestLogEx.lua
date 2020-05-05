@@ -1,5 +1,5 @@
 local _, ns = ...
-local B, C, L, DB, F = unpack(ns)
+local B, C, L, DB = unpack(ns)
 local S = B:GetModule("Skins")
 
 local gsub, next = gsub, next
@@ -31,16 +31,16 @@ function S:MoveCodexButtons(frame)
 end
 
 function S:ReskinQuestTemplate(frame)
-	F.ReskinPortraitFrame(frame)
-	F.StripTextures(frame.count)
-	F.CreateBDFrame(frame.count, .25)
-	F.StripTextures(frame.emptyLog)
-	F.StripTextures(frame.scrollFrame.expandAll)
-	F.ReskinExpandOrCollapse(frame.scrollFrame.expandAll)
+	B.ReskinPortraitFrame(frame)
+	B.StripTextures(frame.count)
+	B.CreateBDFrame(frame.count, .25)
+	B.StripTextures(frame.emptyLog)
+	B.StripTextures(frame.scrollFrame.expandAll)
+	B.ReskinExpandOrCollapse(frame.scrollFrame.expandAll)
 
 	local mapButton = frame.mapButton
 	mapButton:SetSize(34, 22)
-	F.CreateBDFrame(mapButton)
+	B.CreateBDFrame(mapButton)
 	mapButton:GetNormalTexture():SetTexCoord(.25, .73, .1, .4)
 	mapButton:GetPushedTexture():SetTexCoord(.25, .73, .6, .9)
 	local hl = mapButton:GetHighlightTexture()
@@ -50,18 +50,18 @@ function S:ReskinQuestTemplate(frame)
 	hooksecurefunc("QuestLog_Update", function()
 		for _, bu in next, frame.scrollFrame.buttons do
 			if bu:IsShown() and not bu.styled then
-				F.ReskinExpandOrCollapse(bu)
+				B.ReskinExpandOrCollapse(bu)
 				bu.styled = true
 			end
 		end
 	end)
 
-	F.ReskinScroll(frame.scrollFrame.scrollBar)
-	F.ReskinScroll(frame.detail.ScrollBar)
+	B.ReskinScroll(frame.scrollFrame.scrollBar)
+	B.ReskinScroll(frame.detail.ScrollBar)
 	local names = {"abandon", "push", "track", "close", "options"}
 	for _, name in next, names do
 		local bu = frame[name]
-		if bu then F.Reskin(bu) end
+		if bu then B.Reskin(bu) end
 	end
 
 	-- Move ClassicCodex
@@ -76,16 +76,16 @@ function S:ReskinClassicQuestLog()
 	ClassicQuestLog.detail.DetailBG:SetAlpha(0)
 
 	local optionsFrame = ClassicQuestLog.optionsFrame
-	F.StripTextures(optionsFrame)
-	F.ReskinClose(optionsFrame.CloseButton)
-	F.CreateSD(F.CreateBDFrame(optionsFrame))
+	B.StripTextures(optionsFrame)
+	B.ReskinClose(optionsFrame.CloseButton)
+	B.CreateSD(B.CreateBDFrame(optionsFrame))
 	optionsFrame:ClearAllPoints()
 	optionsFrame:SetPoint("TOPLEFT", ClassicQuestLog, "TOPRIGHT", 5, 0)
 
 	local names = {"UndockWindow", "LockWindow", "ShowResizeGrip", "ShowLevels", "ShowTooltips", "SolidBackground"}
 	for _, name in next, names do
 		local bu = optionsFrame[name]
-		if bu then F.ReskinCheck(bu) end
+		if bu then B.ReskinCheck(bu) end
 	end
 
 	-- Copy header to Chatframe
@@ -115,7 +115,7 @@ function S:ReskinQuestGuru()
 
 	-- Temp fix
 	if not QuestMapFrame_ShowQuestDetails then
-		QuestMapFrame_ShowQuestDetails = F.dummy
+		QuestMapFrame_ShowQuestDetails = B.dummy
 	end
 	-- https://bbs.nga.cn/read.php?tid=18321155&pid=362320732
 end
@@ -124,7 +124,7 @@ function S:ReskinQuestLogEx()
 	if not IsAddOnLoaded("QuestLogEx") then return end
 
 	B.CreateMF(QuestLogExFrame)
-	local BG = F.ReskinPortraitFrame(QuestLogExFrame, 10, -5, -30, 0)
+	local BG = B.ReskinPortraitFrame(QuestLogExFrame, 10, -5, -30, 0)
 	hooksecurefunc(QuestLogEx, "ToggleExtended", function()
 		if QuestLogExFrameDescription:IsVisible() then
 			BG:SetPoint("BOTTOMRIGHT", QuestLogExFrameDescription, -25, 0)
@@ -133,36 +133,36 @@ function S:ReskinQuestLogEx()
 		end
 	end)
 
-	F.StripTextures(EmptyQuestLogExFrame)
-	F.StripTextures(QuestLogExFrameDescription)
-	F.ReskinClose(QuestLogExDetailCloseButton, "TOPRIGHT", QuestLogExFrameDescription, -30, -10)
-	F.ReskinArrow(QuestLogExFrameMaximizeButton, "right")
+	B.StripTextures(EmptyQuestLogExFrame)
+	B.StripTextures(QuestLogExFrameDescription)
+	B.ReskinClose(QuestLogExDetailCloseButton, "TOPRIGHT", QuestLogExFrameDescription, -30, -10)
+	B.ReskinArrow(QuestLogExFrameMaximizeButton, "right")
 	QuestLogExFrameMaximizeButton:ClearAllPoints()
 	QuestLogExFrameMaximizeButton:SetPoint("RIGHT", QuestLogExFrameCloseButton, "LEFT", -2, 0)
-	F.ReskinArrow(QuestLogExDetailMinimizeButton, "left")
+	B.ReskinArrow(QuestLogExDetailMinimizeButton, "left")
 	QuestLogExDetailMinimizeButton:ClearAllPoints()
 	QuestLogExDetailMinimizeButton:SetPoint("RIGHT", QuestLogExDetailCloseButton, "LEFT", -2, 0)
 
-	F.ReskinScroll(QuestLogExListScrollFrameScrollBar)
-	F.ReskinScroll(QuestLogExDetailScrollFrameScrollBar)
-	F.Reskin(QuestLogExFrameAbandonButton)
-	F.Reskin(QuestLogExFramePushQuestButton)
-	F.Reskin(QuestLogExFrameExitButton)
-	F.Reskin(QuestLogExDetailExitButton)
-	F.ReskinExpandOrCollapse(QuestLogExCollapseAllButton)
+	B.ReskinScroll(QuestLogExListScrollFrameScrollBar)
+	B.ReskinScroll(QuestLogExDetailScrollFrameScrollBar)
+	B.Reskin(QuestLogExFrameAbandonButton)
+	B.Reskin(QuestLogExFramePushQuestButton)
+	B.Reskin(QuestLogExFrameExitButton)
+	B.Reskin(QuestLogExDetailExitButton)
+	B.ReskinExpandOrCollapse(QuestLogExCollapseAllButton)
 	QuestLogExCollapseAllButton:DisableDrawLayer("BACKGROUND")
 	for i = 1, 27 do
 		local title = _G["QuestLogExTitle"..i]
-		F.ReskinExpandOrCollapse(title)
+		B.ReskinExpandOrCollapse(title)
 	end
 
 	for i = 1, 10 do
 		local icon = _G["QuestLogExItem"..i.."IconTexture"]
 		icon:SetTexCoord(.08, .92, .08, .92)
-		F.CreateBDFrame(icon)
+		B.CreateBDFrame(icon)
 		local nameFrame = _G["QuestLogExItem"..i.."NameFrame"]
 		nameFrame:Hide()
-		local bg = F.CreateBDFrame(nameFrame, .25)
+		local bg = B.CreateBDFrame(nameFrame, .25)
 		bg:SetPoint("TOPLEFT", icon, "TOPRIGHT", 3, C.mult)
 		bg:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", 100, -C.mult)
 	end
@@ -173,14 +173,14 @@ function S:ReskinQuestLogEx()
 	for i = 1, 10 do
 		local text = _G["QuestLogExObjective"..i]
 		text:SetTextColor(1, 1, 1)
-		text.SetTextColor = F.dummy
+		text.SetTextColor = B.dummy
 	end
 	QuestLogExRewardTitleText:SetTextColor(1, .8, 0)
-	QuestLogExRewardTitleText.SetTextColor = F.dummy
+	QuestLogExRewardTitleText.SetTextColor = B.dummy
 	QuestLogExItemChooseText:SetTextColor(1, 1, 1)
-	QuestLogExItemChooseText.SetTextColor = F.dummy
+	QuestLogExItemChooseText.SetTextColor = B.dummy
 	QuestLogExItemReceiveText:SetTextColor(1, 1, 1)
-	QuestLogExItemReceiveText.SetTextColor = F.dummy
+	QuestLogExItemReceiveText.SetTextColor = B.dummy
 
 	-- Move ClassicCodex
 	S:MoveCodexButtons(QuestLogExDetailScrollFrame)
@@ -188,7 +188,7 @@ end
 
 function S:ExtraQuestSkin()
 	if not NDuiDB["Skins"]["QuestLogEx"] then return end
-	if not F then return end
+	if not NDuiDB["Skins"]["BlizzardSkins"] then return end
 
 	S:ReskinClassicQuestLog()
 	S:ReskinQuestGuru()

@@ -1,9 +1,9 @@
 local _, ns = ...
 local B, C, L, DB = unpack(ns)
-local S = B:GetModule("Skins")
+local M = B:GetModule("Misc")
 
-function S:CreateRM()
-	if not NDuiDB["Skins"]["RM"] then return end
+function M:CreateRM()
+	if not NDuiDB["Misc"]["RaidTool"] then return end
 
 	local tinsert, strsplit, format = table.insert, string.split, string.format
 	local next, pairs, mod = next, pairs, mod
@@ -11,10 +11,7 @@ function S:CreateRM()
 	local header = CreateFrame("Button", nil, UIParent)
 	header:SetSize(120, 28)
 	header:SetFrameLevel(2)
-	B.CreateBD(header)
-	B.CreateSD(header)
-	B.CreateTex(header)
-	B.CreateBC(header, .5)
+	B.ReskinMenuButton(header)
 	B.CreateFS(header, 14, L["Raid Tool"], true)
 	B.Mover(header, L["Raid Tool"], "RaidManager", C.Skins.RMPos)
 	header:RegisterEvent("GROUP_ROSTER_UPDATE")
@@ -143,12 +140,10 @@ function S:CreateRM()
 ]=]
 	-- Ready check indicator
 	local rcFrame = CreateFrame("Frame", nil, header)
-	rcFrame:SetPoint("TOP", header, "BOTTOM", 0, -2)
+	rcFrame:SetPoint("TOP", header, "BOTTOM", 0, -3)
 	rcFrame:SetSize(120, 50)
 	rcFrame:Hide()
-	B.CreateBD(rcFrame)
-	B.CreateSD(rcFrame)
-	B.CreateTex(rcFrame)
+	B.SetBD(rcFrame)
 	B.CreateFS(rcFrame, 14, READY_CHECK, true, "TOP", 0, -8)
 	local rc = B.CreateFS(rcFrame, 14, "", false, "TOP", 0, -28)
 
@@ -233,22 +228,17 @@ function S:CreateRM()
 
 	-- Left icon
 	local left = CreateFrame("Frame", nil, header)
-	left:SetPoint("RIGHT", header, "LEFT", -2, 0)
+	left:SetPoint("RIGHT", header, "LEFT", -3, 0)
 	left:SetSize(28, 28)
-	B.CreateBD(left)
-	B.CreateSD(left)
-	B.CreateTex(left)
+	B.ReskinMenuButton(left)
 	B.CreateFS(left, 16, "?", true)
 
 	-- Buff checker
 	local checker = CreateFrame("Button", nil, header)
-	checker:SetPoint("LEFT", header, "RIGHT", 2, 0)
+	checker:SetPoint("LEFT", header, "RIGHT", 3, 0)
 	checker:SetSize(28, 28)
-	B.CreateBD(checker)
-	B.CreateSD(checker)
-	B.CreateTex(checker)
+	B.ReskinMenuButton(checker)
 	B.CreateFS(checker, 16, "!", true)
-	B.CreateBC(checker, .5)
 
 	local BuffName, numPlayer = {L["Flask"], L["Food"], SPELL_STAT4_NAME, RAID_BUFF_2, RAID_BUFF_3, RUNES}
 	local NoBuff, numGroups = {}, 6
@@ -313,14 +303,14 @@ function S:CreateRM()
 				end
 			end
 		end
-		if not NDuiDB["Skins"]["RMRune"] then NoBuff[numGroups] = {} end
+		if not NDuiDB["Misc"]["RMRune"] then NoBuff[numGroups] = {} end
 
 		if #NoBuff[1] == 0 and #NoBuff[2] == 0 and #NoBuff[3] == 0 and #NoBuff[4] == 0 and #NoBuff[5] == 0 and #NoBuff[6] == 0 then
 			sendMsg(L["Buffs Ready"])
 		else
 			sendMsg(L["Raid Buff Check"])
 			for i = 1, 5 do sendResult(i) end
-			if NDuiDB["Skins"]["RMRune"] then sendResult(numGroups) end
+			if NDuiDB["Misc"]["RMRune"] then sendResult(numGroups) end
 		end
 	end
 
@@ -363,7 +353,7 @@ function S:CreateRM()
 			if IsInGroup() and (UnitIsGroupLeader("player") or (UnitIsGroupAssistant("player") and IsInRaid())) then
 				if IsAddOnLoaded("DBM-Core") then
 					if reset then
-						SlashCmdList["DEADLYBOSSMODS"]("pull "..NDuiDB["Skins"]["DBMCount"])
+						SlashCmdList["DEADLYBOSSMODS"]("pull "..NDuiDB["Misc"]["DBMCount"])
 					else
 						SlashCmdList["DEADLYBOSSMODS"]("pull 0")
 					end
@@ -371,7 +361,7 @@ function S:CreateRM()
 				elseif IsAddOnLoaded("BigWigs") then
 					if not SlashCmdList["BIGWIGSPULL"] then LoadAddOn("BigWigs_Plugins") end
 					if reset then
-						SlashCmdList["BIGWIGSPULL"](NDuiDB["Skins"]["DBMCount"])
+						SlashCmdList["BIGWIGSPULL"](NDuiDB["Misc"]["DBMCount"])
 					else
 						SlashCmdList["BIGWIGSPULL"]("0")
 					end
@@ -389,11 +379,9 @@ function S:CreateRM()
 
 	-- Others
 	local menu = CreateFrame("Frame", nil, header)
-	menu:SetPoint("TOP", header, "BOTTOM", 0, -2)
+	menu:SetPoint("TOP", header, "BOTTOM", 0, -3)
 	menu:SetSize(180, 38)
-	B.CreateBD(menu)
-	B.CreateSD(menu)
-	B.CreateTex(menu)
+	B.SetBD(menu)
 	menu:Hide()
 	menu:SetScript("OnLeave", function(self)
 		self:SetScript("OnUpdate", function(self, elapsed)
@@ -479,7 +467,7 @@ function S:CreateRM()
 	header:RegisterForClicks("AnyUp")
 	header:SetScript("OnClick", function(_, btn)
 		if btn == "LeftButton" then
-			ToggleFrame(menu)
+			B:TogglePanel(menu)
 
 			if menu:IsShown() then
 				menu:ClearAllPoints()
@@ -518,7 +506,7 @@ function S:CreateRM()
 	}
 
 	WorldFrame:HookScript("OnMouseDown", function(_, btn)
-		if not NDuiDB["Skins"]["EasyMarking"] then return end
+		if not NDuiDB["Misc"]["EasyMarking"] then return end
 		if btn == "LeftButton" and IsControlKeyDown() and UnitExists("mouseover") then
 			if not IsInGroup() or (IsInGroup() and not IsInRaid()) or UnitIsGroupLeader("player") or UnitIsGroupAssistant("player") then
 				local ricon = GetRaidTargetIndex("mouseover")
