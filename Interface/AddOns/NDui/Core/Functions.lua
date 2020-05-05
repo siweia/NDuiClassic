@@ -814,7 +814,7 @@ do
 		yOffset = yOffset or C.mult
 		anchor = anchor or frame:GetParent()
 
-		DisablePixelSnap(frame)
+		--DisablePixelSnap(frame)
 		frame:ClearAllPoints()
 		frame:Point("TOPLEFT", anchor, "TOPLEFT", xOffset, -yOffset)
 		frame:Point("BOTTOMRIGHT", anchor2 or anchor, "BOTTOMRIGHT", -xOffset, yOffset)
@@ -825,7 +825,7 @@ do
 		yOffset = yOffset or C.mult
 		anchor = anchor or frame:GetParent()
 
-		DisablePixelSnap(frame)
+		--DisablePixelSnap(frame)
 		frame:ClearAllPoints()
 		frame:Point("TOPLEFT", anchor, "TOPLEFT", -xOffset, yOffset)
 		frame:Point("BOTTOMRIGHT", anchor2 or anchor, "BOTTOMRIGHT", xOffset, -yOffset)
@@ -836,7 +836,7 @@ do
 		if not object.Point then mt.Point = Point end
 		if not object.SetInside then mt.SetInside = SetInside end
 		if not object.SetOutside then mt.SetOutside = SetOutside end
-		if not object.DisabledPixelSnap then
+		--[[if not object.DisabledPixelSnap then
 			if mt.SetTexture then hooksecurefunc(mt, "SetTexture", DisablePixelSnap) end
 			if mt.SetTexCoord then hooksecurefunc(mt, "SetTexCoord", DisablePixelSnap) end
 			if mt.CreateTexture then hooksecurefunc(mt, "CreateTexture", DisablePixelSnap) end
@@ -845,7 +845,7 @@ do
 			if mt.SetSnapToPixelGrid then hooksecurefunc(mt, "SetSnapToPixelGrid", WatchPixelSnap) end
 			if mt.SetStatusBarTexture then hooksecurefunc(mt, "SetStatusBarTexture", DisablePixelSnap) end
 			mt.DisabledPixelSnap = true
-		end
+		end]]
 	end
 
 	local handled = {["Frame"] = true}
