@@ -727,8 +727,8 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Misc", "AlertInInstance", L["Alert In Instance"].."*", true},
 		{1, "Misc", "OwnInterrupt", L["Own Interrupt"].."*"},
 		{1, "Misc", "BrokenSpell", L["Broken Spell"].."*", true, nil, nil, L["BrokenSpellTip"]},
-		{},--blank
-		{1, "Misc", "PlacedItemAlert", L["Placed Item Alert"].."*"},
+		--{},--blank
+		--{1, "Misc", "PlacedItemAlert", L["Placed Item Alert"].."*"}, -- fix me: need more data
 	},
 	[8] = {
 		{1, "Chat", "Lock", "|cff00cc4c"..L["Lock Chat"]},
