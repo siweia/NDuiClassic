@@ -698,8 +698,8 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Nameplate", "NameplateClassPower", L["Nameplate ClassPower"]},
 		{1, "Nameplate", "ClassPowerOnly", L["Nameplate ClassPowerOnly"], true},
 		{1, "Nameplate", "PPPowerText", L["PlayerPlate PowerText"]},
-		{1, "Nameplate", "PPHideOOC", L["Fadeout OOC"], true},
-		--{3, "Nameplate", "PPIconSize", L["PlayerPlate IconSize"], true, {30, 60, 0}},
+		{1, "Nameplate", "PPHideOOC", L["Fadeout OOC"]},
+		{3, "Nameplate", "PPIconSize", L["PlayerPlate IconSize"].."(32)", true, {30, 60, 0}, updatePlayerPlate},
 		{3, "Nameplate", "PPHeight", L["PlayerPlate HPHeight"].."*", false, {5, 15, 0}, updatePlayerPlate},
 		{3, "Nameplate", "PPPHeight", L["PlayerPlate MPHeight"].."*", true, {5, 15, 0}, updatePlayerPlate},
 		{},--blank
