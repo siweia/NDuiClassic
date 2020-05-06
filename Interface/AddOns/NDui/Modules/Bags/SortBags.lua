@@ -479,7 +479,7 @@ function Item(container, position)
 			tinsert(sortKey, 12)
 
 		-- higher quality
-		elseif quality > 1 then
+		elseif quality and quality > 1 then
 			tinsert(sortKey, 10)
 
 		-- common quality
