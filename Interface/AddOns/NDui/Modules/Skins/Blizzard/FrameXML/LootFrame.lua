@@ -28,9 +28,9 @@ tinsert(C.defaultThemes, function()
 		end
 
 		if select(7, GetLootSlotInfo(index)) then
-			ic.bg:SetVertexColor(1, 1, 0)
+			ic.bg:SetBackdropBorderColor(1, 1, 0)
 		else
-			ic.bg:SetVertexColor(0, 0, 0)
+			ic.bg:SetBackdropBorderColor(0, 0, 0)
 		end
 	end)
 
@@ -56,7 +56,7 @@ tinsert(C.defaultThemes, function()
 	MasterLooterFrame.Item.bg = B.CreateBDFrame(MasterLooterFrame.Item.Icon)
 
 	MasterLooterFrame:HookScript("OnShow", function(self)
-		local color = C.QualityColors[LootFrame.selectedQuality or 1]
+		local color = DB.QualityColors[LootFrame.selectedQuality or 1]
 		self.Item.bg:SetBackdropBorderColor(color.r, color.g, color.b)
 		LootFrame:SetAlpha(.4)
 	end)
@@ -94,13 +94,9 @@ tinsert(C.defaultThemes, function()
 			local frame = _G["GroupLootFrame"..i]
 			B.StripTextures(frame)
 			if not frame.styled then
-				frame.bg = B.CreateBDFrame(frame)
+				frame.bg = B.CreateBDFrame(frame, nil, true)
 				frame.bg:SetPoint("TOPLEFT", 8, -8)
 				frame.bg:SetPoint("BOTTOMRIGHT", -8, 8)
-				B.CreateSD(frame.bg)
-				if frame.bg.Shadow then
-					frame.bg.Shadow:SetFrameLevel(0)
-				end
 
 				B.ReskinClose(frame.PassButton, "TOPRIGHT", frame.bg, "TOPRIGHT", -5, -5)
 
@@ -124,7 +120,7 @@ tinsert(C.defaultThemes, function()
 
 			if frame:IsShown() then
 				local quality = select(4, GetLootRollItemInfo(frame.rollID))
-				local color = C.QualityColors[quality or 1]
+				local color = DB.QualityColors[quality or 1]
 				frame.bg:SetBackdropBorderColor(color.r, color.g, color.b)
 			end
 		end

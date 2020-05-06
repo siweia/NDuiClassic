@@ -43,7 +43,7 @@ tinsert(C.defaultThemes, function()
 
 		local texture, _, _, quality = GetContainerItemInfo(container, buttonID)
 		if texture and quality and quality > 1 then
-			local color = C.QualityColors[quality]
+			local color = DB.QualityColors[quality]
 			button.bg:SetBackdropBorderColor(color.r, color.g, color.b)
 		else
 			button.bg:SetBackdropBorderColor(0, 0, 0)
