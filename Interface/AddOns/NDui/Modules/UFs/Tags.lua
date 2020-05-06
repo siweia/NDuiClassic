@@ -6,7 +6,7 @@ local format, floor = string.format, math.floor
 local AFK, DND, DEAD, PLAYER_OFFLINE = AFK, DND, DEAD, PLAYER_OFFLINE
 local ALTERNATE_POWER_INDEX = ALTERNATE_POWER_INDEX or 10
 local UnitIsDeadOrGhost, UnitIsConnected, UnitIsTapDenied, UnitIsPlayer = UnitIsDeadOrGhost, UnitIsConnected, UnitIsTapDenied, UnitIsPlayer
-local UnitHealth, UnitHealthMax, UnitPower, UnitPowerType, UnitStagger = UnitHealth, UnitHealthMax, UnitPower, UnitPowerType, UnitStagger
+local UnitHealth, UnitHealthMax, UnitPower, UnitPowerType = UnitHealth, UnitHealthMax, UnitPower, UnitPowerType
 local UnitClass, UnitReaction, UnitLevel, UnitClassification = UnitClass, UnitReaction, UnitLevel, UnitClassification
 local UnitIsAFK, UnitIsDND, UnitIsDead, UnitIsGhost = UnitIsAFK, UnitIsDND, UnitIsDead, UnitIsGhost
 local GetCreatureDifficultyColor = GetCreatureDifficultyColor
@@ -213,13 +213,3 @@ oUF.Tags.Methods["altpower"] = function(unit)
 	end
 end
 oUF.Tags.Events["altpower"] = "UNIT_POWER_UPDATE"
-
--- Monk stagger
-oUF.Tags.Methods["monkstagger"] = function(unit)
-	if unit ~= "player" then return end
-	local cur = UnitStagger(unit) or 0
-	local perc = cur / UnitHealthMax(unit)
-	if cur == 0 then return end
-	return B.Numb(cur).." | "..DB.MyColor..floor(perc*100 + .5).."%"
-end
-oUF.Tags.Events["monkstagger"] = "UNIT_MAXHEALTH UNIT_AURA"

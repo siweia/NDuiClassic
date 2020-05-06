@@ -675,7 +675,6 @@ function UF:CreatePlayerPlate()
 	UF:CreateHealthBar(self)
 	UF:CreatePowerBar(self)
 	UF:CreateClassPower(self)
-	UF:StaggerBar(self)
 	if NDuiDB["Auras"]["ClassAuras"] and not DB.isClassic then auras:CreateLumos(self) end
 	if not NDuiDB["Nameplate"]["ClassPowerOnly"] then UF:CreateEneryTicker(self) end
 

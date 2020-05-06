@@ -849,38 +849,8 @@ function UF:CreateClassPower(self)
 		end
 	end
 
-	if DB.MyClass == "DEATHKNIGHT" then
-		bars.colorSpec = true
-		bars.sortOrder = "asc"
-		bars.PostUpdate = UF.PostUpdateRunes
-		self.Runes = bars
-	else
-		bars.PostUpdate = UF.PostUpdateClassPower
-		self.ClassPower = bars
-	end
-end
-
-function UF:StaggerBar(self)
-	if DB.MyClass ~= "MONK" then return end
-
-	local stagger = CreateFrame("StatusBar", nil, self.Health)
-	stagger:SetSize(barWidth, barHeight)
-	stagger:SetPoint(unpack(C.UFs.BarPoint))
-	stagger:SetStatusBarTexture(DB.normTex)
-	stagger:SetFrameLevel(self:GetFrameLevel() + 5)
-	B.CreateBDFrame(stagger, 0, true)
-
-	local bg = stagger:CreateTexture(nil, "BACKGROUND")
-	bg:SetAllPoints()
-	bg:SetTexture(DB.normTex)
-	bg.multiplier = .25
-
-	local text = B.CreateFS(stagger, 13)
-	text:SetPoint("CENTER", stagger, "TOP")
-	self:Tag(text, "[monkstagger]")
-
-	self.Stagger = stagger
-	self.Stagger.bg = bg
+	bars.PostUpdate = UF.PostUpdateClassPower
+	self.ClassPower = bars
 end
 
 function UF.PostUpdateAltPower(element, _, cur, _, max)
