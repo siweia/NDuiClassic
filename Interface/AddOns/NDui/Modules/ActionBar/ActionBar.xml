@@ -5,7 +5,7 @@
 	<Script file="Bars\Bar4.lua"/>
 	<Script file="Bars\Bar5.lua"/>
 	<Script file="Bars\Stancebar.lua"/>
-	<Script file="bars\Petbar.lua"/>
+	<Script file="Bars\Petbar.lua"/>
 	<Script file="Bars\Leave_vehicle.lua"/>
 	<Script file="Bars\Hide_blizzart.lua"/>
 	<Script file="Bars\Fader.lua"/>
