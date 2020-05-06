@@ -207,7 +207,7 @@ function S:RecountSkin()
 
 	local frame = Recount_MainWindow
 	B.StripTextures(frame)
-	local bg = B.CreateBDFrame(frame)
+	local bg = B.SetBD(frame)
 	bg:SetPoint("TOPLEFT", 0, -10)
 	frame.bg = bg
 
