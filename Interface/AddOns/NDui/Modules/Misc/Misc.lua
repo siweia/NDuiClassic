@@ -50,6 +50,7 @@ function M:OnLogin()
 	self:BidPriceHighlight()
 	self:TradeTabs()
 	self:BlockStrangerInvite()
+	self:CreateRM()
 
 	-- Max camera distancee
 	if tonumber(GetCVar("cameraDistanceMaxZoomFactor")) ~= 2.6 then
