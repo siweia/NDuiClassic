@@ -57,6 +57,8 @@ function Bar:FixActionCount()
 end
 
 function Bar:OnLogin()
+	self:MicroMenu()
+
 	if not NDuiDB["Actionbar"]["Enable"] then return end
 
 	local padding, margin = 2, 2
@@ -135,7 +137,6 @@ function Bar:OnLogin()
 	self:ReskinBars()
 	self:UpdateAllScale()
 	self:CreateBackground()
-	self:MicroMenu()
 
 	-- Credit: ShowActionCount, prozhong
 	hooksecurefunc("ActionButton_UpdateCount", self.FixActionCount)
