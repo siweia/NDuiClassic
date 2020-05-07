@@ -93,13 +93,12 @@ tinsert(C.defaultThemes, function()
 	B.StripTextures(QuestNPCModel)
 	B.StripTextures(QuestNPCModelTextFrame)
 
-	local npcbd = CreateFrame("Frame", nil, QuestNPCModel)
+	local npcbd = B.SetBD(QuestNPCModel)
+	npcbd:ClearAllPoints()
 	npcbd:SetPoint("TOPLEFT", -1, 1)
 	npcbd:SetPoint("RIGHT", 2, 0)
 	npcbd:SetPoint("BOTTOM", QuestNPCModelTextScrollFrame)
 	npcbd:SetFrameLevel(0)
-	B.CreateBD(npcbd)
-	B.CreateSD(npcbd)
 
 	local npcLine = CreateFrame("Frame", nil, QuestNPCModel)
 	npcLine:SetPoint("BOTTOMLEFT", 0, -1)
@@ -181,5 +180,5 @@ tinsert(C.defaultThemes, function()
 	-- QuestTimerFrame
 
 	B.StripTextures(QuestTimerFrame)
-	B.CreateSD(B.CreateBDFrame(QuestTimerFrame))
+	B.SetBD(QuestTimerFrame)
 end)

@@ -5,8 +5,8 @@ C.themes["Blizzard_AuctionUI"] = function()
 	local r, g, b = DB.r, DB.g, DB.b
 
 	B.SetBD(AuctionFrame, 2, -10, 0, 10)
-	B.CreateBD(AuctionProgressFrame)
-	B.CreateSD(AuctionProgressFrame)
+	B.StripTextures(AuctionProgressFrame)
+	B.SetBD(AuctionProgressFrame)
 
 	AuctionProgressBar:SetStatusBarTexture(DB.bdTex)
 	B.CreateBDFrame(AuctionProgressBar, .25)
@@ -19,9 +19,6 @@ C.themes["Blizzard_AuctionUI"] = function()
 
 	AuctionFrame:DisableDrawLayer("ARTWORK")
 	AuctionPortraitTexture:Hide()
-	for i = 1, 4 do
-		select(i, AuctionProgressFrame:GetRegions()):Hide()
-	end
 	BrowseFilterScrollFrame:GetRegions():Hide()
 	select(2, BrowseFilterScrollFrame:GetRegions()):Hide()
 	BrowseScrollFrame:GetRegions():Hide()

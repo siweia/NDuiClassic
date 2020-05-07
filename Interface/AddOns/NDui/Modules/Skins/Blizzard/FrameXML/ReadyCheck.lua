@@ -2,8 +2,7 @@ local _, ns = ...
 local B, C, L, DB = unpack(ns)
 
 tinsert(C.defaultThemes, function()
-	B.CreateBD(ReadyCheckFrame)
-	B.CreateSD(ReadyCheckFrame)
+	B.SetBD(ReadyCheckFrame)
 	ReadyCheckPortrait:SetAlpha(0)
 	select(2, ReadyCheckListenerFrame:GetRegions()):Hide()
 

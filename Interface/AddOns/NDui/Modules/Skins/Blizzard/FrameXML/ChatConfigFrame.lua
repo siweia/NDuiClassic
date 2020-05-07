@@ -3,8 +3,7 @@ local B, C, L, DB = unpack(ns)
 
 tinsert(C.defaultThemes, function()
 	B.StripTextures(ChatConfigFrame)
-	B.CreateBD(ChatConfigFrame)
-	B.CreateSD(ChatConfigFrame)
+	B.SetBD(ChatConfigFrame)
 	ChatConfigFrameHeader:SetAlpha(0)
 	ChatConfigFrameHeader:SetPoint("TOP", ChatConfigFrame, 0, 0)
 

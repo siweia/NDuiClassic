@@ -3,6 +3,20 @@ local B, C, L, DB = unpack(ns)
 
 tinsert(C.defaultThemes, function()
 	local r, g, b = DB.r, DB.g, DB.b
+
+	-- Battlenet toast frame
+	BNToastFrame:SetBackdrop(nil)
+	B.SetBD(BNToastFrame)
+	BNToastFrame.TooltipFrame:SetBackdrop(nil)
+	B.SetBD(BNToastFrame.TooltipFrame)
+
+	-- Battletag invite frame
+	BattleTagInviteFrame:SetBackdrop(nil)
+	B.SetBD(BattleTagInviteFrame)
+	local send, cancel = BattleTagInviteFrame:GetChildren()
+	B.Reskin(send)
+	B.Reskin(cancel)
+
 	local friendTex = "Interface\\HELPFRAME\\ReportLagIcon-Chat"
 	local queueTex = "Interface\\HELPFRAME\\HelpIcon-ItemRestoration"
 	local homeTex = "Interface\\Buttons\\UI-HomeButton"
@@ -98,11 +112,10 @@ tinsert(C.defaultThemes, function()
 	B.ReskinInput(CreateChannelPopup.Name)
 	B.ReskinInput(CreateChannelPopup.Password)
 
-	B.CreateBD(VoiceChatPromptActivateChannel)
-	B.CreateSD(VoiceChatPromptActivateChannel)
+	B.SetBD(VoiceChatPromptActivateChannel)
 	B.Reskin(VoiceChatPromptActivateChannel.AcceptButton)
-	B.CreateBD(VoiceChatChannelActivatedNotification)
-	B.CreateSD(VoiceChatChannelActivatedNotification)
+	VoiceChatChannelActivatedNotification:SetBackdrop(nil)
+	B.SetBD(VoiceChatChannelActivatedNotification)
 
 	B.ReskinSlider(UnitPopupVoiceMicrophoneVolume.Slider)
 	B.ReskinSlider(UnitPopupVoiceSpeakerVolume.Slider)

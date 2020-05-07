@@ -2,13 +2,10 @@ local _, ns = ...
 local B, C, L, DB = unpack(ns)
 
 tinsert(C.defaultThemes, function()
-	B.CreateBD(TutorialFrame)
-	B.CreateSD(TutorialFrame)
+	B.SetBD(TutorialFrame)
 
 	TutorialFrame:DisableDrawLayer("BORDER")
-
 	B.Reskin(TutorialFrameOkayButton, true)
-
 	TutorialFrameOkayButton:ClearAllPoints()
 	TutorialFrameOkayButton:SetPoint("BOTTOMLEFT", TutorialFrameNextButton, "BOTTOMRIGHT", 10, 0)
 

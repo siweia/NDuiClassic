@@ -2,10 +2,8 @@ local _, ns = ...
 local B, C, L, DB = unpack(ns)
 
 tinsert(C.defaultThemes, function()
-	B.CreateBD(ScrollOfResurrectionSelectionFrame)
-	B.CreateSD(ScrollOfResurrectionSelectionFrame)
-	B.CreateBD(ScrollOfResurrectionFrame)
-	B.CreateSD(ScrollOfResurrectionFrame)
+	B.SetBD(ScrollOfResurrectionSelectionFrame)
+	B.SetBD(ScrollOfResurrectionFrame)
 	B.ReskinScroll(ScrollOfResurrectionSelectionFrameListScrollFrameScrollBar)
 	B.ReskinInput(ScrollOfResurrectionSelectionFrameTargetEditBox)
 	B.ReskinInput(ScrollOfResurrectionFrameNoteFrame)

@@ -40,10 +40,9 @@ tinsert(C.defaultThemes, function()
 			searchOverlay:SetPoint("BOTTOMRIGHT", C.mult, -C.mult)
 		end
 
-		local f = B.CreateBDFrame(con)
+		local f = B.CreateBDFrame(con, nil, true)
 		f:SetPoint("TOPLEFT", 8, -4)
 		f:SetPoint("BOTTOMRIGHT", -4, 3)
-		B.CreateSD(f)
 
 		B.ReskinClose(_G["ContainerFrame"..i.."CloseButton"], "TOPRIGHT", con, "TOPRIGHT", -6, -6)
 	end
