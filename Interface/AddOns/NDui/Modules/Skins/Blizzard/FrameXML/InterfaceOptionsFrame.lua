@@ -14,8 +14,7 @@ tinsert(C.defaultThemes, function()
 		for i = 1, 2 do
 			B.StripTextures(_G["InterfaceOptionsFrameTab"..i])
 		end
-		B.CreateBD(InterfaceOptionsFrame)
-		B.CreateSD(InterfaceOptionsFrame)
+		B.SetBD(InterfaceOptionsFrame)
 
 		InterfaceOptionsFrameHeader:SetTexture("")
 		InterfaceOptionsFrameHeader:ClearAllPoints()

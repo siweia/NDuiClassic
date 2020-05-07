@@ -5,9 +5,8 @@ tinsert(C.defaultThemes, function()
 	GameMenuFrameHeader:SetAlpha(0)
 	GameMenuFrameHeader:ClearAllPoints()
 	GameMenuFrameHeader:SetPoint("TOP", GameMenuFrame, 0, 7)
-	B.CreateBD(GameMenuFrame)
-	B.CreateSD(GameMenuFrame)
-	--GameMenuFrame.Border:Hide()
+	B.StripTextures(GameMenuFrame)
+	B.SetBD(GameMenuFrame)
 
 	local buttons = {
 		GameMenuButtonHelp,
