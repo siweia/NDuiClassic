@@ -2,6 +2,7 @@
 	<Script file="Blizzard_AuctionUI.lua"/>
 	<Script file="Blizzard_BattlefieldMap.lua"/>
 	<Script file="Blizzard_BindingUI.lua"/>
+	<Script file="Blizzard_Communities.lua"/>
 	<Script file="Blizzard_DebugTools.lua"/>
 	<Script file="Blizzard_FlightMap.lua"/>
 	<Script file="Blizzard_GMChatUI.lua"/>
