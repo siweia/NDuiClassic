@@ -235,6 +235,7 @@ local defaultSettings = {
 		FontOutline = true,
 		Loot = true,
 		Shadow = true,
+		FontScale = 1,
 	},
 	Tooltip = {
 		CombatHide = false,
@@ -770,13 +771,14 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{3, "Map", "MinmapScale", L["Minimap Scale"].."*", true, {1, 2, 1}, updateMinimapScale},
 	},
 	[10] = {
-		{1, "Skins", "FlatMode", L["FlatMode"]},
-		{1, "Skins", "Shadow", L["Shadow"]},
-		{3, "Skins", "SkinAlpha", L["SkinAlpha"].."*", true, {0, 1, 1}, updateSkinAlpha},
-		{1, "Skins", "FontOutline", L["FontOutline"]},
-		{1, "Skins", "DefaultBags", L["DefaultBags"], true, nil, nil, L["DefaultBagsTips"]},
+		{1, "Skins", "BlizzardSkins", "|cff00cc4c"..L["BlizzardSkins"], nil, nil, nil, L["BlizzardSkinsTips"]},
+		{1, "Skins", "FlatMode", L["FlatMode"], true},
+		{1, "Skins", "DefaultBags", L["DefaultBags"], nil, nil, nil, L["DefaultBagsTips"]},
+		{1, "Skins", "Shadow", L["Shadow"], true},
 		{1, "Skins", "Loot", L["Loot"]},
-		{1, "Skins", "BlizzardSkins", "|cff00cc4c"..L["BlizzardSkins"], true, nil, nil, L["BlizzardSkinsTips"]},
+		{1, "Skins", "FontOutline", L["FontOutline"], true},
+		{3, "Skins", "SkinAlpha", L["SkinAlpha"].."*", nil, {0, 1, 1}, updateSkinAlpha},
+		{3, "Skins", "FontScale", L["GlobalFontScale"], true, {.5, 1.5, 1}},
 		{},--blank
 
 		{1, "Skins", "BarLine", L["Bar Line"]},

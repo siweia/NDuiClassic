@@ -7,7 +7,8 @@ tinsert(C.defaultThemes, function()
 	local function ReskinFont(font, size, white)
 		local oldSize = select(2, font:GetFont())
 		size = size or oldSize
-		font:SetFont(DB.Font[1], size, DB.Font[3])
+		local fontSize = floor(size*NDuiDB["Skins"]["FontScale"] + .5) -- round number
+		font:SetFont(DB.Font[1], fontSize, DB.Font[3])
 		font:SetShadowColor(0, 0, 0, 0)
 	end
 
