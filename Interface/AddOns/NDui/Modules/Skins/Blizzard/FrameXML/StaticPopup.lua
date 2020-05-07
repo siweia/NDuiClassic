@@ -35,6 +35,7 @@ tinsert(C.defaultThemes, function()
 		silver:SetPoint("LEFT", gold, "RIGHT", 1, 0)
 		copper:SetPoint("LEFT", silver, "RIGHT", 1, 0)
 
+		B.StripTextures(frame)
 		B.SetBD(frame)
 		for j = 1, 4 do
 			B.Reskin(frame["button"..j])
