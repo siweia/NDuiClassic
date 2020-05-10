@@ -766,7 +766,7 @@ do
 
 		if not noHighlight then
 			self:HookScript("OnEnter", Button_OnEnter)
-			 self:HookScript("OnLeave", Button_OnLeave)
+			self:HookScript("OnLeave", Button_OnLeave)
 		end
 	end
 
@@ -1191,6 +1191,7 @@ do
 			closeButton:ClearAllPoints()
 			closeButton:SetPoint("TOPRIGHT", bg, -5, -5)
 		end
+		return bg
 	end
 
 	function B:ReskinGarrisonPortrait()
