@@ -2,9 +2,6 @@ local _, ns = ...
 local B, C, L, DB = unpack(ns)
 
 tinsert(C.defaultThemes, function()
-	local class = select(2, UnitClass("player"))
-	if class ~= "HUNTER" then return end
-
 	B.ReskinPortraitFrame(PetStableFrame, 15, -15, -35, 73)
 	B.Reskin(PetStablePurchaseButton)
 	B.ReskinRotationButtons(PetStableModel)
