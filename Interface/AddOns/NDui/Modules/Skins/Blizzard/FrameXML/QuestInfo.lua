@@ -80,8 +80,8 @@ tinsert(C.defaultThemes, function()
 		bu.iconBG = B.ReskinIcon(bu.Icon)
 
 		local bg = B.CreateBDFrame(bu, .25)
-		bg:SetPoint("TOPLEFT", iconBG, "TOPRIGHT", 2, 0)
-		bg:SetPoint("BOTTOMRIGHT", iconBG, 100, 0)
+		bg:SetPoint("TOPLEFT", bu.iconBG, "TOPRIGHT", 2, 0)
+		bg:SetPoint("BOTTOMRIGHT", bu.iconBG, 100, 0)
 		bu.bg = bg
 	end
 
