@@ -59,3 +59,4 @@ function M:AlertFrame_Setup()
 	hooksecurefunc("GroupLootFrame_OpenNewFrame", M.GroupLootContainer_UpdateAnchor)
 	hooksecurefunc("GroupLootContainer_Update", M.UpdatGroupLootContainer)
 end
+M:RegisterMisc("AlertFrame", M.AlertFrame_Setup)

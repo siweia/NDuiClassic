@@ -189,10 +189,11 @@ function M:ShowItemLevel()
 	B:RegisterEvent("PLAYER_EQUIPMENT_CHANGED", M.ItemLevel_UpdatePlayer)
 
 	-- iLvl on InspectFrame
-	B:RegisterEvent("INSPECT_READY", self.ItemLevel_UpdateInspect)
+	B:RegisterEvent("INSPECT_READY", M.ItemLevel_UpdateInspect)
 
 	-- Update item quality
 	M.QualityUpdater = CreateFrame("Frame")
 	M.QualityUpdater:Hide()
 	M.QualityUpdater:SetScript("OnUpdate", M.RefreshButtonInfo)
 end
+M:RegisterMisc("GearInfo", M.ShowItemLevel)

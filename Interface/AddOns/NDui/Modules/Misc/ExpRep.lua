@@ -112,5 +112,6 @@ function M:Expbar()
 	rest:SetFrameLevel(bar:GetFrameLevel() - 1)
 	bar.restBar = rest
 
-	self:SetupScript(bar)
+	M:SetupScript(bar)
 end
+M:RegisterMisc("ExpRep", M.Expbar)

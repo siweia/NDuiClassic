@@ -12,12 +12,6 @@ local GetSpellLink, GetSpellInfo = GetSpellLink, GetSpellInfo
 local C_ChatInfo_SendAddonMessage = C_ChatInfo.SendAddonMessage
 local C_ChatInfo_RegisterAddonMessagePrefix = C_ChatInfo.RegisterAddonMessagePrefix
 
-function M:AddAlerts()
-	self:InterruptAlert()
-	self:VersionCheck()
-	self:PlacedItemAlert()
-end
-
 --[[
 	闭上你的嘴！
 	打断、偷取及驱散法术时的警报
@@ -216,3 +210,11 @@ function M:PlacedItemAlert()
 	B:RegisterEvent("GROUP_LEFT", self.ItemAlert_CheckGroup)
 	B:RegisterEvent("GROUP_JOINED", self.ItemAlert_CheckGroup)
 end
+
+-- Init
+function M:AddAlerts()
+	M:InterruptAlert()
+	M:VersionCheck()
+	M:PlacedItemAlert()
+end
+M:RegisterMisc("Alerts", M.AddAlerts)
