@@ -313,6 +313,7 @@ local accountSettings = {
 	DisableInfobars = false,
 	ClassColorChat = true,
 	ContactList = {},
+	CustomJunkList = {},
 }
 
 -- Initial settings
