@@ -171,6 +171,14 @@ DB.ReminderBuffs = {
 			instance = true,
 			pvp = true,
 		},
+		{	spells = {	-- 心灵之火
+				[588] = true,
+			},
+			depend = 588,
+			combat = true,
+			instance = true,
+			pvp = true,
+		},
 	},
 	DRUID = {
 		{	spells = {	-- 野性印记
