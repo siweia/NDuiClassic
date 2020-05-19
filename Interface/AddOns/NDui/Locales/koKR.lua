@@ -561,4 +561,4 @@ L["AllowFriendsSpamTip"] = "|n선택 시 친구,파티원,길드원으로부터 
 L["TimestampFormat"] = "Timestamp Format"
 L["GlobalFontScale"] = "Font Scale"
 L["CustomJunkMode"] = "Custom Junk List"
-L["JunkMode Enabled"] = "|nClick to tag item as junk.|nIf 'Autosell Junl' enabled, these items would be sold as well.|nThe list is saved account-wide."
+L["JunkMode Enabled"] = "|nClick to tag item as junk.|nIf 'Autosell Junk' enabled, these items would be sold as well.|nThe list is saved account-wide."
