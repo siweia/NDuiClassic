@@ -410,13 +410,6 @@ end
 
 local function updateBagStatus()
 	B:GetModule("Bags"):UpdateAllBags()
-
-	local label = BAG_FILTER_EQUIPMENT
-	if NDuiDB["Bags"]["ItemSetFilter"] then
-		label = L["Equipement Set"]
-	end
-	_G.NDui_BackpackEquipment.label:SetText(label)
-	_G.NDui_BackpackBankEquipment.label:SetText(label)
 end
 
 local function updateActionbarScale()
