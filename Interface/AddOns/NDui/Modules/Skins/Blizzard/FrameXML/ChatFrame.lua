@@ -2,8 +2,6 @@ local _, ns = ...
 local B, C, L, DB = unpack(ns)
 
 tinsert(C.defaultThemes, function()
-	local r, g, b = DB.r, DB.g, DB.b
-
 	-- Battlenet toast frame
 	BNToastFrame:SetBackdrop(nil)
 	B.SetBD(BNToastFrame)

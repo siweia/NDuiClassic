@@ -12,7 +12,7 @@ local GetTime, SendChatMessage, IsAddOnLoaded = GetTime, SendChatMessage, IsAddO
 local IsAltKeyDown, IsControlKeyDown, InCombatLockdown = IsAltKeyDown, IsControlKeyDown, InCombatLockdown
 local UnitExists, UninviteUnit, LeaveParty = UnitExists, UninviteUnit, LeaveParty
 local ConvertToParty, ConvertToRaid = ConvertToParty, ConvertToRaid
-local DoReadyCheck, InitiateRolePoll, GetReadyCheckStatus = DoReadyCheck, InitiateRolePoll, GetReadyCheckStatus
+local DoReadyCheck, GetReadyCheckStatus = DoReadyCheck, GetReadyCheckStatus
 local C_Timer_After = C_Timer.After
 
 function M:RaidTool_Visibility(frame)
@@ -502,15 +502,6 @@ function M:RaidTool_CreateMenu(parent)
 				UIErrorsFrame:AddMessage(DB.InfoColor..ERR_NOT_LEADER)
 			end
 		end},
-		--[[
-		{ROLE_POLL, function()
-			if IsInGroup() and not HasLFGRestrictions() and (UnitIsGroupLeader("player") or (UnitIsGroupAssistant("player") and IsInRaid())) then
-				InitiateRolePoll()
-			else
-				UIErrorsFrame:AddMessage(DB.InfoColor..ERR_NOT_LEADER)
-			end
-		end},
-		{RAID_CONTROL, function() ToggleFriendsFrame(3) end},]]
 	}
 
 	local bu = {}
