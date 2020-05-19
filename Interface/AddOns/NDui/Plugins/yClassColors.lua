@@ -5,7 +5,7 @@ local oUF = ns.oUF
 -- yClassColors, by yleaf
 -- NDui MOD
 ----------------------------
-local format, ipairs, tinsert, strsplit = string.format, ipairs, table.insert, string.split
+local format, tinsert, strsplit = string.format, table.insert, string.split
 
 -- Colors
 local function classColor(class, showRGB)
@@ -28,19 +28,6 @@ local rankColor = {
 	1, 1, 0,
 	0, 1, 0
 }
-
-local repColor = {
-	1, 0, 0,
-	1, 1, 0,
-	0, 1, 0,
-	0, 1, 1,
-	0, 0, 1,
-}
-
-local function smoothColor(cur, max, color)
-	local r, g, b = oUF:RGBColorGradient(cur, max, unpack(color))
-	return B.HexRGB(r, g, b)
-end
 
 -- Guild
 hooksecurefunc("GuildStatus_Update", function()
@@ -65,7 +52,7 @@ hooksecurefunc("GuildStatus_Update", function()
 	else
 		for i = 1, GUILDMEMBERS_TO_DISPLAY, 1 do
 			guildIndex = guildOffset + i
-			local fullName, _, rankIndex, _, class, zone, _, _, online = GetGuildRosterInfo(guildIndex)
+			local fullName, _, rankIndex, _, class, _, _, _, online = GetGuildRosterInfo(guildIndex)
 			if fullName and online then
 				local r, g, b = classColor(class, true)
 				_G["GuildFrameGuildStatusButton"..i.."Name"]:SetTextColor(r, g, b)

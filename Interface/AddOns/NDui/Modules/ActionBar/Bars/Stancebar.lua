@@ -6,7 +6,6 @@ local cfg = C.bars.stancebar
 function Bar:CreateStancebar()
 	local padding, margin = 2, 5
 	local num = NUM_STANCE_SLOTS
-	local NUM_POSSESS_SLOTS = NUM_POSSESS_SLOTS
 	local buttonList = {}
 
 	--make a frame that fits the size of all microbuttons

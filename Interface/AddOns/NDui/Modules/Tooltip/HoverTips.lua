@@ -2,9 +2,9 @@ local _, ns = ...
 local B, C, L, DB = unpack(ns)
 local TT = B:GetModule("Tooltip")
 
-local strmatch, strsplit, tonumber = string.match, string.split, tonumber
+local strmatch = string.match
 
-local orig1, orig2, sectionInfo = {}, {}, {}
+local orig1, orig2 = {}, {}
 local linkTypes = {
 	item = true,
 	enchant = true,

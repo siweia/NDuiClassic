@@ -10,7 +10,6 @@ local GetQuestIndexForWatch, GetNumQuestLeaderBoards, GetQuestLogLeaderBoard = G
 local FauxScrollFrame_GetOffset = FauxScrollFrame_GetOffset
 
 local cr, cg, cb = DB.r, DB.g, DB.b
-local LE_QUEST_FREQUENCY_DAILY = LE_QUEST_FREQUENCY_DAILY or 2
 local MAX_QUESTLOG_QUESTS = MAX_QUESTLOG_QUESTS or 20
 local MAX_WATCHABLE_QUESTS = MAX_WATCHABLE_QUESTS or 5
 local headerString = QUESTS_LABEL.." %s/%s"

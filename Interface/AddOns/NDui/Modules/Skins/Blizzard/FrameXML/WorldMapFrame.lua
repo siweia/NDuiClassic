@@ -3,7 +3,6 @@ local B, C, L, DB = unpack(ns)
 
 tinsert(C.defaultThemes, function()
 	local WorldMapFrame = WorldMapFrame
-	local BorderFrame = WorldMapFrame.BorderFrame
 
 	B.ReskinPortraitFrame(WorldMapFrame, 7, 0, -7, 25)
 	B.ReskinDropDown(WorldMapContinentDropDown)

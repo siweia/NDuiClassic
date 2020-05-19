@@ -4,7 +4,7 @@ local B, C, L, DB = unpack(ns)
 tinsert(C.defaultThemes, function()
 	if not NDuiDB["Skins"]["FontOutline"] then return end
 
-	local function ReskinFont(font, size, white)
+	local function ReskinFont(font, size)
 		local oldSize = select(2, font:GetFont())
 		size = size or oldSize
 		local fontSize = floor(size*NDuiDB["Skins"]["FontScale"] + .5) -- round number

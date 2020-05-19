@@ -2,8 +2,6 @@ local _, ns = ...
 local B, C, L, DB = unpack(ns)
 
 C.themes["Blizzard_TalentUI"] = function()
-	local r, g, b = DB.r, DB.g, DB.b
-
 	B.ReskinPortraitFrame(TalentFrame, 20, -10, -33, 75)
 	B.Reskin(TalentFrameCancelButton)
 	B.ReskinScroll(TalentFrameScrollFrameScrollBar)

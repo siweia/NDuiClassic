@@ -7,7 +7,7 @@ local completedQuest, initComplete = {}
 local strmatch, strfind, gsub, format = string.match, string.find, string.gsub, string.format
 local mod, tonumber, pairs, floor = mod, tonumber, pairs, math.floor
 local soundKitID = SOUNDKIT.ALARM_CLOCK_WARNING_3
-local QUEST_COMPLETE, LE_QUEST_TAG_TYPE_PROFESSION, LE_QUEST_FREQUENCY_DAILY = QUEST_COMPLETE, LE_QUEST_TAG_TYPE_PROFESSION, LE_QUEST_FREQUENCY_DAILY
+local QUEST_COMPLETE, LE_QUEST_FREQUENCY_DAILY = QUEST_COMPLETE, LE_QUEST_FREQUENCY_DAILY
 
 local function acceptText(link, daily)
 	if daily then
@@ -71,7 +71,7 @@ function M:FindQuestProgress(_, msg)
 	end
 end
 
-function M:FindQuestAccept(questLogIndex, questID)
+function M:FindQuestAccept(questLogIndex)
 	local name, _, _, _, _, _, frequency = GetQuestLogTitle(questLogIndex)
 	if name then
 		sendQuestMsg(acceptText(name, frequency == LE_QUEST_FREQUENCY_DAILY))

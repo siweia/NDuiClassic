@@ -3,11 +3,10 @@ local B, C, L, DB = unpack(ns)
 local M = B:GetModule("Misc")
 
 local _G = getfenv(0)
-local ipairs, tremove = ipairs, table.remove
 local UIParent = _G.UIParent
 local GroupLootContainer = _G.GroupLootContainer
 
-local POSITION, ANCHOR_POINT, YOFFSET = "TOP", "BOTTOM", -10
+local POSITION, YOFFSET = "TOP", -10
 local parentFrame
 
 function M:GroupLootContainer_UpdateAnchor()
@@ -15,11 +14,9 @@ function M:GroupLootContainer_UpdateAnchor()
 	local screenHeight = UIParent:GetTop()
 	if y > screenHeight/2 then
 		POSITION = "TOP"
-		ANCHOR_POINT = "BOTTOM"
 		YOFFSET = -10
 	else
 		POSITION = "BOTTOM"
-		ANCHOR_POINT = "TOP"
 		YOFFSET = 10
 	end
 

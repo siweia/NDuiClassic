@@ -43,15 +43,6 @@ local function GetNPCID()
 	return B.GetNPCID(UnitGUID("npc"))
 end
 
-local function IsTrackingHidden()
-	for index = 1, GetNumTrackingTypes() do
-		local name, _, active = GetTrackingInfo(index)
-		if(name == (MINIMAP_TRACKING_TRIVIAL_QUESTS or MINIMAP_TRACKING_HIDDEN_QUESTS)) then
-			return active
-		end
-	end
-end
-
 local ignoreQuestNPC = {
 	[88570] = true,		-- Fate-Twister Tiklal
 	[87391] = true,		-- Fate-Twister Seress

@@ -5,13 +5,10 @@ local M = B:GetModule("Misc")
 --[[
 	一个工具条用来替代系统的经验条、声望条、神器经验等等
 ]]
-local format, pairs = string.format, pairs
-local min, mod, floor = math.min, mod, math.floor
+local pairs = pairs
+local min, floor = math.min, math.floor
 local MAX_PLAYER_LEVEL = MAX_PLAYER_LEVEL
-local MAX_REPUTATION_REACTION = MAX_REPUTATION_REACTION
 local FACTION_BAR_COLORS = FACTION_BAR_COLORS
-local NUM_FACTIONS_DISPLAYED = NUM_FACTIONS_DISPLAYED
-local REPUTATION_PROGRESS_FORMAT = REPUTATION_PROGRESS_FORMAT
 
 function M:ExpBar_Update()
 	local rest = self.restBar
@@ -29,7 +26,7 @@ function M:ExpBar_Update()
 			rest:Show()
 		end
 	elseif GetWatchedFactionInfo() then
-		local _, standing, barMin, barMax, value, factionID = GetWatchedFactionInfo()
+		local _, standing, barMin, barMax, value = GetWatchedFactionInfo()
 		--if standing == MAX_REPUTATION_REACTION then barMin, barMax, value = 0, 1, 1 end
 		self:SetStatusBarColor(FACTION_BAR_COLORS[standing].r, FACTION_BAR_COLORS[standing].g, FACTION_BAR_COLORS[standing].b, .85)
 		self:SetMinMaxValues(barMin, barMax)
@@ -64,7 +61,7 @@ function M:ExpBar_UpdateTooltip()
 	end
 
 	if GetWatchedFactionInfo() then
-		local name, standing, barMin, barMax, value, factionID = GetWatchedFactionInfo()
+		local name, standing, barMin, barMax, value = GetWatchedFactionInfo()
 		--[[if standing == MAX_REPUTATION_REACTION then
 			barMax = barMin + 1e3
 			value = barMax - 1

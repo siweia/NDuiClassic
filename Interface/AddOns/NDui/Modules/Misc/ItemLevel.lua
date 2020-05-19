@@ -4,9 +4,7 @@ local M = B:GetModule("Misc")
 
 local pairs, select, next, wipe = pairs, select, next, wipe
 local UnitGUID, GetItemInfo = UnitGUID, GetItemInfo
-local GetContainerItemLink, GetInventoryItemLink = GetContainerItemLink, GetInventoryItemLink
-local EquipmentManager_UnpackLocation, EquipmentManager_GetItemInfoByLocation = EquipmentManager_UnpackLocation, EquipmentManager_GetItemInfoByLocation
-local C_Timer_After = C_Timer.After
+local GetInventoryItemLink = GetInventoryItemLink
 
 local inspectSlots = {
 	"Head",

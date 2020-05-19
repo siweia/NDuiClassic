@@ -2,8 +2,6 @@ local _, ns = ...
 local B, C, L, DB = unpack(ns)
 
 C.themes["Blizzard_TrainerUI"] = function()
-	local r, g, b = DB.r, DB.g, DB.b
-
 	B.ReskinPortraitFrame(ClassTrainerFrame, 10, -5, -30, 70)
 	B.Reskin(ClassTrainerTrainButton)
 	B.Reskin(ClassTrainerCancelButton)

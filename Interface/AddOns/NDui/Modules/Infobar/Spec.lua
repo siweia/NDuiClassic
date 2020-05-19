@@ -4,16 +4,11 @@ if not C.Infobar.Spec then return end
 
 local module = B:GetModule("Infobar")
 local info = module:RegisterInfobar("Spec", C.Infobar.SpecPos)
-local format, wipe, select, next, strsub = string.format, table.wipe, select, next, strsub
+local format, strsub = string.format, strsub
 local TALENT, SHOW_SPEC_LEVEL, FEATURE_BECOMES_AVAILABLE_AT_LEVEL, NONE = TALENT, SHOW_SPEC_LEVEL, FEATURE_BECOMES_AVAILABLE_AT_LEVEL, NONE
 local UnitLevel, ToggleTalentFrame, UnitCharacterPoints = UnitLevel, ToggleTalentFrame, UnitCharacterPoints
 local talentString = "%s (%s)"
 local unspendPoints = gsub(CHARACTER_POINTS1_COLON, HEADER_COLON, "")
-
-local function addIcon(texture)
-	texture = texture and "|T"..texture..":12:16:0:0:50:50:4:46:4:46|t" or ""
-	return texture
-end
 
 info.eventList = {
 	"PLAYER_ENTERING_WORLD",

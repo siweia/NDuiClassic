@@ -8,7 +8,7 @@ local info = module:RegisterInfobar("Durability", C.Infobar.DurabilityPos)
 local format, gsub, sort, floor, modf, select = string.format, string.gsub, table.sort, math.floor, math.modf, select
 local GetInventoryItemLink, GetInventoryItemDurability, GetInventoryItemTexture = GetInventoryItemLink, GetInventoryItemDurability, GetInventoryItemTexture
 local GetMoney, GetRepairAllCost, RepairAllItems, CanMerchantRepair = GetMoney, GetRepairAllCost, RepairAllItems, CanMerchantRepair
-local C_Timer_After, IsShiftKeyDown, InCombatLockdown, CanMerchantRepair = C_Timer.After, IsShiftKeyDown, InCombatLockdown, CanMerchantRepair
+local IsShiftKeyDown, CanMerchantRepair = IsShiftKeyDown, CanMerchantRepair
 local repairCostString = gsub(REPAIR_COST, HEADER_COLON, ":")
 
 local localSlots = {
@@ -99,10 +99,6 @@ info.onEvent = function(self, event)
 end
 
 inform.CloseButton:HookScript("OnClick", function()
-	--[[if InCombatLockdown() then
-		info:UnregisterEvent("UPDATE_INVENTORY_DURABILITY")
-		info:RegisterEvent("PLAYER_REGEN_ENABLED")
-	end]]
 	lastClick = GetTime()
 end)
 

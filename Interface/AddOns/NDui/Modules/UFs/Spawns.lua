@@ -149,7 +149,6 @@ function UF:OnLogin()
 	local numGroups = NDuiDB["UFs"]["NumGroups"]
 	local scale = NDuiDB["UFs"]["SimpleRaidScale"]/10
 	local raidWidth, raidHeight = NDuiDB["UFs"]["RaidWidth"], NDuiDB["UFs"]["RaidHeight"]
-	local raidPowerHeight = NDuiDB["UFs"]["RaidPowerHeight"]
 	local showPartyFrame = NDuiDB["UFs"]["PartyFrame"]
 	local partyWidth, partyHeight = NDuiDB["UFs"]["PartyWidth"], NDuiDB["UFs"]["PartyHeight"]
 	local showPartyPetFrame = NDuiDB["UFs"]["PartyPetFrame"]
@@ -291,7 +290,6 @@ function UF:OnLogin()
 		oUF:RegisterStyle("Raid", CreateRaidStyle)
 		oUF:SetActiveStyle("Raid")
 
-		local raidMover
 		if NDuiDB["UFs"]["SimpleMode"] then
 			local groupingOrder, groupBy, sortMethod = "1,2,3,4,5,6,7,8", "GROUP", "INDEX"
 			if NDuiDB["UFs"]["SimpleModeSortByRole"] then
@@ -338,7 +336,7 @@ function UF:OnLogin()
 			local group = CreateGroup("oUF_Raid", groupFilter)
 			local moverWidth = numGroups > 4 and (100*scale*2 + 5) or 100
 			local moverHeight = 20*scale*20 + 10*19
-			raidMover = B.Mover(group, L["RaidFrame"], "RaidFrame", {"TOPLEFT", UIParent, 35, -50}, moverWidth, moverHeight)
+			B.Mover(group, L["RaidFrame"], "RaidFrame", {"TOPLEFT", UIParent, 35, -50}, moverWidth, moverHeight)
 		else
 			local raidFrameHeight = raidHeight + NDuiDB["UFs"]["RaidPowerHeight"] + C.mult
 

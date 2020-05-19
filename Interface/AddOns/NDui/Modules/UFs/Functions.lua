@@ -4,7 +4,7 @@ local B, C, L, DB = unpack(ns)
 local oUF = ns.oUF or oUF
 local UF = B:RegisterModule("UnitFrames")
 
-local format, floor, abs, min = string.format, math.floor, math.abs, math.min
+local format, floor = string.format, math.floor
 local pairs, next = pairs, next
 
 -- Custom colors
@@ -315,17 +315,6 @@ function UF:CreatePortrait(self)
 	self.Health.bg:SetPoint("BOTTOMLEFT", self.Health:GetStatusBarTexture(), "BOTTOMRIGHT", 0, 0)
 	self.Health.bg:SetPoint("TOPRIGHT", self.Health)
 	self.Health.bg:SetParent(self)
-end
-
-local roleTexCoord = {
-	["TANK"] = {.5, .75, 0, 1},
-	["HEALER"] = {.75, 1, 0, 1},
-	["DAMAGER"] = {.25, .5, 0, 1},
-}
-local function postUpdateRole(element, role)
-	if element:IsShown() then
-		element:SetTexCoord(unpack(roleTexCoord[role]))
-	end
 end
 
 function UF:CreateIcons(self)
@@ -759,7 +748,7 @@ end
 local margin = C.UFs.BarMargin
 local barWidth, barHeight = unpack(C.UFs.BarSize)
 
-function UF.PostUpdateClassPower(element, cur, max, diff, powerType)
+function UF.PostUpdateClassPower(element, cur, max, diff)
 	if not cur or cur == 0 then
 		for i = 1, 6 do
 			element[i].bg:Hide()

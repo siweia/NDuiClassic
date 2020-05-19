@@ -2,7 +2,6 @@
 	<Script file="Tip.lua"/>
 	<Script file="TooltipIcons.lua"/>
 	<Script file="TooltipID.lua"/>
-	<Script file="SpecLevel.lua"/>
 	<Script file="Hovertips.lua"/>
 	<Script file="Targeted.lua"/>
 </Ui>
