@@ -309,7 +309,6 @@ local accountSettings = {
 	TexStyle = 2,
 	KeystoneInfo = {},
 	AutoBubbles = false,
-	SystemInfoType = 0,
 	DisableInfobars = false,
 	ClassColorChat = true,
 	ContactList = {},
