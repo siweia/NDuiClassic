@@ -190,6 +190,14 @@ DB.ReminderBuffs = {
 			instance = true,
 			pvp = true,
 		},
+		{	spells = {	--- 荆棘术
+				[467] = true,
+			},
+			depend = 467,
+			combat = true,
+			instance = true,
+			pvp = true,
+		},
 	},
 	WARRIOR = {
 		{	spells = {	-- 战斗怒吼
