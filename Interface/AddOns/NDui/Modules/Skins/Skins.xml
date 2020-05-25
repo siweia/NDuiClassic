@@ -11,7 +11,6 @@
 	<Script file="AddOns\WeakAuras.lua"/>
 	<Script file="AddOns\Details.lua"/>
 	<Script file="AddOns\Postal.lua"/>
-	<Script file="AddOns\QuestLogEx.lua"/>
 	<Script file="AddOns\ObjectiveTracker.lua"/>
 	<Script file="AddOns\TradeSkillFrame.lua"/>
 

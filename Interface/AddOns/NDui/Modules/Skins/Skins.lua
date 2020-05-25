@@ -64,7 +64,6 @@ function S:OnLogin()
 	self:SkadaSkin()
 	self:BigWigsSkin()
 	self:PostalSkin()
-	self:ExtraQuestSkin()
 	self:LoadOtherSkins()
 
 	-- Register skin
