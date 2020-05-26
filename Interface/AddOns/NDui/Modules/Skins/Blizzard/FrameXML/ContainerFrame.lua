@@ -10,8 +10,6 @@ tinsert(C.defaultThemes, function()
 		local name = _G["ContainerFrame"..i.."Name"]
 
 		B.StripTextures(con, 0)
-		con.PortraitButton.Highlight:SetTexture("")
-
 		name:ClearAllPoints()
 		name:SetPoint("TOP", 0, -10)
 
