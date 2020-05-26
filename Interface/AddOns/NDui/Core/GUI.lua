@@ -89,8 +89,8 @@ local defaultSettings = {
 		RaidFrame = true,
 		NumGroups = 8,
 		SimpleMode = false,
-		SimpleModeSortByRole = true,
-		SimpleModeColumn = 5,
+		SMSortByRole = true,
+		SMUnitsPerColumn = 20,
 		InstanceAuras = true,
 		RaidDebuffScale = 1,
 		RaidHealthColor = 1,
@@ -647,8 +647,8 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{3, "UFs", "RaidTextScale", L["UFTextScale"], true, {.8, 1.5, 2}, updateRaidTextScale},
 		{},--blank
 		{1, "UFs", "SimpleMode", "|cff00cc4c"..L["Simple RaidFrame"]},
-		{1, "UFs", "SimpleModeSortByRole", L["SimpleMode SortByRole"]},
-		{3, "UFs", "SimpleModeColumn", L["SimpleMode Column"], true, {10, 40, 0}},
+		{1, "UFs", "SMSortByRole", L["SimpleMode SortByRole"]},
+		{3, "UFs", "SMUnitsPerColumn", L["SimpleMode Column"], true, {10, 40, 0}},
 	},
 	[5] = {
 		{1, "Nameplate", "Enable", "|cff00cc4c"..L["Enable Nameplate"], nil, setupNameplateFilter},
