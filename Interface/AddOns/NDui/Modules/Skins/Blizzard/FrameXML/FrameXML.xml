@@ -28,7 +28,6 @@
 	<Script file="ModelPreviewFrame.lua"/>
 	<Script file="MovieFrame.lua"/>
 	<Script file="NavigationBar.lua"/>
-	<Script file="PaperDollFrame.lua"/>
 	<Script file="PetitionFrame.lua"/>
 	<Script file="PetStable.lua"/>
 	<Script file="ProductChoiceFrame.lua"/>
