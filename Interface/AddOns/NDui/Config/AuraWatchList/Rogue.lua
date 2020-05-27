@@ -6,7 +6,6 @@ local module = B:GetModule("AurasTable")
 local list = {
 	["Player Aura"] = {		-- 玩家光环组
 		{AuraID = 1784, UnitID = "player"},		-- 潜行
-		{AuraID = 2983, UnitID = "player"},		-- 疾跑
 	},
 	["Target Aura"] = {		-- 目标光环组
 		{AuraID = 408, UnitID = "target", Caster = "player"},		-- 肾击
@@ -20,6 +19,7 @@ local list = {
 	},
 	["Special Aura"] = {	-- 玩家重要光环组
 		{AuraID = 1966, UnitID = "player"},		-- 佯攻
+		{AuraID = 2983, UnitID = "player"},		-- 疾跑
 		{AuraID = 5171, UnitID = "player"},		-- 切割
 		{AuraID = 5277, UnitID = "player"},		-- 闪避
 		{AuraID = 11327, UnitID = "player"},	-- 消失
