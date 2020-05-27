@@ -299,7 +299,9 @@ function module:OnLogin()
 			ConsoleExec("portal TW")
 		end
 		SetCVar("profanityFilter", 0)
+                SetCVar("overrideArchive", 0)
 	else
 		SetCVar("profanityFilter", 1)
+		SetCVar("overrideArchive", 1)
 	end
 end
