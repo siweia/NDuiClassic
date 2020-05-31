@@ -1,131 +1,160 @@
-local _, ns = ...
-local B, C, L, DB = unpack(ns)
+----------------------------------------------------------------------------------------
+--	MasterLoot by Ammo
+----------------------------------------------------------------------------------------
+local hexColors = {}
+for k, v in pairs(RAID_CLASS_COLORS) do
+	hexColors[k] = "|c"..v.colorStr
+end
+hexColors["UNKNOWN"] = string.format("|cff%02x%02x%02x", 0.6 * 255, 0.6 * 255, 0.6 * 255)
 
-tinsert(C.defaultThemes, function()
-	local r, g, b = DB.r, DB.g, DB.b
-
-	local LootHistoryFrame = LootHistoryFrame
-
-	for i = 1, 9 do
-		select(i, LootHistoryFrame:GetRegions()):Hide()
-	end
-	LootHistoryFrame.LootIcon:Hide()
-	LootHistoryFrame.Divider:SetAlpha(0)
-	LootHistoryFrameScrollFrame:GetRegions():Hide()
-
-	LootHistoryFrame.Label:ClearAllPoints()
-	LootHistoryFrame.Label:SetPoint("TOP", LootHistoryFrame, "TOP", 0, -8)
-
-	B.SetBD(LootHistoryFrame)
-	B.ReskinClose(LootHistoryFrame.CloseButton)
-	B.ReskinScroll(LootHistoryFrameScrollFrameScrollBar)
-
-	-- [[ Resize button ]]
-
-	LootHistoryFrame.ResizeButton:SetNormalTexture("")
-	LootHistoryFrame.ResizeButton:SetHeight(8)
-
-	do
-		local line1 = LootHistoryFrame.ResizeButton:CreateTexture()
-		line1:SetTexture(DB.bdTex)
-		line1:SetVertexColor(.7, .7, .7)
-		line1:SetSize(30, 1)
-		line1:SetPoint("TOP")
-
-		local line2 = LootHistoryFrame.ResizeButton:CreateTexture()
-		line2:SetTexture(DB.bdTex)
-		line2:SetVertexColor(.7, .7, .7)
-		line2:SetSize(30, 1)
-		line2:SetPoint("TOP", 0, -3)
-
-		LootHistoryFrame.ResizeButton:HookScript("OnEnter", function()
-			line1:SetVertexColor(r, g, b)
-			line2:SetVertexColor(r, g, b)
-		end)
-
-		LootHistoryFrame.ResizeButton:HookScript("OnLeave", function()
-			line1:SetVertexColor(.7, .7, .7)
-			line2:SetVertexColor(.7, .7, .7)
-		end)
-	end
-
-	-- [[ Item frame ]]
-
-	hooksecurefunc("LootHistoryFrame_UpdateItemFrame", function(self, frame)
-		local rollID, _, _, isDone, winnerIdx = C_LootHistory.GetItem(frame.itemIdx)
-		local expanded = self.expandedRolls[rollID]
-
-		if not frame.styled then
-			frame.Divider:Hide()
-			frame.NameBorderLeft:Hide()
-			frame.NameBorderRight:Hide()
-			frame.NameBorderMid:Hide()
-			frame.IconBorder:Hide()
-
-			frame.WinnerRoll:SetTextColor(.9, .9, .9)
-
-			frame.bg = B.ReskinIcon(frame.Icon)
-
-			B.ReskinExpandOrCollapse(frame.ToggleButton)
-			frame.ToggleButton:GetNormalTexture():SetAlpha(0)
-			frame.ToggleButton:GetPushedTexture():SetAlpha(0)
-			frame.ToggleButton:GetDisabledTexture():SetAlpha(0)
-
-			frame.styled = true
+if CUSTOM_CLASS_COLORS then
+	local function update()
+		for k, v in pairs(CUSTOM_CLASS_COLORS) do
+			hexColors[k] = "|c"..v.colorStr
 		end
+	end
+	CUSTOM_CLASS_COLORS:RegisterCallback(update)
+	update()
+end
 
-		if isDone and not expanded and winnerIdx then
-			local name, class = C_LootHistory.GetPlayerInfo(frame.itemIdx, winnerIdx)
-			if name then
-				local color = DB.ClassColors[class]
-				frame.WinnerName:SetVertexColor(color.r, color.g, color.b)
+local playerName = UnitName("player")
+local classesInRaid = {}
+local players, player_indices = {}, {}
+local randoms = {}
+local wipe = table.wipe
+
+local function MasterLoot_GiveLoot(frame)
+	MasterLooterFrame.slot = LootFrame.selectedSlot
+	MasterLooterFrame.candidateId = frame.value
+	if LootFrame.selectedQuality >= MASTER_LOOT_THREHOLD then
+		StaticPopup_Show("CONFIRM_LOOT_DISTRIBUTION", ITEM_QUALITY_COLORS[LootFrame.selectedQuality].hex..LootFrame.selectedItemName..FONT_COLOR_CODE_CLOSE, frame:GetText() or UNKNOWN, "LootWindow")
+	else
+		GiveMasterLoot(LootFrame.selectedSlot, frame.value)
+	end
+	CloseDropDownMenus()
+end
+
+local function init()
+	local candidate, lclass, className
+	local slot = LootFrame.selectedSlot or 0
+	local info = UIDropDownMenu_CreateInfo()
+
+	if UIDROPDOWNMENU_MENU_LEVEL == 2 then
+		-- Raid class menu
+		wipe(players)
+		wipe(player_indices)
+		local this_class = UIDROPDOWNMENU_MENU_VALUE
+		for i = 1, MAX_RAID_MEMBERS do
+			candidate, lclass, className = GetMasterLootCandidate(slot, i)
+			if candidate and this_class == className then
+				table.insert(players, candidate)
+				player_indices[candidate] = i
+			end
+		end
+		if #players > 0 then
+			table.sort(players)
+			for _, cand in ipairs(players) do
+				-- Add candidate button
+				info.text = cand
+				info.colorCode = hexColors[this_class] or hexColors["UNKNOWN"]
+				info.textHeight = 12
+				info.value = player_indices[cand]
+				info.notCheckable = 1
+				info.disabled = nil
+				info.func = MasterLoot_GiveLoot
+				UIDropDownMenu_AddButton(info, UIDROPDOWNMENU_MENU_LEVEL)
+			end
+		end
+		return
+	end
+
+	info.isTitle = 1
+	info.text = GIVE_LOOT
+	info.textHeight = 12
+	info.notCheckable = 1
+	info.disabled = nil
+	info.notClickable = nil
+	UIDropDownMenu_AddButton(info)
+
+	if IsInRaid() then
+		-- In a raid
+		wipe(classesInRaid)
+		for i = 1, MAX_RAID_MEMBERS do
+			candidate, lclass, className = GetMasterLootCandidate(slot, i)
+			if candidate then
+				classesInRaid[className] = lclass
 			end
 		end
 
-		frame.bg:SetBackdropBorderColor(frame.IconBorder:GetVertexColor())
-	end)
-
-	-- [[ Player frame ]]
-
-	hooksecurefunc("LootHistoryFrame_UpdatePlayerFrame", function(_, playerFrame)
-		if not playerFrame.styled then
-			playerFrame.RollText:SetTextColor(.9, .9, .9)
-			playerFrame.WinMark:SetDesaturated(true)
-
-			playerFrame.styled = true
-		end
-
-		if playerFrame.playerIdx then
-			local name, class, _, _, isWinner = C_LootHistory.GetPlayerInfo(playerFrame.itemIdx, playerFrame.playerIdx)
-
-			if name then
-				local colour = DB.ClassColors[class]
-				playerFrame.PlayerName:SetTextColor(colour.r, colour.g, colour.b)
-
-				if isWinner then
-					playerFrame.WinMark:SetVertexColor(colour.r, colour.g, colour.b)
-				end
+		for _, class in ipairs(CLASS_SORT_ORDER) do
+			local cname = classesInRaid[class]
+			if cname then
+				info.isTitle = nil
+				info.text = cname
+				info.colorCode = hexColors[class] or hexColors["UNKNOWN"]
+				info.textHeight = 12
+				info.hasArrow = 1
+				info.notCheckable = 1
+				info.value = class
+				info.func = nil
+				info.disabled = nil
+				UIDropDownMenu_AddButton(info)
 			end
 		end
-	end)
-
-	-- [[ Dropdown ]]
-
-	LootHistoryDropDown.initialize = function(self)
-		local info = UIDropDownMenu_CreateInfo();
-		info.isTitle = 1;
-		info.text = MASTER_LOOTER;
-		info.fontObject = GameFontNormalLeft;
-		info.notCheckable = 1;
-		UIDropDownMenu_AddButton(info);
-
-		info = UIDropDownMenu_CreateInfo();
-		info.notCheckable = 1;
-		local name, class = C_LootHistory.GetPlayerInfo(self.itemIdx, self.playerIdx);
-		local classColor = DB.ClassColors[class];
-		local colorCode = string.format("|cFF%02x%02x%02x",  classColor.r*255,  classColor.g*255,  classColor.b*255);
-		info.text = string.format(MASTER_LOOTER_GIVE_TO, colorCode..name.."|r");
-		info.func = LootHistoryDropDown_OnClick;
-		UIDropDownMenu_AddButton(info);
+	else
+		-- In a party
+		for i = 1, MAX_PARTY_MEMBERS + 1, 1 do
+			candidate, lclass, className = GetMasterLootCandidate(slot, i)
+			if candidate then
+				-- Add candidate button
+				info.text = candidate
+				info.colorCode = hexColors[className] or hexColors["UNKNOWN"]
+				info.textHeight = 12
+				info.value = i
+				info.notCheckable = 1
+				info.hasArrow = nil
+				info.isTitle = nil
+				info.disabled = nil
+				info.func = MasterLoot_GiveLoot
+				UIDropDownMenu_AddButton(info)
+			end
+		end
 	end
-end)
+
+	wipe(randoms)
+	for i = 1, MAX_RAID_MEMBERS do
+		candidate, lclass, className = GetMasterLootCandidate(slot, i)
+		if candidate then
+			table.insert(randoms, i)
+		end
+	end
+	if #randoms > 0 then
+		info.colorCode = "|cffffffff"
+		info.isTitle = nil
+		info.textHeight = 12
+		info.value = randoms[math.random(1, #randoms)]
+		info.notCheckable = 1
+		info.hasArrow = nil
+		info.text = "随机分配"
+		info.func = MasterLoot_GiveLoot
+		info.icon = "Interface\\Buttons\\UI-GroupLoot-Coin-Up"
+		UIDropDownMenu_AddButton(info)
+	end
+	for i = 1, MAX_RAID_MEMBERS do
+		candidate, lclass, className = GetMasterLootCandidate(slot, i)
+		if candidate and candidate == playerName then
+			info.colorCode = hexColors[className] or hexColors["UNKNOWN"]
+			info.isTitle = nil
+			info.textHeight = 12
+			info.value = i
+			info.notCheckable = 1
+			info.hasArrow = nil
+			info.text = "自己拾取"
+			info.func = MasterLoot_GiveLoot
+			info.icon = "Interface\\GossipFrame\\VendorGossipIcon"
+			UIDropDownMenu_AddButton(info)
+		end
+	end
+end
+
+UIDropDownMenu_Initialize(GroupLootDropDown, init, "MENU")
