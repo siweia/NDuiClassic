@@ -234,11 +234,12 @@ function S:RecountSkin()
 	S:ResetRocountFont()
 	hooksecurefunc(Recount, "BarsChanged", S.ResetRocountFont)
 
-	if NDuiDB["Skins"]["BlizzardSkins"] then
-		B.ReskinArrow(frame.LeftButton, "left")
-		B.ReskinArrow(frame.RightButton, "right")
-		B.ReskinClose(frame.CloseButton, "TOPRIGHT", frame.bg, "TOPRIGHT", -2, -2)
-	end
+	B.ReskinArrow(frame.LeftButton, "left")
+	B.ReskinArrow(frame.RightButton, "right")
+	B.ReskinClose(frame.CloseButton, "TOPRIGHT", frame.bg, "TOPRIGHT", -2, -2)
+
+	-- Force to show window on init
+	Recount.MainWindow:Show()
 end
 
 function S:BindPad()
