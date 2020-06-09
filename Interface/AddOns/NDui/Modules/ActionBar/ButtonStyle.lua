@@ -186,6 +186,7 @@ function Bar:StyleActionButton(button, cfg)
 	local count = _G[buttonName.."Count"]
 	local name = _G[buttonName.."Name"]
 	local border = _G[buttonName.."Border"]
+	local autoCastable = _G[buttonName.."AutoCastable"]
 	local NewActionTexture = button.NewActionTexture
 	local cooldown = _G[buttonName.."Cooldown"]
 	local normalTexture = button:GetNormalTexture()
@@ -213,6 +214,8 @@ function Bar:StyleActionButton(button, cfg)
 	SetupTexture(pushedTexture, cfg.pushedTexture, "SetPushedTexture", button)
 	SetupTexture(highlightTexture, cfg.highlightTexture, "SetHighlightTexture", button)
 	SetupTexture(checkedTexture, cfg.checkedTexture, "SetCheckedTexture", button)
+
+	checkedTexture:SetColorTexture(1, .8, 0, .35)
 	highlightTexture:SetColorTexture(1, 1, 1, .25)
 
 	--cooldown
@@ -247,58 +250,8 @@ function Bar:StyleActionButton(button, cfg)
 		end
 	end
 
-	button.__styled = true
-end
-
-function Bar:StyleExtraActionButton(cfg)
-	local button = ExtraActionButton1
-	if button.__styled then return end
-
-	local buttonName = button:GetName()
-	local icon = _G[buttonName.."Icon"]
-	--local flash = _G[buttonName.."Flash"] --wierd the template has two textures of the same name
-	local hotkey = _G[buttonName.."HotKey"]
-	local count = _G[buttonName.."Count"]
-	local buttonstyle = button.style --artwork around the button
-	local cooldown = _G[buttonName.."Cooldown"]
-
-	local normalTexture = button:GetNormalTexture()
-	local pushedTexture = button:GetPushedTexture()
-	local highlightTexture = button:GetHighlightTexture()
-	local checkedTexture = button:GetCheckedTexture()
-
-	--backdrop
-	SetupBackdrop(button)
-
-	--textures
-	SetupTexture(icon, cfg.icon, "SetTexture", icon)
-	SetupTexture(buttonstyle, cfg.buttonstyle, "SetTexture", buttonstyle)
-	SetupTexture(normalTexture, cfg.normalTexture, "SetNormalTexture", button)
-	SetupTexture(pushedTexture, cfg.pushedTexture, "SetPushedTexture", button)
-	SetupTexture(highlightTexture, cfg.highlightTexture, "SetHighlightTexture", button)
-	SetupTexture(checkedTexture, cfg.checkedTexture, "SetCheckedTexture", button)
-	highlightTexture:SetColorTexture(1, 1, 1, .25)
-
-	--cooldown
-	SetupCooldown(cooldown, cfg.cooldown)
-
-	--hotkey, count
-	local overlay = CreateFrame("Frame", nil, button)
-	overlay:SetAllPoints()
-	if NDuiDB["Actionbar"]["Hotkeys"] then
-		hotkey:SetParent(overlay)
-		Bar.UpdateHotKey(button)
-		cfg.hotkey.font = {DB.Font[1], 13, DB.Font[3]}
-		SetupFontString(hotkey, cfg.hotkey)
-	else
-		hotkey:Hide()
-	end
-	if NDuiDB["Actionbar"]["Count"] then
-		count:SetParent(overlay)
-		cfg.count.font = {DB.Font[1], 16, DB.Font[3]}
-		SetupFontString(count, cfg.count)
-	else
-		count:Hide()
+	if autoCastable then
+		autoCastable:SetOutside(button, cfg.autoCastSize, cfg.autoCastSize)
 	end
 
 	button.__styled = true
@@ -349,13 +302,25 @@ function Bar:ReskinBars()
 			texCoord = DB.TexCoord,
 			color = {.3, .3, .3},
 			points = {
-				{"TOPLEFT", 0, 0},
-				{"BOTTOMRIGHT", 0, 0},
+				{"TOPLEFT", C.mult, -C.mult},
+				{"BOTTOMRIGHT", -C.mult, C.mult},
 			},
 		},
 		flash = {file = DB.textures.flash},
-		pushedTexture = {file = DB.textures.pushed},
-		checkedTexture = {file = DB.textures.checked},
+		pushedTexture = {
+			file = DB.textures.pushed,
+			points = {
+				{"TOPLEFT", C.mult, -C.mult},
+				{"BOTTOMRIGHT", -C.mult, C.mult},
+			},
+		},
+		checkedTexture = {
+			file = "",
+			points = {
+				{"TOPLEFT", C.mult, -C.mult},
+				{"BOTTOMRIGHT", -C.mult, C.mult},
+			},
+		},
 		highlightTexture = {
 			file = "",
 			points = {
@@ -365,8 +330,8 @@ function Bar:ReskinBars()
 		},
 		cooldown = {
 			points = {
-				{"TOPLEFT", 0, 0},
-				{"BOTTOMRIGHT", 0, 0},
+				{"TOPLEFT", C.mult, -C.mult},
+				{"BOTTOMRIGHT", -C.mult, C.mult},
 			},
 		},
 		name = {
@@ -390,6 +355,7 @@ function Bar:ReskinBars()
 			},
 		},
 		buttonstyle = {file = ""},
+		autoCastSize = (C.bars.petbar.size/2 - C.bars.petbar.size/7.5),
 	}
 
 	Bar:StyleAllActionButtons(cfg)
