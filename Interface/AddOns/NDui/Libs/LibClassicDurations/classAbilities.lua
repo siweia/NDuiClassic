@@ -1,7 +1,7 @@
 local lib = LibStub and LibStub("LibClassicDurations", true)
 if not lib then return end
 
-local Type, Version = "SpellTable", 59
+local Type, Version = "SpellTable", 60
 if lib:GetDataVersion(Type) >= Version then return end  -- older versions didn't have that function
 
 local Spell = lib.AddAura
@@ -84,6 +84,23 @@ if class == "MAGE" then
         applyAura = true,
         targetSpellID = 12486, -- Imp Blizzard
     }
+
+    -- Ignite
+
+    local fire_spells = {133, 2948, 2136, 2120, 11113} -- Fireball, Scorch, Fireblast, Flamestrike, Blast Wave
+
+    for _, spellId in ipairs(fire_spells) do
+        lib.indirectRefreshSpells[GetSpellInfo(spellId)] = { -- Fireball
+            events = {
+                ["SPELL_DAMAGE"] = true
+            },
+            targetSpellID = 12654, -- Ignite
+            rollbackMisses = true,
+            condition = function(isMine, isCrit) return isCrit end,
+        }
+    end
+
+    lib.indirectRefreshSpells[GetSpellInfo(12654)] = lib.indirectRefreshSpells[GetSpellInfo(133)] -- Just adding Ignite to indirectRefreshSpells table
 end
 
 if class == "PRIEST" then
