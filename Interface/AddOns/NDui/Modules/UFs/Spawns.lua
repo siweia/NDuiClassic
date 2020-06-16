@@ -77,7 +77,7 @@ end
 
 local function CreateToToT(self)
 	self.mystyle = "tot"
-	self:SetSize(NDuiDB["UFs"]["PetWidth"], NDuiDB["UFs"]["PetHeight"])
+	SetUnitFrameSize(self, "Pet")
 
 	UF:CreateHeader(self)
 	UF:CreateHealthBar(self)
