@@ -1,0 +1,13 @@
+--[[自动对话NPC]]
+
+local talk = CreateFrame("Frame")
+talk:SetScript("OnEvent", function (event, ...)
+local name, realm = UnitName("target")
+if not IsAltKeyDown() then --按ALT 取消自动对话
+    if GetNumGossipOptions() == 1 then   
+     SelectGossipOption(1)
+  end
+end
+end)
+
+talk:RegisterEvent("GOSSIP_SHOW")
