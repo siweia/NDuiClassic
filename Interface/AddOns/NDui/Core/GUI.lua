@@ -601,10 +601,10 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{3, "Bags", "iLvlToShow", L["iLvlToShow"].."*", true, {1, 100, 1}, updateBagStatus, L["iLvlToShowTip"]},
 		{1, "Bags", "DeleteButton", L["Bags DeleteButton"]},
 		{},--blank
-		{3, "Bags", "BagsScale", L["Bags Scale"], false, {.5, 1.5, 1}},
-		{3, "Bags", "IconSize", L["Bags IconSize"], true, {30, 42, 0}},
-		{3, "Bags", "BagsWidth", L["Bags Width"], false, {12, 40, 0}},
-		{3, "Bags", "BankWidth", L["Bank Width"], true, {12, 40, 0}},
+		{3, "Bags", "BagsScale", L["Bags Scale"], false, {.5, 1.5, .1}},
+		{3, "Bags", "IconSize", L["Bags IconSize"], true, {30, 42, 1}},
+		{3, "Bags", "BagsWidth", L["Bags Width"], false, {12, 40, 1}},
+		{3, "Bags", "BankWidth", L["Bank Width"], true, {12, 40, 1}},
 	},
 	[3] = {
 		{1, "UFs", "Enable", "|cff00cc4c"..L["Enable UFs"], nil, setupUnitFrame, nil, L["HideUFWarning"]},
@@ -649,11 +649,11 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{1, "UFs", "HorizonRaid", L["Horizon RaidFrame"], true},
 		{4, "UFs", "RaidHealthColor", L["HealthColor"], nil, {L["Default Dark"], L["ClassColorHP"], L["GradientHP"]}},
 		{4, "UFs", "RaidHPMode", L["RaidHPMode"].."*", true, {L["DisableRaidHP"], L["RaidHPPercent"], L["RaidHPCurrent"], L["RaidHPLost"]}, updateRaidNameText},
-		{3, "UFs", "NumGroups", L["Num Groups"], nil, {4, 8, 0}},
+		{3, "UFs", "NumGroups", L["Num Groups"], nil, {4, 8, 1}},
 		{3, "UFs", "RaidTextScale", L["UFTextScale"], true, {.8, 1.5, .05}, updateRaidTextScale},
 		{},--blank
 		{1, "UFs", "SimpleMode", "|cff00cc4c"..L["SimpleRaidFrame"], nil, nil, nil, L["SimpleRaidFrameTip"]},
-		{3, "UFs", "SMUnitsPerColumn", L["SimpleMode Column"], nil, {10, 40, 0}},
+		{3, "UFs", "SMUnitsPerColumn", L["SimpleMode Column"], nil, {10, 40, 1}},
 		{4, "UFs", "SMGroupByIndex", L["SimpleMode GroupBy"].."*", true, {GROUP, CLASS}, updateSimpleModeGroupBy},
 		{nil, true},-- FIXME: dirty fix for now
 		{nil, true},
@@ -687,14 +687,14 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{3, "Nameplate", "PlateHeight", L["NP Height"].."*(8)", true, {5, 30, 1}, refreshNameplates},
 		{3, "Nameplate", "NameTextSize", L["NameTextSize"].."*(14)", false, {10, 30, 1}, refreshNameplates},
 		{3, "Nameplate", "HealthTextSize", L["HealthTextSize"].."*(16)", true, {10, 30, 1}, refreshNameplates},
-		{3, "Nameplate", "maxAuras", L["Max Auras"], false, {0, 10, 0}},
-		{3, "Nameplate", "AuraSize", L["Auras Size"].."(28)", true, {18, 40, 0}},
+		{3, "Nameplate", "maxAuras", L["Max Auras"], false, {0, 10, 1}},
+		{3, "Nameplate", "AuraSize", L["Auras Size"].."(28)", true, {18, 40, 1}},
 	},
 	[6] = {
 		{1, "AuraWatch", "Enable", "|cff00cc4c"..L["Enable AuraWatch"], nil, setupAuraWatch},
 		{1, "AuraWatch", "WatchSpellRank", L["AuraWatch WatchSpellRank"]},
 		{1, "AuraWatch", "ClickThrough", L["AuraWatch ClickThrough"], nil, nil, nil, L["ClickThroughTip"]},
-		{3, "AuraWatch", "IconScale", L["AuraWatch IconScale"], true, {.8, 2, 1}},
+		{3, "AuraWatch", "IconScale", L["AuraWatch IconScale"], true, {.8, 2, .1}},
 		{},--blank
 		{1, "Nameplate", "ShowPlayerPlate", "|cff00cc4c"..L["Enable PlayerPlate"]},
 		--{1, "Auras", "ClassAuras", L["Enable ClassAuras"], true},
@@ -710,10 +710,10 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{},--blank
 		{1, "Auras", "ReverseBuffs", L["ReverseBuffs"]},
 		{1, "Auras", "ReverseDebuffs", L["ReverseDebuffs"], true},
-		{3, "Auras", "BuffSize", L["BuffSize"], nil, {24, 50, 0}},
-		{3, "Auras", "DebuffSize", L["DebuffSize"], true, {24, 50, 0}},
-		{3, "Auras", "BuffsPerRow", L["BuffsPerRow"], nil, {10, 20, 0}},
-		{3, "Auras", "DebuffsPerRow", L["DebuffsPerRow"], true, {10, 16, 0}},
+		{3, "Auras", "BuffSize", L["BuffSize"], nil, {24, 50, 1}},
+		{3, "Auras", "DebuffSize", L["DebuffSize"], true, {24, 50, 1}},
+		{3, "Auras", "BuffsPerRow", L["BuffsPerRow"], nil, {10, 20, 1}},
+		{3, "Auras", "DebuffsPerRow", L["DebuffsPerRow"], true, {10, 16, 1}},
 		--{1, "Auras", "Totems", L["Enable Totems"]},
 	},
 	[7] = {
@@ -752,7 +752,7 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Chat", "AllowFriends", L["AllowFriendsSpam"].."*", nil, nil, nil, L["AllowFriendsSpamTip"]},
 		{1, "Chat", "BlockStranger", "|cffff0000"..L["BlockStranger"].."*", nil, nil, nil, L["BlockStrangerTip"]},
 		{2, "ACCOUNT", "ChatFilterWhiteList", "|cff00cc4c"..L["ChatFilterWhiteList"].."*", true, nil, updateFilterWhiteList, L["ChatFilterWhiteListTip"]},
-		{3, "Chat", "Matches", L["Keyword Match"].."*", nil, {1, 3, 0}},
+		{3, "Chat", "Matches", L["Keyword Match"].."*", nil, {1, 3, 1}},
 		{2, "ACCOUNT", "ChatFilterList", L["Filter List"].."*", true, nil, updateFilterList, L["FilterListTip"]},
 		{},--blank
 		{1, "Chat", "Invite", "|cff00cc4c"..L["Whisper Invite"]},
@@ -769,7 +769,7 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Map", "ShowRecycleBin", L["Show RecycleBin"]},
 		{1, "Misc", "ExpRep", L["Show Expbar"], true},
 		{},--blank
-		{3, "Map", "MapScale", L["Map Scale"].."*", false, {.5, 1, 1}},
+		{3, "Map", "MapScale", L["Map Scale"].."*", false, {.5, 1, .1}},
 		{3, "Map", "MinimapScale", L["Minimap Scale"].."*", true, {1, 2, .1}, updateMinimapScale},
 	},
 	[10] = {
@@ -779,8 +779,8 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Skins", "Loot", L["Loot"], true},
 		{1, "Skins", "Shadow", L["Shadow"]},
 		{1, "Skins", "FontOutline", L["FontOutline"], true},
-		{3, "Skins", "SkinAlpha", L["SkinAlpha"].."*", nil, {0, 1, .1}, updateSkinAlpha},
-		{3, "Skins", "FontScale", L["GlobalFontScale"], true, {.5, 1.5, 1}},
+		{3, "Skins", "SkinAlpha", L["SkinAlpha"].."*", nil, {0, 1, .05}, updateSkinAlpha},
+		{3, "Skins", "FontScale", L["GlobalFontScale"], true, {.5, 1.5, .05}},
 		{},--blank
 		{1, "Skins", "ClassLine", L["ClassColor Line"]},
 		{1, "Skins", "InfobarLine", L["Infobar Line"], true},
@@ -803,7 +803,7 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Tooltip", "CombatHide", L["Hide Tooltip"].."*"},
 		{1, "Tooltip", "Cursor", L["Follow Cursor"].."*"},
 		{1, "Tooltip", "ClassColor", L["Classcolor Border"].."*"},
-		{3, "Tooltip", "Scale", L["Tooltip Scale"].."*", true, {.5, 1.5, 1}},
+		{3, "Tooltip", "Scale", L["Tooltip Scale"].."*", true, {.5, 1.5, .1}},
 		{},--blank
 		{1, "Tooltip", "HideTitle", L["Hide Title"].."*"},
 		{1, "Tooltip", "HideRank", L["Hide Rank"].."*", true},
