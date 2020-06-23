@@ -1,7 +1,7 @@
 local lib = LibStub and LibStub("LibClassicDurations", true)
 if not lib then return end
 
-local Type, Version = "SpellTable", 60
+local Type, Version = "SpellTable", 61
 if lib:GetDataVersion(Type) >= Version then return end  -- older versions didn't have that function
 
 local Spell = lib.AddAura
@@ -20,124 +20,155 @@ end
 -- https://github.com/rgd87/LibClassicDurations/issues/11
 lib.indirectRefreshSpells = {
     [GetSpellInfo(11597)] = { -- Sunder Armor
-        events = {
-            ["SPELL_CAST_SUCCESS"] = true
-        },
-        targetSpellID = 11597,
-        rollbackMisses = true,
+        [11597] = {
+            events = {
+                ["SPELL_CAST_SUCCESS"] = true
+            },
+            -- targetSpellID = 11597,
+            rollbackMisses = true,
+        }
     },
 
     [GetSpellInfo(25357)] = { -- Healing Wave
-        events = {
-            ["SPELL_CAST_SUCCESS"] = true
-        },
-        targetSpellID = 29203, -- Healing Way
+        [29203] = {
+            events = {
+                ["SPELL_CAST_SUCCESS"] = true
+            },
+            -- targetSpellID = 29203, -- Healing Way
+        }
     },
 }
 
 if class == "MAGE" then
-    lib.indirectRefreshSpells[GetSpellInfo(10207)] = { -- Scorch
-        events = {
-            ["SPELL_DAMAGE"] = true
-        },
-        targetSpellID = 22959, -- Fire Vulnerability
-        rollbackMisses = true,
-        condition = function(isMine) return isMine end,
-        -- it'll refresg only from mages personal casts which is fine
-        -- because if mage doesn't have imp scorch then he won't even see a Fire Vulnerability timer
-    }
+
 
     lib.indirectRefreshSpells[GetSpellInfo(25304)] = { -- Frostbolt
-        events = {
-            ["SPELL_DAMAGE"] = true
-        },
-        targetSpellID = 12579, -- Winter's Chill
-        rollbackMisses = true,
-        condition = function(isMine) return isMine end,
+        [12579] = {
+            events = {
+                ["SPELL_DAMAGE"] = true
+            },
+            targetSpellID = 12579, -- Winter's Chill
+            rollbackMisses = true,
+            condition = function(isMine) return isMine end,
+        }
     }
 
     lib.indirectRefreshSpells[GetSpellInfo(10161)] = { -- Cone of Cold
-        events = {
-            ["SPELL_DAMAGE"] = true
-        },
-        targetSpellID = 12579, -- Winter's Chill
-        rollbackMisses = true,
-        condition = function(isMine) return isMine end,
+        [12579] = {
+            events = {
+                ["SPELL_DAMAGE"] = true
+            },
+            targetSpellID = 12579, -- Winter's Chill
+            rollbackMisses = true,
+            condition = function(isMine) return isMine end,
+        }
     }
 
     lib.indirectRefreshSpells[GetSpellInfo(10230)] = { -- Frost Nova
-        events = {
-            ["SPELL_DAMAGE"] = true
-        },
-        targetSpellID = 12579, -- Winter's Chill
-        rollbackMisses = true,
-        condition = function(isMine) return isMine end,
+        [12579] = {
+            events = {
+                ["SPELL_DAMAGE"] = true
+            },
+            targetSpellID = 12579, -- Winter's Chill
+            rollbackMisses = true,
+            condition = function(isMine) return isMine end,
+        }
     }
 
     -- Winter's Chill = Frostbolt
     lib.indirectRefreshSpells[GetSpellInfo(12579)] = lib.indirectRefreshSpells[GetSpellInfo(25304)]
 
     lib.indirectRefreshSpells[GetSpellInfo(10)] = { -- Blizzard
-        events = {
-            ["SPELL_PERIODIC_DAMAGE"] = true
-        },
-        applyAura = true,
-        targetSpellID = 12486, -- Imp Blizzard
+        [12486] = {
+            events = {
+                ["SPELL_PERIODIC_DAMAGE"] = true
+            },
+            applyAura = true,
+            targetSpellID = 12486, -- Imp Blizzard
+        }
     }
 
     -- Ignite
 
-    local fire_spells = {133, 2948, 2136, 2120, 11113} -- Fireball, Scorch, Fireblast, Flamestrike, Blast Wave
+    -- Scorch is separate
+    local fire_spells = {133, 2136, 2120, 11113} -- Fireball, Fireblast, Flamestrike, Blast Wave
 
     for _, spellId in ipairs(fire_spells) do
         lib.indirectRefreshSpells[GetSpellInfo(spellId)] = { -- Fireball
-            events = {
-                ["SPELL_DAMAGE"] = true
-            },
-            targetSpellID = 12654, -- Ignite
-            rollbackMisses = true,
-            condition = function(isMine, isCrit) return isCrit end,
+            [12654] = {
+                events = {
+                    ["SPELL_DAMAGE"] = true
+                },
+                -- targetSpellID = 12654, -- Ignite
+                rollbackMisses = true,
+                condition = function(isMine, isCrit) return isCrit end,
+            }
         }
     end
 
-    lib.indirectRefreshSpells[GetSpellInfo(12654)] = lib.indirectRefreshSpells[GetSpellInfo(133)] -- Just adding Ignite to indirectRefreshSpells table
+    lib.indirectRefreshSpells[GetSpellInfo(10207)] = { -- Scorch
+        [22959] = {
+            events = {
+                ["SPELL_DAMAGE"] = true
+            },
+            -- targetSpellID = 22959, -- Fire Vulnerability
+            rollbackMisses = true,
+            condition = function(isMine) return isMine end,
+            -- it'll refresg only from mages personal casts which is fine
+            -- because if mage doesn't have imp scorch then he won't even see a Fire Vulnerability timer
+        },
+        [12654] = { -- Ignite
+            events = {
+                ["SPELL_DAMAGE"] = true
+            },
+            -- targetSpellID = 12654, -- Ignite
+            rollbackMisses = true,
+            condition = function(isMine, isCrit) return isCrit end,
+        }
+    }
+
+    lib.indirectRefreshSpells[GetSpellInfo(12654)] = CopyTable(lib.indirectRefreshSpells[GetSpellInfo(133)]) -- Just adding Ignite to indirectRefreshSpells table
+    lib.indirectRefreshSpells[GetSpellInfo(12654)][12654].events = {}
 end
 
 if class == "PRIEST" then
     -- Shadow Weaving
     lib.indirectRefreshSpells[GetSpellInfo(10894)] = { -- SW:Pain
-        events = {
-            ["SPELL_AURA_APPLIED"] = true,
-            ["SPELL_AURA_REFRESH"] = true,
-        },
-        targetSpellID = 15258, -- Shadow Weaving
-        -- targetResistCheck = true,
-        rollbackMisses = true,
-        condition = function(isMine) return isMine end,
+        [15258] = {
+            events = {
+                ["SPELL_AURA_APPLIED"] = true,
+                ["SPELL_AURA_REFRESH"] = true,
+            },
+            -- targetSpellID = 15258, -- Shadow Weaving
+            -- targetResistCheck = true,
+            rollbackMisses = true,
+            condition = function(isMine) return isMine end,
+        }
     }
     lib.indirectRefreshSpells[GetSpellInfo(10947)] = { -- Mind Blast
-        events = {
-            ["SPELL_DAMAGE"] = true,
-        },
-        targetSpellID = 15258, -- Shadow Weaving
-        -- targetResistCheck = true,
-        rollbackMisses = true,
-        condition = function(isMine) return isMine end,
+        [15258] = {
+            events = {
+                ["SPELL_DAMAGE"] = true,
+            },
+            -- targetResistCheck = true,
+            rollbackMisses = true,
+            condition = function(isMine) return isMine end,
+        }
     }
     lib.indirectRefreshSpells[GetSpellInfo(18807)] = { -- Mind Flay
-        events = {
-            ["SPELL_AURA_APPLIED"] = true,
-            ["SPELL_AURA_REFRESH"] = true,
-        },
-        targetSpellID = 15258, -- Shadow Weaving
-        -- targetResistCheck = true,
-        rollbackMisses = true,
-        condition = function(isMine) return isMine end,
+        [15258] = {
+            events = {
+                ["SPELL_AURA_APPLIED"] = true,
+                ["SPELL_AURA_REFRESH"] = true,
+            },
+            rollbackMisses = true,
+            condition = function(isMine) return isMine end,
+        }
     }
 
     -- Shadow Weaving = SW: Pain
     lib.indirectRefreshSpells[GetSpellInfo(15258)] = CopyTable(lib.indirectRefreshSpells[GetSpellInfo(10894)])
-    lib.indirectRefreshSpells[GetSpellInfo(15258)].events = {}
+    lib.indirectRefreshSpells[GetSpellInfo(15258)][15258].events = {}
 end
 
 ------------------
