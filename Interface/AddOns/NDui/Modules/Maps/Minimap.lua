@@ -284,10 +284,6 @@ function module:UpdateMinimapScale()
 	local scale = NDuiDB["Map"]["MinimapScale"]
 	Minimap:SetScale(scale)
 	Minimap.mover:SetSize(size*scale, size*scale)
-	-- Other elements
-	if _G.NDuiMinimapDataBar then
-		_G.NDuiMinimapDataBar:SetWidth((size-10)*scale)
-	end
 end
 
 function module:ShowMinimapClock()
