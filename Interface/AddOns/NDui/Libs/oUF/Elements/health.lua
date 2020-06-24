@@ -201,7 +201,6 @@ end
 local onUpdateElapsed, onUpdateWait = 0, 0.25
 local function onUpdateHealth(self, elapsed)
 	if onUpdateElapsed > onUpdateWait then
-		print(123)
 		Path(self.__owner, 'OnUpdate', self.__owner.unit)
 
 		onUpdateElapsed = 0
