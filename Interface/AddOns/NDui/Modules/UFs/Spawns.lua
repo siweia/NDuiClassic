@@ -397,5 +397,7 @@ function UF:OnLogin()
 				end
 			end
 		end
+
+		UF:UpdateRaidHealthMethod()
 	end
 end
