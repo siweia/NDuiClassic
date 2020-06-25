@@ -94,7 +94,7 @@ local function UpdateColor(self, event, unit)
 	elseif(element.colorTapping and not UnitPlayerControlled(unit) and UnitIsTapDenied(unit)) then
 		t = self.colors.tapped
 	elseif(element.colorHappiness and unit == "pet" and GetPetHappiness()) then
-		t = parent.colors.happiness[GetPetHappiness()]
+		t = self.colors.happiness[GetPetHappiness()]
 	elseif(element.colorClass and UnitIsPlayer(unit)) or
 		(element.colorClassNPC and not UnitIsPlayer(unit)) or
 		(element.colorClassPet and UnitPlayerControlled(unit) and not UnitIsPlayer(unit)) then
