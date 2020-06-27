@@ -28,7 +28,7 @@ function UF:CreateRaidIcons(self)
 
 	local role = parent:CreateTexture(nil, "OVERLAY")
 	role:SetSize(12, 12)
-	role:SetPoint("TOPLEFT", 12, 8)
+	role:SetPoint("TOPRIGHT", self, 5, 5)
 	self.RaidRoleIndicator = role
 end
 
