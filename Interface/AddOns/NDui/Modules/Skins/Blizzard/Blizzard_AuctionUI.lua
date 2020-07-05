@@ -15,39 +15,38 @@ C.themes["Blizzard_AuctionUI"] = function()
 	AuctionProgressBar.Text:ClearAllPoints()
 	AuctionProgressBar.Text:SetPoint("CENTER", 0, 1)
 	B.ReskinClose(AuctionProgressFrameCancelButton, "LEFT", AuctionProgressBar, "RIGHT", 4, 0)
-	select(14, AuctionProgressFrameCancelButton:GetRegions()):SetPoint("CENTER", 0, 2)
 
 	AuctionFrame:DisableDrawLayer("ARTWORK")
 	AuctionPortraitTexture:Hide()
-	BrowseFilterScrollFrame:GetRegions():Hide()
-	select(2, BrowseFilterScrollFrame:GetRegions()):Hide()
-	BrowseScrollFrame:GetRegions():Hide()
-	select(2, BrowseScrollFrame:GetRegions()):Hide()
-	BidScrollFrame:GetRegions():Hide()
-	select(2, BidScrollFrame:GetRegions()):Hide()
-	AuctionsScrollFrame:GetRegions():Hide()
-	select(2, AuctionsScrollFrame:GetRegions()):Hide()
-	BrowseQualitySort:DisableDrawLayer("BACKGROUND")
-	BrowseLevelSort:DisableDrawLayer("BACKGROUND")
-	BrowseDurationSort:DisableDrawLayer("BACKGROUND")
-	BrowseHighBidderSort:DisableDrawLayer("BACKGROUND")
-	BrowseCurrentBidSort:DisableDrawLayer("BACKGROUND")
-	BidQualitySort:DisableDrawLayer("BACKGROUND")
-	BidLevelSort:DisableDrawLayer("BACKGROUND")
-	BidDurationSort:DisableDrawLayer("BACKGROUND")
-	BidBuyoutSort:DisableDrawLayer("BACKGROUND")
-	BidStatusSort:DisableDrawLayer("BACKGROUND")
-	BidBidSort:DisableDrawLayer("BACKGROUND")
-	AuctionsQualitySort:DisableDrawLayer("BACKGROUND")
-	AuctionsDurationSort:DisableDrawLayer("BACKGROUND")
-	AuctionsHighBidderSort:DisableDrawLayer("BACKGROUND")
-	AuctionsBidSort:DisableDrawLayer("BACKGROUND")
-	select(6, BrowseCloseButton:GetRegions()):Hide()
-	select(6, BrowseBuyoutButton:GetRegions()):Hide()
-	select(6, BrowseBidButton:GetRegions()):Hide()
-	select(6, BidCloseButton:GetRegions()):Hide()
-	select(6, BidBuyoutButton:GetRegions()):Hide()
-	select(6, BidBidButton:GetRegions()):Hide()
+
+	local auctionSorts = {
+		BrowseQualitySort,
+		BrowseLevelSort,
+		BrowseDurationSort,
+		BrowseHighBidderSort,
+		BrowseCurrentBidSort,
+		BidQualitySort,
+		BidLevelSort,
+		BidDurationSort,
+		BidBuyoutSort,
+		BidStatusSort,
+		BidBidSort,
+		AuctionsQualitySort,
+		AuctionsDurationSort,
+		AuctionsHighBidderSort,
+		AuctionsBidSort,
+	}
+	for _, tab in pairs(auctionSorts) do
+		tab:DisableDrawLayer("BACKGROUND")
+		tab:GetHighlightTexture():SetColorTexture(r, g, b, .25)
+	end
+
+	B.StripTextures(BrowseCloseButton)
+	B.StripTextures(BrowseBuyoutButton)
+	B.StripTextures(BrowseBidButton)
+	B.StripTextures(BidCloseButton)
+	B.StripTextures(BidBuyoutButton)
+	B.StripTextures(BidBidButton)
 
 	hooksecurefunc("FilterButton_SetUp", function(button)
 		button:SetNormalTexture("")
@@ -87,17 +86,6 @@ C.themes["Blizzard_AuctionUI"] = function()
 	AuctionsCancelAuctionButton:ClearAllPoints()
 	AuctionsCancelAuctionButton:SetPoint("RIGHT", AuctionsCloseButton, "LEFT", -1, 0)
 
-	-- Blizz needs to be more consistent
---[[
-	BrowseBidPriceSilver:SetPoint("LEFT", BrowseBidPriceGold, "RIGHT", 1, 0)
-	BrowseBidPriceCopper:SetPoint("LEFT", BrowseBidPriceSilver, "RIGHT", 1, 0)
-	BidBidPriceSilver:SetPoint("LEFT", BidBidPriceGold, "RIGHT", 1, 0)
-	BidBidPriceCopper:SetPoint("LEFT", BidBidPriceSilver, "RIGHT", 1, 0)
-	StartPriceSilver:SetPoint("LEFT", StartPriceGold, "RIGHT", 1, 0)
-	StartPriceCopper:SetPoint("LEFT", StartPriceSilver, "RIGHT", 1, 0)
-	BuyoutPriceSilver:SetPoint("LEFT", BuyoutPriceGold, "RIGHT", 1, 0)
-	BuyoutPriceCopper:SetPoint("LEFT", BuyoutPriceSilver, "RIGHT", 1, 0)]]
-
 	local function reskinAuctionButtons(button, i)
 		local bu = _G[button..i]
 		local it = _G[button..i.."Item"]
@@ -115,15 +103,13 @@ C.themes["Blizzard_AuctionUI"] = function()
 			B.StripTextures(bu)
 
 			local bg = B.CreateBDFrame(bu, .25)
-			bg:SetPoint("TOPLEFT")
-			bg:SetPoint("BOTTOMRIGHT", 0, 5)
+			bg:SetPoint("TOPLEFT", ic, "TOPRIGHT", 0, C.mult)
+			bg:SetPoint("BOTTOMRIGHT", 0, 4)
 
 			bu:SetHighlightTexture(DB.bdTex)
 			local hl = bu:GetHighlightTexture()
 			hl:SetVertexColor(r, g, b, .2)
-			hl:ClearAllPoints()
-			hl:SetPoint("TOPLEFT", 0, -1)
-			hl:SetPoint("BOTTOMRIGHT", -1, 6)
+			hl:SetInside(bg)
 		end
 	end
 
@@ -139,14 +125,11 @@ C.themes["Blizzard_AuctionUI"] = function()
 		reskinAuctionButtons("AuctionsButton", i)
 	end
 
-	local auctionhandler = CreateFrame("Frame")
-	auctionhandler:RegisterEvent("NEW_AUCTION_UPDATE")
-	auctionhandler:SetScript("OnEvent", function()
-		local AuctionsItemButtonIconTexture = AuctionsItemButton:GetNormalTexture()
-		if AuctionsItemButtonIconTexture then
-			AuctionsItemButtonIconTexture:SetTexCoord(.08, .92, .08, .92)
-			AuctionsItemButtonIconTexture:SetPoint("TOPLEFT", C.mult, -C.mult)
-			AuctionsItemButtonIconTexture:SetPoint("BOTTOMRIGHT", -C.mult, C.mult)
+	B:RegisterEvent("NEW_AUCTION_UPDATE", function()
+		local iconTexture = AuctionsItemButton:GetNormalTexture()
+		if iconTexture then
+			iconTexture:SetTexCoord(.08, .92, .08, .92)
+			iconTexture:SetInside()
 		end
 		AuctionsItemButton.IconBorder:SetTexture("")
 	end)
@@ -156,13 +139,13 @@ C.themes["Blizzard_AuctionUI"] = function()
 	AuctionsItemButtonNameFrame:Hide()
 	local hl = AuctionsItemButton:GetHighlightTexture()
 	hl:SetColorTexture(1, 1, 1, .25)
-	hl:SetPoint("TOPLEFT", C.mult, -C.mult)
-	hl:SetPoint("BOTTOMRIGHT", -C.mult, C.mult)
+	hl:SetInside()
 
 	B.ReskinClose(AuctionFrameCloseButton, "TOPRIGHT", AuctionFrame, "TOPRIGHT", -4, -14)
 	B.ReskinScroll(BrowseScrollFrameScrollBar)
 	B.ReskinScroll(AuctionsScrollFrameScrollBar)
 	B.ReskinScroll(BrowseFilterScrollFrameScrollBar)
+	B.ReskinScroll(BidScrollFrameScrollBar)
 	B.ReskinDropDown(PriceDropDown)
 	B.ReskinInput(BrowseName)
 	B.ReskinArrow(BrowsePrevPageButton, "left")
@@ -224,8 +207,7 @@ C.themes["Blizzard_AuctionUI"] = function()
 		Token.ItemBorder:Hide()
 		iconBorder:SetTexture(DB.bdTex)
 		iconBorder:SetDrawLayer("BACKGROUND")
-		iconBorder:SetPoint("TOPLEFT", icon, -C.mult, C.mult)
-		iconBorder:SetPoint("BOTTOMRIGHT", icon, C.mult, -C.mult)
+		iconBorder:SetOutside(icon)
 		icon:SetTexCoord(.08, .92, .08, .92)
 	end
 end
