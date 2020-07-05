@@ -66,7 +66,7 @@ function TT:AddLineForID(id, linkType, noadd)
 
 		local bagCount = GetItemCount(id)
 		local bankCount = GetItemCount(id, true) - bagCount
-		local itemStackCount = select(8, GetItemInfo(id))
+		local name, _, _, itemLevel, _, _, _, itemStackCount = GetItemInfo(id)
 		if bankCount > 0 then
 			self:AddDoubleLine(BAGSLOT.."/"..BANK..":", DB.InfoColor..bagCount.."/"..bankCount)
 		elseif bagCount > 0 then
@@ -74,6 +74,9 @@ function TT:AddLineForID(id, linkType, noadd)
 		end
 		if itemStackCount and itemStackCount > 1 then
 			self:AddDoubleLine(L["Stack Cap"]..":", DB.InfoColor..itemStackCount)
+		end
+		if name and itemLevel and itemLevel > 1 then
+			self:AddDoubleLine(L["ItemLevel"]..":", DB.InfoColor..itemLevel)
 		end
 	end
 
