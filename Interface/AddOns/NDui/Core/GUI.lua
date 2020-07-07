@@ -135,6 +135,7 @@ local defaultSettings = {
 		PlayerWidth = 245,
 		PlayerHeight = 24,
 		PlayerPowerHeight = 4,
+		PlayerPowerOffset = 2,
 		PetWidth = 120,
 		PetHeight = 18,
 		PetPowerHeight = 2,

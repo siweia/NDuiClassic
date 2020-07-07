@@ -621,10 +621,15 @@ end
 
 local function SetUnitFrameSize(self, unit)
 	local width = NDuiDB["UFs"][unit.."Width"]
-	local height = NDuiDB["UFs"][unit.."Height"] + NDuiDB["UFs"][unit.."PowerHeight"] + C.mult
+	local healthHeight = NDuiDB["UFs"][unit.."Height"]
+	local powerHeight = NDuiDB["UFs"][unit.."PowerHeight"]
+	local height = healthHeight + powerHeight + C.mult
 	self:SetSize(width, height)
-	self.Health:SetHeight(NDuiDB["UFs"][unit.."Height"])
-	self.Power:SetHeight(NDuiDB["UFs"][unit.."PowerHeight"])
+	self.Health:SetHeight(healthHeight)
+	self.Power:SetHeight(powerHeight)
+	if self.powerText then
+		self.powerText:SetPoint("RIGHT", -3, NDuiDB["UFs"][unit.."PowerOffset"])
+	end
 end
 
 function G:SetupUnitFrame(parent)
@@ -641,7 +646,7 @@ function G:SetupUnitFrame(parent)
 	}
 
 	local defaultValue = {
-		["Player"] = {245, 24, 4},
+		["Player"] = {245, 24, 4, 2},
 		["Pet"] = {120, 18, 2},
 	}
 
@@ -650,6 +655,9 @@ function G:SetupUnitFrame(parent)
 		createOptionSlider(parent, L["Health Width"].."("..defaultValue[value][1]..")", sliderRange[value][1], sliderRange[value][2], 30, offset-60, value.."Width", func)
 		createOptionSlider(parent, L["Health Height"].."("..defaultValue[value][2]..")", 15, 50, 30, offset-130, value.."Height", func)
 		createOptionSlider(parent, L["Power Height"].."("..defaultValue[value][3]..")", 2, 30, 30, offset-200, value.."PowerHeight", func)
+		if defaultValue[value][4] then
+			createOptionSlider(parent, L["Power Offset"].."("..defaultValue[value][4]..")", -20, 20, 30, offset-270, value.."PowerOffset", func)
+		end
 	end
 
 	local mainFrames = {_G.oUF_Player, _G.oUF_Target}
@@ -666,7 +674,7 @@ function G:SetupUnitFrame(parent)
 			SetUnitFrameSize(frame, "Pet")
 		end
 	end
-	createOptionGroup(scroll.child, L["Pet&*Target"], -270, "Pet", updatePetSize)
+	createOptionGroup(scroll.child, L["Pet&*Target"], -340, "Pet", updatePetSize)
 end
 
 function G:SetupRaidFrame(parent)
