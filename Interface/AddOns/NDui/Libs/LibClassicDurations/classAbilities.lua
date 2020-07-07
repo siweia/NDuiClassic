@@ -1,7 +1,7 @@
 local lib = LibStub and LibStub("LibClassicDurations", true)
 if not lib then return end
 
-local Type, Version = "SpellTable", 62
+local Type, Version = "SpellTable", 63
 if lib:GetDataVersion(Type) >= Version then return end  -- older versions didn't have that function
 
 local Spell = lib.AddAura
@@ -113,7 +113,7 @@ if class == "MAGE" then
             },
             -- targetSpellID = 22959, -- Fire Vulnerability
             rollbackMisses = true,
-            condition = function(isMine) return isMine end,
+            -- condition = function(isMine) return isMine end,
             -- it'll refresg only from mages personal casts which is fine
             -- because if mage doesn't have imp scorch then he won't even see a Fire Vulnerability timer
         },
