@@ -45,6 +45,8 @@ local module = B:GetModule("AurasTable")
 -- 全职业的相关监控
 local list = {
 	["Enchant Aura"] = {	-- 附魔及饰品组
+	    {AuraID = 20007, UnitID = "player", Text = "神圣"},    --十字军
+		{AuraID = 10901, UnitID = "player", Value = true, Text = "盾"}, --牧师
 		-- 种族天赋
 		{AuraID = 20580, UnitID = "player"},	-- 影遁 暗夜
 		{AuraID = 20594, UnitID = "player"},	-- 石像形态 矮人
@@ -53,19 +55,74 @@ local list = {
 		{AuraID = 23230, UnitID = "player"},	-- 血性狂暴 兽人，减治疗
 	},
 	["Raid Buff"] = {		-- 团队增益组
-		-- 嗜血相关
-		--{AuraID = 2825, UnitID = "player"},		-- 嗜血
+		-- 药水相关
+		{AuraID = 3169, UnitID = "player", Text = "无敌"},    --有限无敌药水
+		{AuraID = 6615, UnitID = "player", Text = "自由"},    --自由行动药剂
+		{AuraID = 17543, UnitID = "player", Text = "火抗"},  --强效火焰抗性药水 
+		{AuraID = 17544, UnitID = "player", Text = "冰抗"},  --强效冰霜抗性药水
+		{AuraID = 17548, UnitID = "player", Text = "暗抗"},  --强效暗影抗性药水 
+		{AuraID = 17546, UnitID = "player", Text = "自抗"},  --强效自然抗性药水
 		-- 团队增益或减伤
 		{AuraID = 1022, UnitID = "player"},		-- 保护祝福
 		{AuraID = 6940, UnitID = "player"},		-- 牺牲祝福
 		{AuraID = 1044, UnitID = "player"},		-- 自由祝福
 	},
 	["Raid Debuff"] = {		-- 团队减益组
-		--{AuraID = 209858, UnitID = "player"},	-- 死疽溃烂
+		-- 熔火
+		{AuraID = 19702, UnitID = "player", Flash = true,  Text = "末日"},
+		{AuraID = 19703, UnitID = "player", Flash = true,  Text = "诅咒"},
+		{AuraID = 20604, UnitID = "player", Flash = true,  Text = "统御"},
+		{AuraID = 19408, UnitID = "player", Flash = true,  Text = "恐慌"},
+		{AuraID = 20475, UnitID = "player", Flash = true,  Text = "地狱"},
+		{AuraID = 19713, UnitID = "player", Flash = true,  Text = "诅咒"},
+
+		-- 黑翼 DEBUFF
+		{AuraID = 23023, UnitID = "player", Flash = true, Text = "燃烧"}, --1号燃烧
+		{AuraID = 18173, UnitID = "player", Flash = true, Text = "刺激"},
+		{AuraID = 23341, UnitID = "player", Flash = true, Text = "烈焰"},
+		{AuraID = 23170, UnitID = "player", Flash = true, Text = "龙：青铜"},
+		{AuraID = 23154, UnitID = "player", Flash = true, Text = "龙：黑"},
+		{AuraID = 23155, UnitID = "player", Flash = true, Text = "龙：疾病"},
+		{AuraID = 23153, UnitID = "player", Flash = true, Text = "龙：魔法"},
+		{AuraID = 23169, UnitID = "player", Flash = true, Text = "龙：绿"},
+		{AuraID = 23414, UnitID = "player", Flash = true, Text = "麻痹"}, --盗贼点名
+		{AuraID = 23401, UnitID = "player", Flash = true, Text = "堕落"}, --牧师点名
+		{AuraID = 23397, UnitID = "player", Flash = true, Text = "脆皮"}, --战士点名
+		{AuraID = 23410, UnitID = "player", Flash = true, Text = "变羊"}, --法师点名
+		
+		--废墟
+		{AuraID = 25471, UnitID = "player", Flash = true, Text = "命令"},
+		{AuraID = 25725, UnitID = "player", Flash = true, Text = "麻痹"},
+		
+		--神殿
+		{AuraID = 785, UnitID = "player", Flash = true, Text = "充实"},
+		{AuraID = 26556, UnitID = "player", Flash = true, Text = "瘟疫"},--防御者
+		{AuraID = 26580, UnitID = "player", Flash = true, Text = "恐惧"},
+		{AuraID = 26050, UnitID = "player", Flash = true, Text = "喷射"},
+		{AuraID = 26180, UnitID = "player", Flash = true, Text = "翼龙"},
+		{AuraID = 26053, UnitID = "player", Flash = true, Text = "剧毒"},
+		-- 纳克萨玛斯
 	},
 	["Warning"] = {			-- 目标重要光环组
-		--{AuraID = 226510, UnitID = "target"},	-- 血池回血
-	-- PVP
+		-- 熔火
+		{AuraID = 19714, UnitID = "target", Text = "衰减"},
+		{AuraID = 20619, UnitID = "target", Text = "魔反"},
+		{AuraID = 21075, UnitID = "target", Text = "物反"},
+		
+		-- 黑翼 门神易伤
+		{AuraID = 22277, UnitID = "target", Text = "火焰"},
+		{AuraID = 22278, UnitID = "target", Text = "冰霜"},
+		{AuraID = 22279, UnitID = "target", Text = "暗影"},
+		{AuraID = 22280, UnitID = "target", Text = "自然"},
+		{AuraID = 22281, UnitID = "target", Text = "奥术"},
+		{AuraID = 23128, UnitID = "target", Text = "狂暴"},   --7狗
+		{AuraID = 23342, UnitID = "target", Text = "疯狂"},   --6龙
+		-- 废墟
+		-- 神殿
+		{AuraID = 8269, UnitID = "target", Text = "狂怒"},  --沙尔图拉
+		{AuraID = 26051, UnitID = "target", Flash = true, Text = "疯狂"},  --哈霍兰公主
+		{AuraID = 26615, UnitID = "target", Text = "狂暴"},  --奥罗
+	    -- PVP
 		{AuraID = 498, UnitID = "target"},		-- 圣佑术
 		{AuraID = 642, UnitID = "target"},		-- 圣盾术
 		{AuraID = 871, UnitID = "target"},		-- 盾墙
@@ -75,6 +132,20 @@ local list = {
 		{AuraID = 1022, UnitID = "target"},		-- 保护祝福
 		{AuraID = 19574, UnitID = "target"},	-- 狂野怒火
 		{AuraID = 23920, UnitID = "target"},	-- 法术反射
+	},
+	["Focus Aura"] = {		-- 侧边（焦点）光环组
+	    -- 监控团队易伤
+		{AuraID = 11597, UnitID = "target", Text = "破甲"},	  --破甲（战士）
+        {AuraID = 11581, UnitID = "target", Text = "雷霆"},	  --雷霆（战士）
+		{AuraID = 11556, UnitID = "target", Text = "挫志"},	  --挫志（战士）
+		{AuraID = 12323, UnitID = "target", Text = "刺耳"},	  --刺耳（战士）
+		{AuraID = 20355, UnitID = "target", Text = "智慧"},	  --智慧审判（圣骑士）
+		{AuraID = 20346, UnitID = "target", Text = "光明"},	  --光明审判（圣骑士）
+		{AuraID = 11717, UnitID = "target", Combat = true, Text = "鲁莽"},	  --鲁莽（术士）
+		{AuraID = 17937, UnitID = "target", Combat = true, Text = "暗影"},	  --暗影（术士）
+		{AuraID = 11722, UnitID = "target", Combat = true, Text = "元素"},	  --元素（术士）
+		{AuraID = 14325, UnitID = "target", Combat = true, Text = "印记"},	  --印记（猎人）
+		{AuraID = 2855, UnitID = "target", Combat = true, Text = "侦测"},	  --侦测（法师）
 	},
 	["InternalCD"] = {		-- 自定义内置冷却组
 		--{IntID = 240447, Duration = 20},	-- 践踏
