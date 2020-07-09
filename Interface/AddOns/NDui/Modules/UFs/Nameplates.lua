@@ -4,7 +4,7 @@ local UF = B:GetModule("UnitFrames")
 
 local _G = getfenv(0)
 local strmatch, tonumber, pairs, unpack, rad = string.match, tonumber, pairs, unpack, math.rad
-local UnitIsTapDenied, UnitPlayerControlled, UnitIsUnit = UnitIsTapDenied, UnitPlayerControlled, UnitIsUnit
+local UnitThreatSituation, UnitIsTapDenied, UnitPlayerControlled, UnitIsUnit = UnitThreatSituation, UnitIsTapDenied, UnitPlayerControlled, UnitIsUnit
 local UnitReaction, UnitIsConnected, UnitIsPlayer, UnitSelectionColor = UnitReaction, UnitIsConnected, UnitIsPlayer, UnitSelectionColor
 local UnitClassification, UnitExists, InCombatLockdown = UnitClassification, UnitExists, InCombatLockdown
 local UnitGUID, GetPlayerInfoByGUID, Ambiguate, UnitName = UnitGUID, GetPlayerInfoByGUID, Ambiguate, UnitName
@@ -94,10 +94,13 @@ function UF.UpdateColor(self, _, unit)
 	local npcID = self.npcID
 	local isCustomUnit = customUnits[name] or customUnits[npcID]
 	local isPlayer = UnitIsPlayer(unit)
+	local status = UnitThreatSituation("player", unit) or false -- just in case
 	local isTargeting = UnitIsUnit(unit.."target", "player")
 	local reaction = UnitReaction(unit, "player")
 	local customColor = NDuiDB["Nameplate"]["CustomColor"]
 	local secureColor = NDuiDB["Nameplate"]["SecureColor"]
+	local transColor = NDuiDB["Nameplate"]["TransColor"]
+	local insecureColor = NDuiDB["Nameplate"]["InsecureColor"]
 	local r, g, b
 
 	if not UnitIsConnected(unit) then
@@ -117,8 +120,14 @@ function UF.UpdateColor(self, _, unit)
 			r, g, b = .6, .6, .6
 		else
 			r, g, b = UnitSelectionColor(unit, true)
-			if NDuiDB["Nameplate"]["TankMode"] and isTargeting then
-				r, g, b = secureColor.r, secureColor.g, secureColor.b
+			if status and NDuiDB["Nameplate"]["TankMode"] then
+				if status == 3 then
+					r, g, b = secureColor.r, secureColor.g, secureColor.b
+				elseif status == 2 or status == 1 then
+					r, g, b = transColor.r, transColor.g, transColor.b
+				elseif status == 0 then
+					r, g, b = insecureColor.r, insecureColor.g, insecureColor.b
+				end
 			end
 		end
 	end
@@ -127,9 +136,16 @@ function UF.UpdateColor(self, _, unit)
 		element:SetStatusBarColor(r, g, b)
 	end
 
-	if (not NDuiDB["Nameplate"]["TankMode"] or isCustomUnit or isPlayer) and UnitCanAttack(unit, "player") and isTargeting then
-		self.ThreatIndicator:SetBackdropBorderColor(1, 0, 0)
-		self.ThreatIndicator:Show()
+	if isCustomUnit or not NDuiDB["Nameplate"]["TankMode"] then
+		if status and status == 3 then
+			self.ThreatIndicator:SetBackdropBorderColor(1, 0, 0)
+			self.ThreatIndicator:Show()
+		elseif status and (status == 2 or status == 1) then
+			self.ThreatIndicator:SetBackdropBorderColor(1, 1, 0)
+			self.ThreatIndicator:Show()
+		else
+			self.ThreatIndicator:Hide()
+		end
 	else
 		self.ThreatIndicator:Hide()
 	end

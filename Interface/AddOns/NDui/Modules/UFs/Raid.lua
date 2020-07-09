@@ -52,11 +52,32 @@ function UF:CreateTargetBorder(self)
 	self:RegisterEvent("GROUP_ROSTER_UPDATE", UF.UpdateTargetBorder, true)
 end
 
-local function postUpdateThreat(element, _, status)
-	if status then
-		element:SetBackdropBorderColor(1, 0, 0)
+if not GetThreatStatusColor then
+	function GetThreatStatusColor(status)
+		if status == 3 then
+			return 1, 0, 0
+		elseif status == 2 then
+			return 1, .6, 0
+		elseif status == 1 then
+			return 1, 1, .47
+		else
+			return .69, .69, .69
+		end
+	end
+end
+
+function UF:UpdateThreatBorder(_, unit)
+	if unit ~= self.unit then return end
+
+	local element = self.ThreatIndicator
+	local status = UnitThreatSituation(unit)
+
+	if status and status > 1 then
+		local r, g, b = GetThreatStatusColor(status)
+		element:SetBackdropBorderColor(r, g, b)
+		element:Show()
 	else
-		element:SetBackdropBorderColor(0, 0, 0)
+		element:Hide()
 	end
 end
 
@@ -66,8 +87,9 @@ function UF:CreateThreatBorder(self)
 	threatIndicator:SetBackdropBorderColor(.7, .7, .7)
 	threatIndicator:SetFrameLevel(0)
 	self.Shadow = nil
+
 	self.ThreatIndicator = threatIndicator
-	self.ThreatIndicator.PostUpdate = postUpdateThreat
+	self.ThreatIndicator.Override = UF.UpdateThreatBorder
 end
 
 local debuffList = {}
