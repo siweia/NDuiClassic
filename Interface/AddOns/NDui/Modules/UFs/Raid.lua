@@ -52,20 +52,6 @@ function UF:CreateTargetBorder(self)
 	self:RegisterEvent("GROUP_ROSTER_UPDATE", UF.UpdateTargetBorder, true)
 end
 
-if not GetThreatStatusColor then
-	function GetThreatStatusColor(status)
-		if status == 3 then
-			return 1, 0, 0
-		elseif status == 2 then
-			return 1, .6, 0
-		elseif status == 1 then
-			return 1, 1, .47
-		else
-			return .69, .69, .69
-		end
-	end
-end
-
 function UF:UpdateThreatBorder(_, unit)
 	if unit ~= self.unit then return end
 
