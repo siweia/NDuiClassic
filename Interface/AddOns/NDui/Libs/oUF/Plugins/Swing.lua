@@ -12,13 +12,13 @@ local UnitAttackSpeed = UnitAttackSpeed
 local UnitRangedDamage = UnitRangedDamage
 local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
 local UnitGUID = UnitGUID
-local GetUnitSpeed = GetUnitSpeed
+local IsPlayerMoving = IsPlayerMoving
 
 local meleeing, rangeing, lasthit
 local MainhandID = GetInventoryItemID("player", 16)
 local OffhandID = GetInventoryItemID("player", 17)
 local RangedID = GetInventoryItemID("player", 18)
-local AUTO_CAST_TIME = .7001
+local AUTO_CAST_TIME = .65
 local delayTime = 0
 
 local function SwingStopped(element)
@@ -45,14 +45,15 @@ local function UpdateBarValue(self, value)
 		if self.__owner.OverrideText then
 			self.__owner.OverrideText(self, value)
 		else
-			self.Text:SetFormattedText("%.1f", self.max - self.min - value)
+			local decimal = rangeing and "%.2f" or "%.1f"
+			self.Text:SetFormattedText(decimal, self.max - self.min - value)
 		end
 	end
 end
 
 local function delayUpdate(self)
 	local now = GetTime()
-	local isMoving = GetUnitSpeed("player") > 0
+	local isMoving = IsPlayerMoving()
 	if not isMoving then
 		local elapsed = now - delayTime
 		if elapsed > AUTO_CAST_TIME then
@@ -112,7 +113,7 @@ do
 
 			local currentValue = now - self.min
 			local swingTime = self.max - self.min - AUTO_CAST_TIME
-			local isMoving = GetUnitSpeed("player") > 0
+			local isMoving = IsPlayerMoving()
 
 			if rangeing and currentValue >= swingTime and isMoving then
 				self.swingTime = swingTime
