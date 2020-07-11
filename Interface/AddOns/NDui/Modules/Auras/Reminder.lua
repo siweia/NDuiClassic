@@ -39,6 +39,7 @@ end
 function A:Reminder_Update(cfg)
 	local frame = cfg.frame
 	local depend = cfg.depend
+	local depends = cfg.depends
 	local combat = cfg.combat
 	local instance = cfg.instance
 	local pvp = cfg.pvp
