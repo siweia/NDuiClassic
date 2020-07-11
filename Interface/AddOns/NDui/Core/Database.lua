@@ -203,7 +203,7 @@ DB.ReminderBuffs = {
 				[6673] = true,
 				[25289] = true,
 			},
-			depend = 6673,
+			depends = {6673, 5242, 6192, 11549, 11550, 11551, 25289},
 			combat = true,
 			instance = true,
 			pvp = true,
