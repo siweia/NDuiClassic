@@ -53,10 +53,23 @@ local function isItemEquipment(item)
 end
 
 local function isItemConsumble(item)
+    local function has_value (tab, val)
+	    for index, value in ipairs(tab) do
+	        if value == val then
+	            return true
+	        end
+	    end
+	    return false
+	end
+	local juju = ""
+	local jujus = {12457, 12455, 12459, 12450, 12458, 12460, 12451}
+	if (has_value(jujus, item.id)) then
+		juju = item.id
+	end
 	if not NDuiDB["Bags"]["ItemFilter"] then return end
 	if not NDuiDB["Bags"]["FilterConsumble"] then return end
 	if isCustomFilter(item) == false then return end
-	return isCustomFilter(item) or (item.classID and (item.classID == LE_ITEM_CLASS_CONSUMABLE or item.classID == LE_ITEM_CLASS_ITEM_ENHANCEMENT))
+	return isCustomFilter(item) or (item.classID and (item.classID == LE_ITEM_CLASS_CONSUMABLE or item.classID == LE_ITEM_CLASS_ITEM_ENHANCEMENT)) or juju ~= ""
 end
 
 local function isItemLegendary(item)
