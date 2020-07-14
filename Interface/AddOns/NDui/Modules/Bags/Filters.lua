@@ -6,14 +6,15 @@ local LE_ITEM_QUALITY_POOR, LE_ITEM_QUALITY_LEGENDARY = LE_ITEM_QUALITY_POOR, LE
 local LE_ITEM_CLASS_CONSUMABLE, LE_ITEM_CLASS_ITEM_ENHANCEMENT = LE_ITEM_CLASS_CONSUMABLE, LE_ITEM_CLASS_ITEM_ENHANCEMENT
 local LE_ITEM_CLASS_WEAPON, LE_ITEM_CLASS_ARMOR, LE_ITEM_CLASS_TRADEGOODS = LE_ITEM_CLASS_WEAPON, LE_ITEM_CLASS_ARMOR, LE_ITEM_CLASS_TRADEGOODS
 
--- Custom filter
+-- Custom filter for consumble
 local CustomFilterList = {
-	[37863] = false,	-- 酒吧传送器
-	[141333] = true,	-- 宁神圣典
-	[141446] = true,	-- 宁神书卷
-	[153646] = true,	-- 静心圣典
-	[153647] = true,	-- 静心书卷
-	[161053] = true,	-- 水手咸饼干
+	[12450] = true,	-- Juju Flurry
+	[12451] = true,	-- Juju Power
+	[12455] = true,	-- Juju Ember
+	[12457] = true, -- Juju Chill
+	[12458] = true,	-- Juju Guile
+	[12459] = true,	-- Juju Escape
+	[12460] = true,	-- Juju Might
 }
 
 local function isCustomFilter(item)
