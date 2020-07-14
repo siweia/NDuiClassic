@@ -53,7 +53,7 @@ local defaultSettings = {
 
 		FilterJunk = true,
 		FilterAmmo = true,
-		FilterConsumble = true,
+		FilterConsumable = true,
 		FilterEquipment = true,
 		FilterLegendary = true,
 		FilterFavourite = true,

@@ -499,8 +499,8 @@ function module:OnLogin()
 		f.equipment = MyContainer:New("Equipment", {Columns = bagsWidth, Parent = f.main})
 		f.equipment:SetFilter(filters.bagEquipment, true)
 
-		f.consumble = MyContainer:New("Consumble", {Columns = bagsWidth, Parent = f.main})
-		f.consumble:SetFilter(filters.bagConsumble, true)
+		f.consumable = MyContainer:New("Consumable", {Columns = bagsWidth, Parent = f.main})
+		f.consumable:SetFilter(filters.bagConsumable, true)
 
 		f.bagGoods = MyContainer:New("BagGoods", {Columns = bagsWidth, Parent = f.main})
 		f.bagGoods:SetFilter(filters.bagGoods, true)
@@ -531,8 +531,8 @@ function module:OnLogin()
 		f.bankEquipment = MyContainer:New("BankEquipment", {Columns = bankWidth, Parent = f.bank})
 		f.bankEquipment:SetFilter(filters.bankEquipment, true)
 
-		f.bankConsumble = MyContainer:New("BankConsumble", {Columns = bankWidth, Parent = f.bank})
-		f.bankConsumble:SetFilter(filters.bankConsumble, true)
+		f.bankConsumable = MyContainer:New("BankConsumable", {Columns = bankWidth, Parent = f.bank})
+		f.bankConsumable:SetFilter(filters.bankConsumable, true)
 
 		f.bankGoods = MyContainer:New("BankGoods", {Columns = bankWidth, Parent = f.bank})
 		f.bankGoods:SetFilter(filters.bankGoods, true)
@@ -540,8 +540,8 @@ function module:OnLogin()
 		f.bankQuest = MyContainer:New("BankQuest", {Columns = bankWidth, Parent = f.bank})
 		f.bankQuest:SetFilter(filters.bankQuest, true)
 
-		module.BagGroup = {f.ammoItem, f.equipment, f.bagFavourite, f.bagGoods, f.consumble, f.bagQuest, f.junk}
-		module.BankGroup = {f.bankAmmoItem, f.bankEquipment, f.bankLegendary, f.bankFavourite, f.bankGoods, f.bankConsumble, f.bankQuest}
+		module.BagGroup = {f.ammoItem, f.equipment, f.bagFavourite, f.bagGoods, f.consumable, f.bagQuest, f.junk}
+		module.BankGroup = {f.bankAmmoItem, f.bankEquipment, f.bankLegendary, f.bankFavourite, f.bankGoods, f.bankConsumable, f.bankQuest}
 	end
 
 	local initBagType
@@ -738,7 +738,7 @@ function module:OnLogin()
 			label = BAG_FILTER_EQUIPMENT
 		elseif name == "BankLegendary" then
 			label = LOOT_JOURNAL_LEGENDARIES
-		elseif strmatch(name, "Consumble$") then
+		elseif strmatch(name, "Consumable$") then
 			label = BAG_FILTER_CONSUMABLES
 		elseif name == "Junk" then
 			label = BAG_FILTER_JUNK

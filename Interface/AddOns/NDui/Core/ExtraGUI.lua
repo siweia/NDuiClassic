@@ -821,7 +821,7 @@ function G:SetupBagFilter(parent)
 
 	local filterOptions = {
 		[1] = "FilterJunk",
-		[2] = "FilterConsumble",
+		[2] = "FilterConsumable",
 		[3] = "FilterAmmo",
 		[4] = "FilterEquipment",
 		[5] = "FilterLegendary",
