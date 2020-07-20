@@ -640,6 +640,7 @@ end
 
 -- Player Nameplate
 local auras = B:GetModule("Auras")
+local margin = C.UFs.BarMargin
 
 function UF:PlateVisibility(event)
 	if (event == "PLAYER_REGEN_DISABLED" or InCombatLockdown()) and UnitIsUnit("player", self.unit) then
@@ -658,9 +659,10 @@ end
 function UF:ResizePlayerPlate()
 	local plate = _G.oUF_PlayerPlate
 	if plate then
-		local iconSize, margin = NDuiDB["Nameplate"]["PPIconSize"], 2
+		local pWidth = NDuiDB["Nameplate"]["PPWidth"]
 		local pHeight, ppHeight = NDuiDB["Nameplate"]["PPHeight"], NDuiDB["Nameplate"]["PPPHeight"]
-		plate:SetSize(iconSize*5 + margin*4, pHeight + ppHeight + C.mult)
+		plate:SetSize(pWidth, pHeight + ppHeight + C.mult)
+		plate.mover:SetSize(pWidth, pHeight + ppHeight + C.mult)
 		plate.Health:SetHeight(pHeight)
 		plate.Power:SetHeight(ppHeight)
 		local bars = plate.ClassPower
@@ -685,9 +687,8 @@ end
 function UF:CreatePlayerPlate()
 	self.mystyle = "PlayerPlate"
 	self:EnableMouse(false)
-	local iconSize, margin = NDuiDB["Nameplate"]["PPIconSize"], 2
 	local pHeight, ppHeight = NDuiDB["Nameplate"]["PPHeight"], NDuiDB["Nameplate"]["PPPHeight"]
-	self:SetSize(iconSize*5 + margin*4, pHeight + ppHeight + C.mult)
+	self:SetSize(NDuiDB["Nameplate"]["PPWidth"], pHeight + ppHeight + C.mult)
 
 	UF:CreateHealthBar(self)
 	UF:CreatePowerBar(self)
