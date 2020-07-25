@@ -18,7 +18,6 @@ local list = {
 		{AuraID = 1943, UnitID = "target", Caster = "player"},		-- 割裂
 	},
 	["Special Aura"] = {	-- 玩家重要光环组
-		{AuraID = 1966, UnitID = "player"},		-- 佯攻
 		{AuraID = 2983, UnitID = "player"},		-- 疾跑
 		{AuraID = 5171, UnitID = "player"},		-- 切割
 		{AuraID = 5277, UnitID = "player"},		-- 闪避
