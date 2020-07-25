@@ -582,11 +582,6 @@ function module:OnLogin()
 		parentFrame:SetAllPoints()
 		parentFrame:SetFrameLevel(5)
 
-		self.junkIcon = parentFrame:CreateTexture(nil, "ARTWORK")
-		self.junkIcon:SetAtlas("bags-junkcoin")
-		self.junkIcon:SetSize(20, 20)
-		self.junkIcon:SetPoint("TOPRIGHT", 1, 0)
-
 		self.Favourite = parentFrame:CreateTexture(nil, "ARTWORK")
 		self.Favourite:SetAtlas("collections-icon-favorites")
 		self.Favourite:SetSize(30, 30)
@@ -630,16 +625,18 @@ function module:OnLogin()
 			end
 		end
 
-		if (MerchantFrame:IsShown() or customJunkEnable) and (item.rarity == LE_ITEM_QUALITY_POOR or NDuiADB["CustomJunkList"][item.id]) and item.sellPrice > 0 then
-			self.junkIcon:SetAlpha(1)
-		else
-			self.junkIcon:SetAlpha(0)
+		if self.JunkIcon then
+			if (MerchantFrame:IsShown() or customJunkEnable) and (item.rarity == LE_ITEM_QUALITY_POOR or NDuiADB["CustomJunkList"][item.id]) and item.sellPrice > 0 then
+				self.JunkIcon:Show()
+			else
+				self.JunkIcon:Hide()
+			end
 		end
 
 		if NDuiDB["Bags"]["FavouriteItems"][item.id] then
-			self.Favourite:SetAlpha(1)
+			self.Favourite:Show()
 		else
-			self.Favourite:SetAlpha(0)
+			self.Favourite:Hide()
 		end
 
 		if NDuiDB["Bags"]["BagsiLvl"] and isItemNeedsLevel(item) then
@@ -671,11 +668,11 @@ function module:OnLogin()
 	end
 
 	function MyButton:OnUpdateQuest(item)
-		self.Quest:SetAlpha(0)
+		self.Quest:Hide()
 
 		if item.isQuestItem then
 			self:SetBackdropBorderColor(.8, .8, 0)
-			self.Quest:SetAlpha(1)
+			self.Quest:Show()
 		elseif item.rarity and item.rarity > -1 then
 			local color = DB.QualityColors[item.rarity]
 			self:SetBackdropBorderColor(color.r, color.g, color.b)
