@@ -3,7 +3,7 @@ local B, C, L, DB = unpack(ns)
 
 local oUF = ns.oUF or oUF
 local format, floor = string.format, math.floor
-local AFK, DND, DEAD, PLAYER_OFFLINE = AFK, DND, DEAD, PLAYER_OFFLINE
+local AFK, DND, DEAD, PLAYER_OFFLINE, LEVEL = AFK, DND, DEAD, PLAYER_OFFLINE, LEVEL
 local ALTERNATE_POWER_INDEX = ALTERNATE_POWER_INDEX or 10
 local UnitIsDeadOrGhost, UnitIsConnected, UnitIsTapDenied, UnitIsPlayer = UnitIsDeadOrGhost, UnitIsConnected, UnitIsTapDenied, UnitIsPlayer
 local UnitHealth, UnitHealthMax, UnitPower, UnitPowerType = UnitHealth, UnitHealthMax, UnitPower, UnitPowerType
@@ -203,6 +203,19 @@ oUF.Tags.Methods["pppower"] = function(unit)
 	end
 end
 oUF.Tags.Events["pppower"] = "UNIT_POWER_FREQUENT UNIT_MAXPOWER UNIT_DISPLAYPOWER"
+
+oUF.Tags.Methods["npctitle"] = function(unit)
+	if UnitIsPlayer(unit) then return end
+
+	B.ScanTip:SetOwner(UIParent, "ANCHOR_NONE")
+	B.ScanTip:SetUnit(unit)
+
+	local title = _G[format("NDui_ScanTooltipTextLeft%d", GetCVarBool("colorblindmode") and 3 or 2)]:GetText()
+	if title and not strfind(title, "^"..LEVEL) then
+		return title
+	end
+end
+oUF.Tags.Events["npctitle"] = "UNIT_NAME_UPDATE"
 
 -- AltPower value tag
 oUF.Tags.Methods["altpower"] = function(unit)
