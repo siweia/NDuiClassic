@@ -23,13 +23,13 @@ function Bar:UpdateAllScale()
 	UpdateActionbarScale("BarStance")
 end
 
-local tip = CreateFrame("GameTooltip", "NDui_ActionCountTooltip", nil, "GameTooltipTemplate")
 local REAGENTS_STRING = gsub(SPELL_REAGENTS, HEADER_COLON.."(.+)", "").."(.+)"
+
 function Bar:GetActionCount(action)
-	tip:SetOwner(UIParent, "ANCHOR_NONE")
-	tip:SetAction(action)
-	for i = 1, tip:NumLines() do
-		local line = _G[tip:GetName().."TextLeft"..i]
+	B.ScanTip:SetOwner(UIParent, "ANCHOR_NONE")
+	B.ScanTip:SetAction(action)
+	for i = 1, B.ScanTip:NumLines() do
+		local line = _G["NDui_ScanTooltipTextLeft"..i]
 		if not line then break end
 		local text = line:GetText()
 		local itemName = text and strmatch(text, REAGENTS_STRING)

@@ -249,7 +249,6 @@ function UF:QuestIconCheck()
 	B:RegisterEvent("PLAYER_ENTERING_WORLD", CheckInstanceStatus)
 end
 
-local unitTip = CreateFrame("GameTooltip", "NDuiQuestUnitTip", nil, "GameTooltipTemplate")
 function UF:UpdateQuestUnit(_, unit)
 	if not NDuiDB["Nameplate"]["QuestIndicator"] then return end
 	if isInInstance then
@@ -261,11 +260,11 @@ function UF:UpdateQuestUnit(_, unit)
 	unit = unit or self.unit
 
 	local isLootQuest, questProgress
-	unitTip:SetOwner(UIParent, "ANCHOR_NONE")
-	unitTip:SetUnit(unit)
+	B.ScanTip:SetOwner(UIParent, "ANCHOR_NONE")
+	B.ScanTip:SetUnit(unit)
 
-	for i = 2, unitTip:NumLines() do
-		local textLine = _G[unitTip:GetName().."TextLeft"..i]
+	for i = 2, B.ScanTip:NumLines() do
+		local textLine = _G["NDui_ScanTooltipTextLeft"..i]
 		local text = textLine:GetText()
 		if textLine and text then
 			local r, g, b = textLine:GetTextColor()

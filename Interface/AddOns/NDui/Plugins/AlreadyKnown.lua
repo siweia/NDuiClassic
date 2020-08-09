@@ -12,7 +12,6 @@ local knowables, knowns = {
 	[LE_ITEM_CLASS_RECIPE] = true,
 	[LE_ITEM_CLASS_MISCELLANEOUS] = true,
 }, {}
-local tooltip = CreateFrame("GameTooltip", "AlreadyKnownTooltip", nil, "GameTooltipTemplate")
 
 local function isPetCollected(speciesID)
 	if not speciesID or speciesID == 0 then return end
@@ -33,16 +32,16 @@ local function IsAlreadyKnown(link, index)
 		if not name then return end
 
 		if itemClassID == LE_ITEM_CLASS_BATTLEPET and index then
-			local speciesID = tooltip:SetGuildBankItem(GetCurrentGuildBankTab(), index)
+			local speciesID = B.ScanTip:SetGuildBankItem(GetCurrentGuildBankTab(), index)
 			return isPetCollected(speciesID)
 		else
 			if knowns[link] then return true end
 			if not knowables[itemClassID] then return end
 
-			tooltip:SetOwner(UIParent, "ANCHOR_NONE")
-			tooltip:SetHyperlink(link)
-			for i = 1, tooltip:NumLines() do
-				local text = _G[tooltip:GetName().."TextLeft"..i]:GetText() or ""
+			B.ScanTip:SetOwner(UIParent, "ANCHOR_NONE")
+			B.ScanTip:SetHyperlink(link)
+			for i = 1, B.ScanTip:NumLines() do
+				local text = _G["NDui_ScanTooltipTextLeft"..i]:GetText() or ""
 				if strfind(text, COLLECTED) or text == ITEM_SPELL_KNOWN then
 					knowns[link] = true
 					return true
@@ -185,7 +184,7 @@ end
 
 -- for LoD addons
 if not (isBlizzard_GuildBankUILoaded and isBlizzard_AuctionUILoaded) then
-	local function OnEvent(self, event, addonName)
+	local function OnEvent(event, addonName)
 		if addonName == "Blizzard_GuildBankUI" then
 			isBlizzard_GuildBankUILoaded = true
 			hooksecurefunc("GuildBankFrame_Update", GuildBankFrame_Update)
@@ -196,11 +195,8 @@ if not (isBlizzard_GuildBankUILoaded and isBlizzard_AuctionUILoaded) then
 			hooksecurefunc("AuctionFrameAuctions_Update", AuctionFrameAuctions_Update)
 		end
 		if isBlizzard_GuildBankUILoaded and isBlizzard_AuctionUILoaded then
-			self:UnregisterEvent(event)
-			self:SetScript("OnEvent", nil)
-			OnEvent = nil
+			B:UnregisterEvent(event, OnEvent)
 		end
 	end
-	tooltip:SetScript("OnEvent", OnEvent)
-	tooltip:RegisterEvent("ADDON_LOADED")
+	B:RegisterEvent("ADDON_LOADED", OnEvent)
 end
