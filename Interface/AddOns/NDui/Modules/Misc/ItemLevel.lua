@@ -75,12 +75,12 @@ function M:CreateItemString(frame, strType)
 			slotFrame.enchantText:ClearAllPoints()
 			slotFrame.enchantText:SetPoint(relF, slotFrame, x, y)
 			slotFrame.enchantText:SetTextColor(0, 1, 0)
-			for i = 1, 5 do
-				local offset = (i-1)*18 + 5
-				local iconX = x > 0 and x+offset or x-offset
-				local iconY = index > 15 and 20 or 2
-				slotFrame["textureIcon"..i] = M:CreateItemTexture(slotFrame, relF, iconX, iconY)
-			end
+		--	for i = 1, 5 do
+		--		local offset = (i-1)*18 + 5
+		--		local iconX = x > 0 and x+offset or x-offset
+		--		local iconY = index > 15 and 20 or 2
+		--		slotFrame["textureIcon"..i] = M:CreateItemTexture(slotFrame, relF, iconX, iconY)
+		--	end
 			M.CreateColorBorder(slotFrame)
 		end
 	end
@@ -92,9 +92,9 @@ function M:ItemBorderSetColor(slotFrame, r, g, b)
 	if slotFrame.colorBG then
 		slotFrame.colorBG:SetBackdropBorderColor(r, g, b)
 	end
-	if slotFrame.bg then
-		slotFrame.bg:SetBackdropBorderColor(r, g, b)
-	end
+--	if slotFrame.bg then
+--		slotFrame.bg:SetBackdropBorderColor(r, g, b)
+--	end
 end
 
 local pending = {}
@@ -136,11 +136,11 @@ function M:ItemLevel_SetupLevel(frame, strType, unit)
 			local slotFrame = _G[strType..slot.."Slot"]
 			slotFrame.iLvlText:SetText("")
 			slotFrame.enchantText:SetText("")
-			for i = 1, 5 do
-				local texture = slotFrame["textureIcon"..i]
-				texture:SetTexture(nil)
-				texture.bg:Hide()
-			end
+		--	for i = 1, 5 do
+		--		local texture = slotFrame["textureIcon"..i]
+		--		texture:SetTexture(nil)
+		--		texture.bg:Hide()
+		--	end
 			M:ItemBorderSetColor(slotFrame, 0, 0, 0)
 
 			local itemTexture = GetInventoryItemTexture(unit, index)
