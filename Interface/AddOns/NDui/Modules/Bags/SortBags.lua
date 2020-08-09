@@ -2,6 +2,8 @@
 -- SortBags 0.1.2, shirsig
 -- https://github.com/shirsig/SortBags
 -----------------------------------------
+local _, ns = ...
+local B, C, L, DB = unpack(ns)
 
 local _G = getfenv(0)
 local select, pairs, ipairs, tonumber = select, pairs, ipairs, tonumber
