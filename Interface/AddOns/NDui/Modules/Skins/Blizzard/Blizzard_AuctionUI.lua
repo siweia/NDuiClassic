@@ -166,8 +166,8 @@ C.themes["Blizzard_AuctionUI"] = function()
 	B.Reskin(BrowseDropDownButton, true)
 
 	local tex = BrowseDropDownButton:CreateTexture(nil, "OVERLAY")
-	tex:SetTexture(DB.arrowDown)
-	tex:SetSize(8, 8)
+	B.SetupArrow(tex, "down")
+	tex:SetSize(14, 14)
 	tex:SetPoint("CENTER")
 	tex:SetVertexColor(1, 1, 1)
 	BrowseDropDownButton.bgTex = tex
