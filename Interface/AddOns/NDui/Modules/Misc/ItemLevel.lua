@@ -92,9 +92,9 @@ function M:ItemBorderSetColor(slotFrame, r, g, b)
 	if slotFrame.colorBG then
 		slotFrame.colorBG:SetBackdropBorderColor(r, g, b)
 	end
---	if slotFrame.bg then
---		slotFrame.bg:SetBackdropBorderColor(r, g, b)
---	end
+	if slotFrame.bg then
+		slotFrame.bg:SetBackdropBorderColor(r, g, b)
+	end
 end
 
 local pending = {}
