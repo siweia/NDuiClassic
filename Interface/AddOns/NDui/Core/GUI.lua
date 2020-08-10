@@ -76,7 +76,7 @@ local defaultSettings = {
 		Enable = true,
 		ClickThrough = false,
 		IconScale = 1,
-		WatchSpellRank = true,
+		WatchSpellRank = false,
 	},
 	UFs = {
 		Enable = true,
