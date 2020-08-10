@@ -359,9 +359,12 @@ function UF:CreateIcons(self)
 		self.QuestIndicator = quest
 	end
 
-	local phase = self:CreateTexture(nil, "OVERLAY")
-	phase:SetPoint("TOP", self, 0, 12)
-	phase:SetSize(22, 22)
+	local parentFrame = CreateFrame("Frame", nil, self)
+	parentFrame:SetAllPoints()
+	parentFrame:SetFrameLevel(5)
+	local phase = parentFrame:CreateTexture(nil, "OVERLAY")
+	phase:SetPoint("CENTER", self.Health)
+	phase:SetSize(24, 24)
 	self.PhaseIndicator = phase
 
 	local li = self:CreateTexture(nil, "OVERLAY")
@@ -389,7 +392,7 @@ function UF:CreateRaidMark(self)
 		ri:SetPoint("RIGHT", self, "LEFT", -3, 0)
 		ri:SetParent(self.Health)
 	else
-		ri:SetPoint("CENTER", self.Health)
+		ri:SetPoint("CENTER", self, "TOP")
 	end
 	local size = retVal(self, 18, 13, 12, 12, 32)
 	ri:SetSize(size, size)
