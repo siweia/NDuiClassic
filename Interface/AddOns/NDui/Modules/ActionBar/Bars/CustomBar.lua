@@ -2,8 +2,11 @@ local _, ns = ...
 local B, C, L, DB = unpack(ns)
 local Bar = B:GetModule("Actionbar")
 
-local padding, margin = 2, 2
+local _G = _G
+local tinsert = tinsert
+local mod, min, ceil = mod, min, ceil
 local cfg = C.bars.bar4
+local margin, padding = C.bars.margin, C.bars.padding
 
 function Bar:CreateCustomBar(anchor)
 	local showGrid = tonumber(GetCVar("alwaysShowActionBars"))
