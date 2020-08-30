@@ -5,8 +5,8 @@ local Bar = B:GetModule("Actionbar")
 local _G = _G
 local tinsert = tinsert
 local mod, min, ceil = mod, min, ceil
-local cfg = C.bars.bar4
-local margin, padding = C.bars.margin, C.bars.padding
+local cfg = C.Bars.bar4
+local margin, padding = C.Bars.margin, C.Bars.padding
 
 function Bar:CreateCustomBar(anchor)
 	local showGrid = tonumber(GetCVar("alwaysShowActionBars"))
