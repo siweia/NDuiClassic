@@ -13,7 +13,7 @@ function Bar:CreateCustomBar(anchor)
 	local size = NDuiDB["Actionbar"]["CustomBarButtonSize"]
 	local num = 12
 	local name = "NDui_CustomBar"
-	local page = 8
+	local page = DB.MyClass == "WARRIOR" and 10 or 8
 
 	local frame = CreateFrame("Frame", name, UIParent, "SecureHandlerStateTemplate")
 	frame:SetWidth(num*size + (num-1)*margin + 2*padding)
