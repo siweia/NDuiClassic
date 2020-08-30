@@ -433,12 +433,6 @@ do
 		self:SetScript("OnLeave", B.HideTooltip)
 	end
 
-	-- Frame
-	function B:Scale(x)
-		local mult = C.mult
-		return mult * floor(x / mult + .5)
-	end
-
 	-- Glow parent
 	function B:CreateGlowFrame(size)
 		local frame = CreateFrame("Frame", nil, self)
@@ -483,7 +477,7 @@ do
 
 		self.Shadow = CreateFrame("Frame", nil, frame)
 		self.Shadow:SetOutside(self, size or 4, size or 4)
-		self.Shadow:SetBackdrop({edgeFile = DB.glowTex, edgeSize = B:Scale(size or 5)})
+		self.Shadow:SetBackdrop({edgeFile = DB.glowTex, edgeSize = size or 5})
 		self.Shadow:SetBackdropBorderColor(0, 0, 0, size and 1 or .4)
 		self.Shadow:SetFrameLevel(1)
 
