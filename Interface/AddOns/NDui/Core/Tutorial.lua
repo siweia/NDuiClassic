@@ -383,7 +383,7 @@ local function HelloWorld()
 	B.CreateFS(welcome, 14, L["Help Info11"], false, "TOPLEFT", 20, -330)
 
 	if NDuiDB["Tutorial"]["Complete"] then
-		local close = B.CreateButton(welcome, 16, 16, "X")
+		local close = B.CreateButton(welcome, 16, 16, true, DB.closeTex)
 		close:SetPoint("TOPRIGHT", -10, -10)
 		close:SetScript("OnClick", function()
 			welcome:Hide()
