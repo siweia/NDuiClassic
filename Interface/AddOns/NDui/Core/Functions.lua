@@ -655,6 +655,21 @@ do
 		return bu
 	end
 
+	function B:CreateHelpInfo(tooltip)
+		local bu = CreateFrame("Button", nil, self)
+		bu:SetSize(40, 40)
+		bu.Icon = bu:CreateTexture(nil, "ARTWORK")
+		bu.Icon:SetAllPoints()
+		bu.Icon:SetTexture(616343)
+		bu:SetHighlightTexture(616343)
+		if tooltip then
+			bu.title = L["Tips"]
+			B.AddTooltip(bu, "ANCHOR_BOTTOMLEFT", tooltip, "info")
+		end
+
+		return bu
+	end
+
 	-- Handle statusbar
 	function B:CreateSB(spark, r, g, b)
 		self:SetStatusBarTexture(DB.normTex)
