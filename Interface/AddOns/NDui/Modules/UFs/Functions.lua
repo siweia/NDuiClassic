@@ -416,9 +416,11 @@ function UF:CreateCastBar(self)
 	B.CreateSB(cb, true, .3, .7, 1)
 
 	if mystyle == "player" then
+		cb:SetFrameLevel(10)
 		cb:SetSize(NDuiDB["UFs"]["PlayerCBWidth"], NDuiDB["UFs"]["PlayerCBHeight"])
 		createBarMover(cb, L["Player Castbar"], "PlayerCB", C.UFs.Playercb)
 	elseif mystyle == "target" then
+		cb:SetFrameLevel(10)
 		cb:SetSize(NDuiDB["UFs"]["TargetCBWidth"], NDuiDB["UFs"]["TargetCBHeight"])
 		createBarMover(cb, L["Target Castbar"], "TargetCB", C.UFs.Targetcb)
 	elseif mystyle == "nameplate" then
