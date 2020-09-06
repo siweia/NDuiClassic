@@ -47,11 +47,6 @@ function M:OnLogin()
 	self:BidPriceHighlight()
 	self:BlockStrangerInvite()
 
-	-- Max camera distancee
-	if tonumber(GetCVar("cameraDistanceMaxZoomFactor")) ~= 2.6 then
-		SetCVar("cameraDistanceMaxZoomFactor", 2.6)
-	end
-
 	-- Auto chatBubbles
 	if NDuiADB["AutoBubbles"] then
 		local function updateBubble()
