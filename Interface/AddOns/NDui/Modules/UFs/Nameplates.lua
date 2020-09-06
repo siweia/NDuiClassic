@@ -790,10 +790,10 @@ function UF:PlateVisibility(event)
 		UIFrameFadeIn(self.Power, .3, self.Power:GetAlpha(), 1)
 		UIFrameFadeIn(self.Power.bg, .3, self.Power.bg:GetAlpha(), 1)
 	else
-		UIFrameFadeOut(self.Health, 2, self.Health:GetAlpha(), .1)
-		UIFrameFadeOut(self.Health.bg, 2, self.Health.bg:GetAlpha(), .1)
-		UIFrameFadeOut(self.Power, 2, self.Power:GetAlpha(), .1)
-		UIFrameFadeOut(self.Power.bg, 2, self.Power.bg:GetAlpha(), .1)
+		UIFrameFadeOut(self.Health, 2, self.Health:GetAlpha(), 0)
+		UIFrameFadeOut(self.Health.bg, 2, self.Health.bg:GetAlpha(), 0)
+		UIFrameFadeOut(self.Power, 2, self.Power:GetAlpha(), 0)
+		UIFrameFadeOut(self.Power.bg, 2, self.Power.bg:GetAlpha(), 0)
 	end
 end
 
@@ -853,10 +853,28 @@ function UF:CreatePlayerPlate()
 	end
 
 	UF:UpdateTargetClassPower()
+	UF:TogglePlateVisibility()
 
-	if NDuiDB["Nameplate"]["PPHideOOC"] and not NDuiDB["Nameplate"]["ClassPowerOnly"] then
+	if NDuiDB["Nameplate"]["PPFadeout"] and not NDuiDB["Nameplate"]["ClassPowerOnly"] then
 		self:RegisterEvent("PLAYER_REGEN_ENABLED", UF.PlateVisibility, true)
 		self:RegisterEvent("PLAYER_REGEN_DISABLED", UF.PlateVisibility, true)
 		self:RegisterEvent("PLAYER_ENTERING_WORLD", UF.PlateVisibility, true)
 	end
 end
+
+function UF:TogglePlateVisibility()
+	local plate = _G.oUF_PlayerPlate
+	if not plate then return end
+
+	if NDuiDB["Nameplate"]["PPFadeout"] and not NDuiDB["Nameplate"]["ClassPowerOnly"] then
+		plate:RegisterEvent("PLAYER_REGEN_ENABLED", UF.PlateVisibility, true)
+		plate:RegisterEvent("PLAYER_REGEN_DISABLED", UF.PlateVisibility, true)
+		plate:RegisterEvent("PLAYER_ENTERING_WORLD", UF.PlateVisibility, true)
+		UF.PlateVisibility(plate)
+	else
+		plate:UnregisterEvent("PLAYER_REGEN_ENABLED", UF.PlateVisibility)
+		plate:UnregisterEvent("PLAYER_REGEN_DISABLED", UF.PlateVisibility)
+		plate:UnregisterEvent("PLAYER_ENTERING_WORLD", UF.PlateVisibility)
+		UF.PlateVisibility(plate, "PLAYER_REGEN_DISABLED")
+	end
+end 
