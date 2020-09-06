@@ -580,6 +580,7 @@ local tabList = {
 	L["Unitframes"],
 	L["RaidFrame"],
 	L["Nameplate"],
+	L["PlayerPlate"],
 	L["Auras"],
 	L["Raid Tools"],
 	L["ChatFrame"],
@@ -721,21 +722,24 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{3, "Nameplate", "AuraSize", L["Auras Size"].."*", true, {18, 40, 1}, refreshNameplates},
 	},
 	[6] = {
-		{1, "AuraWatch", "Enable", "|cff00cc4c"..L["Enable AuraWatch"], nil, setupAuraWatch},
-		{1, "AuraWatch", "WatchSpellRank", L["AuraWatch WatchSpellRank"]},
-		{1, "AuraWatch", "ClickThrough", L["AuraWatch ClickThrough"], nil, nil, nil, L["ClickThroughTip"]},
-		{3, "AuraWatch", "IconScale", L["AuraWatch IconScale"], true, {.8, 2, .1}},
-		{},--blank
 		{1, "Nameplate", "ShowPlayerPlate", "|cff00cc4c"..L["Enable PlayerPlate"]},
+		{},--blank
 		--{1, "Auras", "ClassAuras", L["Enable ClassAuras"], true},
 		{1, "Nameplate", "NameplateClassPower", L["Nameplate ClassPower"]},
 		{1, "Nameplate", "ClassPowerOnly", L["Nameplate ClassPowerOnly"], true},
 		{1, "Nameplate", "PPPowerText", L["PlayerPlate PowerText"]},
 		{1, "Nameplate", "PPHideOOC", L["Fadeout OOC"], true},
+		{},--blank
 		{3, "Nameplate", "PPWidth", L["PlayerPlate HPWidth"].."*", false, {150, 300, 1}, refreshNameplates},
 		{3, "Nameplate", "PPBarHeight", L["PlayerPlate CPHeight"].."*", true, {5, 15, 1}, refreshNameplates},
 		{3, "Nameplate", "PPHealthHeight", L["PlayerPlate HPHeight"].."*", false, {5, 15, 1}, refreshNameplates},
 		{3, "Nameplate", "PPPowerHeight", L["PlayerPlate MPHeight"].."*", true, {5, 15, 1}, refreshNameplates},
+	},
+	[7] = {
+		{1, "AuraWatch", "Enable", "|cff00cc4c"..L["Enable AuraWatch"], nil, setupAuraWatch},
+		{1, "AuraWatch", "WatchSpellRank", L["AuraWatch WatchSpellRank"]},
+		{1, "AuraWatch", "ClickThrough", L["AuraWatch ClickThrough"], nil, nil, nil, L["ClickThroughTip"]},
+		{3, "AuraWatch", "IconScale", L["AuraWatch IconScale"], true, {.8, 2, .1}},
 		{},--blank
 		{1, "Auras", "Reminder", L["Enable Reminder"].."*", nil, nil, updateReminder, L["ReminderTip"]},
 		--{1, "Auras", "Totems", L["Enable Totems"]},
@@ -747,7 +751,7 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{3, "Auras", "BuffsPerRow", L["BuffsPerRow"], nil, {10, 20, 1}},
 		{3, "Auras", "DebuffsPerRow", L["DebuffsPerRow"], true, {10, 16, 1}},
 	},
-	[7] = {
+	[8] = {
 		{1, "Misc", "RaidTool", "|cff00cc4c"..L["Raid Manger"]},
 		{1, "Misc", "RMRune", L["Runes Check"].."*"},
 		{1, "Misc", "EasyMarking", L["Easy Mark"].."*"},
@@ -764,7 +768,7 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		--{},--blank
 		--{1, "Misc", "PlacedItemAlert", L["Placed Item Alert"].."*"}, -- fix me: need more data
 	},
-	[8] = {
+	[9] = {
 		{1, "Chat", "Lock", "|cff00cc4c"..L["Lock Chat"]},
 		{3, "Chat", "ChatWidth", L["LockChatWidth"].."*", nil, {200, 600, 1}, updateChatSize},
 		{3, "Chat", "ChatHeight", L["LockChatHeight"].."*", true, {100, 500, 1}, updateChatSize},
@@ -790,7 +794,7 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Chat", "GuildInvite", L["Guild Invite Only"].."*"},
 		{2, "Chat", "Keyword", L["Whisper Keyword"].."*", true, nil, updateWhisperList},
 	},
-	[9] = {
+	[10] = {
 		{1, "Map", "Coord", L["Map Coords"]},
 		{1, "Map", "MapFader", L["MapFader"].."*", true, nil, updateMapFader},
 		{},--blank
@@ -803,7 +807,7 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{3, "Map", "MapScale", L["Map Scale"].."*", false, {.5, 1, .1}},
 		{3, "Map", "MinimapScale", L["Minimap Scale"].."*", true, {1, 2, .1}, updateMinimapScale},
 	},
-	[10] = {
+	[11] = {
 		{1, "Skins", "BlizzardSkins", "|cff00cc4c"..L["BlizzardSkins"], nil, nil, nil, L["BlizzardSkinsTips"]},
 		{1, "Skins", "FlatMode", L["FlatMode"], true},
 		{1, "Skins", "DefaultBags", L["DefaultBags"], nil, nil, nil, L["DefaultBagsTips"]},
@@ -830,7 +834,7 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Skins", "TMW", L["TMW Skin"]},
 		{1, "Skins", "WeakAuras", L["WeakAuras Skin"], true},
 	},
-	[11] = {
+	[12] = {
 		{1, "Tooltip", "CombatHide", L["Hide Tooltip"].."*"},
 		{1, "Tooltip", "Cursor", L["Follow Cursor"].."*"},
 		{1, "Tooltip", "ClassColor", L["Classcolor Border"].."*"},
@@ -845,7 +849,7 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Tooltip", "TargetBy", L["Show TargetedBy"].."*"},
 		{1, "Tooltip", "HideAllID", "|cff00cc4c"..L["HideAllID"], true},
 	},
-	[12] = {
+	[13] = {
 		{1, "Misc", "ItemLevel", "|cff00cc4c"..L["Show ItemQuality"]},
 		{1, "Misc", "ShowItemLevel", L["Show ItemLevel"].."*", true},
 		{},--blank
@@ -858,7 +862,7 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Misc", "TradeTabs", L["TradeTabs"], nil, nil, nil, L["TradeTabsTips"]},
 		{1, "Misc", "InstantDelete", L["InstantDelete"].."*", true},
 	},
-	[13] = {
+	[14] = {
 		{1, "ACCOUNT", "VersionCheck", L["Version Check"]},
 		{1, "ACCOUNT", "DisableInfobars", L["DisableInfobars"], true},
 		{},--blank
