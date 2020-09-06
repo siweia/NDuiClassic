@@ -3,7 +3,7 @@ local B, C, L, DB = unpack(ns)
 local A = B:GetModule("Auras")
 
 local groups = DB.ReminderBuffs[DB.MyClass]
-local iconSize = C.Auras.IconSize + 4
+local iconSize = 36
 local frames, parentFrame = {}
 local InCombatLockdown, GetZonePVPInfo, UnitIsDeadOrGhost = InCombatLockdown, GetZonePVPInfo, UnitIsDeadOrGhost
 local IsInInstance, IsPlayerSpell, UnitBuff, GetSpellTexture = IsInInstance, IsPlayerSpell, UnitBuff, GetSpellTexture
