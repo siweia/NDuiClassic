@@ -67,8 +67,6 @@ local defaultSettings = {
 	},
 	Auras = {
 		Reminder = true,
-		Totems = false,
-		DestroyTotems = true,
 		ClassAuras = false,
 		ReverseBuffs = false,
 		BuffSize = 30,
@@ -742,7 +740,6 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{3, "AuraWatch", "IconScale", L["AuraWatch IconScale"], true, {.8, 2, .1}},
 		{},--blank
 		{1, "Auras", "Reminder", L["Enable Reminder"].."*", nil, nil, updateReminder, L["ReminderTip"]},
-		--{1, "Auras", "Totems", L["Enable Totems"]},
 		{},--blank
 		{1, "Auras", "ReverseBuffs", L["ReverseBuffs"]},
 		{1, "Auras", "ReverseDebuffs", L["ReverseDebuffs"], true},
