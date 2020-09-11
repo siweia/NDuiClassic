@@ -1,8 +1,6 @@
 local _, ns = ...
 local B, C, L, DB = unpack(ns)
----------------------------
--- rButtonTemplate, zork
----------------------------
+
 local Bar = B:GetModule("Actionbar")
 local _G = getfenv(0)
 local pairs, gsub = pairs, string.gsub
@@ -43,7 +41,7 @@ local function ApplyPoints(self, points)
 end
 
 local function ApplyTexCoord(texture, texCoord)
-	if not texCoord then return end
+	if texture.__lockdown or not texCoord then return end
 	texture:SetTexCoord(unpack(texCoord))
 end
 
@@ -277,6 +275,8 @@ function Bar:StyleAllActionButtons(cfg)
 	for i = 1, 6 do
 		Bar:StyleActionButton(_G["OverrideActionBarButton"..i], cfg)
 	end
+	--leave vehicle
+	Bar:StyleActionButton(_G["NDui_LeaveVehicleButton"], cfg)
 	--petbar buttons
 	for i = 1, NUM_PET_ACTION_SLOTS do
 		Bar:StyleActionButton(_G["PetActionButton"..i], cfg)

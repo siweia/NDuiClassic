@@ -37,30 +37,27 @@ function Bar:CreateLeaveVehicle()
 		frame.Pos = {"BOTTOM", UIParent, "BOTTOM", 320, 100}
 	end
 
-	local button = CreateFrame("Button", "NDui_LeaveVehicleButton", frame)
+	local button = CreateFrame("CheckButton", "NDui_LeaveVehicleButton", frame, "ActionButtonTemplate")
 	tinsert(buttonList, button)
 	button:SetPoint("BOTTOMLEFT", frame, padding, padding)
 	button:RegisterForClicks("AnyUp")
-	B.PixelIcon(button, "INTERFACE\\VEHICLES\\UI-Vehicles-Button-Exit-Up", true)
-	button.Icon:SetTexCoord(.216, .784, .216, .784)
-	B.CreateSD(button)
+	button.icon:SetTexture("INTERFACE\\VEHICLES\\UI-Vehicles-Button-Exit-Up")
+	button.icon:SetTexCoord(.216, .784, .216, .784)
+	button.icon.__lockdown = true
 
-	local function updateVisibility()
+	hooksecurefunc("MainMenuBarVehicleLeaveButton_Update", function()
 		if UnitOnTaxi("player") then
 			button:Show()
 		else
 			button:Hide()
-			button:UnlockHighlight()
+			button:SetChecked(false)
 		end
-	end
-	hooksecurefunc("MainMenuBarVehicleLeaveButton_Update", updateVisibility)
+	end)
 
-	local function onClick(self)
-		if not UnitOnTaxi("player") then return end
-		TaxiRequestEarlyLanding()
-		self:LockHighlight()
-	end
-	button:SetScript("OnClick", onClick)
+	button:SetScript("OnClick", function()
+		if UnitOnTaxi("player") then TaxiRequestEarlyLanding() end
+		button:SetChecked(true)
+	end)
 	button:SetScript("OnEnter", MainMenuBarVehicleLeaveButton_OnEnter)
 	button:SetScript("OnLeave", B.HideTooltip)
 
