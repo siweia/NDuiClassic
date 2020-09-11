@@ -883,4 +883,4 @@ function UF:TogglePlateVisibility()
 		plate:UnregisterEvent("PLAYER_ENTERING_WORLD", UF.PlateVisibility)
 		UF.PlateVisibility(plate, "PLAYER_REGEN_DISABLED")
 	end
-end 
+end
