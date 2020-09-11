@@ -134,9 +134,9 @@ local Enable = function(self, unit)
 		local spark = element.Spark
 		if(spark and spark:IsObjectType('Texture')) then
 			spark:SetTexture([[Interface\CastingBar\UI-CastingBar-Spark]])
-			spark:SetSize(20, 20)
 			spark:SetBlendMode('ADD')
-			spark:SetPoint('CENTER', element:GetStatusBarTexture(), 'RIGHT')
+			spark:SetPoint("TOPLEFT", element:GetStatusBarTexture(), "TOPRIGHT", -10, 10)
+			spark:SetPoint("BOTTOMRIGHT", element:GetStatusBarTexture(), "BOTTOMRIGHT", 10, -10)
 		end
 
 		self:RegisterEvent("PLAYER_REGEN_ENABLED", EventHandler, true)
