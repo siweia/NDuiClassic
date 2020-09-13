@@ -28,6 +28,7 @@ local function ForceDefaultSettings()
 	SetCVar("ffxGlow", 0)
 	SetCVar("autoQuestWatch", 1)
 	SetCVar("overrideArchive", 0)
+	SetCVar("cameraDistanceMaxZoomFactor", 2.6)
 end
 
 local function ForceRaidFrame()
