@@ -1,5 +1,5 @@
 -----------------------------------------
--- SortBags 0.1.2, shirsig
+-- SortBags, shirsig
 -- https://github.com/shirsig/SortBags
 -----------------------------------------
 local _, ns = ...
@@ -216,7 +216,7 @@ end
 do
 	local patterns = {}
 	for i = 1, 10 do
-		local text = gsub(ITEM_SPELL_CHARGES, "(-?%d+)(.-)|4([^;]-);", function(numberString, gap, numberForms)
+		local text = gsub(format(ITEM_SPELL_CHARGES, i), '(-?%d+)(.-)|4([^;]-);', function(numberString, gap, numberForms)
 			local _, _, singular, dual, plural = strfind(numberForms, "(.+):(.+):(.+)");
 			if not singular then
 				_, _, singular, plural = strfind(numberForms, "(.+):(.+)")
@@ -254,9 +254,9 @@ function TooltipInfo(container, position)
 	for i = 1, B.ScanTip:NumLines() do
 		local text = _G["NDui_ScanTooltipTextLeft"..i]:GetText()
 
-		local _charges = itemCharges(text)
-		if _charges then
-			charges = _charges
+		local extractedCharges = itemCharges(text)
+		if extractedCharges then
+			charges = extractedCharges
 		elseif strfind(text, "^"..ITEM_SPELL_TRIGGER_ONUSE) then
 			usable = true
 		elseif text == ITEM_SOULBOUND then
