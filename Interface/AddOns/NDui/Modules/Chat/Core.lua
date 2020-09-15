@@ -2,20 +2,18 @@ local _, ns = ...
 local B, C, L, DB = unpack(ns)
 local module = B:RegisterModule("Chat")
 
-local maxLines = 1024
-local fontOutline
-local maxWidth, maxHeight = UIParent:GetWidth(), UIParent:GetHeight()
 local tostring, pairs, ipairs, strsub, strlower = tostring, pairs, ipairs, string.sub, string.lower
 local IsInGroup, IsInRaid, IsInGuild, IsShiftKeyDown, IsControlKeyDown = IsInGroup, IsInRaid, IsInGuild, IsShiftKeyDown, IsControlKeyDown
 local ChatEdit_UpdateHeader, GetChannelList, GetCVar, SetCVar, Ambiguate = ChatEdit_UpdateHeader, GetChannelList, GetCVar, SetCVar, Ambiguate
 local GetNumGuildMembers, GetGuildRosterInfo, IsGuildMember, UnitIsGroupLeader, UnitIsGroupAssistant, InviteToGroup = GetNumGuildMembers, GetGuildRosterInfo, IsGuildMember, UnitIsGroupLeader, UnitIsGroupAssistant, InviteToGroup
 local BNGetFriendInfoByID, BNGetGameAccountInfo, CanCooperateWithGameAccount, BNInviteFriend, BNFeaturesEnabledAndConnected = BNGetFriendInfoByID, BNGetGameAccountInfo, CanCooperateWithGameAccount, BNInviteFriend, BNFeaturesEnabledAndConnected
 
+local maxLines = 1024
+local fontOutline, isBattleNet
+
 function module:TabSetAlpha(alpha)
-	if alpha ~= 1 and (not self.isDocked or GeneralDockManager.selected:GetID() == self:GetID()) then
+	if self.glow:IsShown() and alpha ~= 1 then
 		self:SetAlpha(1)
-	elseif alpha < .6 then
-		self:SetAlpha(.6)
 	end
 end
 
@@ -44,12 +42,12 @@ function module:UpdateChatSize()
 end
 
 function module:SkinChat()
-	if not self or (self and self.styled) then return end
+	if not self or self.styled then return end
 
 	local name = self:GetName()
 	local fontSize = select(2, self:GetFont())
 	self:SetClampRectInsets(0, 0, 0, 0)
-	self:SetMaxResize(maxWidth, maxHeight)
+	self:SetMaxResize(DB.ScreenWidth, DB.ScreenHeight)
 	self:SetMinResize(100, 50)
 	self:SetFont(DB.Font[1], fontSize, fontOutline)
 	self:SetShadowColor(0, 0, 0, 0)
@@ -76,10 +74,8 @@ function module:SkinChat()
 
 	local tab = _G[name.."Tab"]
 	tab:SetAlpha(1)
-	local tabFs = tab:GetFontString()
-	tabFs:SetFont(DB.Font[1], DB.Font[2]+2, fontOutline)
-	tabFs:SetShadowColor(0, 0, 0, 0)
-	tabFs:SetTextColor(1, .8, 0)
+	tab.Text:SetFont(DB.Font[1], DB.Font[2]+2, fontOutline)
+	tab.Text:SetShadowColor(0, 0, 0, 0)
 	B.StripTextures(tab, 7)
 	hooksecurefunc(tab, "SetAlpha", module.TabSetAlpha)
 
@@ -224,11 +220,29 @@ function module:ChatWhisperSticky()
 	end
 end
 
+-- Tab colors
 function module:UpdateTabColors(selected)
-	if selected then
-		self:GetFontString():SetTextColor(1, .8, 0)
+	if self.glow:IsShown() then
+		if isBattleNet then
+			self.Text:SetTextColor(0, 1, .96)
+		else
+			self.Text:SetTextColor(1, .5, 1)
+		end
+	elseif selected then
+		self.Text:SetTextColor(1, .8, 0)
 	else
-		self:GetFontString():SetTextColor(.5, .5, .5)
+		self.Text:SetTextColor(.5, .5, .5)
+	end
+end
+
+function module:UpdateTabEventColors(event)
+	local tab = _G[self:GetName().."Tab"]
+	if event == "CHAT_MSG_WHISPER" then
+		isBattleNet = nil
+		FCFTab_UpdateColors(tab)
+	elseif event == "CHAT_MSG_BN_WHISPER" then
+		isBattleNet = true
+		FCFTab_UpdateColors(tab)
 	end
 end
 
@@ -240,7 +254,7 @@ function module:OnLogin()
 	end
 
 	hooksecurefunc("FCF_OpenTemporaryWindow", function()
-		for _, chatFrameName in next, CHAT_FRAMES do
+		for _, chatFrameName in ipairs(CHAT_FRAMES) do
 			local frame = _G[chatFrameName]
 			if frame.isTemporary then
 				self.SkinChat(frame)
@@ -249,6 +263,7 @@ function module:OnLogin()
 	end)
 
 	hooksecurefunc("FCFTab_UpdateColors", self.UpdateTabColors)
+	hooksecurefunc("FloatingChatFrame_OnEvent", self.UpdateTabEventColors)
 
 	-- Font size
 	for i = 1, 15 do
