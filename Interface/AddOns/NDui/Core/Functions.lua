@@ -1028,6 +1028,7 @@ do
 		bg:SetPoint("TOPLEFT", 4, -4)
 		bg:SetPoint("BOTTOMRIGHT", -4, 4)
 		B.CreateGradient(bg)
+		self.bg = bg
 
 		local ch = self:GetCheckedTexture()
 		ch:SetTexture("Interface\\Buttons\\UI-CheckBox-Check")
