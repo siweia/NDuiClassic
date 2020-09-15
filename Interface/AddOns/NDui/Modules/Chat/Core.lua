@@ -58,7 +58,8 @@ function module:SkinChat()
 	if self:GetMaxLines() < maxLines then
 		self:SetMaxLines(maxLines)
 	end
-	B.SetBD(self.Background)
+	local bg = B.SetBD(self.Background)
+	bg:SetPoint("BOTTOMRIGHT", 26, -7)
 
 	local eb = _G[name.."EditBox"]
 	eb:SetAltArrowKeyMode(false)
