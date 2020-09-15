@@ -14,6 +14,8 @@ local fontOutline, isBattleNet
 function module:TabSetAlpha(alpha)
 	if self.glow:IsShown() and alpha ~= 1 then
 		self:SetAlpha(1)
+	elseif alpha < .4 then
+		self:SetAlpha(.4)
 	end
 end
 
@@ -239,10 +241,10 @@ function module:UpdateTabEventColors(event)
 	local tab = _G[self:GetName().."Tab"]
 	if event == "CHAT_MSG_WHISPER" then
 		isBattleNet = nil
-		FCFTab_UpdateColors(tab)
+		FCFTab_UpdateColors(tab, GeneralDockManager.selected:GetID() == tab:GetID())
 	elseif event == "CHAT_MSG_BN_WHISPER" then
 		isBattleNet = true
-		FCFTab_UpdateColors(tab)
+		FCFTab_UpdateColors(tab, GeneralDockManager.selected:GetID() == tab:GetID())
 	end
 end
 
