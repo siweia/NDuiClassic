@@ -2,11 +2,13 @@ local _, ns = ...
 local B, C, L, DB = unpack(ns)
 local module = B:RegisterModule("Chat")
 
+local _G = _G
 local tostring, pairs, ipairs, strsub, strlower = tostring, pairs, ipairs, string.sub, string.lower
 local IsInGroup, IsInRaid, IsInGuild, IsShiftKeyDown, IsControlKeyDown = IsInGroup, IsInRaid, IsInGuild, IsShiftKeyDown, IsControlKeyDown
 local ChatEdit_UpdateHeader, GetChannelList, GetCVar, SetCVar, Ambiguate = ChatEdit_UpdateHeader, GetChannelList, GetCVar, SetCVar, Ambiguate
 local GetNumGuildMembers, GetGuildRosterInfo, IsGuildMember, UnitIsGroupLeader, UnitIsGroupAssistant, InviteToGroup = GetNumGuildMembers, GetGuildRosterInfo, IsGuildMember, UnitIsGroupLeader, UnitIsGroupAssistant, InviteToGroup
 local BNGetFriendInfoByID, BNGetGameAccountInfo, CanCooperateWithGameAccount, BNInviteFriend, BNFeaturesEnabledAndConnected = BNGetFriendInfoByID, BNGetGameAccountInfo, CanCooperateWithGameAccount, BNInviteFriend, BNFeaturesEnabledAndConnected
+local GeneralDockManager = GeneralDockManager
 
 local maxLines = 1024
 local fontOutline, isBattleNet
@@ -82,7 +84,6 @@ function module:SkinChat()
 	B.StripTextures(tab, 7)
 	hooksecurefunc(tab, "SetAlpha", module.TabSetAlpha)
 
-	B.StripTextures(self)
 	B.HideObject(self.buttonFrame)
 	--B.HideObject(self.ScrollBar)
 	B.HideObject(self.ScrollToBottomButton)
