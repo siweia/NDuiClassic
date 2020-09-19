@@ -107,7 +107,7 @@ local function isPanelCanHide(self, elapsed)
 	end
 end
 
-local function setupFriendsFrame()
+function info:FriendsPanel_Init()
 	if infoFrame then infoFrame:Show() return end
 
 	infoFrame = CreateFrame("Frame", "NDuiFriendsFrame", info)
@@ -126,8 +126,8 @@ local function setupFriendsFrame()
 	end)
 
 	B.CreateFS(infoFrame, 16, "|cff0099ff"..FRIENDS_LIST, nil, "TOPLEFT", 15, -10)
-	infoFrame.numFriends = B.CreateFS(infoFrame, 14, "-/-", nil, "TOPRIGHT", -15, -12)
-	infoFrame.numFriends:SetTextColor(0, .6, 1)
+	infoFrame.friendCountText = B.CreateFS(infoFrame, 14, "-/-", nil, "TOPRIGHT", -15, -12)
+	infoFrame.friendCountText:SetTextColor(0, .6, 1)
 
 	local scrollFrame = CreateFrame("ScrollFrame", "NDuiFriendsInfobarScrollFrame", infoFrame, "HybridScrollFrameTemplate")
 	scrollFrame:SetSize(370, 400)
@@ -274,7 +274,7 @@ end
 
 function info:FriendsPanel_CreateButton(parent, index)
 	local button = CreateFrame("Button", nil, parent)
-	button:SetSize(380, 20)
+	button:SetSize(370, 20)
 	button:SetPoint("TOPLEFT", 0, - (index-1) *20)
 	button.HL = button:CreateTexture(nil, "HIGHLIGHT")
 	button.HL:SetAllPoints()
@@ -420,6 +420,7 @@ info.onEvent = function(self)
 	end
 end
 
+local initFixed
 info.onEnter = function(self)
 	local thisTime = GetTime()
 	if not prevTime or (thisTime-prevTime > 5) then
@@ -456,6 +457,11 @@ info.onEnter = function(self)
 	info:FriendsPanel_Init()
 	info:FriendsPanel_Update()
 	infoFrame.friendCountText:SetText(format("%s: %s/%s", GUILD_ONLINE_LABEL, totalOnline, totalFriends))
+
+	if not initFixed then
+		infoFrame.scrollFrame.scrollBar:SetValue(0)
+		initFixed = true
+	end
 end
 
 local function delayLeave()
