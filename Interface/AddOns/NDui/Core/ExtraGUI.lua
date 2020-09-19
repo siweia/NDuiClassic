@@ -5,11 +5,7 @@ local G = B:GetModule("GUI")
 local function sortBars(barTable)
 	local num = 1
 	for _, bar in pairs(barTable) do
-		if num == 1 then
-			bar:SetPoint("TOPLEFT", 10, -10)
-		else
-			bar:SetPoint("TOPLEFT", 10, -10 - 35*(num-1))
-		end
+		bar:SetPoint("TOPLEFT", 10, -10 - 35*(num-1))
 		num = num + 1
 	end
 end
@@ -249,11 +245,7 @@ function G:SetupRaidDebuffs(parent)
 		end
 
 		for i = 1, index do
-			if i == 1 then
-				bars[i]:SetPoint("TOPLEFT", 10, -10)
-			else
-				bars[i]:SetPoint("TOPLEFT", bars[i-1], "BOTTOMLEFT", 0, -5)
-			end
+			bars[i]:SetPoint("TOPLEFT", 10, -10 - 35*(i-1))
 		end
 	end
 
