@@ -600,7 +600,7 @@ local function resetDetails()
 end
 
 -- Config
-local tabList = {
+G.TabList = {
 	L["Actionbar"],
 	L["Bags"],
 	L["Unitframes"],
@@ -617,7 +617,7 @@ local tabList = {
 	L["UI Settings"],
 }
 
-local optionList = { -- type, key, value, name, horizon, doubleline
+G.OptionList = { -- type, key, value, name, horizon, doubleline
 	[1] = {
 		{1, "Actionbar", "Enable", "|cff00cc4c"..L["Enable Actionbar"]},
 		{1, "Actionbar", "MicroMenu", L["Micromenu"], true},
@@ -902,7 +902,7 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 }
 
 local function SelectTab(i)
-	for num = 1, #tabList do
+	for num = 1, #G.TabList do
 		if num == i then
 			guiTab[num]:SetBackdropColor(cr, cg, cb, .3)
 			guiTab[num].checked = true
@@ -962,7 +962,7 @@ end
 local function CreateOption(i)
 	local parent, offset = guiPage[i].child, 20
 
-	for _, option in pairs(optionList[i]) do
+	for _, option in pairs(G.OptionList[i]) do
 		local optType, key, value, name, horizon, data, callback, tooltip = unpack(option)
 		-- Checkboxes
 		if optType == 1 then
@@ -1101,7 +1101,7 @@ local bloodlustFilter = {
 	[264689] = true
 }
 
-local function exportData()
+function G:ExportGUIData()
 	local text = "NDuiSettings:"..DB.Version..":"..DB.MyName..":"..DB.MyClass
 	for KEY, VALUE in pairs(NDuiDB) do
 		if type(VALUE) == "table" then
@@ -1208,7 +1208,7 @@ local function reloadDefaultSettings()
 	NDuiDB["BFA"] = true -- don't empty data on next loading
 end
 
-local function importData()
+function G:ImportGUIData()
 	local profile = dataFrame.editBox:GetText()
 	if B:IsBase64(profile) then profile = B:Decode(profile) end
 	local options = {strsplit(";", profile)}
@@ -1307,8 +1307,6 @@ local function importData()
 			end
 		end
 	end
-
-	ReloadUI()
 end
 
 local function updateTooltip()
@@ -1359,7 +1357,8 @@ local function createDataFrame()
 		button1 = YES,
 		button2 = NO,
 		OnAccept = function()
-			importData()
+			G:ImportGUIData()
+			ReloadUI()
 		end,
 		whileDead = 1,
 	}
@@ -1417,7 +1416,7 @@ local function OpenGUI()
 		StaticPopup_Show("RELOAD_NDUI")
 	end)
 
-	for i, name in pairs(tabList) do
+	for i, name in pairs(G.TabList) do
 		guiTab[i] = CreateTab(f, i, name)
 
 		guiPage[i] = CreateFrame("ScrollFrame", nil, f, "UIPanelScrollFrameTemplate")
@@ -1467,7 +1466,7 @@ local function OpenGUI()
 		createDataFrame()
 		dataFrame.Header:SetText(L["Export Header"])
 		dataFrame.text:SetText(OKAY)
-		exportData()
+		G:ExportGUIData()
 	end)
 
 	local helpInfo = B.CreateHelpInfo(f, L["Option* Tips"])
