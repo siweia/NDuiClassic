@@ -212,6 +212,7 @@ local defaultSettings = {
 		--OffTankColor = {r=.2, g=.7, b=.5},
 		--DPSRevertThreat = false,
 		PPFadeout = true,
+		PPFadeoutAlpha = 0,
 		NameplateClassPower = false,
 		NameTextSize = 14,
 		HealthTextSize = 16,
@@ -751,9 +752,10 @@ local optionList = { -- type, key, value, name, horizon, doubleline
 		{},--blank
 		--{1, "Auras", "ClassAuras", L["Enable ClassAuras"], true},
 		{1, "Nameplate", "NameplateClassPower", L["Nameplate ClassPower"]},
-		{1, "Nameplate", "ClassPowerOnly", L["Nameplate ClassPowerOnly"], true},
-		{1, "Nameplate", "PPPowerText", L["PlayerPlate PowerText"].."*", nil, nil, togglePlatePower},
 		{1, "Nameplate", "PPFadeout", L["PlayerPlate Fadeout"].."*", true, nil, togglePlateVisibility},
+		{1, "Nameplate", "ClassPowerOnly", L["Nameplate ClassPowerOnly"], nil},
+		{1, "Nameplate", "PPPowerText", L["PlayerPlate PowerText"].."*", nil, nil, togglePlatePower},
+		{3, "Nameplate", "PPFadeoutAlpha", L["PlayerPlate FadeoutAlpha"].."*", true, {0, .5, .05}, togglePlateVisibility},
 		{},--blank
 		{3, "Nameplate", "PPWidth", L["PlayerPlate HPWidth"].."*", false, {150, 300, 1}, refreshNameplates},
 		{3, "Nameplate", "PPBarHeight", L["PlayerPlate CPHeight"].."*", true, {5, 15, 1}, refreshNameplates},
