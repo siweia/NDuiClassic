@@ -11,14 +11,27 @@ local function sortBars(barTable)
 end
 
 local extraGUIs = {}
+local function toggleExtraGUI(guiName)
+	for name, frame in pairs(extraGUIs) do
+		if name == guiName then
+			B:TogglePanel(frame)
+		else
+			frame:Hide()
+		end
+	end
+end
+
+local function hideExtraGUIs()
+	for _, frame in pairs(extraGUIs) do
+		frame:Hide()
+	end
+end
+
 local function createExtraGUI(parent, name, title, bgFrame)
 	local frame = CreateFrame("Frame", name, parent)
 	frame:SetSize(300, 600)
 	frame:SetPoint("TOPLEFT", parent:GetParent(), "TOPRIGHT", 3, 0)
 	B.SetBD(frame)
-	parent:HookScript("OnHide", function()
-		if frame:IsShown() then frame:Hide() end
-	end)
 
 	if title then
 		B.CreateFS(frame, 14, title, "system", "TOPLEFT", 20, -25)
@@ -31,18 +44,13 @@ local function createExtraGUI(parent, name, title, bgFrame)
 		B.CreateBD(frame.bg, .3)
 	end
 
-	tinsert(extraGUIs, frame)
-	return frame
-end
-
-local function toggleExtraGUI(name)
-	for _, frame in next, extraGUIs do
-		if frame:GetName() == name then
-			B:TogglePanel(frame)
-		else
-			frame:Hide()
-		end
+	if not parent.extraGUIHook then
+		parent:HookScript("OnHide", hideExtraGUIs)
+		parent.extraGUIHook = true
 	end
+	extraGUIs[name] = frame
+
+	return frame
 end
 
 local function clearEdit(options)
@@ -51,21 +59,20 @@ local function clearEdit(options)
 	end
 end
 
-local raidDebuffsGUI, clickCastGUI, buffIndicatorGUI, plateGUI, unitframeGUI, castbarGUI, raidframeGUI, bagFilterGUI
-
 local function updateRaidDebuffs()
 	B:GetModule("UnitFrames"):UpdateRaidDebuffs()
 end
 
 function G:SetupRaidDebuffs(parent)
-	toggleExtraGUI("NDuiGUI_RaidDebuffs")
-	if raidDebuffsGUI then return end
+	local guiName = "NDuiGUI_RaidDebuffs"
+	toggleExtraGUI(guiName)
+	if extraGUIs[guiName] then return end
 
-	raidDebuffsGUI = createExtraGUI(parent, "NDuiGUI_RaidDebuffs", L["RaidFrame Debuffs"].."*", true)
-	raidDebuffsGUI:SetScript("OnHide", updateRaidDebuffs)
+	local panel = createExtraGUI(parent, guiName, L["RaidFrame Debuffs"].."*", true)
+	panel:SetScript("OnHide", updateRaidDebuffs)
 
 	local setupBars
-	local frame = raidDebuffsGUI.bg
+	local frame = panel.bg
 	local bars, options = {}, {}
 
 	local iType = G:CreateDropdown(frame, L["Type*"], 10, -30, {RAID, OTHER}, L["Instance Type"], 150, 30)
@@ -255,10 +262,11 @@ function G:SetupRaidDebuffs(parent)
 end
 
 function G:SetupClickCast(parent)
-	toggleExtraGUI("NDuiGUI_ClickCast")
-	if clickCastGUI then return end
+	local guiName = "NDuiGUI_ClickCast"
+	toggleExtraGUI(guiName)
+	if extraGUIs[guiName] then return end
 
-	clickCastGUI = createExtraGUI(parent, "NDuiGUI_ClickCast", L["Add ClickSets"], true)
+	local panel = createExtraGUI(parent, guiName, L["Add ClickSets"], true)
 
 	local textIndex, barTable = {
 		["target"] = TARGET,
@@ -299,7 +307,7 @@ function G:SetupClickCast(parent)
 		sortBars(barTable)
 	end
 
-	local frame = clickCastGUI.bg
+	local frame = panel.bg
 	local keyList, options = {
 		KEY_BUTTON1,
 		KEY_BUTTON2,
@@ -363,10 +371,11 @@ function G:SetupClickCast(parent)
 end
 
 function G:SetupNameplateFilter(parent)
-	toggleExtraGUI("NDuiGUI_NameplateFilter")
-	if plateGUI then return end
+	local guiName = "NDuiGUI_NameplateFilter"
+	toggleExtraGUI(guiName)
+	if extraGUIs[guiName] then return end
 
-	plateGUI = createExtraGUI(parent, "NDuiGUI_NameplateFilter")
+	local panel = createExtraGUI(parent, guiName)
 
 	local frameData = {
 		[1] = {text = L["WhiteList"].."*", offset = -25, barList = {}},
@@ -408,8 +417,8 @@ function G:SetupNameplateFilter(parent)
 	end
 
 	for index, value in ipairs(frameData) do
-		B.CreateFS(plateGUI, 14, value.text, "system", "TOPLEFT", 20, value.offset)
-		local frame = CreateFrame("Frame", nil, plateGUI)
+		B.CreateFS(panel, 14, value.text, "system", "TOPLEFT", 20, value.offset)
+		local frame = CreateFrame("Frame", nil, panel)
 		frame:SetSize(280, 250)
 		frame:SetPoint("TOPLEFT", 10, value.offset - 25)
 		B.CreateBD(frame, .3)
@@ -434,11 +443,12 @@ local function refreshNameList()
 end
 
 function G:SetupBuffIndicator(parent)
-	toggleExtraGUI("NDuiGUI_BuffIndicator")
-	if buffIndicatorGUI then return end
+	local guiName = "NDuiGUI_BuffIndicator"
+	toggleExtraGUI(guiName)
+	if extraGUIs[guiName] then return end
 
-	buffIndicatorGUI = createExtraGUI(parent, "NDuiGUI_BuffIndicator")
-	buffIndicatorGUI:SetScript("OnHide", refreshNameList)
+	local panel = createExtraGUI(parent, guiName)
+	panel:SetScript("OnHide", refreshNameList)
 
 	local frameData = {
 		[1] = {text = L["RaidBuffWatch"].."*", offset = -25, width = 160, barList = {}},
@@ -528,9 +538,9 @@ function G:SetupBuffIndicator(parent)
 	end
 
 	for index, value in ipairs(frameData) do
-		B.CreateFS(buffIndicatorGUI, 14, value.text, "system", "TOPLEFT", 20, value.offset)
+		B.CreateFS(panel, 14, value.text, "system", "TOPLEFT", 20, value.offset)
 
-		local frame = CreateFrame("Frame", nil, buffIndicatorGUI)
+		local frame = CreateFrame("Frame", nil, panel)
 		frame:SetSize(280, 250)
 		frame:SetPoint("TOPLEFT", 10, value.offset - 25)
 		B.CreateBD(frame, .3)
@@ -627,12 +637,12 @@ local function SetUnitFrameSize(self, unit)
 end
 
 function G:SetupUnitFrame(parent)
-	toggleExtraGUI("NDuiGUI_UnitFrameSetup")
-	if unitframeGUI then return end
+	local guiName = "NDuiGUI_UnitFrameSetup"
+	toggleExtraGUI(guiName)
+	if extraGUIs[guiName] then return end
 
-	unitframeGUI = createExtraGUI(parent, "NDuiGUI_UnitFrameSetup", L["UnitFrame Size"].."*")
-
-	local scroll = G:CreateScroll(unitframeGUI, 260, 540)
+	local panel = createExtraGUI(parent, guiName, L["UnitFrame Size"].."*")
+	local scroll = G:CreateScroll(panel, 260, 540)
 
 	local sliderRange = {
 		["Player"] = {200, 300},
@@ -672,12 +682,12 @@ function G:SetupUnitFrame(parent)
 end
 
 function G:SetupRaidFrame(parent)
-	toggleExtraGUI("NDuiGUI_RaidFrameSetup")
-	if raidframeGUI then return end
+	local guiName = "NDuiGUI_RaidFrameSetup"
+	toggleExtraGUI(guiName)
+	if extraGUIs[guiName] then return end
 
-	raidframeGUI = createExtraGUI(parent, "NDuiGUI_RaidFrameSetup", L["RaidFrame Size"])
-
-	local scroll = G:CreateScroll(raidframeGUI, 260, 540)
+	local panel = createExtraGUI(parent, guiName, L["RaidFrame Size"])
+	local scroll = G:CreateScroll(panel, 260, 540)
 
 	local minRange = {
 		["Party"] = {80, 25},
@@ -745,12 +755,12 @@ local function createOptionSwatch(parent, name, value, x, y)
 end
 
 function G:SetupCastbar(parent)
-	toggleExtraGUI("NDuiGUI_CastbarSetup")
-	if castbarGUI then return end
+	local guiName = "NDuiGUI_CastbarSetup"
+	toggleExtraGUI(guiName)
+	if extraGUIs[guiName] then return end
 
-	castbarGUI = createExtraGUI(parent, "NDuiGUI_CastbarSetup", L["Castbar Settings"].."*")
-
-	local scroll = G:CreateScroll(castbarGUI, 260, 540)
+	local panel = createExtraGUI(parent, guiName, L["Castbar Settings"].."*")
+	local scroll = G:CreateScroll(panel, 260, 540)
 
 	createOptionTitle(scroll.child, L["Castbar Colors"], -10)
 	createOptionSwatch(scroll.child, "", NDuiDB["UFs"]["CastingColor"], 120, -55)
@@ -791,7 +801,7 @@ function G:SetupCastbar(parent)
 	end
 	createOptionGroup(scroll.child, L["Target Castbar"], -310, "Target", updateTargetCastbar)
 
-	castbarGUI:HookScript("OnHide", function()
+	panel:HookScript("OnHide", function()
 		if _G.oUF_Player then _G.oUF_Player.Castbar.mover:Hide() end
 		if _G.oUF_Target then _G.oUF_Target.Castbar.mover:Hide() end
 	end)
@@ -805,12 +815,12 @@ local function createOptionCheck(parent, offset, text)
 end
 
 function G:SetupBagFilter(parent)
-	toggleExtraGUI("NDuiGUI_BagFilterSetup")
-	if bagFilterGUI then return end
+	local guiName = "NDuiGUI_BagFilterSetup"
+	toggleExtraGUI(guiName)
+	if extraGUIs[guiName] then return end
 
-	bagFilterGUI = createExtraGUI(parent, "NDuiGUI_BagFilterSetup", L["BagFilterSetup"].."*")
-
-	local scroll = G:CreateScroll(bagFilterGUI, 260, 540)
+	local panel = createExtraGUI(parent, guiName, L["BagFilterSetup"].."*")
+	local scroll = G:CreateScroll(panel, 260, 540)
 
 	local filterOptions = {
 		[1] = "FilterJunk",
