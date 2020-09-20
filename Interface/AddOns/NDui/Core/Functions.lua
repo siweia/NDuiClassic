@@ -670,6 +670,15 @@ do
 		return bu
 	end
 
+	function B:CreateWatermark()
+		local logo = self:CreateTexture(nil, "BACKGROUND")
+		logo:SetPoint("BOTTOMRIGHT", 10, 0)
+		logo:SetTexture(DB.logoTex)
+		logo:SetTexCoord(0, 1, 0, .75)
+		logo:SetSize(200, 75)
+		logo:SetAlpha(.3)
+	end
+
 	-- Handle statusbar
 	function B:CreateSB(spark, r, g, b)
 		self:SetStatusBarTexture(DB.normTex)
