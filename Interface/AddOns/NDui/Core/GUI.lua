@@ -230,7 +230,7 @@ G.DefaultSettings = {
 		TMW = true,
 		WeakAuras = true,
 		InfobarLine = true,
-		ChatLine = true,
+		ChatbarLine = true,
 		MenuLine = true,
 		ClassLine = true,
 		Details = true,
@@ -846,7 +846,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{},--blank
 		{1, "Skins", "ClassLine", L["ClassColor Line"]},
 		{1, "Skins", "InfobarLine", L["Infobar Line"], true},
-		{1, "Skins", "ChatLine", L["Chat Line"]},
+		{1, "Skins", "ChatbarLine", L["Chat Line"]},
 		{1, "Skins", "MenuLine", L["Menu Line"], true},
 		{},--blank
 		{1, "Skins", "TradeSkills", L["EnhancedTradeSkills"]},
