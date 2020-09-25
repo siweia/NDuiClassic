@@ -170,6 +170,7 @@ G.DefaultSettings = {
 		ChatHeight = 190,
 		BlockStranger = false,
 		AllowFriends = true,
+		ChatBGType = 1,
 	},
 	Map = {
 		Coord = true,
@@ -815,8 +816,9 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Chat", "Chatbar", L["ShowChatbar"]},
 		{1, "Chat", "WhisperColor", L["Differ WhisperColor"].."*", true},
 		{1, "Chat", "ChatItemLevel", L["ShowChatItemLevel"]},
-		{1, "Chat", "Freedom", L["Language Filter"]},
-		{4, "ACCOUNT", "TimestampFormat", L["TimestampFormat"].."*", true, {DISABLE, "03:27 PM", "03:27:32 PM", "15:27", "15:27:32"}},
+		{1, "Chat", "Freedom", L["Language Filter"], true},
+		{4, "ACCOUNT", "TimestampFormat", L["TimestampFormat"].."*", nil, {DISABLE, "03:27 PM", "03:27:32 PM", "15:27", "15:27:32"}},
+		{4, "Chat", "ChatBGType", "ChatBGType".."*", true, {DISABLE, "BLACK", "GRADIENT"}, toggleChatBackground},
 		{1, "ACCOUNT", "ClassColorChat", L["ClassColorChat"].."*", nil, nil, updateClassColorName},
 		{},--blank
 		{1, "Chat", "EnableFilter", "|cff00cc4c"..L["Enable Chatfilter"]},
