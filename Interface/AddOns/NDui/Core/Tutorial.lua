@@ -29,6 +29,7 @@ local function ForceDefaultSettings()
 	SetCVar("autoQuestWatch", 1)
 	SetCVar("overrideArchive", 0)
 	SetCVar("cameraDistanceMaxZoomFactor", 2.6)
+	SetCVar("chatClassColorOverride", 0)
 end
 
 local function ForceRaidFrame()

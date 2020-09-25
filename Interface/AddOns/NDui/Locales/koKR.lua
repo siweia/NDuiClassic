@@ -493,7 +493,6 @@ L["ChatFilterWhiteListTip"] = "|n리스트에 나타난 채팅내용만 보류�
 L["FilterListTip"] = "|n적합한 리스트가 있을 시 채팅에서 필터링을 합니다."
 L["HideAllID"] = "모든 스킬과 아이템정보를 끄기"
 L["EnergyTicker"] = "마나회복/에너지회복 모니터링"
-L["ClassColorChat"] = "직업별 컬러를 강력히 표시"
 L["Recount Skin"] = "Recount스킨사용"
 L["Reset Details check"] = "Details의 스킬을 초기화 하겠습니까?"
 L["SpecialBagsColor"] = "특수배낭의 배경색을 추가"

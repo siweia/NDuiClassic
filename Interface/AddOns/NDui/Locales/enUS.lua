@@ -493,7 +493,6 @@ L["ChatFilterWhiteListTip"] = "|nOnly keep messages that match the words below. 
 L["FilterListTip"] = "|nFilter messages that match the words blow."
 L["HideAllID"] = "Hide spell/item info"
 L["EnergyTicker"] = "Energy/Mana Ticker"
-L["ClassColorChat"] = "Show name in classcolor"
 L["Recount Skin"] = "Recount Skin"
 L["Reset Details check"] = "Are you sure to reset skin settings for Details?"
 L["SpecialBagsColor"] = "Show color for special bags"

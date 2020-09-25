@@ -321,7 +321,6 @@ G.AccountSettings = {
 	KeystoneInfo = {},
 	AutoBubbles = false,
 	DisableInfobars = false,
-	ClassColorChat = true,
 	ContactList = {},
 	CustomJunkList = {},
 }
@@ -453,10 +452,6 @@ end
 
 local function updateChatSticky()
 	B:GetModule("Chat"):ChatWhisperSticky()
-end
-
-local function updateClassColorName()
-	B:GetModule("Chat"):UpdateClassColorName()
 end
 
 local function updateWhisperList()
@@ -817,7 +812,6 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Chat", "Freedom", L["Language Filter"], true},
 		{4, "ACCOUNT", "TimestampFormat", L["TimestampFormat"].."*", nil, {DISABLE, "03:27 PM", "03:27:32 PM", "15:27", "15:27:32"}},
 		{4, "Chat", "ChatBGType", "ChatBGType".."*", true, {DISABLE, "BLACK", "GRADIENT"}, toggleChatBackground},
-		{1, "ACCOUNT", "ClassColorChat", L["ClassColorChat"].."*", nil, nil, updateClassColorName},
 		{},--blank
 		{1, "Chat", "EnableFilter", "|cff00cc4c"..L["Enable Chatfilter"]},
 		{1, "Chat", "BlockAddonAlert", L["Block Addon Alert"], true},
