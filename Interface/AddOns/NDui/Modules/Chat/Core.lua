@@ -56,7 +56,8 @@ end
 
 local function GradientBackground(self)
 	local frame = CreateFrame("Frame", nil, self)
-	frame:SetAllPoints(self.Background)
+	frame:SetPoint("TOPLEFT", self.Background)
+	frame:SetPoint("BOTTOMRIGHT", 26, -7)
 	frame:SetFrameLevel(0)
 	frame:SetShown(NDuiDB["Chat"]["ChatBGType"] == 3)
 
