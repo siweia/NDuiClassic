@@ -268,18 +268,18 @@ function module:UpdateTabColors(selected)
 		self.whisperIndex = 0
 	else
 		self.Text:SetTextColor(.5, .5, .5)
-		self.whisperIndex = 0
 	end
 end
 
 function module:UpdateTabEventColors(event)
 	local tab = _G[self:GetName().."Tab"]
+	local selected = GeneralDockManager.selected:GetID() == tab:GetID()
 	if event == "CHAT_MSG_WHISPER" then
 		tab.whisperIndex = 1
-		FCFTab_UpdateColors(tab, GeneralDockManager.selected:GetID() == tab:GetID())
+		module.UpdateTabColors(tab, selected)
 	elseif event == "CHAT_MSG_BN_WHISPER" then
 		tab.whisperIndex = 2
-		FCFTab_UpdateColors(tab, GeneralDockManager.selected:GetID() == tab:GetID())
+		module.UpdateTabColors(tab, selected)
 	end
 end
 
