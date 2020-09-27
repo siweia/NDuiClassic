@@ -27,6 +27,8 @@ local function SetFrameSize(frame, size, num)
 end
 
 function Bar:CreateStancebar()
+	if not NDuiDB["Actionbar"]["ShowStance"] then return end
+
 	local num = NUM_STANCE_SLOTS
 	local buttonList = {}
 
