@@ -631,7 +631,7 @@ function A:AuraWatch_UpdateInt(_, ...)
 
 	local timestamp, eventType, _, sourceGUID, sourceName, sourceFlags, _, destGUID, destName, destFlags, _, _, spellName = ...
 	local value = IntCD.List[spellName]
-	if value and cache[timestamp] ~= spellID and A:IsAuraTracking(value, eventType, sourceGUID, sourceName, sourceFlags, destGUID, destName, destFlags) then
+	if value and cache[timestamp] ~= spellName and A:IsAuraTracking(value, eventType, sourceGUID, sourceName, sourceFlags, destGUID, destName, destFlags) then
 		local guid, name = destGUID, destName
 		if value.OnSuccess then guid, name = sourceGUID, sourceName end
 
