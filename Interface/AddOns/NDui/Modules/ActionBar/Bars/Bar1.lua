@@ -44,6 +44,8 @@ function Bar:GetActionCount(action)
 		local text = line:GetText()
 		local itemName = text and strmatch(text, REAGENTS_STRING)
 		if itemName then
+			itemName = itemName:gsub(":", "")
+            		itemName = itemName:match("^%s*(.+)")
 			return GetItemCount(itemName)
 		end
 	end
