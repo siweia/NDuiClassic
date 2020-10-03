@@ -33,7 +33,7 @@ function Bar:UpdateAllScale()
 	UpdateActionbarScale("BarStance")
 end
 
-local REAGENTS_STRING = gsub(SPELL_REAGENTS, HEADER_COLON.."(.+)", "").."(.+)"
+local REAGENTS_STRING = SPELL_REAGENTS.."(.+)"
 
 function Bar:GetActionCount(action)
 	B.ScanTip:SetOwner(UIParent, "ANCHOR_NONE")
