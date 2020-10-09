@@ -33,10 +33,8 @@ function M:InboxItem_OnEnter()
 	local itemAttached = select(8, GetInboxHeaderInfo(self.index))
 	if itemAttached then
 		for attachID = 1, 12 do
-			local _, _, _, itemCount = GetInboxItem(self.index, attachID)
+			local _, itemID, _, itemCount = GetInboxItem(self.index, attachID)
 			if itemCount and itemCount > 0 then
-				local itemID = strmatch(GetInboxItemLink(self.index, attachID), "item:(%d+)")
-				itemID = tonumber(itemID)
 				inboxItems[itemID] = (inboxItems[itemID] or 0) + itemCount
 			end
 		end
