@@ -3,7 +3,7 @@ local B, C, L, DB = unpack(ns)
 local M = B:GetModule("Misc")
 
 local wipe, select, pairs, tonumber = wipe, select, pairs, tonumber
-local strmatch, strsplit, strfind = strmatch, strsplit, strfind
+local strsplit, strfind = strsplit, strfind
 local InboxItemCanDelete, DeleteInboxItem = InboxItemCanDelete, DeleteInboxItem
 local GetInboxHeaderInfo, GetInboxItem, GetInboxItemLink, GetItemInfo = GetInboxHeaderInfo, GetInboxItem, GetInboxItemLink, GetItemInfo
 local inboxItems = {}
