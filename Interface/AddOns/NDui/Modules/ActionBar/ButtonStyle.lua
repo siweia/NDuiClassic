@@ -231,13 +231,9 @@ function Bar:StyleActionButton(button, cfg)
 		end
 	end
 	if hotkey then
-		if NDuiDB["Actionbar"]["Hotkeys"] then
-			hotkey:SetParent(overlay)
-			Bar.UpdateHotKey(button)
-			SetupFontString(hotkey, cfg.hotkey)
-		else
-			hotkey:Hide()
-		end
+		hotkey:SetParent(overlay)
+		Bar:HookHotKey(button)
+		SetupFontString(hotkey, cfg.hotkey)
 	end
 	if name then
 		if NDuiDB["Actionbar"]["Macro"] then
@@ -364,8 +360,6 @@ function Bar:ReskinBars()
 	-- Update hotkeys
 	hooksecurefunc("ActionButton_UpdateHotkeys", Bar.UpdateHotKey)
 	hooksecurefunc("PetActionButton_SetHotkeys", Bar.UpdateHotKey)
-	if NDuiDB["Actionbar"]["Hotkeys"] then
-		Bar:UpdateStanceHotKey()
-		B:RegisterEvent("UPDATE_BINDINGS", Bar.UpdateStanceHotKey)
-	end
+	Bar:UpdateStanceHotKey()
+	B:RegisterEvent("UPDATE_BINDINGS", Bar.UpdateStanceHotKey)
 end
