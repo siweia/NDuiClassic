@@ -182,7 +182,6 @@ local ignoreKeys = {
 	["RSHIFT"] = true,
 	["UNKNOWN"] = true,
 	["LeftButton"] = true,
-	["MiddleButton"] = true,
 }
 
 function Bar:Bind_Listener(key)
