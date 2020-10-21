@@ -7,7 +7,7 @@ local strmatch, tonumber, pairs, unpack, rad = string.match, tonumber, pairs, un
 local UnitThreatSituation, UnitIsTapDenied, UnitPlayerControlled, UnitIsUnit = UnitThreatSituation, UnitIsTapDenied, UnitPlayerControlled, UnitIsUnit
 local UnitReaction, UnitIsConnected, UnitIsPlayer, UnitSelectionColor = UnitReaction, UnitIsConnected, UnitIsPlayer, UnitSelectionColor
 local UnitClassification, UnitExists, InCombatLockdown = UnitClassification, UnitExists, InCombatLockdown
-local UnitGUID, GetPlayerInfoByGUID, Ambiguate, UnitName = UnitGUID, GetPlayerInfoByGUID, Ambiguate, UnitName
+local UnitGUID, GetPlayerInfoByGUID, Ambiguate, UnitName, UnitHealth, UnitHealthMax = UnitGUID, GetPlayerInfoByGUID, Ambiguate, UnitName, UnitHealth, UnitHealthMax
 local SetCVar, UIFrameFadeIn, UIFrameFadeOut = SetCVar, UIFrameFadeIn, UIFrameFadeOut
 local C_NamePlate_GetNamePlateForUnit = C_NamePlate.GetNamePlateForUnit
 local INTERRUPTED = INTERRUPTED
@@ -97,6 +97,8 @@ function UF:UpdateColor(_, unit)
 	local secureColor = NDuiDB["Nameplate"]["SecureColor"]
 	local transColor = NDuiDB["Nameplate"]["TransColor"]
 	local insecureColor = NDuiDB["Nameplate"]["InsecureColor"]
+	local executeRatio = NDuiDB["Nameplate"]["ExecuteRatio"]
+	local healthPerc = UnitHealth(unit) / (UnitHealthMax(unit) + .0001) * 100
 	local r, g, b
 
 	if not UnitIsConnected(unit) then
@@ -144,6 +146,12 @@ function UF:UpdateColor(_, unit)
 		end
 	else
 		self.ThreatIndicator:Hide()
+	end
+
+	if executeRatio > 0 and healthPerc <= executeRatio then
+		self.nameText:SetTextColor(1, 0, 0)
+	else
+		self.nameText:SetTextColor(1, 1, 1)
 	end
 end
 
