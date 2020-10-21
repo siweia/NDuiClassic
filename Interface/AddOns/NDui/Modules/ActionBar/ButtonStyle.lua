@@ -232,7 +232,7 @@ function Bar:StyleActionButton(button, cfg)
 	end
 	if hotkey then
 		hotkey:SetParent(overlay)
-		Bar:HookHotKey(button)
+		Bar.UpdateHotKey(button)
 		SetupFontString(hotkey, cfg.hotkey)
 	end
 	if name then
