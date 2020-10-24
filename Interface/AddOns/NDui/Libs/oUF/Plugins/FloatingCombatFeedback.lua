@@ -324,7 +324,7 @@ local function onEvent(self, event, ...)
 		local animation = element.defaultMode
 		local string = getAvailableString(element)
 
-		string:SetFont(element.font, element.fontHeight * multiplier, element.fontFlags)
+		string:SetFont(element.font, NDuiDB["UFs"]["FCTFontSize"] * multiplier, element.fontFlags)
 		if texture then
 			string:SetFormattedText(element.textureFormat, texture, (critMark and "*" or "")..text)
 		else
