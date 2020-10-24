@@ -18,11 +18,6 @@ function UF:UpdatePlateScale()
 	SetCVar("namePlateMaxScale", NDuiDB["Nameplate"]["MinScale"])
 end
 
-function UF:UpdatePlateAlpha()
-	SetCVar("nameplateMinAlpha", GetCVarDefault("nameplateMinAlpha"))
-	SetCVar("nameplateMaxAlpha", GetCVarDefault("nameplateMaxAlpha"))
-end
-
 function UF:UpdatePlateSpacing()
 	SetCVar("nameplateOverlapV", NDuiDB["Nameplate"]["VerticalSpacing"])
 end
@@ -30,7 +25,6 @@ end
 function UF:SetupCVars()
 	SetCVar("nameplateOverlapH", .8)
 	UF:UpdatePlateSpacing()
-	UF:UpdatePlateAlpha()
 	SetCVar("nameplateSelectedAlpha", 1)
 
 	UF:UpdatePlateScale()

@@ -218,7 +218,6 @@ G.DefaultSettings = {
 		NameTextSize = 14,
 		HealthTextSize = 16,
 		MinScale = 1,
-		MinAlpha = 1,
 		ColorBorder = false,
 		QuestIndicator = true,
 		ClassPowerOnly = false,
@@ -515,10 +514,6 @@ local function updatePlateScale()
 	B:GetModule("UnitFrames"):UpdatePlateScale()
 end
 
-local function updatePlateAlpha()
-	B:GetModule("UnitFrames"):UpdatePlateAlpha()
-end
-
 local function updateRaidNameText()
 	B:GetModule("UnitFrames"):UpdateRaidNameText()
 end
@@ -752,7 +747,6 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{3, "Nameplate", "ExecuteRatio", "|cffff0000"..L["ExecuteRatio"].."*", nil, {0, 90, 1}, nil, L["ExecuteRatioTip"]},
 		{3, "Nameplate", "VerticalSpacing", L["NP VerticalSpacing"].."*", false, {.5, 1.5, .1}, updatePlateSpacing},
 		{3, "Nameplate", "MinScale", L["Nameplate MinScale"].."*", true, {.5, 1, .1}, updatePlateScale},
-		--{3, "Nameplate", "MinAlpha", L["Nameplate MinAlpha"].."*", true, {.5, 1, 1}, updatePlateAlpha},
 		{3, "Nameplate", "PlateWidth", L["NP Width"].."*", false, {50, 250, 1}, refreshNameplates},
 		{3, "Nameplate", "PlateHeight", L["NP Height"].."*", true, {5, 30, 1}, refreshNameplates},
 		{3, "Nameplate", "NameTextSize", L["NameTextSize"].."*", false, {10, 30, 1}, refreshNameplates},
