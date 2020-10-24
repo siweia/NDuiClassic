@@ -141,6 +141,8 @@ end
 
 function module:SetupWorldMap()
 	if NDuiDB["Map"]["DisableMap"] then return end
+	if IsAddOnLoaded("Mapster") then return end
+	if IsAddOnLoaded("Leatrix_Maps") then return end
 
 	-- Fix worldmap cursor when scaling
 	WorldMapFrame.ScrollContainer.GetCursorPosition = function(f)
@@ -184,10 +186,10 @@ function module:SetupWorldMap()
 	self:MapPartyDots()
 	self:SetupCoords()
 	self:MapFader()
+	self:MapReveal()
 end
 
 function module:OnLogin()
 	self:SetupWorldMap()
 	self:SetupMinimap()
-	self:MapReveal()
 end
