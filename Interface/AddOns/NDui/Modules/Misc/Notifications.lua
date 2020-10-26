@@ -212,11 +212,14 @@ end
 
 -- Incompatible check
 local IncompatibleAddOns = {
+	["!!!163UI!!!"] = true,
 	["Aurora"] = true,
 	["AuroraClassic"] = true,
 	["BigFoot"] = true,
 	["BigFoot"] = true,
-	["!!!163UI!!!"] = true,
+	["ClassicQuestLog"] = true,
+	["QuestGuru"] = true,
+	["QuestLogEx"] = true,
 }
 local AddonDependency = {
 	["BigFoot"] = "!!!Libs",
