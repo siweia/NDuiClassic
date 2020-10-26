@@ -182,6 +182,7 @@ G.DefaultSettings = {
 		ShowRecycleBin = true,
 		WhoPings = true,
 		MapReveal = true,
+		MapRevealGlow = true,
 		MapFader = true,
 	},
 	Nameplate = {
@@ -829,6 +830,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 	},
 	[10] = {
 		{1, "Map", "DisableMap", "|cffff0000"..L["DisableMap"], nil, nil, nil, L["DisableMapTip"]},
+		{1, "Map", "MapRevealGlow", L["MapRevealGlow"].."*", true, nil, nil, L["MapRevealGlowTip"]},
 		{1, "Map", "MapFader", L["MapFader"].."*", nil, nil, updateMapFader},
 		{3, "Map", "MapScale", L["Map Scale"], true, {.5, 1, .1}},
 		{},--blank
