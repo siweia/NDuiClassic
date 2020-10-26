@@ -74,7 +74,7 @@ function S:CharacterStatsClassic()
 	end
 
 	local function CreateStatLine(parent, index)
-		local frame = CreateFrame("Frame", nil, parent, "CharacterStatFrameTemplate")	
+		local frame = CreateFrame("Frame", nil, parent, "CharacterStatFrameTemplate")
 		frame:SetWidth(180)
 		frame:SetPoint("TOP", parent, "BOTTOM", 0, -2 - (index-1)*16)
 		frame.Background:SetShown(index%2 == 1)

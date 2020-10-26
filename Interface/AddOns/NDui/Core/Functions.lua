@@ -1238,14 +1238,14 @@ do
 			tex:SetTexCoord(0, 1, 0, 1)
 		end
 	end
-	
+
 	function B:ReskinRotationButtons()
 		local name = self.GetName and self:GetName() or self
 		local leftButton = _G[name.."RotateRightButton"]
 		reskinRotation(leftButton, "left")
 		local rightButton = _G[name.."RotateLeftButton"]
 		reskinRotation(rightButton, "right")
-	
+
 		leftButton:SetPoint("TOPLEFT", 5, -5)
 		rightButton:ClearAllPoints()
 		rightButton:SetPoint("LEFT", leftButton, "RIGHT", 3, 0)

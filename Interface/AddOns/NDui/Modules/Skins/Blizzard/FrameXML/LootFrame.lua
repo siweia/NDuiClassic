@@ -109,7 +109,7 @@ tinsert(C.defaultThemes, function()
 				local icon = frame.IconFrame.Icon
 				icon:ClearAllPoints()
 				icon:SetPoint("BOTTOMLEFT", frame.Timer, "TOPLEFT", 0, 5)
-				
+
 				icon.bg = B.ReskinIcon(icon)
 				local bg = B.CreateBDFrame(frame, .25)
 				bg:SetPoint("TOPLEFT", icon.bg, "TOPRIGHT", 2, 0)

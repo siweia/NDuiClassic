@@ -163,4 +163,4 @@ function Bar:OnLogin()
 	Bar:HideBlizz()
 	Bar:ReskinBars()
 	Bar:UpdateAllScale()
-end 
+end
