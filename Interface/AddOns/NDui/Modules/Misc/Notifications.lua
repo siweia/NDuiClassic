@@ -210,10 +210,65 @@ function M:PlacedItemAlert()
 	B:RegisterEvent("GROUP_JOINED", self.ItemAlert_CheckGroup)
 end
 
+-- Incompatible check
+local IncompatibleAddOns = {
+	["Aurora"] = true,
+	["AuroraClassic"] = true,
+	["BigFoot"] = true,
+	["BigFoot"] = true,
+	["!!!163UI!!!"] = true,
+}
+local AddonDependency = {
+	["BigFoot"] = "!!!Libs",
+}
+function M:CheckIncompatible()
+	local IncompatibleList = {}
+	for addon in pairs(IncompatibleAddOns) do
+		if IsAddOnLoaded(addon) then
+			tinsert(IncompatibleList, addon)
+		end
+	end
+
+	if #IncompatibleList > 0 then
+		local frame = CreateFrame("Frame", nil, UIParent)
+		frame:SetPoint("TOP", 0, -200)
+		frame:SetFrameStrata("HIGH")
+		B.CreateMF(frame)
+		B.SetBD(frame)
+		B.CreateFS(frame, 18, L["FoundIncompatibleAddon"], true, "TOPLEFT", 10, -10)
+		B.CreateWatermark(frame)
+
+		local offset = 0
+		for _, addon in pairs(IncompatibleList) do
+			B.CreateFS(frame, 14, addon, false, "TOPLEFT", 10, -(50 + offset))
+			offset = offset + 24
+		end
+		frame:SetSize(300, 100 + offset)
+
+		local close = B.CreateButton(frame, 16, 16, true, DB.closeTex)
+		close:SetPoint("TOPRIGHT", -10, -10)
+		close:SetScript("OnClick", function() frame:Hide() end)
+
+		local disable = B.CreateButton(frame, 150, 25, L["DisableIncompatibleAddon"])
+		disable:SetPoint("BOTTOM", 0, 10)
+		disable.text:SetTextColor(1, 0, 0)
+		disable:SetScript("OnClick", function()
+			for _, addon in pairs(IncompatibleList) do
+				DisableAddOn(addon, true)
+				if AddonDependency[addon] then
+					DisableAddOn(AddonDependency[addon], true)
+				end
+			end
+			ReloadUI()
+		end)
+	end
+end
+
 -- Init
 function M:AddAlerts()
 	M:InterruptAlert()
 	M:VersionCheck()
 	M:PlacedItemAlert()
+	M:CheckIncompatible()
 end
 M:RegisterMisc("Alerts", M.AddAlerts)
