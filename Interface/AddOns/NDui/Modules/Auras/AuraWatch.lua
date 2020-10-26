@@ -155,9 +155,11 @@ local function BuildUnitIDTable()
 end
 
 local function BuildCooldownTable()
+	wipe(cooldownTable)
+
 	for KEY, VALUE in pairs(AuraList) do
 		for spellID, value in pairs(VALUE.List) do
-			if value.SpellID or value.ItemID or value.SlotID or value.TotemID then
+			if value.SpellID and IsPlayerSpell(value.SpellID) or value.ItemID or value.SlotID or value.TotemID then
 				if not cooldownTable[KEY] then cooldownTable[KEY] = {} end
 				cooldownTable[KEY][spellID] = true
 			end
@@ -315,6 +317,7 @@ local function InitSetup()
 	ConvertIntCDToNameTable()
 	BuildUnitIDTable()
 	BuildCooldownTable()
+	B:RegisterEvent("SPELLS_CHANGED", BuildCooldownTable)
 	BuildAura()
 	SetupAnchor()
 end
@@ -377,7 +380,7 @@ function A:AuraWatch_UpdateCD()
 			local group = AuraList[KEY]
 			local value = group.List[spellID]
 			if value then
-				if value.SpellID and IsPlayerSpell(value.SpellID) then
+				if value.SpellID then
 					local name, _, icon = GetSpellInfo(value.SpellID)
 					local start, duration = GetSpellCooldown(value.SpellID)
 					local charges, maxCharges, chargeStart, chargeDuration = GetSpellCharges(value.SpellID)
