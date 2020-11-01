@@ -217,6 +217,7 @@ local IncompatibleAddOns = {
 	["AuroraClassic"] = true,
 	["BigFoot"] = true,
 	["BigFoot"] = true,
+	["_ShiGuang"] = true,
 	["ClassicQuestLog"] = true,
 	["QuestGuru"] = true,
 	["QuestLogEx"] = true,
