@@ -326,6 +326,7 @@ G.AccountSettings = {
 	ContactList = {},
 	CustomJunkList = {},
 	ProfileIndex = {},
+	ProfileNames = {}
 }
 
 -- Initial settings
@@ -636,7 +637,7 @@ G.TabList = {
 	L["Tooltip"],
 	L["Misc"],
 	L["UI Settings"],
-	"Profile"
+	L["Profile"],
 }
 
 G.OptionList = { -- type, key, value, name, horizon, doubleline
@@ -1356,7 +1357,7 @@ local function updateTooltip()
 	end
 end
 
-local function createDataFrame()
+function G:CreateDataFrame()
 	if dataFrame then dataFrame:Show() return end
 
 	dataFrame = CreateFrame("Frame", nil, UIParent)
@@ -1420,6 +1421,8 @@ local function createDataFrame()
 	end)
 	accept:HookScript("OnLeave", B.HideTooltip)
 	dataFrame.text = accept.text
+
+	G.ProfileDataFrame = dataFrame
 end
 
 local function OpenGUI()
