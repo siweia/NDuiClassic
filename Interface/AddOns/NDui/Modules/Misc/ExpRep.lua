@@ -94,7 +94,7 @@ function M:SetupScript(bar)
 end
 
 function M:Expbar()
-	if not NDuiDB["Misc"]["ExpRep"] then return end
+	if not C.db["Misc"]["ExpRep"] then return end
 
 	local bar = CreateFrame("StatusBar", nil, MinimapCluster)
 	bar:SetPoint("TOPLEFT", Minimap, "BOTTOMLEFT", 5, -5)

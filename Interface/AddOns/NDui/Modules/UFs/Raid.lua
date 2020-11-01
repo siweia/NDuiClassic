@@ -108,7 +108,7 @@ local function buttonOnEnter(self)
 end
 
 function UF:CreateRaidDebuffs(self)
-	local scale = NDuiDB["UFs"]["RaidDebuffScale"]
+	local scale = C.db["UFs"]["RaidDebuffScale"]
 	local size = 18
 
 	local bu = CreateFrame("Frame", nil, self)
@@ -131,7 +131,7 @@ function UF:CreateRaidDebuffs(self)
 	bu.timer = B.CreateFS(bu, 12, "", false, "CENTER", 1, 0)
 	bu.glowFrame = B.CreateGlowFrame(bu, size)
 
-	if not NDuiDB["UFs"]["AurasClickThrough"] then
+	if not C.db["UFs"]["AurasClickThrough"] then
 		bu:SetScript("OnEnter", buttonOnEnter)
 		bu:SetScript("OnLeave", B.HideTooltip)
 	end
@@ -139,7 +139,7 @@ function UF:CreateRaidDebuffs(self)
 	bu.ShowDispellableDebuff = true
 	bu.ShowDebuffBorder = true
 	bu.FilterDispellableDebuff = true
-	if NDuiDB["UFs"]["InstanceAuras"] then
+	if C.db["UFs"]["InstanceAuras"] then
 		if not next(debuffList) then UF:UpdateRaidDebuffs() end
 		bu.Debuffs = debuffList
 	end
@@ -216,10 +216,10 @@ local defaultSpellList = {
 }
 
 function UF:DefaultClickSets()
-	if not next(NDuiDB["RaidClickSets"]) then
+	if not next(C.db["RaidClickSets"]) then
 		for k, v in pairs(defaultSpellList[DB.MyClass]) do
 			local clickSet = keyList[k][2]..keyList[k][1]
-			NDuiDB["RaidClickSets"][clickSet] = {keyList[k][1], keyList[k][2], v}
+			C.db["RaidClickSets"][clickSet] = {keyList[k][1], keyList[k][2], v}
 		end
 	end
 end
@@ -244,7 +244,7 @@ local onMouseString = "if not self:IsUnderMouse(false) then self:ClearBindings()
 
 local function setupMouseWheelCast(self)
 	local found
-	for _, data in pairs(NDuiDB["RaidClickSets"]) do
+	for _, data in pairs(C.db["RaidClickSets"]) do
 		if strmatch(data[1], L["Wheel"]) then
 			found = true
 			break
@@ -263,7 +263,7 @@ end
 local function setupClickSets(self)
 	if self.clickCastRegistered then return end
 
-	for _, data in pairs(NDuiDB["RaidClickSets"]) do
+	for _, data in pairs(C.db["RaidClickSets"]) do
 		local key, modKey, value = unpack(data)
 		for _, v in ipairs(keyList) do
 			if v[1] == key and v[2] == modKey then
@@ -294,7 +294,7 @@ end
 
 local pendingFrames = {}
 function UF:CreateClickSets(self)
-	if not NDuiDB["UFs"]["RaidClickSets"] then return end
+	if not C.db["UFs"]["RaidClickSets"] then return end
 
 	if InCombatLockdown() then
 		pendingFrames[self] = true
@@ -313,7 +313,7 @@ function UF:DelayClickSets()
 end
 
 function UF:AddClickSetsListener()
-	if not NDuiDB["UFs"]["RaidClickSets"] then return end
+	if not C.db["UFs"]["RaidClickSets"] then return end
 
 	B:RegisterEvent("PLAYER_REGEN_ENABLED", UF.DelayClickSets)
 end
@@ -359,7 +359,7 @@ function UF:UpdateBuffIndicator(event, unit)
 
 				for _, bu in pairs(buttons) do
 					if bu.anchor == value[1] then
-						if NDuiDB["UFs"]["BuffIndicatorType"] == 3 then
+						if C.db["UFs"]["BuffIndicatorType"] == 3 then
 							if duration and duration > 0 then
 								bu.expiration = expiration
 								bu:SetScript("OnUpdate", UF.BuffIndicatorOnUpdate)
@@ -374,7 +374,7 @@ function UF:UpdateBuffIndicator(event, unit)
 							else
 								bu.cd:Hide()
 							end
-							if NDuiDB["UFs"]["BuffIndicatorType"] == 1 then
+							if C.db["UFs"]["BuffIndicatorType"] == 1 then
 								bu.icon:SetVertexColor(unpack(value[2]))
 							else
 								bu.icon:SetTexture(texture)
@@ -398,7 +398,7 @@ function UF:UpdateBuffIndicator(event, unit)
 end
 
 function UF:RefreshBuffIndicator(bu)
-	if NDuiDB["UFs"]["BuffIndicatorType"] == 3 then
+	if C.db["UFs"]["BuffIndicatorType"] == 3 then
 		local point, anchorPoint, x, y = unpack(counterOffsets[bu.anchor][2])
 		bu.timer:Show()
 		bu.count:ClearAllPoints()
@@ -411,7 +411,7 @@ function UF:RefreshBuffIndicator(bu)
 		bu.timer:Hide()
 		bu.count:ClearAllPoints()
 		bu.count:SetPoint("CENTER", unpack(counterOffsets[bu.anchor][1]))
-		if NDuiDB["UFs"]["BuffIndicatorType"] == 1 then
+		if C.db["UFs"]["BuffIndicatorType"] == 1 then
 			bu.icon:SetTexture(DB.bdTex)
 		else
 			bu.icon:SetVertexColor(1, 1, 1)
@@ -423,8 +423,8 @@ function UF:RefreshBuffIndicator(bu)
 end
 
 function UF:CreateBuffIndicator(self)
-	if not NDuiDB["UFs"]["RaidBuffIndicator"] then return end
-	if NDuiDB["UFs"]["SimpleMode"] and not self.isPartyFrame then return end
+	if not C.db["UFs"]["RaidBuffIndicator"] then return end
+	if C.db["UFs"]["SimpleMode"] and not self.isPartyFrame then return end
 
 	local anchors = {"TOPLEFT", "TOP", "TOPRIGHT", "LEFT", "RIGHT", "BOTTOMLEFT", "BOTTOM", "BOTTOMRIGHT"}
 	local buttons = {}
@@ -432,7 +432,7 @@ function UF:CreateBuffIndicator(self)
 		local bu = CreateFrame("Frame", nil, self.Health)
 		bu:SetFrameLevel(self:GetFrameLevel()+10)
 		bu:SetSize(10, 10)
-		bu:SetScale(NDuiDB["UFs"]["BuffIndicatorScale"])
+		bu:SetScale(C.db["UFs"]["BuffIndicatorScale"])
 		bu:SetPoint(anchor)
 		bu:Hide()
 
@@ -462,11 +462,11 @@ function UF:RefreshRaidFrameIcons()
 	for _, frame in pairs(oUF.objects) do
 		if frame.mystyle == "raid" then
 			if frame.RaidDebuffs then
-				frame.RaidDebuffs:SetScale(NDuiDB["UFs"]["RaidDebuffScale"])
+				frame.RaidDebuffs:SetScale(C.db["UFs"]["RaidDebuffScale"])
 			end
 			if frame.BuffIndicator then
 				for _, bu in pairs(frame.BuffIndicator) do
-					bu:SetScale(NDuiDB["UFs"]["BuffIndicatorScale"])
+					bu:SetScale(C.db["UFs"]["BuffIndicatorScale"])
 					UF:RefreshBuffIndicator(bu)
 				end
 			end

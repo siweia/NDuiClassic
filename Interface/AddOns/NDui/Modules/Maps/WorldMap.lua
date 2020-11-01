@@ -91,8 +91,8 @@ end
 function module:UpdateMapScale()
 	if self.isMaximized and self:GetScale() ~= 1 then
 		self:SetScale(1)
-	elseif not self.isMaximized and self:GetScale() ~= NDuiDB["Map"]["MapScale"] then
-		self:SetScale(NDuiDB["Map"]["MapScale"])
+	elseif not self.isMaximized and self:GetScale() ~= C.db["Map"]["MapScale"] then
+		self:SetScale(C.db["Map"]["MapScale"])
 	end
 end
 
@@ -106,7 +106,7 @@ local function isMouseOverMap()
 end
 
 function module:MapFader()
-	if NDuiDB["Map"]["MapFader"] then
+	if C.db["Map"]["MapFader"] then
 		PlayerMovementFrameFader.AddDeferredFrame(WorldMapFrame, .5, 1, .5, isMouseOverMap)
 	else
 		PlayerMovementFrameFader.RemoveFrame(WorldMapFrame)
@@ -140,7 +140,7 @@ function module:MapPartyDots()
 end
 
 function module:SetupWorldMap()
-	if NDuiDB["Map"]["DisableMap"] then return end
+	if C.db["Map"]["DisableMap"] then return end
 	if IsAddOnLoaded("Mapster") then return end
 	if IsAddOnLoaded("Leatrix_Maps") then return end
 

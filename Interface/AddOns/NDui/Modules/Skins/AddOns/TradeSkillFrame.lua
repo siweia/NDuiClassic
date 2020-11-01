@@ -18,7 +18,7 @@ function S:TradeSkill_OnEvent(addon)
 end
 
 function S:TradeSkillSkin()
-	if not NDuiDB["Skins"]["TradeSkills"] then return end
+	if not C.db["Skins"]["TradeSkills"] then return end
 
 	B:RegisterEvent("ADDON_LOADED", S.TradeSkill_OnEvent)
 end
@@ -134,7 +134,7 @@ function S:EnhancedTradeSkill()
 	TradeSkillSubClassDropDown:SetPoint("RIGHT", TradeSkillInvSlotDropDown, "LEFT", 0, 0)
 
 	-- Reskin
-	if NDuiDB["Skins"]["BlizzardSkins"] then
+	if C.db["Skins"]["BlizzardSkins"] then
 		regions[2]:Hide()
 		regions[3]:Hide()
 		RecipeInset:Hide()
@@ -261,7 +261,7 @@ function S:EnhancedCraft()
 	CraftFrameCloseButton:SetPoint("TOPRIGHT", CraftFrame, "TOPRIGHT", -34, -13)
 
 	-- Reskin
-	if NDuiDB["Skins"]["BlizzardSkins"] then
+	if C.db["Skins"]["BlizzardSkins"] then
 		regions[2]:Hide()
 		regions[3]:Hide()
 		RecipeInset:Hide()

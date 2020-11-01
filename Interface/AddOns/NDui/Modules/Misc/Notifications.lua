@@ -43,13 +43,13 @@ for spellID in pairs(spellBlackList) do
 end
 
 function M:IsAllyPet(sourceFlags)
-	if DB:IsMyPet(sourceFlags) or (not NDuiDB["Misc"]["OwnInterrupt"] and (sourceFlags == DB.PartyPetFlags or sourceFlags == DB.RaidPetFlags)) then
+	if DB:IsMyPet(sourceFlags) or (not C.db["Misc"]["OwnInterrupt"] and (sourceFlags == DB.PartyPetFlags or sourceFlags == DB.RaidPetFlags)) then
 		return true
 	end
 end
 
 function M:InterruptAlert_Update(...)
-	if NDuiDB["Misc"]["AlertInInstance"] and (not IsInInstance()) then return end
+	if C.db["Misc"]["AlertInInstance"] and (not IsInInstance()) then return end
 
 	local _, eventType, _, sourceGUID, sourceName, sourceFlags, _, _, destName, _, _, _, spellName, _, _, extraskillName, _, auraType = ...
 	if not sourceGUID or sourceName == destName then return end
@@ -58,11 +58,11 @@ function M:InterruptAlert_Update(...)
 		local infoText = infoType[eventType]
 		if infoText then
 			if infoText == L["BrokenSpell"] then
-				if not NDuiDB["Misc"]["BrokenSpell"] then return end
+				if not C.db["Misc"]["BrokenSpell"] then return end
 				if auraType and auraType == AURA_TYPE_BUFF or blackList[spellName] then return end
 				SendChatMessage(format(infoText, sourceName, extraskillName, destName, spellName), msgChannel())
 			else
-				if NDuiDB["Misc"]["OwnInterrupt"] and sourceName ~= DB.MyName and not M:IsAllyPet(sourceFlags) then return end
+				if C.db["Misc"]["OwnInterrupt"] and sourceName ~= DB.MyName and not M:IsAllyPet(sourceFlags) then return end
 				SendChatMessage(format(infoText, sourceName, spellName, destName, extraskillName), msgChannel())
 			end
 		end
@@ -78,7 +78,7 @@ function M:InterruptAlert_CheckGroup()
 end
 
 function M:InterruptAlert()
-	if NDuiDB["Misc"]["Interrupt"] then
+	if C.db["Misc"]["Interrupt"] then
 		self:InterruptAlert_CheckGroup()
 		B:RegisterEvent("GROUP_LEFT", self.InterruptAlert_CheckGroup)
 		B:RegisterEvent("GROUP_JOINED", self.InterruptAlert_CheckGroup)
@@ -184,7 +184,7 @@ local itemList = {
 }
 
 function M:ItemAlert_Update(unit, _, spellID)
-	if not NDuiDB["Misc"]["PlacedItemAlert"] then return end
+	if not C.db["Misc"]["PlacedItemAlert"] then return end
 
 	if (UnitInRaid(unit) or UnitInParty(unit)) and spellID and itemList[spellID] and lastTime ~= GetTime() then
 		local who = UnitName(unit)

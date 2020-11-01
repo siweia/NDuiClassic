@@ -53,7 +53,7 @@ function M:CreateItemTexture(slot, relF, x, y)
 end
 
 function M:CreateColorBorder()
-	if NDuiDB["Skins"]["BlizzardSkins"] then return end
+	if C.db["Skins"]["BlizzardSkins"] then return end
 
 	local frame = CreateFrame("Frame", nil, self)
 	frame:SetAllPoints()
@@ -107,7 +107,7 @@ function M:RefreshButtonInfo()
 				if quality then
 					local color = DB.QualityColors[quality]
 					M:ItemBorderSetColor(slotFrame, color.r, color.g, color.b)
-					if NDuiDB["Misc"]["ShowItemLevel"] and level and level > 1 and quality > 1 then
+					if C.db["Misc"]["ShowItemLevel"] and level and level > 1 and quality > 1 then
 						slotFrame.iLvlText:SetText(level)
 						slotFrame.iLvlText:SetTextColor(color.r, color.g, color.b)
 					end
@@ -151,7 +151,7 @@ function M:ItemLevel_SetupLevel(frame, strType, unit)
 					if quality then
 						local color = DB.QualityColors[quality]
 						M:ItemBorderSetColor(slotFrame, color.r, color.g, color.b)
-						if NDuiDB["Misc"]["ShowItemLevel"] and level and level > 1 and quality > 1 then
+						if C.db["Misc"]["ShowItemLevel"] and level and level > 1 and quality > 1 then
 							slotFrame.iLvlText:SetText(level)
 							slotFrame.iLvlText:SetTextColor(color.r, color.g, color.b)
 						end
@@ -180,7 +180,7 @@ function M:ItemLevel_UpdateInspect(...)
 end
 
 function M:ShowItemLevel()
-	if not NDuiDB["Misc"]["ItemLevel"] then return end
+	if not C.db["Misc"]["ItemLevel"] then return end
 
 	-- iLvl on CharacterFrame
 	CharacterFrame:HookScript("OnShow", M.ItemLevel_UpdatePlayer)

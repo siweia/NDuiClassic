@@ -2,12 +2,12 @@ local _, ns = ...
 local B, C, L, DB = unpack(ns)
 
 tinsert(C.defaultThemes, function()
-	if not NDuiDB["Skins"]["FontOutline"] then return end
+	if not C.db["Skins"]["FontOutline"] then return end
 
 	local function ReskinFont(font, size)
 		local oldSize = select(2, font:GetFont())
 		size = size or oldSize
-		local fontSize = size*NDuiDB["Skins"]["FontScale"]
+		local fontSize = size*C.db["Skins"]["FontScale"]
 		font:SetFont(DB.Font[1], fontSize, DB.Font[3])
 		font:SetShadowColor(0, 0, 0, 0)
 	end

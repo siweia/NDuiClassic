@@ -10,7 +10,7 @@ local margin, padding = C.Bars.margin, C.Bars.padding
 
 function Bar:CreateCustomBar(anchor)
 	local showGrid = tonumber(GetCVar("alwaysShowActionBars"))
-	local size = NDuiDB["Actionbar"]["CustomBarButtonSize"]
+	local size = C.db["Actionbar"]["CustomBarButtonSize"]
 	local num = 12
 	local name = "NDui_CustomBar"
 	local page = DB.MyClass == "WARRIOR" and 10 or 8
@@ -37,7 +37,7 @@ function Bar:CreateCustomBar(anchor)
 		tinsert(Bar.buttons, button)
 	end
 
-	if NDuiDB["Actionbar"]["CustomBarFader"] and cfg.fader then
+	if C.db["Actionbar"]["CustomBarFader"] and cfg.fader then
 		Bar.CreateButtonFrameFader(frame, buttonList, cfg.fader)
 	end
 
@@ -48,9 +48,9 @@ function Bar:UpdateCustomBar()
 	local frame = _G.NDui_CustomBar
 	if not frame then return end
 
-	local size = NDuiDB["Actionbar"]["CustomBarButtonSize"]
-	local num = NDuiDB["Actionbar"]["CustomBarNumButtons"]
-	local perRow = NDuiDB["Actionbar"]["CustomBarNumPerRow"]
+	local size = C.db["Actionbar"]["CustomBarButtonSize"]
+	local num = C.db["Actionbar"]["CustomBarNumButtons"]
+	local perRow = C.db["Actionbar"]["CustomBarNumPerRow"]
 	for i = 1, num do
 		local button = frame.buttons[i]
 		button:SetSize(size, size)
@@ -80,7 +80,7 @@ function Bar:UpdateCustomBar()
 end
 
 function Bar:CustomBar()
-	if NDuiDB["Actionbar"]["CustomBar"] then
+	if C.db["Actionbar"]["CustomBar"] then
 		Bar:CreateCustomBar({"BOTTOM", UIParent, "BOTTOM", 0, 140})
 	end
 end

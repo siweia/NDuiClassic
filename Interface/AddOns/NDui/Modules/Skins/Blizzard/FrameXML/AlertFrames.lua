@@ -8,7 +8,7 @@ tinsert(C.defaultThemes, function()
 			frame = frame:GetParent()
 		end
 		if frame.bg then
-			frame.bg:SetBackdropColor(0, 0, 0, NDuiDB["Skins"]["SkinAlpha"])
+			frame.bg:SetBackdropColor(0, 0, 0, C.db["Skins"]["SkinAlpha"])
 			if frame.bg.Shadow then
 				frame.bg.Shadow:SetBackdropBorderColor(0, 0, 0, .4)
 			end
@@ -18,7 +18,7 @@ tinsert(C.defaultThemes, function()
 	local function fixParentbg(frame)
 		frame = frame:GetParent():GetParent()
 		if frame.bg then
-			frame.bg:SetBackdropColor(0, 0, 0, NDuiDB["Skins"]["SkinAlpha"])
+			frame.bg:SetBackdropColor(0, 0, 0, C.db["Skins"]["SkinAlpha"])
 			if frame.bg.Shadow then
 				frame.bg.Shadow:SetBackdropBorderColor(0, 0, 0, .4)
 			end

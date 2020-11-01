@@ -57,7 +57,7 @@ do
 		elseif s > 3 then
 			return format("|cffffff00%d|r", s), s - floor(s)
 		else
-			if NDuiDB["Actionbar"]["DecimalCD"] then
+			if C.db["Actionbar"]["DecimalCD"] then
 				return format("|cffff0000%.1f|r", s), s - format("%.1f", s)
 			else
 				return format("|cffff0000%d|r", s + .5), s - floor(s)
@@ -477,7 +477,7 @@ do
 
 	-- Backdrop shadow
 	function B:CreateSD(size, override)
-		if not override and not NDuiDB["Skins"]["Shadow"] then return end
+		if not override and not C.db["Skins"]["Shadow"] then return end
 		if self.Shadow then return end
 
 		local frame = self
@@ -573,7 +573,7 @@ do
 	function B:CreateBD(a)
 		self:SetBackdrop(nil)
 		B:PixelBorders(self)
-		B:SetBackdrop(self, a or NDuiDB["Skins"]["SkinAlpha"])
+		B:SetBackdrop(self, a or C.db["Skins"]["SkinAlpha"])
 		if not a then tinsert(C.frames, self) end
 	end
 
@@ -581,7 +581,7 @@ do
 		local tex = self:CreateTexture(nil, "BORDER")
 		tex:SetInside()
 		tex:SetTexture(DB.bdTex)
-		if NDuiDB["Skins"]["FlatMode"] then
+		if C.db["Skins"]["FlatMode"] then
 			tex:SetVertexColor(.3, .3, .3, .25)
 		else
 			tex:SetGradientAlpha("Vertical", 0, 0, 0, .5, .3, .3, .3, .3)
@@ -713,7 +713,7 @@ do
 	local function Button_OnEnter(self)
 		if not self:IsEnabled() then return end
 
-		if NDuiDB["Skins"]["FlatMode"] then
+		if C.db["Skins"]["FlatMode"] then
 			self.bgTex:SetVertexColor(cr / 4, cg / 4, cb / 4)
 		else
 			self:SetBackdropColor(cr, cg, cb, .25)
@@ -721,7 +721,7 @@ do
 		self:SetBackdropBorderColor(cr, cg, cb)
 	end
 	local function Button_OnLeave(self)
-		if NDuiDB["Skins"]["FlatMode"] then
+		if C.db["Skins"]["FlatMode"] then
 			self.bgTex:SetVertexColor(.3, .3, .3, .25)
 		else
 			self:SetBackdropColor(0, 0, 0, 0)
@@ -794,7 +794,7 @@ do
 		self.bg:SetBackdropBorderColor(0, 0, 0)
 	end
 	local function Menu_OnMouseUp(self)
-		self.bg:SetBackdropColor(0, 0, 0, NDuiDB["Skins"]["SkinAlpha"])
+		self.bg:SetBackdropColor(0, 0, 0, C.db["Skins"]["SkinAlpha"])
 	end
 	local function Menu_OnMouseDown(self)
 		self.bg:SetBackdropColor(cr, cg, cb, .25)

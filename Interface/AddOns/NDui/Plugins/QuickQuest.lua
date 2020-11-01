@@ -14,9 +14,9 @@ local function setupCheckButton()
 	mono:SetSize(26, 26)
 	B.ReskinCheck(mono, .25)
 	mono.text = B.CreateFS(mono, 14, L["Auto Quest"], false, "LEFT", 25, 0)
-	mono:SetChecked(NDuiDB["Misc"]["AutoQuest"])
+	mono:SetChecked(C.db["Misc"]["AutoQuest"])
 	mono:SetScript("OnClick", function(self)
-		NDuiDB["Misc"]["AutoQuest"] = self:GetChecked()
+		C.db["Misc"]["AutoQuest"] = self:GetChecked()
 	end)
 
 	created = true
@@ -34,7 +34,7 @@ QuickQuest:SetScript("OnEvent", function(self, event, ...) self[event](...) end)
 function QuickQuest:Register(event, func)
 	self:RegisterEvent(event)
 	self[event] = function(...)
-		if NDuiDB["Misc"]["AutoQuest"] and not IsShiftKeyDown() then
+		if C.db["Misc"]["AutoQuest"] and not IsShiftKeyDown() then
 			func(...)
 		end
 	end

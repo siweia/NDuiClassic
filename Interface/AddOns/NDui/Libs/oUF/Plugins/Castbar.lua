@@ -191,7 +191,7 @@ end
 function B:PostCastStart(unit)
 	self:SetAlpha(1)
 	self.Spark:Show()
-	local color = NDuiDB["UFs"]["CastingColor"]
+	local color = C.db["UFs"]["CastingColor"]
 	self:SetStatusBarColor(color.r, color.g, color.b)
 
 	if unit == "vehicle" then
@@ -230,7 +230,7 @@ function B:PostCastStart(unit)
 end
 
 function B:PostUpdateInterruptible(unit)
-	local color = NDuiDB["UFs"]["CastingColor"]
+	local color = C.db["UFs"]["CastingColor"]
 	if not UnitIsUnit(unit, "player") and self.notInterruptible then
 		color = NotInterruptColor
 	end

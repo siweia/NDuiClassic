@@ -253,15 +253,15 @@ local function onEvent(self, event, ...)
 		local atTarget = UnitGUID("target") == destGUID
 		local atPlayer = playerGUID == destGUID
 		local isVehicle = element.showPets and sourceFlags == DB.GuardianFlags
-		local isPet = NDuiDB["UFs"]["PetCombatText"] and DB:IsMyPet(sourceFlags)
+		local isPet = C.db["UFs"]["PetCombatText"] and DB:IsMyPet(sourceFlags)
 
 		if (unit == "target" and (isPlayer or isPet or isVehicle) and atTarget) or (unit == "player" and atPlayer) then
 			local value = eventFilter[eventType]
 			if not value then return end
 
 			if value.suffix == "DAMAGE" then
-				if value.autoAttack and not NDuiDB["UFs"]["AutoAttack"] then return end
-				if value.isPeriod and not NDuiDB["UFs"]["HotsDots"] then return end
+				if value.autoAttack and not C.db["UFs"]["AutoAttack"] then return end
+				if value.isPeriod and not C.db["UFs"]["HotsDots"] then return end
 
 				local amount, _, _, _, _, _, critical, _, crushing = select(value.index, ...)
 				texture = getFloatingIconTexture(value.iconType, spellID, isPet)
@@ -273,7 +273,7 @@ local function onEvent(self, event, ...)
 					critMark = true
 				end
 			elseif value.suffix == "HEAL" then
-				if value.isPeriod and not NDuiDB["UFs"]["HotsDots"] then return end
+				if value.isPeriod and not C.db["UFs"]["HotsDots"] then return end
 
 				local amount, overhealing, _, critical = select(value.index, ...)
 				texture = getFloatingIconTexture(value.iconType, spellID)
@@ -282,7 +282,7 @@ local function onEvent(self, event, ...)
 					amount = amount - overhealing
 					overhealText = " ("..formatNumber(self, overhealing)..")"
 				end
-				if amount == 0 and not NDuiDB["UFs"]["FCTOverHealing"] then return end
+				if amount == 0 and not C.db["UFs"]["FCTOverHealing"] then return end
 				text = "+"..formatNumber(self, amount)..overhealText
 				name = spellName
 
@@ -324,7 +324,7 @@ local function onEvent(self, event, ...)
 		local animation = element.defaultMode
 		local string = getAvailableString(element)
 
-		string:SetFont(element.font, NDuiDB["UFs"]["FCTFontSize"] * multiplier, element.fontFlags)
+		string:SetFont(element.font, C.db["UFs"]["FCTFontSize"] * multiplier, element.fontFlags)
 		if texture then
 			string:SetFormattedText(element.textureFormat, texture, (critMark and "*" or "")..text)
 		else

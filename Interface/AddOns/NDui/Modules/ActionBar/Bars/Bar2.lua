@@ -29,7 +29,7 @@ end
 function Bar:CreateBar2()
 	local num = NUM_ACTIONBAR_BUTTONS
 	local buttonList = {}
-	local layout = NDuiDB["Actionbar"]["Style"]
+	local layout = C.db["Actionbar"]["Style"]
 
 	local frame = CreateFrame("Frame", "NDui_ActionBar2", UIParent, "SecureHandlerStateTemplate")
 	frame.Pos = {"BOTTOM", _G.NDui_ActionBar1, "TOP", 0, -margin}

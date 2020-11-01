@@ -40,14 +40,14 @@ function TT:HideLines()
 				tiptext:SetText(nil)
 				tiptext:Hide()
 			elseif linetext == FACTION_HORDE then
-				if NDuiDB["Tooltip"]["FactionIcon"] then
+				if C.db["Tooltip"]["FactionIcon"] then
 					tiptext:SetText(nil)
 					tiptext:Hide()
 				else
 					tiptext:SetText("|cffff5040"..linetext.."|r")
 				end
 			elseif linetext == FACTION_ALLIANCE then
-				if NDuiDB["Tooltip"]["FactionIcon"] then
+				if C.db["Tooltip"]["FactionIcon"] then
 					tiptext:SetText(nil)
 					tiptext:Hide()
 				else
@@ -96,7 +96,7 @@ end
 
 function TT:OnTooltipSetUnit()
 	if self:IsForbidden() then return end
-	if NDuiDB["Tooltip"]["CombatHide"] and InCombatLockdown() then self:Hide() return end
+	if C.db["Tooltip"]["CombatHide"] and InCombatLockdown() then self:Hide() return end
 	TT.HideLines(self)
 
 	local unit = TT.GetUnit(self)
@@ -116,11 +116,11 @@ function TT:OnTooltipSetUnit()
 			local name, realm = UnitName(unit)
 			local pvpName = UnitPVPName(unit)
 			local relationship = UnitRealmRelationship(unit)
-			if not NDuiDB["Tooltip"]["HideTitle"] and pvpName then
+			if not C.db["Tooltip"]["HideTitle"] and pvpName then
 				name = pvpName
 			end
 			if realm and realm ~= "" then
-				if isShiftKeyDown or not NDuiDB["Tooltip"]["HideRealm"] then
+				if isShiftKeyDown or not C.db["Tooltip"]["HideRealm"] then
 					name = name.."-"..realm
 				elseif relationship == LE_REALM_RELATION_COALESCED then
 					name = name..FOREIGN_SERVER_LABEL
@@ -135,7 +135,7 @@ function TT:OnTooltipSetUnit()
 			end
 			GameTooltipTextLeft1:SetFormattedText("%s", name..(status or ""))
 
-			if NDuiDB["Tooltip"]["FactionIcon"] then
+			if C.db["Tooltip"]["FactionIcon"] then
 				local faction = UnitFactionGroup(unit)
 				if faction and faction ~= "Neutral" then
 					TT.InsertFactionFrame(self, faction)
@@ -153,11 +153,11 @@ function TT:OnTooltipSetUnit()
 				end
 
 				rankIndex = rankIndex + 1
-				if NDuiDB["Tooltip"]["HideRank"] then rank = "" end
+				if C.db["Tooltip"]["HideRank"] then rank = "" end
 				if guildRealm and isShiftKeyDown then
 					guildName = guildName.."-"..guildRealm
 				end
-				if NDuiDB["Tooltip"]["HideJunkGuild"] and not isShiftKeyDown then
+				if C.db["Tooltip"]["HideJunkGuild"] and not isShiftKeyDown then
 					if strlen(guildName) > 31 then guildName = "..." end
 				end
 				GameTooltipTextLeft2:SetText("<"..guildName.."> "..rank.."("..rankIndex..")")
@@ -270,7 +270,7 @@ function TT:GameTooltip_SetDefaultAnchor(parent)
 	if self:IsForbidden() then return end
 	if not parent then return end
 
-	if NDuiDB["Tooltip"]["Cursor"] then
+	if C.db["Tooltip"]["Cursor"] then
 		self:SetOwner(parent, "ANCHOR_CURSOR_RIGHT")
 	else
 		if not mover then
@@ -322,7 +322,7 @@ function TT:ReskinTooltip()
 		return
 	end
 	if self:IsForbidden() then return end
-	self:SetScale(NDuiDB["Tooltip"]["Scale"])
+	self:SetScale(C.db["Tooltip"]["Scale"])
 
 	if not self.tipStyled then
 		self:SetBackdrop(nil)
@@ -345,7 +345,7 @@ function TT:ReskinTooltip()
 	end
 
 	self.bg:SetBackdropBorderColor(0, 0, 0)
-	if NDuiDB["Tooltip"]["ClassColor"] and self.GetItem then
+	if C.db["Tooltip"]["ClassColor"] and self.GetItem then
 		local _, item = self:GetItem()
 		if item then
 			local quality = select(3, GetItemInfo(item))

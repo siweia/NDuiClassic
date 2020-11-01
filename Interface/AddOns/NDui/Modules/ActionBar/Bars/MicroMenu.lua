@@ -9,7 +9,7 @@ local buttonList = {}
 
 function Bar:MicroButton_SetupTexture(icon, texture)
 	local r, g, b = DB.r, DB.g, DB.b
-	if not NDuiDB["Skins"]["ClassLine"] then r, g, b = 0, 0, 0 end
+	if not C.db["Skins"]["ClassLine"] then r, g, b = 0, 0, 0 end
 
 	icon:SetOutside(nil, 3, 3)
 	icon:SetTexture(DB.MicroTex..texture)
@@ -32,14 +32,14 @@ function Bar:MicroButton_Create(parent, data)
 	bu:SetHighlightTexture(DB.MicroTex..texture)
 	local hl = bu:GetHighlightTexture()
 	Bar:MicroButton_SetupTexture(hl, texture)
-	if not NDuiDB["Skins"]["ClassLine"] then hl:SetVertexColor(1, 1, 1) end
+	if not C.db["Skins"]["ClassLine"] then hl:SetVertexColor(1, 1, 1) end
 end
 
 function Bar:MicroMenu_Lines(parent)
-	if not NDuiDB["Skins"]["MenuLine"] then return end
+	if not C.db["Skins"]["MenuLine"] then return end
 
 	local cr, cg, cb = 0, 0, 0
-	if NDuiDB["Skins"]["ClassLine"] then cr, cg, cb = DB.r, DB.g, DB.b end
+	if C.db["Skins"]["ClassLine"] then cr, cg, cb = DB.r, DB.g, DB.b end
 
 	local width, height = 150, 20
 	local anchors = {
@@ -62,7 +62,7 @@ function Bar:MicroMenu_Lines(parent)
 end
 
 function Bar:MicroMenu()
-	if not NDuiDB["Actionbar"]["MicroMenu"] then return end
+	if not C.db["Actionbar"]["MicroMenu"] then return end
 
 	local menubar = CreateFrame("Frame", nil, UIParent)
 	menubar:SetSize(238, 22)

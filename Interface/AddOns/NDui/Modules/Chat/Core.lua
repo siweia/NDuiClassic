@@ -24,7 +24,7 @@ end
 
 local isScaling = false
 function module:UpdateChatSize()
-	if not NDuiDB["Chat"]["Lock"] then return end
+	if not C.db["Chat"]["Lock"] then return end
 	if isScaling then return end
 	isScaling = true
 
@@ -40,8 +40,8 @@ function module:UpdateChatSize()
 	end
 	ChatFrame1:ClearAllPoints()
 	ChatFrame1:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 0, 30)
-	ChatFrame1:SetWidth(NDuiDB["Chat"]["ChatWidth"])
-	ChatFrame1:SetHeight(NDuiDB["Chat"]["ChatHeight"])
+	ChatFrame1:SetWidth(C.db["Chat"]["ChatWidth"])
+	ChatFrame1:SetHeight(C.db["Chat"]["ChatHeight"])
 
 	isScaling = false
 end
@@ -49,7 +49,7 @@ end
 local function BlackBackground(self)
 	local frame = B.SetBD(self.Background)
 	frame:SetPoint("BOTTOMRIGHT", 26, -7)
-	frame:SetShown(NDuiDB["Chat"]["ChatBGType"] == 2)
+	frame:SetShown(C.db["Chat"]["ChatBGType"] == 2)
 
 	return frame
 end
@@ -59,7 +59,7 @@ local function GradientBackground(self)
 	frame:SetPoint("TOPLEFT", self.Background)
 	frame:SetPoint("BOTTOMRIGHT", 26, -7)
 	frame:SetFrameLevel(0)
-	frame:SetShown(NDuiDB["Chat"]["ChatBGType"] == 3)
+	frame:SetShown(C.db["Chat"]["ChatBGType"] == 3)
 
 	local tex = B.SetGradient(frame, "H", 0, 0, 0, .5, 0)
 	tex:SetOutside()
@@ -122,10 +122,10 @@ function module:ToggleChatBackground()
 	for _, chatFrameName in ipairs(CHAT_FRAMES) do
 		local frame = _G[chatFrameName]
 		if frame.__background then
-			frame.__background:SetShown(NDuiDB["Chat"]["ChatBGType"] == 2)
+			frame.__background:SetShown(C.db["Chat"]["ChatBGType"] == 2)
 		end
 		if frame.__gradient then
-			frame.__gradient:SetShown(NDuiDB["Chat"]["ChatBGType"] == 3)
+			frame.__gradient:SetShown(C.db["Chat"]["ChatBGType"] == 3)
 		end
 	end
 end
@@ -198,7 +198,7 @@ hooksecurefunc("FloatingChatFrame_OnMouseScroll", module.QuickMouseScroll)
 -- Autoinvite by whisper
 local whisperList = {}
 function module:UpdateWhisperList()
-	B.SplitList(whisperList, NDuiDB["Chat"]["Keyword"], true)
+	B.SplitList(whisperList, C.db["Chat"]["Keyword"], true)
 end
 
 function module:IsUnitInGuild(unitName)
@@ -221,12 +221,12 @@ function module.OnChatWhisper(event, ...)
 				local gameID = select(6, BNGetFriendInfoByID(presenceID))
 				if gameID then
 					local _, charName, _, realmName = BNGetGameAccountInfo(gameID)
-					if CanCooperateWithGameAccount(gameID) and (not NDuiDB["Chat"]["GuildInvite"] or module:IsUnitInGuild(charName.."-"..realmName)) then
+					if CanCooperateWithGameAccount(gameID) and (not C.db["Chat"]["GuildInvite"] or module:IsUnitInGuild(charName.."-"..realmName)) then
 						BNInviteFriend(gameID)
 					end
 				end
 			else
-				if not NDuiDB["Chat"]["GuildInvite"] or IsGuildMember(guid) then
+				if not C.db["Chat"]["GuildInvite"] or IsGuildMember(guid) then
 					InviteToGroup(author)
 				end
 			end
@@ -235,7 +235,7 @@ function module.OnChatWhisper(event, ...)
 end
 
 function module:WhisperInvite()
-	if not NDuiDB["Chat"]["Invite"] then return end
+	if not C.db["Chat"]["Invite"] then return end
 	self:UpdateWhisperList()
 	B:RegisterEvent("CHAT_MSG_WHISPER", module.OnChatWhisper)
 	B:RegisterEvent("CHAT_MSG_BN_WHISPER", module.OnChatWhisper)
@@ -243,7 +243,7 @@ end
 
 -- Sticky whisper
 function module:ChatWhisperSticky()
-	if NDuiDB["Chat"]["Sticky"] then
+	if C.db["Chat"]["Sticky"] then
 		ChatTypeInfo["WHISPER"].sticky = 1
 		ChatTypeInfo["BN_WHISPER"].sticky = 1
 	else
@@ -283,7 +283,7 @@ function module:UpdateTabEventColors(event)
 end
 
 function module:OnLogin()
-	fontOutline = NDuiDB["Skins"]["FontOutline"] and "OUTLINE" or ""
+	fontOutline = C.db["Skins"]["FontOutline"] and "OUTLINE" or ""
 
 	for i = 1, NUM_CHAT_WINDOWS do
 		self.SkinChat(_G["ChatFrame"..i])
@@ -321,7 +321,7 @@ function module:OnLogin()
 	self:WhisperInvite()
 
 	-- Lock chatframe
-	if NDuiDB["Chat"]["Lock"] then
+	if C.db["Chat"]["Lock"] then
 		hooksecurefunc("FCF_SavePositionAndDimensions", self.UpdateChatSize)
 		B:RegisterEvent("UI_SCALE_CHANGED", self.UpdateChatSize)
 		self:UpdateChatSize()
@@ -329,7 +329,7 @@ function module:OnLogin()
 
 	-- ProfanityFilter
 	if not BNFeaturesEnabledAndConnected() then return end
-	if NDuiDB["Chat"]["Freedom"] then
+	if C.db["Chat"]["Freedom"] then
 		if GetCVar("portal") == "CN" then
 			ConsoleExec("portal TW")
 		end

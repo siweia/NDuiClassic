@@ -157,7 +157,7 @@ function A:CreateLumos(self)
 	if not A.ChantLumos then return end
 
 	self.bu = {}
-	local iconSize = (NDuiDB["Nameplate"]["PPWidth"] - C.margin*4)/5
+	local iconSize = (C.db["Nameplate"]["PPWidth"] - C.margin*4)/5
 	for i = 1, 5 do
 		local bu = CreateFrame("Frame", nil, self.Health)
 		bu:SetSize(iconSize, iconSize)

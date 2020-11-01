@@ -118,7 +118,7 @@ local function MapExplorationPin_RefreshOverlays(pin, fullUpdate)
 					texture:SetPoint("TOPLEFT", offsetX + (TILE_SIZE_WIDTH * (k-1)), -(offsetY + (TILE_SIZE_HEIGHT * (j - 1))))
 					texture:SetTexture(tonumber(fileDataIDs[((j - 1) * numTexturesWide) + k]), nil, nil, "TRILINEAR")
 					texture:SetDrawLayer("ARTWORK", -1)
-					if NDuiDB["Map"]["MapReveal"] then
+					if C.db["Map"]["MapReveal"] then
 						texture:Show()
 						if fullUpdate then
 							pin.textureLoadGroup:AddTexture(texture)
@@ -126,7 +126,7 @@ local function MapExplorationPin_RefreshOverlays(pin, fullUpdate)
 					else
 						texture:Hide()
 					end
-					if NDuiDB["Map"]["MapRevealGlow"] then
+					if C.db["Map"]["MapRevealGlow"] then
 						texture:SetVertexColor(.7, .7, .7)
 					else
 						texture:SetVertexColor(1, 1, 1)
@@ -154,7 +154,7 @@ function module:MapReveal()
 	bu:SetPoint("TOPRIGHT", -270, 0)
 	bu:SetSize(26, 26)
 	B.ReskinCheck(bu)
-	bu:SetChecked(NDuiDB["Map"]["MapReveal"])
+	bu:SetChecked(C.db["Map"]["MapReveal"])
 	bu.text = B.CreateFS(bu, 14, L["Map Reveal"], false, "LEFT", 25, 0)
 
 	for pin in WorldMapFrame:EnumeratePinsByTemplate("MapExplorationPinTemplate") do
@@ -163,10 +163,10 @@ function module:MapReveal()
 	end
 
 	bu:SetScript("OnClick", function(self)
-		NDuiDB["Map"]["MapReveal"] = self:GetChecked()
+		C.db["Map"]["MapReveal"] = self:GetChecked()
 
 		for i = 1, #overlayTextures do
-			overlayTextures[i]:SetShown(NDuiDB["Map"]["MapReveal"])
+			overlayTextures[i]:SetShown(C.db["Map"]["MapReveal"])
 		end
 	end)
 end

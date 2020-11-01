@@ -50,7 +50,7 @@ function S:EnhancedQuestLog()
 		button:SetPoint("TOPLEFT", _G["QuestLogTitle"..(i-1)], "BOTTOMLEFT", 0, 1)
 	end
 
-	if not NDuiDB["Skins"]["BlizzardSkins"] then
+	if not C.db["Skins"]["BlizzardSkins"] then
 		-- Get quest frame textures
 		local regions = {QuestLogFrame:GetRegions()}
 		-- Set top left texture
@@ -85,7 +85,7 @@ function S:EnhancedQuestLog()
 	logMapButton:SetPoint("LEFT", QuestFramePushQuestButton, "RIGHT", 3, 0)
 	logMapButton:SetSize(100, 22)
 	logMapButton:SetScript("OnClick", ToggleWorldMap)
-	if NDuiDB["Skins"]["BlizzardSkins"] then B.Reskin(logMapButton) end
+	if C.db["Skins"]["BlizzardSkins"] then B.Reskin(logMapButton) end
 
 	-- Position and size close button
 	QuestFrameExitButton:SetSize(80, 22)
@@ -182,14 +182,14 @@ function S:EnhancedQuestTracker()
 	bu.collapse = false
 	bu:SetNormalTexture("Interface\\Buttons\\UI-MinusButton-Up")
 	bu:SetHighlightTexture("Interface\\Buttons\\UI-PlusButton-Hilight")
-	if NDuiDB["Skins"]["BlizzardSkins"] then
+	if C.db["Skins"]["BlizzardSkins"] then
 		bu:SetPoint("TOPRIGHT", 0, 14)
 		B.ReskinExpandOrCollapse(bu)
 		bu:SetNormalTexture("Interface\\Buttons\\UI-MinusButton-Up")
 	end
 	bu:SetShown(GetNumQuestWatches() > 0)
 
-	bu.Text = B.CreateFS(bu, 16, TRACKER_HEADER_OBJECTIVE, "system", "RIGHT", -24, NDuiDB["Skins"]["BlizzardSkins"] and 3 or 0)
+	bu.Text = B.CreateFS(bu, 16, TRACKER_HEADER_OBJECTIVE, "system", "RIGHT", -24, C.db["Skins"]["BlizzardSkins"] and 3 or 0)
 	bu.Text:Hide()
 
 	bu:SetScript("OnClick", function(self)
@@ -351,7 +351,7 @@ function S:QuestTracker()
 		end
 	end)
 
-	if not NDuiDB["Skins"]["QuestTracker"] then return end
+	if not C.db["Skins"]["QuestTracker"] then return end
 
 	S:EnhancedQuestLog()
 	S:EnhancedQuestTracker()

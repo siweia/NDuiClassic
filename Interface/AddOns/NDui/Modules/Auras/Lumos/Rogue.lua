@@ -16,7 +16,7 @@ local diceSpells = {
 function A:PostCreateLumos(self)
 	local iconSize = (self:GetWidth() - 10)/6
 	local buttons = {}
-	local offset = NDuiDB["Nameplate"]["NameplateClassPower"] and C.margin or (C.margin*2 + NDuiDB["Nameplate"]["PPBarHeight"])
+	local offset = C.db["Nameplate"]["NameplateClassPower"] and C.margin or (C.margin*2 + C.db["Nameplate"]["PPBarHeight"])
 	for i = 1, 6 do
 		local bu = CreateFrame("Frame", nil, self.Health)
 		bu:SetSize(iconSize, iconSize)

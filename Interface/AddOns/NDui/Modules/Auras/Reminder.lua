@@ -109,7 +109,7 @@ end
 function A:InitReminder()
 	if not groups then return end
 
-	if NDuiDB["Auras"]["Reminder"] then
+	if C.db["Auras"]["Reminder"] then
 		if not parentFrame then
 			parentFrame = CreateFrame("Frame", nil, UIParent)
 			parentFrame:SetPoint("CENTER", -220, 130)

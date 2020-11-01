@@ -9,7 +9,7 @@ local CastSpellByID, GetTrackingTexture = CastSpellByID, GetTrackingTexture
 local cr, cg, cb = DB.r, DB.g, DB.b
 
 function module:CreatePulse()
-	if not NDuiDB["Map"]["CombatPulse"] then return end
+	if not C.db["Map"]["CombatPulse"] then return end
 
 	local bg = B.CreateBDFrame(Minimap, nil, true)
 	local anim = bg:CreateAnimationGroup()
@@ -95,7 +95,7 @@ function module:ReskinRegions()
 end
 
 function module:RecycleBin()
-	if not NDuiDB["Map"]["ShowRecycleBin"] then return end
+	if not C.db["Map"]["ShowRecycleBin"] then return end
 
 	local buttons = {}
 	local blackList = {
@@ -252,7 +252,7 @@ function module:RecycleBin()
 end
 
 function module:WhoPingsMyMap()
-	if not NDuiDB["Map"]["WhoPings"] then return end
+	if not C.db["Map"]["WhoPings"] then return end
 
 	local f = CreateFrame("Frame", nil, Minimap)
 	f:SetAllPoints()
@@ -284,13 +284,13 @@ end
 
 function module:UpdateMinimapScale()
 	local size = Minimap:GetWidth()
-	local scale = NDuiDB["Map"]["MinimapScale"]
+	local scale = C.db["Map"]["MinimapScale"]
 	Minimap:SetScale(scale)
 	Minimap.mover:SetSize(size*scale, size*scale)
 end
 
 function module:ShowMinimapClock()
-	if NDuiDB["Map"]["Clock"] then
+	if C.db["Map"]["Clock"] then
 		if not TimeManagerClockButton then LoadAddOn("Blizzard_TimeManager") end
 		if not TimeManagerClockButton.styled then
 			TimeManagerClockButton:DisableDrawLayer("BORDER")

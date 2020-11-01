@@ -27,13 +27,13 @@ local function SetFrameSize(frame, size, num)
 end
 
 function Bar:CreateStancebar()
-	if not NDuiDB["Actionbar"]["ShowStance"] then return end
+	if not C.db["Actionbar"]["ShowStance"] then return end
 
 	local num = NUM_STANCE_SLOTS
 	local buttonList = {}
 
 	local frame = CreateFrame("Frame", "NDui_ActionBarStance", UIParent, "SecureHandlerStateTemplate")
-	local anchor = NDuiDB["Actionbar"]["Style"] == 4 and _G.NDui_ActionBar3 or _G.NDui_ActionBar2
+	local anchor = C.db["Actionbar"]["Style"] == 4 and _G.NDui_ActionBar3 or _G.NDui_ActionBar2
 	frame.Pos = {"BOTTOMLEFT", anchor, "TOPLEFT", 0, margin}
 
 	-- StanceBar
