@@ -207,4 +207,22 @@ DB.ReminderBuffs = {
 			pvp = true,
 		},
 	},
+	HUNTER = {
+		{	spells = {	-- 雄鹰守护
+				[13165] = true, 
+			},
+			depend = 13165,
+			combat = true,
+			instance = true,
+			pvp = true,
+		},
+		{	spells = {	--- 强击光环
+				[20906] = true,
+			},
+			depend = 20906,
+			combat = true,
+			instance = true,
+			pvp = true,
+		},
+	},
 }
