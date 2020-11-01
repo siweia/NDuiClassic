@@ -1695,6 +1695,7 @@ local function parseHealDelayed(casterGUID, startTimeRelative, endTimeRelative, 
 	local endTime = endTimeRelative + GetTime()
 	if not casterGUID then return end
 	local pending = (pendingHeals[casterGUID][spellName] or pendingHots[casterGUID][spellName])
+	if not pending then return end
 	-- It's possible to get duplicate interrupted due to raid1 = party1, player = raid# etc etc, just block it here
 	if( pending.endTime == endTime and pending.startTime == startTime ) then return end
 
