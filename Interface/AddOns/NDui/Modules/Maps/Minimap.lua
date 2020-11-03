@@ -342,9 +342,6 @@ function module:EasyTrackMenu()
 		5502,	--Sense Undead
 	}
 
-	local menuFrame = CreateFrame("Frame", "NDui_EasyTrackMenu", UIParent, "UIDropDownMenuTemplate")
-	menuFrame:SetFrameStrata("TOOLTIP")
-	menuFrame:Hide()
 	local menuList = {
 		[1] = {text = L["TrackMenu"], isTitle = true, notCheckable = true},
 	}
@@ -377,7 +374,7 @@ function module:EasyTrackMenu()
 			local index = updateMenuList()
 			if index > 2 then
 				local offset = self:GetWidth()*self:GetScale()*.5
-				EasyMenu(menuList, menuFrame, self, -offset, offset, "MENU")
+				EasyMenu(menuList, B.EasyMenu, self, -offset, offset, "MENU")
 			end
 		end
 	end
