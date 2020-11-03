@@ -11,6 +11,7 @@ local UnitGUID, GetPlayerInfoByGUID, Ambiguate, UnitName, UnitHealth, UnitHealth
 local SetCVar, UIFrameFadeIn, UIFrameFadeOut = SetCVar, UIFrameFadeIn, UIFrameFadeOut
 local C_NamePlate_GetNamePlateForUnit = C_NamePlate.GetNamePlateForUnit
 local INTERRUPTED = INTERRUPTED
+local _QuestieTooltips, _QuestiePlayer, _QuestieQuest
 
 -- Init
 function UF:UpdatePlateScale()
@@ -30,6 +31,12 @@ function UF:SetupCVars()
 	UF:UpdatePlateScale()
 	SetCVar("nameplateSelectedScale", 1)
 	SetCVar("nameplateLargerScale", 1)
+
+	if IsAddOnLoaded("Questie") then
+		_QuestieQuest = QuestieLoader:ImportModule("QuestieQuest")
+		_QuestiePlayer = QuestieLoader:ImportModule("QuestiePlayer")
+		_QuestieTooltips = QuestieLoader:ImportModule("QuestieTooltips")
+	end
 end
 
 function UF:BlockAddons()
@@ -337,17 +344,19 @@ function UF:UpdateQuestUnit(_, unit)
 	end
 end
 
-function UF:UpdateForQuestie(name)
-	local data = name and QuestieTooltips.tooltipLookup["u_"..name]
+function UF:UpdateForQuestie(npcID)
+	local data = _QuestieTooltips.lookupByKey and _QuestieTooltips.lookupByKey["m_"..npcID]
 	if data then
 		local foundObjective, progressText
 		for _, tooltip in pairs(data) do
-			local questID = tooltip.Objective.QuestData.Id
-			QuestieQuest:UpdateQuest(questID)
-			if qCurrentQuestlog[questID] then
+			local questID = tooltip.questId
+			_QuestieQuest:UpdateQuest(questID)
+
+			if _QuestiePlayer.currentQuestlog[questID] then
 				foundObjective = true
-				if tooltip.Objective.Needed then
-					progressText = tooltip.Objective.Needed - tooltip.Objective.Collected
+
+				if tooltip.objective.Needed then
+					progressText = tooltip.objective.Needed - tooltip.objective.Collected
 					if progressText == 0 then
 						foundObjective = nil
 					end
@@ -355,6 +364,7 @@ function UF:UpdateForQuestie(name)
 				end
 			end
 		end
+
 		if foundObjective then
 			self.questIcon:Show()
 			self.questCount:SetText(progressText)
@@ -416,11 +426,10 @@ function UF:UpdateQuestIndicator()
 	self.questIcon:Hide()
 	self.questCount:SetText("")
 
-	local name = self.unitName
 	if CodexMap then
-		UF.UpdateCodexQuestUnit(self, name)
-	elseif QuestieTooltips then
-		UF.UpdateForQuestie(self, name)
+		UF.UpdateCodexQuestUnit(self, self.unitName)
+	elseif _QuestieTooltips then
+		UF.UpdateForQuestie(self, self.npcID)
 	end
 end
 
@@ -428,12 +437,12 @@ function UF:AddQuestIcon(self)
 	if not C.db["Nameplate"]["QuestIndicator"] then return end
 
 	local qicon = self:CreateTexture(nil, "OVERLAY", nil, 2)
-	qicon:SetPoint("LEFT", self, "RIGHT", 2, 0)
-	qicon:SetSize(16, 16)
+	qicon:SetPoint("LEFT", self, "RIGHT", 4, 0)
+	qicon:SetSize(28, 28)
 	qicon:SetAtlas(DB.questTex)
 	qicon:Hide()
-	local count = B.CreateFS(self, 12, "", nil, "LEFT", 0, 0)
-	count:SetPoint("LEFT", qicon, "RIGHT", -2, 0)
+	local count = B.CreateFS(self, 18, "", nil, "LEFT", 0, 0)
+	count:SetPoint("LEFT", qicon, "RIGHT", -4, 0)
 	count:SetTextColor(.6, .8, 1)
 
 	self.questIcon = qicon
