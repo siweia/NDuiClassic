@@ -112,7 +112,7 @@ function UF:UpdateRaidHealthMethod()
 	for _, frame in pairs(oUF.objects) do
 		if frame.mystyle == "raid" then
 			frame:SetHealthUpdateMethod(C.db["UFs"]["FrequentHealth"])
-			frame:SetHealthUpdateSpeed(C.db["UFs"]["HealthFrequency"])
+			frame:SetHealthUpdateSpeed(max(.02, C.db["UFs"]["HealthFrequency"]))
 			frame.Health:ForceUpdate()
 		end
 	end
