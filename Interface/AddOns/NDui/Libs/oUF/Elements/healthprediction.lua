@@ -97,6 +97,10 @@ local function Update(self, event, unit)
 		--otherIncomingHeal = HealComm:GetOthersHealAmount(guid, HealComm.ALL_HEALS) or 0
 	end
 
+	if UnitIsDeadOrGhost(unit) then
+		myIncomingHeal, otherIncomingHeal = 0, 0
+	end
+
 	if(element.myBar) then
 		element.myBar:SetMinMaxValues(0, maxHealth)
 		element.myBar:SetValue(myIncomingHeal)
