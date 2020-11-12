@@ -5,11 +5,12 @@ local cr, cg, cb = DB.r, DB.g, DB.b
 
 local _G = _G
 local tostring, pairs, ipairs, strsub, strlower = tostring, pairs, ipairs, string.sub, string.lower
-local IsInGroup, IsInRaid, IsInGuild, IsShiftKeyDown, IsControlKeyDown = IsInGroup, IsInRaid, IsInGuild, IsShiftKeyDown, IsControlKeyDown
-local ChatEdit_UpdateHeader, GetChannelList, GetCVar, SetCVar, Ambiguate = ChatEdit_UpdateHeader, GetChannelList, GetCVar, SetCVar, Ambiguate
+local IsInGroup, IsInRaid, IsInGuild, IsShiftKeyDown, IsControlKeyDown, PlaySound = IsInGroup, IsInRaid, IsInGuild, IsShiftKeyDown, IsControlKeyDown, PlaySound
+local ChatEdit_UpdateHeader, GetChannelList, GetCVar, SetCVar, Ambiguate, GetTime = ChatEdit_UpdateHeader, GetChannelList, GetCVar, SetCVar, Ambiguate, GetTime
 local GetNumGuildMembers, GetGuildRosterInfo, IsGuildMember, UnitIsGroupLeader, UnitIsGroupAssistant, InviteToGroup = GetNumGuildMembers, GetGuildRosterInfo, IsGuildMember, UnitIsGroupLeader, UnitIsGroupAssistant, InviteToGroup
 local BNGetFriendInfoByID, BNGetGameAccountInfo, CanCooperateWithGameAccount, BNInviteFriend, BNFeaturesEnabledAndConnected = BNGetFriendInfoByID, BNGetGameAccountInfo, CanCooperateWithGameAccount, BNInviteFriend, BNFeaturesEnabledAndConnected
 local GeneralDockManager = GeneralDockManager
+local messageSoundID = SOUNDKIT.TELL_MESSAGE
 
 local maxLines = 1024
 local fontOutline
@@ -236,7 +237,7 @@ end
 
 function module:WhisperInvite()
 	if not C.db["Chat"]["Invite"] then return end
-	self:UpdateWhisperList()
+	module:UpdateWhisperList()
 	B:RegisterEvent("CHAT_MSG_WHISPER", module.OnChatWhisper)
 	B:RegisterEvent("CHAT_MSG_BN_WHISPER", module.OnChatWhisper)
 end
@@ -282,24 +283,39 @@ function module:UpdateTabEventColors(event)
 	end
 end
 
+local whisperEvents = {
+	["CHAT_MSG_WHISPER"] = true,
+	["CHAT_MSG_BN_WHISPER"] = true,
+}
+function module:PlayWhisperSound(event)
+	if whisperEvents[event] then
+		local currentTime = GetTime()
+		if not self.soundTimer or currentTime > self.soundTimer then
+			PlaySound(messageSoundID, "master")
+		end
+		self.soundTimer = currentTime + 5
+	end
+end
+
 function module:OnLogin()
 	fontOutline = C.db["Skins"]["FontOutline"] and "OUTLINE" or ""
 
 	for i = 1, NUM_CHAT_WINDOWS do
-		self.SkinChat(_G["ChatFrame"..i])
+		module.SkinChat(_G["ChatFrame"..i])
 	end
 
 	hooksecurefunc("FCF_OpenTemporaryWindow", function()
 		for _, chatFrameName in ipairs(CHAT_FRAMES) do
 			local frame = _G[chatFrameName]
 			if frame.isTemporary then
-				self.SkinChat(frame)
+				module.SkinChat(frame)
 			end
 		end
 	end)
 
-	hooksecurefunc("FCFTab_UpdateColors", self.UpdateTabColors)
-	hooksecurefunc("FloatingChatFrame_OnEvent", self.UpdateTabEventColors)
+	hooksecurefunc("FCFTab_UpdateColors", module.UpdateTabColors)
+	hooksecurefunc("FloatingChatFrame_OnEvent", module.UpdateTabEventColors)
+	hooksecurefunc("ChatFrame_ConfigEventHandler", module.PlayWhisperSound)
 
 	-- Font size
 	for i = 1, 15 do
@@ -312,19 +328,19 @@ function module:OnLogin()
 	CombatLogQuickButtonFrame_CustomTexture:SetTexture(nil)
 
 	-- Add Elements
-	self:ChatWhisperSticky()
-	self:ChatFilter()
-	self:ChannelRename()
-	self:Chatbar()
-	self:ChatCopy()
-	self:UrlCopy()
-	self:WhisperInvite()
+	module:ChatWhisperSticky()
+	module:ChatFilter()
+	module:ChannelRename()
+	module:Chatbar()
+	module:ChatCopy()
+	module:UrlCopy()
+	module:WhisperInvite()
 
 	-- Lock chatframe
 	if C.db["Chat"]["Lock"] then
-		hooksecurefunc("FCF_SavePositionAndDimensions", self.UpdateChatSize)
-		B:RegisterEvent("UI_SCALE_CHANGED", self.UpdateChatSize)
-		self:UpdateChatSize()
+		hooksecurefunc("FCF_SavePositionAndDimensions", module.UpdateChatSize)
+		B:RegisterEvent("UI_SCALE_CHANGED", module.UpdateChatSize)
+		module:UpdateChatSize()
 	end
 
 	-- ProfanityFilter
