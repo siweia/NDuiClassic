@@ -5,7 +5,7 @@ local oUF = ns.oUF or oUF
 local UF = B:RegisterModule("UnitFrames")
 
 local format, floor = string.format, math.floor
-local pairs, next = pairs, next
+local pairs = pairs
 
 -- Custom colors
 oUF.colors.smooth = {1, 0, 0, .85, .8, .45, .1, .1, .1}

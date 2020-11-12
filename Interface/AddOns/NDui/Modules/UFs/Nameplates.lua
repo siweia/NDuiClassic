@@ -93,7 +93,6 @@ function UF:UpdateColor(_, unit)
 	local isPlayer = self.isPlayer
 	local isFriendly = self.isFriendly
 	local status = UnitThreatSituation("player", unit) or false -- just in case
-	local isTargeting = UnitIsUnit(unit.."target", "player")
 	local customColor = C.db["Nameplate"]["CustomColor"]
 	local secureColor = C.db["Nameplate"]["SecureColor"]
 	local transColor = C.db["Nameplate"]["TransColor"]

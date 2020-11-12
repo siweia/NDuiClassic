@@ -48,8 +48,8 @@ tinsert(C.defaultThemes, function()
 
 	hooksecurefunc("ChatConfig_CreateBoxes", function(frame, boxTable)
 		local nameString = frame:GetName().."Box"
-		for index, value in ipairs(boxTable) do
-			boxName = nameString..index
+		for index in ipairs(boxTable) do
+			local boxName = nameString..index
 			local box = _G[boxName]
 			if box and not box.styled then
 				box:SetBackdrop(nil)

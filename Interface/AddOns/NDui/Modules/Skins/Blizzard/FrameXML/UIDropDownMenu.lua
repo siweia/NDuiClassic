@@ -32,21 +32,7 @@ tinsert(C.defaultThemes, function()
 		end
 	end)
 
-	local function toggleBackdrop(bu, show)
-		if show then
-			bu.bg:Show()
-		else
-			bu.bg:Hide()
-		end
-	end
-
-	local function isCheckTexture(check)
-		if check:GetTexture() == "Interface\\Common\\UI-DropDownRadioChecks" then
-			return true
-		end
-	end
-
-	hooksecurefunc("ToggleDropDownMenu", function(level, _, dropDownFrame, anchorName)
+	hooksecurefunc("ToggleDropDownMenu", function(level)
 		if not level then level = 1 end
 
 		local listFrame = _G["DropDownList"..level]
