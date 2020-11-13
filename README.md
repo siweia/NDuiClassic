@@ -3,7 +3,7 @@
 
 # NDui Classic
 - A classic version of [NDui](https://github.com/siweia/NDui) for World of Warcraft classic.
-- Locales include 简体中文, 繁體中文 and enUS.
+- Locales include 简体中文, 繁體中文, koKR and enUS.
 - Published Pages:
   - NGA: https://bbs.nga.cn/read.php?tid=18321155
   - Curse: https://www.curseforge.com/wow/addons/ndui-classic
