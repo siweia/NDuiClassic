@@ -1127,6 +1127,11 @@ local function CreateOption(i)
 	footer:SetPoint("TOPLEFT", 25, -offset)
 end
 
+local function scrollBarHook(self, delta)
+	local scrollBar = self.ScrollBar
+	scrollBar:SetValue(scrollBar:GetValue() - delta*35)
+end
+
 local function OpenGUI()
 	if f then f:Show() return end
 
@@ -1166,6 +1171,7 @@ local function OpenGUI()
 		guiPage[i].child:SetSize(610, 1)
 		guiPage[i]:SetScrollChild(guiPage[i].child)
 		B.ReskinScroll(guiPage[i].ScrollBar)
+		guiPage[i]:SetScript("OnMouseWheel", scrollBarHook)
 
 		CreateOption(i)
 	end
