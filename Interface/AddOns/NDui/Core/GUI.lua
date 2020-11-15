@@ -1162,8 +1162,8 @@ function G:AddContactFrame()
 	local lr = B.SetGradient(frame, "H", .7, .7, .7, .5, 0, 80, C.mult)
 	lr:SetPoint("TOP", 40, -32)
 
-	CreateContactBox(frame, "NGA.CN", "https://bbs.nga.cn/read.php?tid=5483616", 1)
-	CreateContactBox(frame, "GitHub", "https://github.com/siweia/NDui", 2)
+	CreateContactBox(frame, "NGA.CN", "https://bbs.nga.cn/read.php?tid=18321155", 1)
+	CreateContactBox(frame, "GitHub", "https://github.com/siweia/NDuiClassic", 2)
 	CreateContactBox(frame, "Discord", "https://discord.gg/WXgrfBm", 3)
 
 	local back = B.CreateButton(frame, 120, 20, OKAY)
