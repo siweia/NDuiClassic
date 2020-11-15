@@ -34,6 +34,7 @@ local frames = {
 	["PetitionFrame"] = false,
 	["PetPaperDollFrame"] = true,
 	["PetStableFrame"] = false,
+	["QuestFrame"] = false,
 	["QuestLogFrame"] = false,
 	["RaidParentFrame"] = false,
 	["ReputationFrame"] = true,
