@@ -274,12 +274,12 @@ end
 local lastCDSend = 0
 function M:SendCurrentSpell(thisTime, spellID)
 	local start, duration = GetSpellCooldown(spellID)
-	local spellLink = GetSpellLink(spellID)
+	local spellName = GetSpellInfo(spellID)
 	if start and duration > 0 then
 		local remain = start + duration - thisTime
-		SendChatMessage(format(L["CooldownRemaining"], spellLink, remain), msgChannel())
+		SendChatMessage(format(L["CooldownRemaining"], spellName, B.FormatTimeRaw(remain)), msgChannel())
 	else
-		SendChatMessage(format(L["CooldownCompleted"], spellLink), msgChannel())
+		SendChatMessage(format(L["CooldownCompleted"], spellName), msgChannel())
 	end
 end
 
@@ -287,7 +287,7 @@ function M:SendCurrentItem(thisTime, itemID, itemLink)
 	local start, duration = GetItemCooldown(itemID)
 	if start and duration > 0 then
 		local remain = start + duration - thisTime
-		SendChatMessage(format(L["CooldownRemaining"], itemLink, remain), msgChannel())
+		SendChatMessage(format(L["CooldownRemaining"], itemLink, B.FormatTimeRaw(remain)), msgChannel())
 	else
 		SendChatMessage(format(L["CooldownCompleted"], itemLink), msgChannel())
 	end
@@ -324,7 +324,7 @@ function M:SendCDStatus()
 
 	local Bar = B:GetModule("Actionbar")
 	for _, button in pairs(Bar.buttons) do
-		button:HookScript("OnMouseWheel", M.AnalyzeButtonCooldown)
+		button:SetScript("OnMouseWheel", M.AnalyzeButtonCooldown)
 	end
 end
 
