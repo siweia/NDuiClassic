@@ -289,6 +289,7 @@ G.DefaultSettings = {
 		DBMCount = "10",
 		EasyMarking = true,
 		BlockInvite = false,
+		SendActionCD = false,
 	},
 	Tutorial = {
 		Complete = false,
@@ -660,8 +661,9 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{3, "Actionbar", "CustomBarNumPerRow", L["CustomBarNumPerRow"].."*", true, {1, 12, 1}, updateCustomBar},
 		{},--blank
 		{1, "Actionbar", "Cooldown", HeaderTag..L["Show Cooldown"]},
-		{1, "Actionbar", "DecimalCD", L["Decimal Cooldown"].."*"},
 		{1, "Actionbar", "OverrideWA", L["HideCooldownOnWA"].."*", true},
+		{1, "Actionbar", "DecimalCD", L["Decimal Cooldown"].."*"},
+		{1, "Misc", "SendActionCD", NewFeatureTag..L["SendActionCD"].."*", true, nil, nil, L["SendActionCDTip"]},
 		{},--blank
 		{1, "Actionbar", "Hotkeys", L["Actionbar Hotkey"].."*", nil, nil, updateHotkeys},
 		{1, "Actionbar", "Macro", L["Actionbar Macro"], true},
