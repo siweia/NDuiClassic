@@ -2,10 +2,11 @@
 local B, C, L, DB = unpack(ns)
 local module = B:GetModule("Maps")
 
-local strmatch, strfind, strupper = string.match, string.find, string.upper
-local select, pairs, ipairs, unpack = select, pairs, ipairs, unpack
+local select, pairs, unpack, next, tinsert = select, pairs, unpack, next, tinsert
+local strmatch, strfind, strupper = strmatch, strfind, strupper
 local IsPlayerSpell, GetSpellInfo, GetSpellTexture = IsPlayerSpell, GetSpellInfo, GetSpellTexture
 local CastSpellByID, GetTrackingTexture = CastSpellByID, GetTrackingTexture
+local UIFrameFadeOut, UIFrameFadeIn = UIFrameFadeOut, UIFrameFadeIn
 local C_Timer_After = C_Timer.After
 local cr, cg, cb = DB.r, DB.g, DB.b
 
@@ -153,7 +154,6 @@ function module:RecycleBin()
 		["Guidelime"] = true,
 		["QuestieFrame"] = true,
 	}
-
 	local function isButtonSecure(name)
 		for addonName in pairs(secureAddons) do
 			if strmatch(name, addonName) then
@@ -162,58 +162,73 @@ function module:RecycleBin()
 		end
 	end
 
+	local currentIndex, pendingTime, timeThreshold = 0, 5, 12
 	local buttons, numMinimapChildren = {}, 0
 	local removedTextures = {
 		[136430] = true,
 		[136467] = true,
 	}
 
+	local function ReskinMinimapButton(child)
+		for j = 1, child:GetNumRegions() do
+			local region = select(j, child:GetRegions())
+			if region:IsObjectType("Texture") then
+				local texture = region:GetTexture() or ""
+				if removedTextures[texture] or strfind(texture, "Interface\\CharacterFrame") or strfind(texture, "Interface\\Minimap") then
+					region:SetTexture(nil)
+				end
+				region:ClearAllPoints()
+				region:SetAllPoints()
+				region:SetTexCoord(unpack(DB.TexCoord))
+			end
+			child:SetSize(34, 34)
+			B.CreateSD(child, 3, 3)
+		end
+
+		tinsert(buttons, child)
+	end
+
+	local function KillMinimapButtons()
+		for _, child in pairs(buttons) do
+			if not child.styled then
+				child:SetParent(bin)
+				if child:HasScript("OnDragStop") then child:SetScript("OnDragStop", nil) end
+				if child:HasScript("OnDragStart") then child:SetScript("OnDragStart", nil) end
+				--if child:HasScript("OnClick") then child:HookScript("OnClick", clickFunc) end
+
+				if child:IsObjectType("Button") then
+					child:SetHighlightTexture(DB.bdTex) -- prevent nil function
+					child:GetHighlightTexture():SetColorTexture(1, 1, 1, .25)
+				elseif child:IsObjectType("Frame") then
+					child.highlight = child:CreateTexture(nil, "HIGHLIGHT")
+					child.highlight:SetAllPoints()
+					child.highlight:SetColorTexture(1, 1, 1, .25)
+				end
+
+				-- Naughty Addons
+				local name = child:GetName()
+				if name == "DBMMinimapButton" then
+					child:SetScript("OnMouseDown", nil)
+					child:SetScript("OnMouseUp", nil)
+				elseif name == "BagSync_MinimapButton" then
+					--child:HookScript("OnMouseUp", clickFunc)
+				end
+
+				child.styled = true
+			end
+		end
+	end
+
 	local function CollectRubbish()
 		local numChildren = Minimap:GetNumChildren()
-		if numChildren > numMinimapChildren then
+		if numChildren ~= numMinimapChildren then
 			for i = 1, numChildren do
 				local child = select(i, Minimap:GetChildren())
 				local name = child and child.GetName and child:GetName()
 				if name and not child.isExamed and not blackList[name] then
 					if (child:IsObjectType("Button") or strmatch(strupper(name), "BUTTON")) and not isButtonSecure(name) then
-						child:SetParent(bin)
-						child:SetSize(34, 34)
-
-						for j = 1, child:GetNumRegions() do
-							local region = select(j, child:GetRegions())
-							if region:IsObjectType("Texture") then
-								local texture = region:GetTexture() or ""
-								if removedTextures[texture] or strfind(texture, "Interface\\CharacterFrame") or strfind(texture, "Interface\\Minimap") then
-									region:SetTexture(nil)
-								end
-								region:ClearAllPoints()
-								region:SetAllPoints()
-								region:SetTexCoord(unpack(DB.TexCoord))
-							end
-						end
-
-						if child:HasScript("OnDragStop") then child:SetScript("OnDragStop", nil) end
-						if child:HasScript("OnDragStart") then child:SetScript("OnDragStart", nil) end
-
-						if child:IsObjectType("Button") then
-							child:SetHighlightTexture(DB.bdTex) -- prevent nil function
-							child:GetHighlightTexture():SetColorTexture(1, 1, 1, .25)
-						elseif child:IsObjectType("Frame") then
-							child.highlight = child:CreateTexture(nil, "HIGHLIGHT")
-							child.highlight:SetAllPoints()
-							child.highlight:SetColorTexture(1, 1, 1, .25)
-						end
-						B.CreateSD(child, 3, 3)
-
-						-- Naughty Addons
-						if name == "DBMMinimapButton" then
-							child:SetScript("OnMouseDown", nil)
-							child:SetScript("OnMouseUp", nil)
-						end
-
-						tinsert(buttons, child)
+						ReskinMinimapButton(child)
 					end
-
 					child.isExamed = true
 				end
 			end
@@ -221,7 +236,12 @@ function module:RecycleBin()
 			numMinimapChildren = numChildren
 		end
 
-		C_Timer_After(10, CollectRubbish) -- collect every 10s
+		KillMinimapButtons()
+
+		currentIndex = currentIndex + 1
+		if currentIndex < timeThreshold then
+			C_Timer_After(pendingTime, CollectRubbish)
+		end
 	end
 
 	local function SortRubbish()
@@ -249,9 +269,7 @@ function module:RecycleBin()
 		end
 	end)
 
-	C_Timer_After(1, function()
-		CollectRubbish()
-	end)
+	CollectRubbish()
 end
 
 function module:WhoPingsMyMap()
