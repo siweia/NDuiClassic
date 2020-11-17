@@ -98,7 +98,6 @@ end
 function module:RecycleBin()
 	if not C.db["Map"]["ShowRecycleBin"] then return end
 
-	local buttons = {}
 	local blackList = {
 		["GameTimeFrame"] = true,
 		["MiniMapLFGFrame"] = true,
@@ -149,14 +148,13 @@ function module:RecycleBin()
 	end
 
 	local secureAddons = {
-		["HANDYNOTESPIN"] = true,
-		["GATHERMATEPIN"] = true,
-		["GUIDELIME"] = true,
-		["TRACKINGEYE"] = true,
+		["HandyNotesPin"] = true,
+		["GatherMatePin"] = true,
+		["Guidelime"] = true,
+		["QuestieFrame"] = true,
 	}
 
 	local function isButtonSecure(name)
-		name = strupper(name)
 		for addonName in pairs(secureAddons) do
 			if strmatch(name, addonName) then
 				return true
@@ -164,20 +162,19 @@ function module:RecycleBin()
 		end
 	end
 
+	local buttons, numMinimapChildren = {}, 0
 	local removedTextures = {
 		[136430] = true,
 		[136467] = true,
 	}
-
-	local numMinimapChildren = 0
 
 	local function CollectRubbish()
 		local numChildren = Minimap:GetNumChildren()
 		if numChildren > numMinimapChildren then
 			for i = 1, numChildren do
 				local child = select(i, Minimap:GetChildren())
-				local name = child.GetName and child:GetName()
-				if name and not blackList[name] and not child.isExamed then
+				local name = child and child.GetName and child:GetName()
+				if name and not child.isExamed and not blackList[name] then
 					if (child:IsObjectType("Button") or strmatch(strupper(name), "BUTTON")) and not isButtonSecure(name) then
 						child:SetParent(bin)
 						child:SetSize(34, 34)
@@ -252,7 +249,7 @@ function module:RecycleBin()
 		end
 	end)
 
-	C_Timer_After(.3, function()
+	C_Timer_After(1, function()
 		CollectRubbish()
 	end)
 end
