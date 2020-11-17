@@ -1200,7 +1200,7 @@ local function OpenGUI()
 		G:AddContactFrame()
 	end)
 
-	local unlock = B.CreateButton(f, 130, 20, "界面移动")
+	local unlock = B.CreateButton(f, 130, 20, L["UnlockUI"])
 	unlock:SetPoint("BOTTOM", contact, "TOP", 0, 2)
 	unlock:SetScript("OnClick", function()
 		f:Hide()
