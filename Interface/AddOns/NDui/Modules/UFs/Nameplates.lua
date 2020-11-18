@@ -31,6 +31,7 @@ function UF:SetupCVars()
 	UF:UpdatePlateScale()
 	SetCVar("nameplateSelectedScale", 1)
 	SetCVar("nameplateLargerScale", 1)
+	SetCVar("nameplateGlobalScale", 1)
 
 	if IsAddOnLoaded("Questie") then
 		_QuestieQuest = QuestieLoader:ImportModule("QuestieQuest")
