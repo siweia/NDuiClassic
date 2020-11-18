@@ -486,6 +486,7 @@ function module:OnLogin()
 	local iconSize = C.db["Bags"]["IconSize"]
 	local deleteButton = C.db["Bags"]["DeleteButton"]
 	local showNewItem = C.db["Bags"]["ShowNewItem"]
+	local hasPawn = IsAddOnLoaded("Pawn")
 
 	-- Init
 	local Backpack = cargBags:NewImplementation("NDui_Backpack")
@@ -638,6 +639,14 @@ function module:OnLogin()
 		return item.link and item.level and item.rarity > 1 and (item.classID == LE_ITEM_CLASS_WEAPON or item.classID == LE_ITEM_CLASS_ARMOR)
 	end
 
+	local function UpdatePawnArrow(self, item)
+		if not hasPawn then return end
+		if not PawnIsContainerItemAnUpgrade then return end
+		if self.UpgradeIcon then
+			self.UpgradeIcon:SetShown(PawnIsContainerItemAnUpgrade(item.bagID, item.slotID))
+		end
+	end
+
 	function MyButton:OnUpdate(item)
 		if MerchantFrame:IsShown() then
 			if item.isInSet then
@@ -692,6 +701,9 @@ function module:OnLogin()
 		if not GetContainerItemInfo(item.bagID, item.slotID) then
 			GameTooltip:Hide()
 		end
+
+		-- Support Pawn
+		UpdatePawnArrow(self, item)
 	end
 
 	function MyButton:OnUpdateQuest(item)
