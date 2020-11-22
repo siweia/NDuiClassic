@@ -902,7 +902,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Tooltip", "HideRealm", L["Hide Realm"].."*"},
 		{1, "Tooltip", "SpecLevelByShift", L["Show SpecLevelByShift"].."*", true},
 		{1, "Tooltip", "TargetBy", L["Show TargetedBy"].."*"},
-		{1, "Tooltip", "HideAllID", HeaderTag..L["HideAllID"], true},
+		{1, "Tooltip", "HideAllID", "|cffff0000"..L["HideAllID"], true},
 	},
 	[13] = {
 		{1, "Misc", "ItemLevel", HeaderTag..L["Show ItemQuality"]},
