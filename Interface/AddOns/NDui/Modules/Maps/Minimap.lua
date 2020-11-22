@@ -149,8 +149,8 @@ function module:RecycleBin()
 	end
 
 	local secureAddons = {
-		["HandyNotesPin"] = true,
 		["GatherMatePin"] = true,
+		["HandyNotes.-Pin"] = true,
 		["Guidelime"] = true,
 		["QuestieFrame"] = true,
 	}
