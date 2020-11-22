@@ -405,9 +405,12 @@ function module:EasyTrackMenu()
 	end
 
 	-- Click Func
+	local hasAlaCalendar = IsAddOnLoaded("alaCalendar")
 	Minimap:SetScript("OnMouseUp", function(self, btn)
 		if btn == "RightButton" then
 			toggleTrackMenu(self)
+		elseif btn == "MiddleButton" and hasAlaCalendar then
+			B:TogglePanel(ALA_CALENDAR)
 		else
 			Minimap_OnClick(self)
 		end
