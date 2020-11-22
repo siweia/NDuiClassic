@@ -26,10 +26,6 @@ local localSlots = {
 }
 
 local lastClick = 0
-local inform = CreateFrame("Frame", nil, nil, "MicroButtonAlertTemplate")
-inform:SetPoint("BOTTOM", info, "TOP", 0, 23)
-inform.Text:SetText(L["Low Durability"])
-inform:Hide()
 
 local function sortSlots(a, b)
 	if a and b then
@@ -72,15 +68,14 @@ local function gradientColor(perc)
 end
 
 info.eventList = {
-	"UPDATE_INVENTORY_DURABILITY", "PLAYER_ENTERING_WORLD",
+	"UPDATE_INVENTORY_DURABILITY", "PLAYER_ENTERING_WORLD"
 }
 
-info.onEvent = function(self, event)
-	if event == "PLAYER_ENTERING_WORLD" then
-		B.ReskinClose(inform.CloseButton)
-		self:UnregisterEvent("PLAYER_ENTERING_WORLD")
-	end
+local function SaveClickTime()
+	lastClick = GetTime()
+end
 
+info.onEvent = function(self, event)
 	local numSlots = getItemDurability()
 	if numSlots > 0 then
 		self.text:SetText(format(gsub("[color]%d|r%%"..L["D"], "%[color%]", (gradientColor(floor(localSlots[1][3]*100)/100))), floor(localSlots[1][3]*100)))
@@ -89,15 +84,11 @@ info.onEvent = function(self, event)
 	end
 
 	if isLowDurability() and ((lastClick == 0) or (GetTime() - lastClick > 60*30)) then -- only half an hour
-		inform:Show()
+		B:ShowHelpTip(info, L["Low Durability"], "TOP", 0, 20, SaveClickTime, "Durability")
 	else
-		inform:Hide()
+		B:HideHelpTip("Durability")
 	end
 end
-
-inform.CloseButton:HookScript("OnClick", function()
-	lastClick = GetTime()
-end)
 
 info.onMouseUp = function(self, btn)
 	if btn == "MiddleButton" then

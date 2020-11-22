@@ -110,19 +110,12 @@ function M:VersionCheck_Compare(new, old)
 	end
 end
 
-function M:VersionCheck_Create(text)
-	local frame = CreateFrame("Frame", nil, nil, "MicroButtonAlertTemplate")
-	frame:SetPoint("BOTTOMLEFT", ChatFrame1, "TOPLEFT", 20, 70)
-	frame.Text:SetText(text)
-	frame:Show()
-end
-
 local hasChecked
 function M:VersionCheck_Initial()
 	if not hasChecked then
 		if M:VersionCheck_Compare(NDuiADB["DetectVersion"], DB.Version) == "IsNew" then
 			local release = gsub(NDuiADB["DetectVersion"], "(%d+)$", "0")
-			M:VersionCheck_Create(format(L["Outdated NDui"], release))
+			B:ShowHelpTip(ChatFrame1, format(L["Outdated NDui"], release), "TOP", 0, 70, nil, "Version")
 		end
 
 		hasChecked = true
