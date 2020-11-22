@@ -675,7 +675,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{},--blank
 		{1, "Bags", "ItemFilter", L["Bags ItemFilter"].."*", nil, setupBagFilter, updateBagStatus},
 		{1, "Bags", "GatherEmpty", L["Bags GatherEmpty"].."*", true, nil, updateBagStatus},
-		{1, "Bags", "ReverseSort", L["Bags ReverseSort"].."*", nil, nil, updateBagSortOrder},
+		{1, "Bags", "ReverseSort", L["Bags ReverseSort"].."*", nil, nil, updateBagSortOrder, L["BagSortTip"]},
 		{1, "Bags", "BagsiLvl", L["Bags Itemlevel"].."*", true, nil, updateBagStatus},
 		{1, "Bags", "SpecialBagsColor", L["SpecialBagsColor"].."*", nil, nil, updateBagStatus, L["SpecialBagsColorTip"]},
 		{1, "Bags", "ShowNewItem", L["Bags ShowNewItem"]},
@@ -1107,6 +1107,10 @@ local function CreateOption(i)
 			end
 
 			B.CreateFS(dd, 14, name, "system", "CENTER", 0, 25)
+			if tooltip then
+				dd.title = L["Tips"]
+				B.AddTooltip(dd, "ANCHOR_RIGHT", tooltip, "info")
+			end
 		-- Colorswatch
 		elseif optType == 5 then
 			local f = B.CreateColorSwatch(parent, name, NDUI_VARIABLE(key, value))
