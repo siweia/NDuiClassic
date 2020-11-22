@@ -174,6 +174,10 @@ hooksecurefunc("ChatEdit_CustomTabPressed", module.UpdateTabChannelSwitch)
 
 -- Quick Scroll
 function module:QuickMouseScroll(dir)
+	if not NDuiADB["Help"]["ChatScroll"] then
+		B:ShowHelpTip(ChatFrame1, L["ChatScrollHelp"], "RIGHT", 20, 0, nil, "ChatScroll")
+	end
+
 	if dir > 0 then
 		if IsShiftKeyDown() then
 			self:ScrollToTop()

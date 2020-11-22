@@ -414,6 +414,14 @@ function module:EasyTrackMenu()
 	end)
 end
 
+function module:ShowMinimapHelpInfo()
+	Minimap:HookScript("OnEnter", function()
+		if not NDuiADB["Help"]["MinimapInfo"] then
+			B:ShowHelpTip(MinimapCluster, L["MinimapHelp"], "LEFT", -20, -50, nil, "MinimapInfo")
+		end
+	end)
+end
+
 function module:SetupMinimap()
 	-- Shape and Position
 	Minimap:SetFrameLevel(10)
@@ -463,6 +471,7 @@ function module:SetupMinimap()
 	self:RecycleBin()
 	self:WhoPingsMyMap()
 	self:EasyTrackMenu()
+	self:ShowMinimapHelpInfo()
 
 	if LibDBIcon10_TownsfolkTracker then
 		LibDBIcon10_TownsfolkTracker:DisableDrawLayer("OVERLAY")
