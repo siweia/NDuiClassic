@@ -469,7 +469,7 @@ do
 		if self.Tex then return end
 
 		local frame = self
-		if self:GetObjectType() == "Texture" then frame = self:GetParent() end
+		if self:IsObjectType("Texture") then frame = self:GetParent() end
 
 		self.Tex = frame:CreateTexture(nil, "BACKGROUND", nil, 1)
 		self.Tex:SetAllPoints(self)
@@ -485,7 +485,7 @@ do
 		if self.Shadow then return end
 
 		local frame = self
-		if self:GetObjectType() == "Texture" then frame = self:GetParent() end
+		if self:IsObjectType("Texture") then frame = self:GetParent() end
 
 		self.Shadow = CreateFrame("Frame", nil, frame)
 		self.Shadow:SetOutside(self, size or 4, size or 4)
@@ -597,7 +597,7 @@ do
 	-- Handle frame
 	function B:CreateBDFrame(a, shadow)
 		local frame = self
-		if self:GetObjectType() == "Texture" then frame = self:GetParent() end
+		if self:IsObjectType("Texture") then frame = self:GetParent() end
 		local lvl = frame:GetFrameLevel()
 
 		local bg = CreateFrame("Frame", nil, frame)
