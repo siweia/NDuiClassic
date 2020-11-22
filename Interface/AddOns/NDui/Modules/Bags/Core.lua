@@ -384,8 +384,8 @@ function module:CreateJunkButton()
 		else
 			bu.__turnOff()
 		end
-		self:GetScript("OnEnter")(self)
 		module:UpdateAllBags()
+		self:GetScript("OnEnter")(self)
 	end)
 	bu:SetScript("OnHide", bu.__turnOff)
 	bu.title = L["CustomJunkMode"]
