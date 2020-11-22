@@ -1,6 +1,33 @@
 local _, ns = ...
 local B, C, L, DB = unpack(ns)
 
+local backpackTexture = "Interface\\Buttons\\Button-Backpack-Up"
+local bagIDToInvID = {
+	[1] = 20,
+	[2] = 21,
+	[3] = 22,
+	[4] = 23,
+	[5] = 80,
+	[6] = 81,
+	[7] = 82,
+	[8] = 83,
+	[9] = 84,
+	[10] = 85,
+	[11] = 86,
+}
+
+local function createBagIcon(frame, index)
+	if not frame.bagIcon then
+		frame.bagIcon = frame.PortraitButton:CreateTexture()
+		B.ReskinIcon(frame.bagIcon)
+		frame.bagIcon:SetPoint("TOPLEFT", 5, -3)
+		frame.bagIcon:SetSize(32, 32)
+	end
+	if index == 1 then
+		frame.bagIcon:SetTexture(backpackTexture) -- backpack
+	end
+end
+
 tinsert(C.defaultThemes, function()
 	if C.db["Bags"]["Enable"] then return end
 	if not C.db["Skins"]["DefaultBags"] then return end
@@ -10,6 +37,7 @@ tinsert(C.defaultThemes, function()
 		local name = _G["ContainerFrame"..i.."Name"]
 
 		B.StripTextures(con, 0)
+		createBagIcon(con, i)
 		name:ClearAllPoints()
 		name:SetPoint("TOP", 0, -10)
 
@@ -18,7 +46,6 @@ tinsert(C.defaultThemes, function()
 			local button = _G[item]
 			local searchOverlay = button.searchOverlay
 			local questTexture = _G[item.."IconQuestTexture"]
-			local newItemTexture = button.NewItemTexture
 
 			questTexture:SetDrawLayer("BACKGROUND")
 			questTexture:SetSize(1, 1)
@@ -29,10 +56,6 @@ tinsert(C.defaultThemes, function()
 
 			button.icon:SetTexCoord(.08, .92, .08, .92)
 			button.bg = B.CreateBDFrame(button, .25)
-
-			-- easiest way to 'hide' it without breaking stuff
-			newItemTexture:SetDrawLayer("BACKGROUND")
-			newItemTexture:SetSize(1, 1)
 
 			searchOverlay:SetPoint("TOPLEFT", -C.mult, C.mult)
 			searchOverlay:SetPoint("BOTTOMRIGHT", C.mult, -C.mult)
@@ -59,6 +82,14 @@ tinsert(C.defaultThemes, function()
 				else
 					itemButton.bg:SetBackdropBorderColor(0, 0, 0)
 				end
+			end
+		end
+
+		if frame.bagIcon then
+			local invID = bagIDToInvID[id]
+			if invID then
+				local icon = GetInventoryItemTexture("player", invID)
+				frame.bagIcon:SetTexture(icon or backpackTexture)
 			end
 		end
 	end)
