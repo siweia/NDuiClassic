@@ -55,6 +55,35 @@ function UF:CreateHeader(self)
 	end)
 end
 
+local function UpdateHealthColorByIndex(health, index)
+	health.colorClass = (index == 2)
+	health.colorTapping = (index == 2)
+	health.colorReaction = (index == 2)
+	health.colorDisconnected = (index == 2)
+	health.colorSmooth = (index == 3)
+	health.colorHappiness = (DB.MyClass == "HUNTER" and index == 2)
+	if index == 1 then
+		health:SetStatusBarColor(.1, .1, .1)
+		health.bg:SetVertexColor(.6, .6, .6)
+	end
+end
+
+function UF:UpdateHealthBarColor(self, force)
+	local health = self.Health
+	local mystyle = self.mystyle
+	if mystyle == "PlayerPlate" then
+		health.colorHealth = true
+	elseif mystyle == "raid" then
+		UpdateHealthColorByIndex(health, C.db["UFs"]["RaidHealthColor"])
+	else
+		UpdateHealthColorByIndex(health, C.db["UFs"]["HealthColor"])
+	end
+
+	if force then
+		health:ForceUpdate()
+	end
+end
+
 function UF:CreateHealthBar(self)
 	local mystyle = self.mystyle
 	local health = CreateFrame("StatusBar", nil, self)
@@ -84,6 +113,7 @@ function UF:CreateHealthBar(self)
 	health.backdrop = B.CreateBDFrame(health, 0, true) -- don't mess up with libs
 	health.shadow = health.backdrop.Shadow
 	B:SmoothBar(health)
+	health.frequentUpdates = true
 
 	local bg = health:CreateTexture(nil, "BACKGROUND")
 	bg:SetAllPoints()
@@ -91,21 +121,10 @@ function UF:CreateHealthBar(self)
 	bg:SetVertexColor(.6, .6, .6)
 	bg.multiplier = .25
 
-	if mystyle == "PlayerPlate" then
-		health.colorHealth = true
-	elseif (mystyle == "raid" and C.db["UFs"]["RaidHealthColor"] == 2) or (mystyle ~= "raid" and C.db["UFs"]["HealthColor"] == 2) then
-		health.colorClass = true
-		health.colorTapping = true
-		health.colorReaction = true
-		health.colorDisconnected = true
-		health.colorHappiness = DB.MyClass == "HUNTER"
-	elseif (mystyle == "raid" and C.db["UFs"]["RaidHealthColor"] == 3) or (mystyle ~= "raid" and C.db["UFs"]["HealthColor"] == 3) then
-		health.colorSmooth = true
-	end
-	health.frequentUpdates = true
-
 	self.Health = health
 	self.Health.bg = bg
+
+	UF:UpdateHealthBarColor(self)
 end
 
 function UF:UpdateRaidHealthMethod()
@@ -217,6 +236,31 @@ function UF:UpdateRaidNameText()
 	end
 end
 
+local function UpdatePowerColorByIndex(power, index)
+	power.colorPower = (index == 2)
+	power.colorClass = (index ~= 2)
+	power.colorTapping = (index ~= 2)
+	power.colorDisconnected = (index ~= 2)
+	power.colorReaction = (index ~= 2)
+	power.colorHappiness = (DB.MyClass == "HUNTER" and index ~= 2)
+end
+
+function UF:UpdatePowerBarColor(self, force)
+	local power = self.Power
+	local mystyle = self.mystyle
+	if mystyle == "PlayerPlate" then
+		power.colorPower = true
+	elseif mystyle == "raid" then
+		UpdatePowerColorByIndex(power, C.db["UFs"]["RaidHealthColor"])
+	else
+		UpdatePowerColorByIndex(power, C.db["UFs"]["HealthColor"])
+	end
+
+	if force then
+		power:ForceUpdate()
+	end
+end
+
 local frequentUpdateCheck = {
 	["player"] = true,
 	["target"] = true,
@@ -259,19 +303,11 @@ function UF:CreatePowerBar(self)
 	bg:SetTexture(DB.normTex)
 	bg.multiplier = .25
 
-	if (mystyle == "raid" and C.db["UFs"]["RaidHealthColor"] == 2) or (mystyle ~= "raid" and C.db["UFs"]["HealthColor"] == 2) or mystyle == "PlayerPlate" then
-		power.colorPower = true
-	else
-		power.colorClass = true
-		power.colorTapping = true
-		power.colorDisconnected = true
-		power.colorReaction = true
-		power.colorHappiness = DB.MyClass == "HUNTER"
-	end
-	power.frequentUpdates = frequentUpdateCheck[mystyle]
-
 	self.Power = power
 	self.Power.bg = bg
+
+	power.frequentUpdates = frequentUpdateCheck[mystyle]
+	UF:UpdatePowerBarColor(self)
 end
 
 function UF:CreatePowerText(self)
@@ -309,8 +345,10 @@ function UF:UpdateTextScale()
 			if castbar then
 				castbar.Text:SetScale(scale)
 				castbar.Time:SetScale(scale)
-				if castbar.Lag then  castbar.Lag:SetScale(scale) end
+				if castbar.Lag then castbar.Lag:SetScale(scale) end
 			end
+			UF:UpdateHealthBarColor(frame, true)
+			UF:UpdatePowerBarColor(frame, true)
 		end
 	end
 end
@@ -322,6 +360,8 @@ function UF:UpdateRaidTextScale()
 			frame.nameText:SetScale(scale)
 			frame.healthValue:SetScale(scale)
 			if frame.powerText then frame.powerText:SetScale(scale) end
+			UF:UpdateHealthBarColor(frame, true)
+			UF:UpdatePowerBarColor(frame, true)
 		end
 	end
 end
