@@ -629,3 +629,4 @@ L["SendActionCDTip"] = "|nIf enabled, you can mouse wheel on actionbar button, a
 L["Contact"] = "Contact"
 L["UnlockUI"] = "Unlock UI"
 L["Donation"] = "Donations @%s"
+L["GotIt"] = "Got It"

@@ -326,7 +326,8 @@ G.AccountSettings = {
 	ContactList = {},
 	CustomJunkList = {},
 	ProfileIndex = {},
-	ProfileNames = {}
+	ProfileNames = {},
+	Help = {},
 }
 
 -- Initial settings
