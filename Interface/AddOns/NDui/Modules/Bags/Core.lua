@@ -870,7 +870,7 @@ function module:OnLogin()
 	module.initComplete = true
 
 	B:RegisterEvent("TRADE_SHOW", module.OpenBags)
-	B:RegisterEvent("TRADE_CLOSED", module.CloseBags)
+	--B:RegisterEvent("TRADE_CLOSED", module.CloseBags)
 	B:RegisterEvent("AUCTION_HOUSE_SHOW", module.OpenBags)
 	B:RegisterEvent("AUCTION_HOUSE_CLOSED", module.CloseBags)
 
