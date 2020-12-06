@@ -62,6 +62,10 @@ function module:ChatCopy_OnClick(btn)
 	end
 end
 
+local function ResetChatAlertJustify(frame)
+	frame:SetJustification("LEFT")
+end
+
 function module:ChatCopy_CreateMenu()
 	menu = CreateFrame("Frame", nil, UIParent)
 	menu:SetSize(25, 100)
@@ -74,8 +78,11 @@ function module:ChatCopy_CreateMenu()
 	_G.ChatFrameChannelButton:ClearAllPoints()
 	_G.ChatFrameChannelButton:SetPoint("TOP", _G.ChatFrameMenuButton, "BOTTOM", 0, -2)
 	_G.ChatFrameChannelButton:SetParent(menu)
+
 	_G.ChatAlertFrame:ClearAllPoints()
 	_G.ChatAlertFrame:SetPoint("BOTTOMLEFT", _G.ChatFrame1Tab, "TOPLEFT", 5, 25)
+	ResetChatAlertJustify(_G.ChatAlertFrame)
+	hooksecurefunc(_G.ChatAlertFrame, "SetChatButtonSide", ResetChatAlertJustify)
 end
 
 function module:ChatCopy_Create()
