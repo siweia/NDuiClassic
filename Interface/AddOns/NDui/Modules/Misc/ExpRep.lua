@@ -7,14 +7,14 @@ local M = B:GetModule("Misc")
 ]]
 local pairs = pairs
 local min, floor = math.min, math.floor
-local MAX_PLAYER_LEVEL = MAX_PLAYER_LEVEL
+local GetMaxPlayerLevel = GetMaxPlayerLevel
 local FACTION_BAR_COLORS = FACTION_BAR_COLORS
 
 function M:ExpBar_Update()
 	local rest = self.restBar
 	if rest then rest:Hide() end
 
-	if UnitLevel("player") < MAX_PLAYER_LEVEL then
+	if UnitLevel("player") < GetMaxPlayerLevel() then
 		local xp, mxp, rxp = UnitXP("player"), UnitXPMax("player"), GetXPExhaustion()
 		self:SetStatusBarColor(0, .7, 1)
 		self:SetMinMaxValues(0, mxp)
@@ -42,7 +42,7 @@ function M:ExpBar_UpdateTooltip()
 	GameTooltip:ClearLines()
 	GameTooltip:AddLine(LEVEL.." "..UnitLevel("player"), 0,.6,1)
 
-	if UnitLevel("player") < MAX_PLAYER_LEVEL then
+	if UnitLevel("player") < GetMaxPlayerLevel() then
 		GameTooltip:AddLine(" ")
 		local xp, mxp, rxp = UnitXP("player"), UnitXPMax("player"), GetXPExhaustion()
 		GameTooltip:AddDoubleLine(XP..":", xp.." / "..mxp.." ("..floor(xp/mxp*100).."%)", .6,.8,1, 1,1,1)
