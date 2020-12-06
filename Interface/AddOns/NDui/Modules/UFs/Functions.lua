@@ -6,6 +6,7 @@ local UF = B:RegisterModule("UnitFrames")
 
 local format, floor = string.format, math.floor
 local pairs = pairs
+local UnitFrame_OnEnter, UnitFrame_OnLeave = UnitFrame_OnEnter, UnitFrame_OnLeave
 
 -- Custom colors
 oUF.colors.smooth = {1, 0, 0, .85, .8, .45, .1, .1, .1}
@@ -34,6 +35,16 @@ local function retVal(self, val1, val2, val3, val4, val5)
 end
 
 -- Elements
+local function UF_OnEnter(self)
+	UnitFrame_OnEnter(self)
+	self.Highlight:Show()
+end
+
+local function UF_OnLeave(self)
+	UnitFrame_OnLeave(self)
+	self.Highlight:Hide()
+end
+
 function UF:CreateHeader(self)
 	local hl = self:CreateTexture(nil, "OVERLAY")
 	hl:SetAllPoints()
@@ -45,14 +56,8 @@ function UF:CreateHeader(self)
 	self.Highlight = hl
 
 	self:RegisterForClicks("AnyUp")
-	self:HookScript("OnEnter", function()
-		UnitFrame_OnEnter(self)
-		self.Highlight:Show()
-	end)
-	self:HookScript("OnLeave", function()
-		UnitFrame_OnLeave(self)
-		self.Highlight:Hide()
-	end)
+	self:HookScript("OnEnter", UF_OnEnter)
+	self:HookScript("OnLeave", UF_OnLeave)
 end
 
 local function UpdateHealthColorByIndex(health, index)
