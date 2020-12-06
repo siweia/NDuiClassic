@@ -4,7 +4,7 @@ Author: d87
 --]================]
 if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then return end
 
-local MAJOR, MINOR = "LibClassicCasterino", 35
+local MAJOR, MINOR = "LibClassicCasterino", 36
 local lib = LibStub:NewLibrary(MAJOR, MINOR)
 if not lib then return end
 
@@ -51,7 +51,12 @@ local spellNameToID = {}
 local NPCspellNameToID = {}
 local NPCSpells
 
-local castTimeCache = {}
+local function makeCastUIDFromSpellID(npcID, spellID)
+    return tostring(npcID)..GetSpellInfo(spellID)
+end
+local castTimeCache = {
+    [makeCastUIDFromSpellID(15990, 8407)] = 2, -- Kel'Thuzad, "Frostbolt"
+}
 local castTimeCacheStartTimes = setmetatable({}, { __mode = "v" })
 
 local AIMED_SHOT = GetSpellInfo(19434)
