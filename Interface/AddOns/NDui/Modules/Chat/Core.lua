@@ -327,6 +327,7 @@ function module:OnLogin()
 	-- Default
 	if CHAT_OPTIONS then CHAT_OPTIONS.HIDE_FRAME_ALERTS = true end -- only flash whisper
 	SetCVar("chatStyle", "classic")
+	SetCVar("chatClassColorOverride", 0)
 	B.HideOption(InterfaceOptionsSocialPanelChatStyle)
 	CombatLogQuickButtonFrame_CustomTexture:SetTexture(nil)
 

@@ -22,7 +22,6 @@ local function ForceDefaultSettings()
 	SetCVar("autoQuestWatch", 1)
 	SetCVar("overrideArchive", 0)
 	SetCVar("cameraDistanceMaxZoomFactor", 2.6)
-	SetCVar("chatClassColorOverride", 0)
 	SetActionBarToggles(1, 1, 1, 1)
 	if not InCombatLockdown() then
 		SetCVar("nameplateMotion", 1)
