@@ -820,7 +820,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Misc", "RaidTool", HeaderTag..L["Raid Manger"]},
 		{1, "Misc", "RMRune", L["Runes Check"].."*"},
 		{1, "Misc", "EasyMarking", L["Easy Mark"].."*"},
-		{2, "Misc", "DBMCount", L["Countdown Sec"].."*", true},
+		{2, "Misc", "DBMCount", L["DBMCount"].."*", true, nil, nil, L["DBMCountTip"]},
 		{},--blank
 		{1, "Misc", "QuestNotifier", HeaderTag..L["QuestNotifier"].."*", nil, nil, updateQuestNotifier},
 		{1, "Misc", "QuestProgress", L["QuestProgress"].."*"},
@@ -857,7 +857,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{},--blank
 		{1, "Chat", "Invite", HeaderTag..L["Whisper Invite"]},
 		{1, "Chat", "GuildInvite", L["Guild Invite Only"].."*"},
-		{2, "Chat", "Keyword", L["Whisper Keyword"].."*", true, nil, updateWhisperList},
+		{2, "Chat", "Keyword", L["Whisper Keyword"].."*", true, nil, updateWhisperList, L["WhisperKeywordTip"]},
 	},
 	[10] = {
 		{1, "Map", "DisableMap", "|cffff0000"..L["DisableMap"], nil, nil, nil, L["DisableMapTip"]},
