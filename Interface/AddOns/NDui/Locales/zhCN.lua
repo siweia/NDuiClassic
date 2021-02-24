@@ -634,3 +634,6 @@ L["ChatScrollHelp"] = "滚轮时按住Ctrl键可一次滚动多行，按住Shift
 L["MinimapHelp"] = "鼠标滚轮可以缩放区域，右键点击打开专业或猎人技能追踪菜单。如果安装了alaCalendar，中键可以快速打开。"
 L["Reset Help"] = "重置帮助提示"
 L["Reset NDui Helpinfo"] = "你想要重置所有帮助提示吗？看来你不是真的懂。"
+L["ColoredTarget"] = "染色目标姓名板"
+L["ColoredTargetTip"] = "|n启用后，染色你当前的目标姓名板，优先级高于自定义及仇恨染色。|n你可以在下面的选项中自定义这个颜色。"
+L["TargetNP Color"] = "目标姓名板颜色"

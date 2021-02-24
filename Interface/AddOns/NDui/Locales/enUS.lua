@@ -634,3 +634,6 @@ L["ChatScrollHelp"] = "Scroll multi-lines by holding Ctrl key, and scroll to top
 L["MinimapHelp"] = "Scroll minimap to zoom in or out, right click to toggle skills or hunter spells track menu. If addon 'alaCalendar' enabled, middle button to toggle calendar."
 L["Reset Help"] = "Reset Helpinfo"
 L["Reset NDui Helpinfo"] = "Are you sure to reset all help info?"
+L["ColoredTarget"] = "Colored Target Nameplate"
+L["ColoredTargetTip"] = "|nIf enabled, colored your target nameplate, its priority is higher than custom color and threat color.|nYou can customize your color below."
+L["TargetNP Color"] = "Target Nameplate Color"
