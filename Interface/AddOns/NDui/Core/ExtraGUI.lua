@@ -293,7 +293,7 @@ function G:SetupClickCast(parent)
 		B.AddTooltip(icon, "ANCHOR_RIGHT", value, "system")
 		close:SetScript("OnClick", function()
 			bar:Hide()
-			C.db["RaidClickSets"][clickSet] = nil
+			NDuiADB["RaidClickSets"][DB.MyClass][clickSet] = nil
 			barTable[clickSet] = nil
 			sortBars(barTable)
 		end)
@@ -330,7 +330,7 @@ function G:SetupClickCast(parent)
 		button1 = YES,
 		button2 = NO,
 		OnAccept = function()
-			C.db["RaidClickSets"] = nil
+			wipe(NDuiADB["RaidClickSets"][DB.MyClass])
 			ReloadUI()
 		end,
 		whileDead = 1,
@@ -346,10 +346,10 @@ function G:SetupClickCast(parent)
 		if (not tonumber(value)) and value ~= "target" and value ~= "follow" and not value:match("/") then UIErrorsFrame:AddMessage(DB.InfoColor..L["Invalid Input"]) return end
 		if not modKey or modKey == NONE then modKey = "" end
 		local clickSet = modKey..key
-		if C.db["RaidClickSets"][clickSet] then UIErrorsFrame:AddMessage(DB.InfoColor..L["Existing ClickSet"]) return end
+		if NDuiADB["RaidClickSets"][DB.MyClass][clickSet] then UIErrorsFrame:AddMessage(DB.InfoColor..L["Existing ClickSet"]) return end
 
-		C.db["RaidClickSets"][clickSet] = {key, modKey, value}
-		createBar(scroll.child, C.db["RaidClickSets"][clickSet])
+		NDuiADB["RaidClickSets"][DB.MyClass][clickSet] = {key, modKey, value}
+		createBar(scroll.child, NDuiADB["RaidClickSets"][DB.MyClass][clickSet])
 		clearEdit(options)
 	end
 
@@ -365,7 +365,7 @@ function G:SetupClickCast(parent)
 		clearEdit(options)
 	end)
 
-	for _, v in pairs(C.db["RaidClickSets"]) do
+	for _, v in pairs(NDuiADB["RaidClickSets"][DB.MyClass]) do
 		createBar(scroll.child, v)
 	end
 end

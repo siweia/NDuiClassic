@@ -216,10 +216,12 @@ local defaultSpellList = {
 }
 
 function UF:DefaultClickSets()
-	if not next(C.db["RaidClickSets"]) then
+	if not NDuiADB["RaidClickSets"][DB.MyClass] then NDuiADB["RaidClickSets"][DB.MyClass] = {} end
+
+	if not next(NDuiADB["RaidClickSets"][DB.MyClass]) then
 		for k, v in pairs(defaultSpellList[DB.MyClass]) do
 			local clickSet = keyList[k][2]..keyList[k][1]
-			C.db["RaidClickSets"][clickSet] = {keyList[k][1], keyList[k][2], v}
+			NDuiADB["RaidClickSets"][DB.MyClass][clickSet] = {keyList[k][1], keyList[k][2], v}
 		end
 	end
 end
@@ -244,7 +246,7 @@ local onMouseString = "if not self:IsUnderMouse(false) then self:ClearBindings()
 
 local function setupMouseWheelCast(self)
 	local found
-	for _, data in pairs(C.db["RaidClickSets"]) do
+	for _, data in pairs(NDuiADB["RaidClickSets"][DB.MyClass]) do
 		if strmatch(data[1], L["Wheel"]) then
 			found = true
 			break
@@ -263,7 +265,7 @@ end
 local function setupClickSets(self)
 	if self.clickCastRegistered then return end
 
-	for _, data in pairs(C.db["RaidClickSets"]) do
+	for _, data in pairs(NDuiADB["RaidClickSets"][DB.MyClass]) do
 		local key, modKey, value = unpack(data)
 		for _, v in ipairs(keyList) do
 			if v[1] == key and v[2] == modKey then
