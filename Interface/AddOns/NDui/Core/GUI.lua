@@ -330,6 +330,7 @@ G.AccountSettings = {
 	ProfileIndex = {},
 	ProfileNames = {},
 	Help = {},
+	CustomTex = "",
 }
 
 -- Initial settings
@@ -391,10 +392,14 @@ loader:SetScript("OnEvent", function(self, _, addon)
 	InitialSettings(G.DefaultSettings, C.db, true)
 
 	B:SetupUIScale(true)
-	if not G.TextureList[NDuiADB["TexStyle"]] then
-		NDuiADB["TexStyle"] = 2 -- reset value if not exists
+	if NDuiADB["CustomTex"] ~= "" then
+		DB.normTex = "Interface\\"..NDuiADB["CustomTex"]
+	else
+		if not G.TextureList[NDuiADB["TexStyle"]] then
+			NDuiADB["TexStyle"] = 2 -- reset value if not exists
+		end
+		DB.normTex = G.TextureList[NDuiADB["TexStyle"]].texture
 	end
-	DB.normTex = G.TextureList[NDuiADB["TexStyle"]].texture
 
 	self:UnregisterAllEvents()
 end)
@@ -931,6 +936,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{},--blank
 		{4, "ACCOUNT", "TexStyle", L["Texture Style"], false, {}},
 		{4, "ACCOUNT", "NumberFormat", L["Numberize"], true, {L["Number Type1"], L["Number Type2"], L["Number Type3"]}},
+		{2, "ACCOUNT", "CustomTex", L["CustomTex"], nil, nil, nil, L["CustomTexTip"]},
 	},
 	[15] = {
 	},
@@ -1042,12 +1048,12 @@ local function CreateOption(i)
 				NDUI_VARIABLE(key, value, eb:GetText())
 				if callback then callback() end
 			end)
+
+			B.CreateFS(eb, 14, name, "system", "CENTER", 0, 25)
 			eb.title = L["Tips"]
 			local tip = L["EditBox Tip"]
 			if tooltip then tip = tooltip.."|n"..tip end
 			B.AddTooltip(eb, "ANCHOR_RIGHT", tip, "info")
-
-			B.CreateFS(eb, 14, name, "system", "CENTER", 0, 25)
 		-- Slider
 		elseif optType == 3 then
 			local min, max, step = unpack(data)
