@@ -331,13 +331,6 @@ function module:ShowMinimapClock()
 	end
 end
 
-function module:TrackMenu_SetText(spellID)
-	local name = GetSpellInfo(spellID)
-	local texture = GetSpellTexture(spellID) or 136243
-	name = " |T"..texture..":12:12:0:0:50:50:4:46:4:46|t "..name
-	return name
-end
-
 function module:TrackMenu_OnClick(spellID)
 	CastSpellByID(spellID)
 end
@@ -380,10 +373,16 @@ function module:EasyTrackMenu()
 		for _, spellID in pairs(trackSpells) do
 			if IsPlayerSpell(spellID) then
 				if not menuList[index] then menuList[index] = {} end
+				local spellName, _, texture = GetSpellInfo(spellID)
 				menuList[index].arg1 = spellID
-				menuList[index].text = module:TrackMenu_SetText(spellID)
+				menuList[index].text = spellName
 				menuList[index].func = module.TrackMenu_OnClick
 				menuList[index].checked = module.TrackMenu_CheckStatus
+				menuList[index].icon = texture
+				menuList[index].tCoordLeft = .08
+				menuList[index].tCoordRight = .92
+				menuList[index].tCoordTop = .08
+				menuList[index].tCoordBottom = .92
 
 				index = index + 1
 			end
