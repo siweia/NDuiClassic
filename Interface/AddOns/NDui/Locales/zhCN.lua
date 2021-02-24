@@ -637,3 +637,4 @@ L["Reset NDui Helpinfo"] = "你想要重置所有帮助提示吗？看来你不�
 L["ColoredTarget"] = "染色目标姓名板"
 L["ColoredTargetTip"] = "|n启用后，染色你当前的目标姓名板，优先级高于自定义及仇恨染色。|n你可以在下面的选项中自定义这个颜色。"
 L["TargetNP Color"] = "目标姓名板颜色"
+L["InstanceAurasTip"] = "|n显示副本相关的法术监控。|n关闭后，将只显示你可以驱散的负面效果。"
