@@ -42,11 +42,20 @@ local function ValueAndPercent(cur, per)
 	end
 end
 
+local function GetUnitHealthPerc(unit)
+	local unitMaxHealth = UnitHealthMax(unit)
+	if unitMaxHealth == 0 then
+		return 0
+	else
+		return B:Round(UnitHealth(unit) / unitMaxHealth * 100, 1)
+	end
+end
+
 oUF.Tags.Methods["hp"] = function(unit)
 	if UnitIsDeadOrGhost(unit) or not UnitIsConnected(unit) or UnitIsFeignDeath(unit) then
 		return oUF.Tags.Methods["DDG"](unit)
 	else
-		local per = oUF.Tags.Methods["perhp"](unit) or 0
+		local per = GetUnitHealthPerc(unit) or 0
 		local cur = UnitHealth(unit)
 		if unit == "player" or unit == "target" then
 			return ValueAndPercent(cur, per)
@@ -145,7 +154,7 @@ oUF.Tags.Methods["raidhp"] = function(unit)
 	if UnitIsDeadOrGhost(unit) or not UnitIsConnected(unit) or UnitIsFeignDeath(unit) then
 		return oUF.Tags.Methods["DDG"](unit)
 	elseif C.db["UFs"]["RaidHPMode"] == 2 then
-		local per = oUF.Tags.Methods["perhp"](unit) or 0
+		local per = GetUnitHealthPerc(unit) or 0
 		return ColorPercent(per)
 	elseif C.db["UFs"]["RaidHPMode"] == 3 then
 		local cur = UnitHealth(unit)
@@ -160,7 +169,7 @@ oUF.Tags.Events["raidhp"] = "UNIT_HEALTH_FREQUENT UNIT_MAXHEALTH UNIT_NAME_UPDAT
 
 -- Nameplate tags
 oUF.Tags.Methods["nphp"] = function(unit)
-	local per = oUF.Tags.Methods["perhp"](unit) or 0
+	local per = GetUnitHealthPerc(unit) or 0
 	if C.db["Nameplate"]["FullHealth"] then
 		local cur = UnitHealth(unit)
 		return ValueAndPercent(cur, per)
