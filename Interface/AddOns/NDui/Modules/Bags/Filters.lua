@@ -96,12 +96,12 @@ end
 function module:GetFilters()
 	local filters = {}
 
-	filters.onlyBags = function(item) return isItemInBag(item) and not isItemEquipment(item) and not isItemConsumable(item) and not isItemAmmo(item) and not isItemJunk(item) and not isItemFavourite(item) and not isEmptySlot(item) and not isTradeGoods(item) and not isQuestItem(item) end
+	filters.onlyBags = function(item) return isItemInBag(item) and not isEmptySlot(item) end
 	filters.bagAmmo = function(item) return isItemInBag(item) and isItemAmmo(item) end
 	filters.bagEquipment = function(item) return isItemInBag(item) and isItemEquipment(item) end
 	filters.bagConsumable = function(item) return isItemInBag(item) and isItemConsumable(item) end
 	filters.bagsJunk = function(item) return isItemInBag(item) and isItemJunk(item) end
-	filters.onlyBank = function(item) return isItemInBank(item) and not isItemEquipment(item) and not isItemLegendary(item) and not isItemConsumable(item) and not isItemAmmo(item) and not isItemFavourite(item) and not isEmptySlot(item) and not isTradeGoods(item) and not isQuestItem(item) end
+	filters.onlyBank = function(item) return isItemInBank(item) and not isEmptySlot(item) end
 	filters.bankAmmo = function(item) return isItemInBank(item) and isItemAmmo(item) end
 	filters.bankLegendary = function(item) return isItemInBank(item) and isItemLegendary(item) end
 	filters.bankEquipment = function(item) return isItemInBank(item) and isItemEquipment(item) end

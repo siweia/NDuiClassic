@@ -16,6 +16,8 @@ local NUM_BAG_SLOTS = NUM_BAG_SLOTS or 4
 local NUM_BANKBAGSLOTS = NUM_BANKBAGSLOTS or 6
 
 function module:UpdateAnchors(parent, bags)
+	if not parent:IsShown() then return end
+
 	local anchor = parent
 	for _, bag in ipairs(bags) do
 		if bag:GetHeight() > 45 then
@@ -168,7 +170,7 @@ function module:GetContainerEmptySlot(bagID)
 end
 
 function module:GetEmptySlot(name)
-	if name == "Main" then
+	if name == "Bag" then
 		for bagID = 0, NUM_BAG_SLOTS do
 			local slotID = module:GetContainerEmptySlot(bagID)
 			if slotID then
@@ -197,7 +199,7 @@ function module:FreeSlotOnDrop()
 end
 
 local freeSlotContainer = {
-	["Main"] = true,
+	["Bag"] = true,
 	["Bank"] = true,
 }
 
@@ -295,7 +297,7 @@ local function splitOnClick(self)
 	if texture and not locked and itemCount and itemCount > C.db["Bags"]["SplitCount"] then
 		SplitContainerItem(self.bagID, self.slotID, C.db["Bags"]["SplitCount"])
 
-		local bagID, slotID = module:GetEmptySlot("Main")
+		local bagID, slotID = module:GetEmptySlot("Bag")
 		if slotID then
 			PickupContainerItem(bagID, slotID)
 		end
@@ -501,70 +503,58 @@ function module:OnLogin()
 	module.BagsType[-1] = 0	-- bank
 
 	local f = {}
-	local filters = self:GetFilters()
+	local filters = module:GetFilters()
+	local MyContainer = Backpack:GetContainerClass()
+	local ContainerGroups = {["Bag"] = {}, ["Bank"] = {}}
+
+	local function AddNewContainer(bagType, index, name, filter)
+		local width = bagsWidth
+		if bagType == "Bank" then width = bankWidth end
+
+		local newContainer = MyContainer:New(name, {Columns = width, BagType = bagType})
+		newContainer:SetFilter(filter, true)
+		ContainerGroups[bagType][index] = newContainer
+	end
 
 	function Backpack:OnInit()
-		local MyContainer = self:GetContainerClass()
+		AddNewContainer("Bag", 7, "Junk", filters.bagsJunk)
+		AddNewContainer("Bag", 3, "BagFavourite", filters.bagFavourite)
+		AddNewContainer("Bag", 1, "AmmoItem", filters.bagAmmo)
+		AddNewContainer("Bag", 2, "Equipment", filters.bagEquipment)
+		AddNewContainer("Bag", 5, "Consumable", filters.bagConsumable)
+		AddNewContainer("Bag", 4, "BagGoods", filters.bagGoods)
+		AddNewContainer("Bag", 6, "BagQuest", filters.bagQuest)
 
-		f.main = MyContainer:New("Main", {Columns = bagsWidth, Bags = "bags"})
-		f.main:SetFilter(filters.onlyBags, true)
+		f.main = MyContainer:New("Bag", {Columns = bagsWidth, Bags = "bags"})
 		f.main:SetPoint("BOTTOMRIGHT", -50, 320)
-
-		f.junk = MyContainer:New("Junk", {Columns = bagsWidth, Parent = f.main})
-		f.junk:SetFilter(filters.bagsJunk, true)
-
-		f.bagFavourite = MyContainer:New("BagFavourite", {Columns = bagsWidth, Parent = f.main})
-		f.bagFavourite:SetFilter(filters.bagFavourite, true)
-
-		f.ammoItem = MyContainer:New("AmmoItem", {Columns = bagsWidth, Parent = f.main})
-		f.ammoItem:SetFilter(filters.bagAmmo, true)
-
-		f.equipment = MyContainer:New("Equipment", {Columns = bagsWidth, Parent = f.main})
-		f.equipment:SetFilter(filters.bagEquipment, true)
-
-		f.consumable = MyContainer:New("Consumable", {Columns = bagsWidth, Parent = f.main})
-		f.consumable:SetFilter(filters.bagConsumable, true)
-
-		f.bagGoods = MyContainer:New("BagGoods", {Columns = bagsWidth, Parent = f.main})
-		f.bagGoods:SetFilter(filters.bagGoods, true)
-
-		f.bagQuest = MyContainer:New("BagQuest", {Columns = bagsWidth, Parent = f.main})
-		f.bagQuest:SetFilter(filters.bagQuest, true)
+		f.main:SetFilter(filters.onlyBags, true)
 
 		local keyring = MyContainer:New("Keyring", {Columns = bagsWidth, Parent = f.main})
 		keyring:SetFilter(filters.onlyKeyring, true)
 		keyring:SetPoint("TOPRIGHT", f.main, "BOTTOMRIGHT", 0, -5)
 		keyring:Hide()
 		f.main.keyring = keyring
+	
+		AddNewContainer("Bank", 4, "BankFavourite", filters.bankFavourite)
+		AddNewContainer("Bank", 1, "bankAmmoItem", filters.bankAmmo)
+		AddNewContainer("Bank", 3, "BankLegendary", filters.bankLegendary)
+		AddNewContainer("Bank", 2, "BankEquipment", filters.bankEquipment)
+		AddNewContainer("Bank", 6, "BankConsumable", filters.bankConsumable)
+		AddNewContainer("Bank", 5, "BankGoods", filters.bankGoods)
+		AddNewContainer("Bank", 7, "BankQuest", filters.bankQuest)
 
 		f.bank = MyContainer:New("Bank", {Columns = bankWidth, Bags = "bank"})
-		f.bank:SetFilter(filters.onlyBank, true)
 		f.bank:SetPoint("BOTTOMRIGHT", f.main, "BOTTOMLEFT", -10, 0)
+		f.bank:SetFilter(filters.onlyBank, true)
 		f.bank:Hide()
 
-		f.bankFavourite = MyContainer:New("BankFavourite", {Columns = bankWidth, Parent = f.bank})
-		f.bankFavourite:SetFilter(filters.bankFavourite, true)
-
-		f.bankAmmoItem = MyContainer:New("BankAmmoItem", {Columns = bankWidth, Parent = f.bank})
-		f.bankAmmoItem:SetFilter(filters.bankAmmo, true)
-
-		f.bankLegendary = MyContainer:New("BankLegendary", {Columns = bankWidth, Parent = f.bank})
-		f.bankLegendary:SetFilter(filters.bankLegendary, true)
-
-		f.bankEquipment = MyContainer:New("BankEquipment", {Columns = bankWidth, Parent = f.bank})
-		f.bankEquipment:SetFilter(filters.bankEquipment, true)
-
-		f.bankConsumable = MyContainer:New("BankConsumable", {Columns = bankWidth, Parent = f.bank})
-		f.bankConsumable:SetFilter(filters.bankConsumable, true)
-
-		f.bankGoods = MyContainer:New("BankGoods", {Columns = bankWidth, Parent = f.bank})
-		f.bankGoods:SetFilter(filters.bankGoods, true)
-
-		f.bankQuest = MyContainer:New("BankQuest", {Columns = bankWidth, Parent = f.bank})
-		f.bankQuest:SetFilter(filters.bankQuest, true)
-
-		module.BagGroup = {f.ammoItem, f.equipment, f.bagFavourite, f.bagGoods, f.consumable, f.bagQuest, f.junk}
-		module.BankGroup = {f.bankAmmoItem, f.bankEquipment, f.bankLegendary, f.bankFavourite, f.bankGoods, f.bankConsumable, f.bankQuest}
+		for bagType, groups in pairs(ContainerGroups) do
+			for _, container in ipairs(groups) do
+				local parent = Backpack.contByName[bagType]
+				container:SetParent(parent)
+				B.CreateMF(container, parent, true)
+			end
+		end
 	end
 
 	local initBagType
@@ -720,7 +710,6 @@ function module:OnLogin()
 		end
 	end
 
-	local MyContainer = Backpack:GetContainerClass()
 	function MyContainer:OnContentsChanged()
 		self:SortButtons("bagSlot")
 
@@ -755,17 +744,18 @@ function module:OnLogin()
 		end
 		self:SetSize(width + xOffset*2, height + offset)
 
-		module:UpdateAnchors(f.main, module.BagGroup)
-		module:UpdateAnchors(f.bank, module.BankGroup)
+		module:UpdateAnchors(f.main, ContainerGroups["Bag"])
+		module:UpdateAnchors(f.bank, ContainerGroups["Bank"])
 	end
 
 	function MyContainer:OnCreate(name, settings)
 		self.Settings = settings
-		self:SetParent(settings.Parent or Backpack)
 		self:SetFrameStrata("HIGH")
 		self:SetClampedToScreen(true)
 		B.SetBD(self)
-		B.CreateMF(self, settings.Parent, true)
+		if settings.Bags then
+			B.CreateMF(self, nil, true)
+		end
 
 		local label
 		if strmatch(name, "AmmoItem$") then
@@ -793,7 +783,7 @@ function module:OnLogin()
 
 		local buttons = {}
 		buttons[1] = module.CreateCloseButton(self)
-		if name == "Main" then
+		if name == "Bag" then
 			module.CreateBagBar(self, settings, NUM_BAG_SLOTS)
 			buttons[2] = module.CreateRestoreButton(self, f)
 			buttons[3] = module.CreateBagToggle(self)
