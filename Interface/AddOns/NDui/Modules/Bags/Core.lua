@@ -600,7 +600,7 @@ function module:OnLogin()
 		self.Favourite:SetSize(30, 30)
 		self.Favourite:SetPoint("TOPLEFT", -12, 9)
 
-		self.Quest = B.CreateFS(self, 30, "!", "system", "LEFT", 3, 0)
+		self.Quest = B.CreateFS(self, 26, "!", "system", "LEFT", 3, 0)
 		self.iLvl = B.CreateFS(self, 12, "", false, "BOTTOMLEFT", 1, 2)
 
 		if showNewItem then
