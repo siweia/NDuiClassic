@@ -1,7 +1,7 @@
 local _, ns = ...
 local _, _, L = unpack(ns)
 if GetLocale() ~= "ruRU" then return end
-
+-- Credit: unw1s3
 L["From"] = "Шепчет"
 L["Tell"] = "Я шепчу"
 L["Ghost"] = "Призрак"
