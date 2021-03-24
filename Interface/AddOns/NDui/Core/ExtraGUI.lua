@@ -644,7 +644,7 @@ function G:SetupUnitFrame(parent)
 	local scroll = G:CreateScroll(panel, 260, 540)
 
 	local sliderRange = {
-		["Player"] = {200, 300},
+		["Player"] = {150, 300},
 		["Pet"] = {100, 200},
 	}
 
