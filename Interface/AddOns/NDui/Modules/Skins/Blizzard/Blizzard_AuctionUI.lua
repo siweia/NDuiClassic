@@ -134,7 +134,7 @@ C.themes["Blizzard_AuctionUI"] = function()
 		AuctionsItemButton.IconBorder:SetTexture("")
 	end)
 
-	B.CreateBD(AuctionsItemButton, .25)
+	B.CreateBDFrame(AuctionsItemButton, .25)
 	local _, AuctionsItemButtonNameFrame = AuctionsItemButton:GetRegions()
 	AuctionsItemButtonNameFrame:Hide()
 	local hl = AuctionsItemButton:GetHighlightTexture()
@@ -170,12 +170,11 @@ C.themes["Blizzard_AuctionUI"] = function()
 	tex:SetSize(14, 14)
 	tex:SetPoint("CENTER")
 	tex:SetVertexColor(1, 1, 1)
-	BrowseDropDownButton.bgTex = tex
+	BrowseDropDownButton.__texture = tex
 
-	local bg = B.CreateBDFrame(BrowseDropDown, 0)
+	local bg = B.CreateBDFrame(BrowseDropDown, 0, true)
 	bg:SetPoint("TOPLEFT", 16, -5)
 	bg:SetPoint("BOTTOMRIGHT", 109, 11)
-	B.CreateGradient(bg)
 
 	BrowseDropDownButton:HookScript("OnEnter", B.Texture_OnEnter)
 	BrowseDropDownButton:HookScript("OnLeave", B.Texture_OnLeave)

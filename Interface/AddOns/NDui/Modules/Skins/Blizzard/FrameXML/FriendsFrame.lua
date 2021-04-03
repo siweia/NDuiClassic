@@ -131,10 +131,9 @@ tinsert(C.defaultThemes, function()
 		end
 	end)
 
-	local whoBg = B.CreateBDFrame(WhoFrameEditBox, .25)
+	local whoBg = B.CreateBDFrame(WhoFrameEditBox, 0, true)
 	whoBg:SetPoint("TOPLEFT", WhoFrameEditBoxInset)
 	whoBg:SetPoint("BOTTOMRIGHT", WhoFrameEditBoxInset, -1, 1)
-	B.CreateGradient(whoBg)
 
 	B.ReskinPortraitFrame(FriendsFrame)
 	B.Reskin(FriendsFrameAddFriendButton)
@@ -228,10 +227,9 @@ tinsert(C.defaultThemes, function()
 	B.ReskinDropDown(GuildControlPopupFrameDropDown)
 	B.ReskinArrow(GuildControlPopupFrameAddRankButton, "right")
 	B.StripTextures(GuildControlPopupFrameEditBox)
-	local bg = B.CreateBDFrame(GuildControlPopupFrameEditBox, .0)
+	local bg = B.CreateBDFrame(GuildControlPopupFrameEditBox, 0, true)
 	bg:SetPoint("TOPLEFT", -5, -5)
 	bg:SetPoint("BOTTOMRIGHT", 5, 5)
-	B.CreateGradient(bg)
 	B.Reskin(GuildControlPopupAcceptButton)
 	B.Reskin(GuildControlPopupFrameCancelButton)
 	for i = 1, 13 do

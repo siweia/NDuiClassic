@@ -70,11 +70,10 @@ tinsert(C.defaultThemes, function()
 			B.SetupArrow(tex, "down")
 			tex:SetSize(14, 14)
 			tex:SetPoint("CENTER")
-			arrowButton.bgTex = tex
+			arrowButton.__texture = tex
 
-			local colourArrow, clearArrow = B.colourArrow, B.clearArrow
-			arrowButton:SetScript("OnEnter", colourArrow)
-			arrowButton:SetScript("OnLeave", clearArrow)
+			arrowButton:SetScript("OnEnter", B.Texture_OnEnter)
+			arrowButton:SetScript("OnLeave", B.Texture_OnLeave)
 
 			navButton.restyled = true
 		end

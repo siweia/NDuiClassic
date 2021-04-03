@@ -51,10 +51,9 @@ function module:CreateInfoFrame()
 	search.isGlobal = true
 	search:SetPoint("LEFT", 0, 5)
 	search:DisableDrawLayer("BACKGROUND")
-	local bg = B.CreateBDFrame(search, 0)
+	local bg = B.CreateBDFrame(search, 0, true)
 	bg:SetPoint("TOPLEFT", -5, -5)
 	bg:SetPoint("BOTTOMRIGHT", 5, 5)
-	B.CreateGradient(bg)
 
 	local tag = self:SpawnPlugin("TagDisplay", "[money]", infoFrame)
 	tag:SetFont(unpack(DB.Font))
