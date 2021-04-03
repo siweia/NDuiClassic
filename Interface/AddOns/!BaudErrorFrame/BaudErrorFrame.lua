@@ -1,7 +1,7 @@
 local SelectedError = 1
 local ErrorList = {}
 local SoundTime = 0
-local enableTaint = false
+local enableTaint = true
 BaudErrorFrameConfig = BaudErrorFrameConfig or {}
 
 local function RegisterTaintEvents(self)
@@ -52,7 +52,7 @@ function BaudErrorFrame_OnLoad(self)
 	soundButton:SetScript("OnMouseUp", function(self)
 		BaudErrorFrameConfig.enableSound = not BaudErrorFrameConfig.enableSound
 		updateColor()
-		PlaySound(1201, "Master")
+		PlaySound(48942, "Master")
 		self:GetScript("OnEnter")(self)
 	end)
 	soundButton:SetScript("OnShow", updateColor)
@@ -109,7 +109,7 @@ function BaudErrorFrameShowError(Error)
 	if not BaudErrorFrameConfig.enableSound then return end
 
 	if GetTime() > SoundTime then
-		PlaySound(1201, "Master")
+		PlaySound(48942, "Master")
 		SoundTime = GetTime() + 1
 	end
 end
@@ -234,16 +234,17 @@ f:SetScript("OnEvent", function()
 
 	if IsAddOnLoaded("NDui") then
 		local B, _, _, DB = unpack(NDui)
-		B.CreateMF(BaudErrorFrame)
 		if DB.isDeveloper then
 			RegisterTaintEvents(BaudErrorFrame)
 		end
-		BaudErrorFrame:SetBackdrop(nil)
+		B.CreateMF(BaudErrorFrame)
 		B.SetBD(BaudErrorFrame)
-		BaudErrorFrameListScrollBox:SetBackdrop(nil)
+
+		BaudErrorFrameBackground:SetAlpha(0)
+		BaudErrorFrameDetailScrollBoxBackground:SetAlpha(0)
 		BaudErrorFrameListScrollBoxHighlightTexture:SetVertexColor(DB.r, DB.g, DB.b, .25)
-		B.StripTextures(BaudErrorFrameDetailScrollBox)
 		B.CreateBDFrame(BaudErrorFrameDetailScrollBox, .25)
+
 		B.ReskinScroll(BaudErrorFrameListScrollBoxScrollBarScrollBar)
 		B.ReskinScroll(BaudErrorFrameDetailScrollFrameScrollBar)
 		B.Reskin(BaudErrorFrameClearButton)
