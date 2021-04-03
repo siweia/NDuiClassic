@@ -820,6 +820,7 @@ function UF:CreateDebuffs(self)
 	bu.initialAnchor = "TOPRIGHT"
 	bu["growth-x"] = "LEFT"
 	bu["growth-y"] = "DOWN"
+	bu.tooltipAnchor = "ANCHOR_BOTTOMLEFT"
 	if mystyle == "player" then
 		bu:SetPoint("TOPRIGHT", self.Power, "BOTTOMRIGHT", 0, -10)
 		bu.num = 14
