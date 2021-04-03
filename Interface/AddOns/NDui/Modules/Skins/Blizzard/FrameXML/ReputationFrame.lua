@@ -16,7 +16,7 @@ tinsert(C.defaultThemes, function()
 			if bar and not bar.styled then
 				B.StripTextures(bar)
 				bar:SetStatusBarTexture(DB.bdTex)
-				B.CreateBD(bar, .25)
+				B.CreateBDFrame(bar, .25)
 
 				local icon = check:GetRegions()
 				icon:SetTexture("Interface\\Buttons\\UI-CheckBox-SwordCheck")
