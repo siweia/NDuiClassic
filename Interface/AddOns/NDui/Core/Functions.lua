@@ -1140,8 +1140,11 @@ do
 
 	-- Handle collapse
 	local function updateCollapseTexture(texture, collapsed)
-		local atlas = collapsed and "Soulbinds_Collection_CategoryHeader_Expand" or "Soulbinds_Collection_CategoryHeader_Collapse"
-		texture:SetAtlas(atlas, true)
+		if collapsed then
+			texture:SetTexCoord(0, .4375, 0, .4375)
+		else
+			texture:SetTexCoord(.5625, 1, 0, .4375)
+		end
 	end
 
 	local function resetCollapseTexture(self, texture)
@@ -1174,6 +1177,8 @@ do
 
 		self.__texture = bg:CreateTexture(nil, "OVERLAY")
 		self.__texture:SetPoint("CENTER")
+		self.__texture:SetSize(7, 7)
+		self.__texture:SetTexture("Interface\\Buttons\\UI-PlusMinus-Buttons")
 		self.__texture.DoCollapse = updateCollapseTexture
 
 		self:HookScript("OnEnter", B.Texture_OnEnter)
