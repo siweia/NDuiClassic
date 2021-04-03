@@ -642,5 +642,6 @@ L["TargetNP Color"] = "Цвет индик.здоровья цели"
 L["InstanceAurasTip"] = "|nПоказывать основные дебаффы в рейдах и подземельях."
 L["CustomTex"] = "Пользовательский путь к текстуре"
 L["CustomTexTip"] = "|nПоместите текстуру в папку «Interface» и введите здесь имя текстуры, чтобы заменить стиль.|nНеправильная текстура будет отображаться как зеленый блок.|nОставьте поле редактирования пустым, чтобы отключить пользовательскую текстуру. Требуется перезагрузка интерфейса."
+L["Switch Mode"] = "Switch mode" -- need translation
 L["DispellableOnly"] = "Dispellable spells only" -- need translation
 L["DispellableOnlyTip"] = "|nOnly show your dispellable debuffs.|nIf disabled, all the auras from magic, curse, disease and poison would show on raidframe.|nThe icon border would be colored when dispellable." -- need translation

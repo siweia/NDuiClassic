@@ -10,6 +10,8 @@ local CLASS_ICON_TCOORDS = CLASS_ICON_TCOORDS
 local GetMoney = GetMoney
 local GetContainerNumSlots, GetContainerItemLink, GetItemInfo, GetContainerItemInfo, UseContainerItem = GetContainerNumSlots, GetContainerItemLink, GetItemInfo, GetContainerItemInfo, UseContainerItem
 local C_Timer_After, IsControlKeyDown, IsShiftKeyDown = C_Timer.After, IsControlKeyDown, IsShiftKeyDown
+local CalculateTotalNumberOfFreeBagSlots = CalculateTotalNumberOfFreeBagSlots
+local slotString = L["Bags"]..": %s%d"
 
 local profit, spent, oldMoney = 0, 0, 0
 local myName, myRealm = DB.MyName, DB.MyRealm
@@ -21,6 +23,15 @@ local function getClassIcon(class)
 	return classStr or ""
 end
 
+local function getSlotString()
+	local num = CalculateTotalNumberOfFreeBagSlots()
+	if num < 10 then
+		return format(slotString, "|cffff0000", num)
+	else
+		return format(slotString, "|cff00ff00", num)
+	end
+end
+
 info.eventList = {
 	"PLAYER_MONEY",
 	"SEND_MAIL_MONEY_CHANGED",
@@ -30,10 +41,12 @@ info.eventList = {
 	"PLAYER_ENTERING_WORLD",
 }
 
-info.onEvent = function(self, event)
+info.onEvent = function(self, event, arg1)
 	if event == "PLAYER_ENTERING_WORLD" then
 		oldMoney = GetMoney()
 		self:UnregisterEvent(event)
+	elseif event == "BAG_UPDATE" then
+		if arg1 < 0 or arg1 > 4 then return end
 	end
 
 	local newMoney = GetMoney()
@@ -43,7 +56,11 @@ info.onEvent = function(self, event)
 	else								-- Gained Moeny
 		profit = profit + change
 	end
-	self.text:SetText(module:GetMoneyString(newMoney))
+	if NDuiADB["ShowSlots"] then
+		self.text:SetText(getSlotString())
+	else
+		self.text:SetText(module:GetMoneyString(newMoney))
+	end
 
 	if not NDuiADB["totalGold"][myRealm] then NDuiADB["totalGold"][myRealm] = {} end
 	NDuiADB["totalGold"][myRealm][myName] = {GetMoney(), DB.MyClass}
@@ -63,8 +80,18 @@ StaticPopupDialogs["RESETGOLD"] = {
 }
 
 info.onMouseUp = function(self, btn)
-	if IsControlKeyDown() and btn == "RightButton" then
-		StaticPopup_Show("RESETGOLD")
+	if btn == "RightButton" then
+		if IsControlKeyDown() then
+			StaticPopup_Show("RESETGOLD")
+		else
+			NDuiADB["ShowSlots"] = not NDuiADB["ShowSlots"]
+			if NDuiADB["ShowSlots"] then
+				self:RegisterEvent("BAG_UPDATE")
+			else
+				self:UnregisterEvent("BAG_UPDATE")
+			end
+			self:onEvent()
+		end
 	elseif btn == "MiddleButton" then
 		NDuiADB["AutoSell"] = not NDuiADB["AutoSell"]
 		self:onEnter()
@@ -103,6 +130,7 @@ info.onEnter = function(self)
 	GameTooltip:AddDoubleLine(TOTAL..":", module:GetMoneyString(totalGold), .6,.8,1, 1,1,1)
 
 	GameTooltip:AddDoubleLine(" ", DB.LineString)
+	GameTooltip:AddDoubleLine(" ", DB.RightButton..L["Switch Mode"].." ", 1,1,1, .6,.8,1)
 	GameTooltip:AddDoubleLine(" ", DB.ScrollButton..L["AutoSell Junk"]..": "..(NDuiADB["AutoSell"] and "|cff55ff55"..VIDEO_OPTIONS_ENABLED or "|cffff5555"..VIDEO_OPTIONS_DISABLED).." ", 1,1,1, .6,.8,1)
 	GameTooltip:AddDoubleLine(" ", "CTRL +"..DB.RightButton..L["Reset Gold"].." ", 1,1,1, .6,.8,1)
 	GameTooltip:Show()
