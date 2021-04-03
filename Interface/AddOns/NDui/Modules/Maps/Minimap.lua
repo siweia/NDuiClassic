@@ -13,7 +13,8 @@ local cr, cg, cb = DB.r, DB.g, DB.b
 function module:CreatePulse()
 	if not C.db["Map"]["CombatPulse"] then return end
 
-	local bg = B.CreateBDFrame(Minimap, nil, true)
+	local bg = B.SetBD(Minimap)
+	bg:SetFrameStrata("BACKGROUND")
 	local anim = bg:CreateAnimationGroup()
 	anim:SetLooping("BOUNCE")
 	anim.fader = anim:CreateAnimation("Alpha")
@@ -49,13 +50,12 @@ end
 
 function module:ReskinRegions()
 	-- Tracking icon
-	MiniMapTrackingFrame:SetScale(.7)
-	MiniMapTrackingFrame:ClearAllPoints()
-	MiniMapTrackingFrame:SetPoint("BOTTOMRIGHT", Minimap, -5, 5)
+	MiniMapTracking:SetScale(.7)
+	MiniMapTracking:ClearAllPoints()
+	MiniMapTracking:SetPoint("BOTTOMRIGHT", Minimap, -3, 3)
 	MiniMapTrackingBorder:Hide()
-	MiniMapTrackingIcon:SetTexCoord(unpack(DB.TexCoord))
-	local bg = B.CreateBDFrame(MiniMapTrackingIcon)
-	bg:SetBackdropBorderColor(cr, cg, cb)
+	MiniMapTrackingBackground:Hide()
+	B.ReskinIcon(MiniMapTrackingIcon)
 
 	-- Mail icon
 	MiniMapMailFrame:ClearAllPoints()
@@ -331,84 +331,10 @@ function module:ShowMinimapClock()
 	end
 end
 
-function module:TrackMenu_OnClick(spellID)
-	CastSpellByID(spellID)
-end
-
-function module:TrackMenu_CheckStatus()
-	local texture = GetSpellTexture(self.arg1)
-	if texture == GetTrackingTexture() then
-		return true
-	end
-end
-
 function module:EasyTrackMenu()
-	local trackSpells = {
-		2383,	--Find Herbs
-		2580,	--Find Minerals
-		2481,	--Find Treasure
-		1494,	--Track Beasts
-		19883,	--Track Humanoids
-		19884,	--Track Undead
-		19885,	--Track Hidden
-		19880,	--Track Elementals
-		19878,	--Track Demons
-		19882,	--Track Giants
-		19879,	--Track Dragonkin
-		5225,	--Track Humanoids: Druid
-		5500,	--Sense Demons
-		5502,	--Sense Undead
-	}
-
-	local menuList = {
-		[1] = {text = L["TrackMenu"], isTitle = true, notCheckable = true},
-	}
-
-	local function updateMenuList()
-		for i = 2, #menuList do
-			if menuList[i] then wipe(menuList[i]) end
-		end
-
-		local index = 2
-		for _, spellID in pairs(trackSpells) do
-			if IsPlayerSpell(spellID) then
-				if not menuList[index] then menuList[index] = {} end
-				local spellName, _, texture = GetSpellInfo(spellID)
-				menuList[index].arg1 = spellID
-				menuList[index].text = spellName
-				menuList[index].func = module.TrackMenu_OnClick
-				menuList[index].checked = module.TrackMenu_CheckStatus
-				menuList[index].icon = texture
-				menuList[index].tCoordLeft = .08
-				menuList[index].tCoordRight = .92
-				menuList[index].tCoordTop = .08
-				menuList[index].tCoordBottom = .92
-
-				index = index + 1
-			end
-		end
-
-		return index
-	end
-
-	local function toggleTrackMenu(self)
-		if DropDownList1:IsShown() then
-			DropDownList1:Hide()
-		else
-			local index = updateMenuList()
-			if index > 2 then
-				local offset = self:GetWidth()*self:GetScale()*.5
-				EasyMenu(menuList, B.EasyMenu, self, -offset, offset, "MENU")
-			end
-		end
-	end
-
-	-- Click Func
 	local hasAlaCalendar = IsAddOnLoaded("alaCalendar")
 	Minimap:SetScript("OnMouseUp", function(self, btn)
-		if btn == "RightButton" then
-			toggleTrackMenu(self)
-		elseif btn == "MiddleButton" and hasAlaCalendar then
+		if btn == "MiddleButton" and hasAlaCalendar then
 			B:TogglePanel(ALA_CALENDAR)
 		else
 			Minimap_OnClick(self)

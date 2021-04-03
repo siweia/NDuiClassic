@@ -7,7 +7,7 @@ local pairs, tonumber, print, strfind, strupper = pairs, tonumber, print, strfin
 local InCombatLockdown = InCombatLockdown
 local GetSpellBookItemName, GetMacroInfo = GetSpellBookItemName, GetMacroInfo
 local IsAltKeyDown, IsControlKeyDown, IsShiftKeyDown = IsAltKeyDown, IsControlKeyDown, IsShiftKeyDown
-local GetBindingKey, SetBinding, AttemptToSaveBindings, LoadBindings = GetBindingKey, SetBinding, AttemptToSaveBindings, LoadBindings
+local GetBindingKey, SetBinding, SaveBindings, LoadBindings = GetBindingKey, SetBinding, SaveBindings, LoadBindings
 local MAX_ACCOUNT_MACROS = MAX_ACCOUNT_MACROS
 local NOT_BOUND = NOT_BOUND
 
@@ -56,7 +56,7 @@ end
 function Bar:Bind_Create()
 	if Bar.keybindFrame then return end
 
-	local frame = CreateFrame("Frame", nil, UIParent)
+	local frame = CreateFrame("Frame", nil, UIParent, "BackdropTemplate")
 	frame:SetFrameStrata("DIALOG")
 	frame:EnableMouse(true)
 	frame:EnableKeyboard(true)
@@ -233,7 +233,7 @@ end
 
 function Bar:Bind_Deactivate(save)
 	if save == true then
-		AttemptToSaveBindings(C.db["Actionbar"]["BindType"])
+		SaveBindings(C.db["Actionbar"]["BindType"])
 		print("|cff0080ffNDui|r: |cff00ff00"..L["Save keybinds"].."|r")
 	else
 		LoadBindings(C.db["Actionbar"]["BindType"])

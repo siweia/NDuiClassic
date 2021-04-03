@@ -23,7 +23,7 @@ C.themes["Blizzard_TimeManager"] = function()
 	B.StripTextures(StopwatchFrame)
 	B.StripTextures(StopwatchTabFrame)
 	B.SetBD(StopwatchFrame)
-	B.ReskinClose(StopwatchCloseButton, "TOPRIGHT", StopwatchFrame, "TOPRIGHT", -2, -2)
+	B.ReskinClose(StopwatchCloseButton, -2, -2)
 
 	local reset = StopwatchResetButton
 	reset:GetNormalTexture():SetTexCoord(.25, .75, .27, .75)

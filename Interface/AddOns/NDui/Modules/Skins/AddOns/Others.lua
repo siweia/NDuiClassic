@@ -127,7 +127,7 @@ function S:CharacterStatsClassic()
 	bu:SetSize(17, 17)
 	bu:SetPoint("RIGHT", CharacterFrameCloseButton, "LEFT", -3, 0)
 	bu:SetNormalTexture("Interface\\Buttons\\UI-MinusButton-Up")
-	B.ReskinExpandOrCollapse(bu)
+	B.ReskinCollapse(bu)
 	bu.bg:SetSize(17, 17)
 	bu:SetNormalTexture("Interface\\Buttons\\UI-MinusButton-Up")
 	bu.collapse = not CharacterStatsClassicDB.expandStat

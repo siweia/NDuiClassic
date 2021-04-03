@@ -90,7 +90,7 @@ function module:SkinChat()
 	eb:ClearAllPoints()
 	eb:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 4, 26)
 	eb:SetPoint("TOPRIGHT", self, "TOPRIGHT", -17, 50)
-	B.StripTextures(eb)
+	B.StripTextures(eb, 2)
 	B.SetBD(eb)
 
 	local lang = _G[name.."EditBoxLanguage"]

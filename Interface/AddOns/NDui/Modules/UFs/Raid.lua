@@ -3,8 +3,6 @@ local B, C, L, DB = unpack(ns)
 local oUF = ns.oUF or oUF
 local UF = B:GetModule("UnitFrames")
 
-local LCD = DB.LibClassicDurations
-
 local strmatch, format, wipe, tinsert = string.match, string.format, table.wipe, table.insert
 local pairs, ipairs, next, tonumber, unpack, gsub = pairs, ipairs, next, tonumber, unpack, gsub
 local UnitAura, GetSpellInfo = UnitAura, GetSpellInfo
@@ -45,7 +43,7 @@ function UF:CreateTargetBorder(self)
 	border:SetOutside(self.Health.backdrop, C.mult+4, C.mult+4, self.Power.backdrop)
 	border:SetBackdropBorderColor(1, 1, 1)
 	border:Hide()
-	self.Shadow = nil
+	self.__shadow = nil
 
 	self.TargetBorder = border
 	self:RegisterEvent("PLAYER_TARGET_CHANGED", UF.UpdateTargetBorder, true)
@@ -72,7 +70,7 @@ function UF:CreateThreatBorder(self)
 	threatIndicator:SetOutside(self.Health.backdrop, C.mult+3, C.mult+3, self.Power.backdrop)
 	threatIndicator:SetBackdropBorderColor(.7, .7, .7)
 	threatIndicator:SetFrameLevel(0)
-	self.Shadow = nil
+	self.__shadow = nil
 
 	self.ThreatIndicator = threatIndicator
 	self.ThreatIndicator.Override = UF.UpdateThreatBorder
@@ -116,7 +114,7 @@ function UF:CreateRaidDebuffs(self)
 	bu:SetPoint("RIGHT", -15, 0)
 	bu:SetFrameLevel(self:GetFrameLevel() + 3)
 	B.CreateSD(bu, 3, true)
-	bu.Shadow:SetFrameLevel(self:GetFrameLevel() + 2)
+	bu.__shadow:SetFrameLevel(self:GetFrameLevel() + 2)
 	bu:SetScale(scale)
 	bu:Hide()
 
@@ -351,13 +349,6 @@ function UF:UpdateBuffIndicator(event, unit)
 			if not name then break end
 			local value = spellList[spellID] or C.CornerBuffsByName[name]
 			if value and (value[3] or caster == "player" or caster == "pet") then
-				if duration == 0 then
-					local newduration, newexpires = LCD:GetAuraDurationByUnit(unit, spellID, caster, name)
-					if newduration then
-						duration, expiration = newduration, newexpires
-					end
-				end
-
 				for _, bu in pairs(buttons) do
 					if bu.anchor == value[1] then
 						if C.db["UFs"]["BuffIndicatorType"] == 3 then

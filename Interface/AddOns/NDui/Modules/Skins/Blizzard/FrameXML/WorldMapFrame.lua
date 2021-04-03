@@ -5,6 +5,7 @@ tinsert(C.defaultThemes, function()
 	local WorldMapFrame = WorldMapFrame
 
 	B.ReskinPortraitFrame(WorldMapFrame, 7, 0, -7, 25)
+	B.ReskinDropDown(WorldMapZoneMinimapDropDown)
 	B.ReskinDropDown(WorldMapContinentDropDown)
 	B.ReskinDropDown(WorldMapZoneDropDown)
 	B.Reskin(WorldMapZoomOutButton)

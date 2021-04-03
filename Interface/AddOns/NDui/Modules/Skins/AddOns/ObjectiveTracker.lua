@@ -184,7 +184,7 @@ function S:EnhancedQuestTracker()
 	bu:SetHighlightTexture("Interface\\Buttons\\UI-PlusButton-Hilight")
 	if C.db["Skins"]["BlizzardSkins"] then
 		bu:SetPoint("TOPRIGHT", 0, 14)
-		B.ReskinExpandOrCollapse(bu)
+		B.ReskinCollapse(bu)
 		bu:SetNormalTexture("Interface\\Buttons\\UI-MinusButton-Up")
 	end
 	bu:SetShown(GetNumQuestWatches() > 0)

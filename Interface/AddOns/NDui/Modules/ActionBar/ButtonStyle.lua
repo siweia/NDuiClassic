@@ -115,14 +115,12 @@ local function SetupCooldown(cooldown, cfg)
 	ApplyPoints(cooldown, cfg.points)
 end
 
-local function SetupBackdrop(button)
-	B.CreateBD(button, .25)
-	B.CreateTex(button)
-	B.CreateSD(button)
+local function SetupBackdrop(icon)
+	local bg = B.SetBD(icon, .25)
 	if C.db["Actionbar"]["Classcolor"] then
-		button:SetBackdropColor(DB.r, DB.g, DB.b, .25)
+		bg:SetBackdropColor(DB.r, DB.g, DB.b, .25)
 	else
-		button:SetBackdropColor(.2, .2, .2, .25)
+		bg:SetBackdropColor(.2, .2, .2, .25)
 	end
 end
 
@@ -200,7 +198,7 @@ function Bar:StyleActionButton(button, cfg)
 	if NewActionTexture then NewActionTexture:SetTexture(nil) end
 
 	--backdrop
-	SetupBackdrop(button)
+	SetupBackdrop(icon)
 
 	--textures
 	SetupTexture(icon, cfg.icon, "SetTexture", icon)

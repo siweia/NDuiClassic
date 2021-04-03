@@ -115,8 +115,8 @@ function UF:CreateHealthBar(self)
 	health:SetStatusBarTexture(DB.normTex)
 	health:SetStatusBarColor(.1, .1, .1)
 	health:SetFrameLevel(self:GetFrameLevel() - 2)
-	health.backdrop = B.CreateBDFrame(health, 0, true) -- don't mess up with libs
-	health.shadow = health.backdrop.Shadow
+	health.backdrop = B.SetBD(health, 0) -- don't mess up with libs
+	health.shadow = health.backdrop.__shadow
 	B:SmoothBar(health)
 	health.frequentUpdates = true
 
@@ -894,7 +894,7 @@ function UF:CreateClassPower(self)
 		bars[i]:SetWidth((barWidth - 5*C.margin) / 6)
 		bars[i]:SetStatusBarTexture(DB.normTex)
 		bars[i]:SetFrameLevel(self:GetFrameLevel() + 5)
-		B.CreateBDFrame(bars[i], 0, true)
+		B.SetBD(bars[i], 0)
 		if i == 1 then
 			bars[i]:SetPoint("BOTTOMLEFT")
 		else
@@ -990,7 +990,7 @@ function UF:CreateAddPower(self)
 	bar:SetPoint("TOPRIGHT", self.Power, "BOTTOMRIGHT", 0, -3)
 	bar:SetHeight(4)
 	bar:SetStatusBarTexture(DB.normTex)
-	B.CreateBDFrame(bar, 0, true)
+	B.SetBD(bar, 0)
 	bar.colorPower = true
 	B:SmoothBar(bar)
 

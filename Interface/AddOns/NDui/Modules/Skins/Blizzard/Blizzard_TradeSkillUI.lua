@@ -17,7 +17,7 @@ C.themes["Blizzard_CraftUI"] = function()
 	B.StripTextures(CraftDetailScrollChildFrame)
 	B.StripTextures(CraftIcon)
 	B.CreateBDFrame(CraftIcon)
-	B.ReskinExpandOrCollapse(CraftCollapseAllButton)
+	B.ReskinCollapse(CraftCollapseAllButton)
 	CraftExpandButtonFrame:DisableDrawLayer("BACKGROUND")
 
 	hooksecurefunc("CraftFrame_SetSelection", function(id)
@@ -58,11 +58,11 @@ C.themes["Blizzard_TradeSkillUI"] = function()
 	B.CreateBDFrame(TradeSkillRankFrame, .25)
 	TradeSkillRankFrame:SetWidth(220)
 
-	B.ReskinExpandOrCollapse(TradeSkillCollapseAllButton)
+	B.ReskinCollapse(TradeSkillCollapseAllButton)
 	TradeSkillExpandButtonFrame:DisableDrawLayer("BACKGROUND")
 	for i = 1, 8 do
 		local bu = _G["TradeSkillSkill"..i]
-		B.ReskinExpandOrCollapse(bu)
+		B.ReskinCollapse(bu)
 	end
 	B.ReskinDropDown(TradeSkillSubClassDropDown)
 	B.ReskinDropDown(TradeSkillInvSlotDropDown)

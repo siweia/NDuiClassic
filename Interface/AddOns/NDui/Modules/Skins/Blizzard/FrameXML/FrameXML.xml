@@ -35,10 +35,8 @@
 	<Script file="QuestInfo.lua"/>
 	<Script file="RaidFrame.lua"/>
 	<Script file="ReadyCheck.lua"/>
-	<Script file="RecruitAFriendFrame.lua"/>
 	<Script file="ReputationFrame.lua"/>
 	<Script file="ScriptErrorsFrame.lua"/>
-	<Script file="ScrollOfResurrection.lua"/>
 	<Script file="SpellBookFrame.lua"/>
 	<Script file="StackSplitFrame.lua"/>
 	<Script file="StaticPopup.lua"/>

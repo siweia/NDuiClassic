@@ -268,14 +268,14 @@ function G:UpdateCurrentProfile()
 			UpdateButtonStatus(bar.apply, false)
 			UpdateButtonStatus(bar.reset, true)
 			bar:SetBackdropColor(cr, cg, cb, .25)
-			bar.apply:SetBackdropBorderColor(1, .8, 0)
+			bar.apply.bg:SetBackdropBorderColor(1, .8, 0)
 		else
 			UpdateButtonStatus(bar.upload, true)
 			UpdateButtonStatus(bar.download, true)
 			UpdateButtonStatus(bar.apply, true)
 			UpdateButtonStatus(bar.reset, false)
 			bar:SetBackdropColor(0, 0, 0, .25)
-			bar.apply:SetBackdropBorderColor(0, 0, 0)
+			bar.apply.bg:SetBackdropBorderColor(0, 0, 0)
 		end
 	end
 end

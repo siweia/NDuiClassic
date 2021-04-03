@@ -4,6 +4,8 @@ local B, C, L, DB = unpack(ns)
 tinsert(C.defaultThemes, function()
 	B.ReskinPortraitFrame(CharacterFrame, 15, -15, -35, 73)
 	B.ReskinRotationButtons(CharacterModelFrame)
+	B.ReskinDropDown(PlayerStatFrameLeftDropDown)
+	B.ReskinDropDown(PlayerStatFrameRightDropDown)
 
 	local CHARACTERFRAME_SUBFRAMES = CHARACTERFRAME_SUBFRAMES or 5
 
@@ -73,7 +75,7 @@ tinsert(C.defaultThemes, function()
 	B.StripTextures(SkillFrame)
 	B.ReskinScroll(SkillListScrollFrameScrollBar)
 	B.Reskin(SkillFrameCancelButton)
-	B.ReskinExpandOrCollapse(SkillFrameCollapseAllButton)
+	B.ReskinCollapse(SkillFrameCollapseAllButton)
 	B.StripTextures(SkillFrameExpandButtonFrame)
 	B.ReskinScroll(SkillDetailScrollFrame.ScrollBar)
 	B.CreateBDFrame(SkillDetailScrollFrame, .25)
@@ -82,7 +84,7 @@ tinsert(C.defaultThemes, function()
 	B.CreateBDFrame(SkillDetailStatusBar, .25)
 
 	for i = 1, 12 do
-		B.ReskinExpandOrCollapse(_G["SkillTypeLabel"..i])
+		B.ReskinCollapse(_G["SkillTypeLabel"..i])
 		B.CreateBDFrame(_G["SkillRankFrame"..i], .25)
 		_G["SkillRankFrame"..i.."Border"]:SetAlpha(0)
 		_G["SkillRankFrame"..i.."Bar"]:SetTexture(DB.bdTex)

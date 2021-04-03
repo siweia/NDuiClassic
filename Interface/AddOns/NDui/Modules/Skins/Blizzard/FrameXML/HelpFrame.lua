@@ -61,8 +61,7 @@ tinsert(C.defaultThemes, function()
 	for i = 1, 15 do
 		local bu = _G["HelpFrameKnowledgebaseScrollFrameButton"..i]
 		bu:DisableDrawLayer("ARTWORK")
-		B.CreateBD(bu, 0)
-		B.CreateGradient(bu)
+		B.CreateBDFrame(bu, 0, true)
 	end
 
 	local function colourTab(f)

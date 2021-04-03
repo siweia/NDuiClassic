@@ -7,7 +7,7 @@ tinsert(C.defaultThemes, function()
 	AvailableServicesText:SetShadowColor(0, 0, 0)
 
 	B.ReskinPortraitFrame(GuildRegistrarFrame)
-	B.CreateBD(GuildRegistrarFrameEditBox, .25)
+	B.CreateBDFrame(GuildRegistrarFrameEditBox, .25)
 	B.Reskin(GuildRegistrarFrameGoodbyeButton)
 	B.Reskin(GuildRegistrarFramePurchaseButton)
 	B.Reskin(GuildRegistrarFrameCancelButton)

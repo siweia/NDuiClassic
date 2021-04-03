@@ -2,8 +2,6 @@ local _, ns = ...
 local B, C, L, DB = unpack(ns)
 local oUF = ns.oUF or oUF
 
-local LCD = DB.LibClassicDurations
-
 local debugMode = false
 local class = DB.MyClass
 local RaidDebuffsIgnore, invalidPrio = {}, -1
@@ -93,8 +91,8 @@ local function UpdateDebuffFrame(self, name, icon, count, debuffType, duration, 
 		end
 
 		local c = DispellColor[debuffType] or DispellColor.none
-		if rd.ShowDebuffBorder and rd.Shadow then
-			rd.Shadow:SetBackdropBorderColor(c[1], c[2], c[3])
+		if rd.ShowDebuffBorder and rd.__shadow then
+			rd.__shadow:SetBackdropBorderColor(c[1], c[2], c[3])
 		end
 
 		if rd.glowFrame then
@@ -137,13 +135,6 @@ local function Update(self, _, unit)
 	for i = 1, 32 do
 		local name, icon, count, debuffType, duration, expiration, caster, _, _, spellId = UnitAura(unit, i, rd.filter)
 		if not name then break end
-
-		if duration == 0 then
-			local newduration, newexpires = LCD:GetAuraDurationByUnit(unit, spellId, caster, name)
-			if newduration then
-				duration, expiration = newduration, newexpires
-			end
-		end
 
 		if rd.ShowDispellableDebuff and debuffType and (not isCharmed) and (not canAttack) then
 			if C.db["UFs"]["DispellOnly"] then

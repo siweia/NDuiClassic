@@ -114,8 +114,8 @@ tinsert(C.defaultThemes, function()
 	MerchantBuyBackItemItemButton:GetHighlightTexture():SetAllPoints(MerchantBuyBackItemItemButtonIconTexture)
 	MerchantBuyBackItemItemButton.IconBorder:SetAlpha(0)
 
-	B.CreateBD(MerchantBuyBackItemItemButton, 0)
-	B.CreateBD(MerchantBuyBackItem, .25)
+	B.CreateBDFrame(MerchantBuyBackItemItemButton, 0)
+	B.CreateBDFrame(MerchantBuyBackItem, .25)
 
 	MerchantBuyBackItemItemButtonIconTexture:SetTexCoord(.08, .92, .08, .92)
 	MerchantBuyBackItemItemButtonIconTexture:ClearAllPoints()

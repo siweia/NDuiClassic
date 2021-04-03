@@ -33,7 +33,7 @@ tinsert(C.defaultThemes, function()
 	ReputationFrame:HookScript("OnEvent", UpdateFactionSkins)
 
 	for i = 1, NUM_FACTIONS_DISPLAYED do
-		B.ReskinExpandOrCollapse(_G["ReputationHeader"..i])
+		B.ReskinCollapse(_G["ReputationHeader"..i])
 	end
 
 	B.StripTextures(ReputationFrame)
