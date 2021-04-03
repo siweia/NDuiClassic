@@ -1,7 +1,7 @@
 local SelectedError = 1
 local ErrorList = {}
 local SoundTime = 0
-local enableTaint = true
+local enableTaint = false
 BaudErrorFrameConfig = BaudErrorFrameConfig or {}
 
 local function RegisterTaintEvents(self)
