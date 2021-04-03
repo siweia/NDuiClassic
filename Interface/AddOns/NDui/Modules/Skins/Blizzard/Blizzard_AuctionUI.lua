@@ -14,7 +14,7 @@ C.themes["Blizzard_AuctionUI"] = function()
 
 	AuctionProgressBar.Text:ClearAllPoints()
 	AuctionProgressBar.Text:SetPoint("CENTER", 0, 1)
-	B.ReskinClose(AuctionProgressFrameCancelButton, "LEFT", AuctionProgressBar, "RIGHT", 4, 0)
+	B.ReskinClose(AuctionProgressFrameCancelButton)
 
 	AuctionFrame:DisableDrawLayer("ARTWORK")
 	AuctionPortraitTexture:Hide()
@@ -141,7 +141,7 @@ C.themes["Blizzard_AuctionUI"] = function()
 	hl:SetColorTexture(1, 1, 1, .25)
 	hl:SetInside()
 
-	B.ReskinClose(AuctionFrameCloseButton, "TOPRIGHT", AuctionFrame, "TOPRIGHT", -4, -14)
+	B.ReskinClose(AuctionFrameCloseButton, AuctionFrame, -4, -14)
 	B.ReskinScroll(BrowseScrollFrameScrollBar)
 	B.ReskinScroll(AuctionsScrollFrameScrollBar)
 	B.ReskinScroll(BrowseFilterScrollFrameScrollBar)

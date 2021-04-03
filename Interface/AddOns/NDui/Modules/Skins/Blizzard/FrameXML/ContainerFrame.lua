@@ -65,7 +65,7 @@ tinsert(C.defaultThemes, function()
 		f:SetPoint("TOPLEFT", 8, -4)
 		f:SetPoint("BOTTOMRIGHT", -4, 3)
 
-		B.ReskinClose(_G["ContainerFrame"..i.."CloseButton"], "TOPRIGHT", con, "TOPRIGHT", -6, -6)
+		B.ReskinClose(_G["ContainerFrame"..i.."CloseButton"], con, -6, -6)
 	end
 
 	hooksecurefunc("ContainerFrame_Update", function(frame)

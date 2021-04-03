@@ -236,7 +236,7 @@ function S:RecountSkin()
 
 	B.ReskinArrow(frame.LeftButton, "left")
 	B.ReskinArrow(frame.RightButton, "right")
-	B.ReskinClose(frame.CloseButton, "TOPRIGHT", frame.bg, "TOPRIGHT", -2, -2)
+	B.ReskinClose(frame.CloseButton, frame.bg, -2, -2)
 
 	-- Force to show window on init
 	Recount.MainWindow:Show()
