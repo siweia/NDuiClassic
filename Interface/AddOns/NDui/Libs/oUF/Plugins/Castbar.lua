@@ -6,7 +6,6 @@ local GetTime, UnitIsUnit = GetTime, UnitIsUnit
 
 local CastbarCompleteColor = {.1, .8, 0}
 local CastbarFailColor = {1, .1, 0}
-local NotInterruptColor = {r=1, g=.5, b=.5}
 
 local channelingTicks = { -- ElvUI data
 	--First Aid
@@ -118,27 +117,8 @@ local function updateCastBarTicks(bar, numTicks)
 	end
 end
 
-local function isPlayerCasting()
-	local bar = oUF_Castbarplayer
-	if not bar then return end
-	if bar.casting or bar.channeling then
-		return true
-	end
-end
-
-function B:FixTargetCastbarUpdate()
-	if UnitIsUnit("target", "player") and not isPlayerCasting() then
-		self.casting = nil
-		self.channeling = nil
-		self.Text:SetText(INTERRUPTED)
-		self.holdTime = 0
-	end
-end
-
 function B:OnCastbarUpdate(elapsed)
 	if self.casting or self.channeling then
-		B.FixTargetCastbarUpdate(self)
-
 		local decimal = self.decimal
 
 		local duration = self.casting and self.duration + elapsed or self.duration - elapsed
@@ -216,7 +196,7 @@ function B:PostCastStart(unit)
 		end
 		updateCastBarTicks(self, numTicks)
 	elseif not UnitIsUnit(unit, "player") and self.notInterruptible then
-		color = NotInterruptColor
+		color = C.db["UFs"]["NotInterruptColor"]
 		self:SetStatusBarColor(color.r, color.g, color.b)
 	end
 
@@ -232,7 +212,7 @@ end
 function B:PostUpdateInterruptible(unit)
 	local color = C.db["UFs"]["CastingColor"]
 	if not UnitIsUnit(unit, "player") and self.notInterruptible then
-		color = NotInterruptColor
+		color = C.db["UFs"]["NotInterruptColor"]
 	end
 	self:SetStatusBarColor(color.r, color.g, color.b)
 end

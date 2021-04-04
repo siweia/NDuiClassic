@@ -762,11 +762,13 @@ function G:SetupCastbar(parent)
 	local scroll = G:CreateScroll(panel, 260, 540)
 
 	createOptionTitle(scroll.child, L["Castbar Colors"], -10)
-	createOptionSwatch(scroll.child, "", C.db["UFs"]["CastingColor"], 120, -55)
+	createOptionSwatch(scroll.child, L["Interruptible Color"], C.db["UFs"]["CastingColor"], 40, -40)
+	createOptionSwatch(scroll.child, L["NotInterruptible Color"], C.db["UFs"]["NotInterruptColor"], 40, -70)
 
 	local defaultValue = {
 		["Player"] = {300, 20},
 		["Target"] = {280, 20},
+		["Focus"] = {320, 20},
 	}
 
 	local function createOptionGroup(parent, title, offset, value, func)
@@ -800,9 +802,21 @@ function G:SetupCastbar(parent)
 	end
 	createOptionGroup(scroll.child, L["Target Castbar"], -310, "Target", updateTargetCastbar)
 
+	local function updateFocusCastbar()
+		if _G.oUF_Focus then
+			local width, height = C.db["UFs"]["FocusCBWidth"], C.db["UFs"]["FocusCBHeight"]
+			_G.oUF_Focus.Castbar:SetSize(width, height)
+			_G.oUF_Focus.Castbar.Icon:SetSize(height, height)
+			_G.oUF_Focus.Castbar.mover:Show()
+			_G.oUF_Focus.Castbar.mover:SetSize(width+height+5, height+5)
+		end
+	end
+	createOptionGroup(scroll.child, L["Focus Castbar"], -510, "Focus", updateFocusCastbar)
+
 	panel:HookScript("OnHide", function()
 		if _G.oUF_Player then _G.oUF_Player.Castbar.mover:Hide() end
 		if _G.oUF_Target then _G.oUF_Target.Castbar.mover:Hide() end
+		if _G.oUF_Focus then _G.oUF_Focus.Castbar.mover:Hide() end
 	end)
 end
 
