@@ -284,7 +284,7 @@ function S:BindPad()
 	BindPadMacroPopupFrame:SetPoint("TOPLEFT", BindPadFrame.bg, "TOPRIGHT", 3, -40)
 	B.SetBD(BindPadMacroPopupFrame)
 	B.StripTextures(BindPadMacroPopupEditBox)
-	B.CreateBD(BindPadMacroPopupEditBox, .25)
+	B.CreateBDFrame(BindPadMacroPopupEditBox, .25)
 	B.ReskinScroll(BindPadMacroPopupScrollFrameScrollBar)
 	B.Reskin(BindPadMacroPopupOkayButton)
 	B.Reskin(BindPadMacroPopupCancelButton)
@@ -304,7 +304,7 @@ function S:BindPad()
 				ic:SetPoint("TOPLEFT", C.mult, -C.mult)
 				ic:SetPoint("BOTTOMRIGHT", -C.mult, C.mult)
 				ic:SetTexCoord(unpack(DB.TexCoord))
-				B.CreateBD(bu, .25)
+				B.CreateBDFrame(ic, .25)
 
 				bu.styled = true
 			end

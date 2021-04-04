@@ -2,7 +2,8 @@ local _, ns = ...
 local B, C, L, DB = unpack(ns)
 
 C.themes["Blizzard_GMSurveyUI"] = function()
-	B.SetBD(GMSurveyFrame, 0, 0, -32, 4)
+	local bg = B.SetBD(GMSurveyFrame, nil, 0, 0, -45, 4)
+	B.ReskinClose(GMSurveyCloseButton, bg, -4, -4)
 	B.CreateBD(GMSurveyCommentFrame, .25)
 	for i = 1, 11 do
 		B.CreateBD(_G["GMSurveyQuestion"..i], .25)
@@ -22,6 +23,5 @@ C.themes["Blizzard_GMSurveyUI"] = function()
 	GMSurveyScrollFrameBottom:SetAlpha(0)
 	B.Reskin(GMSurveySubmitButton)
 	B.Reskin(GMSurveyCancelButton)
-	B.ReskinClose(GMSurveyCloseButton, GMSurveyFrame, -36, -4)
 	B.ReskinScroll(GMSurveyScrollFrameScrollBar)
 end
