@@ -52,10 +52,15 @@ function module:ReskinRegions()
 	-- Tracking icon
 	MiniMapTracking:SetScale(.7)
 	MiniMapTracking:ClearAllPoints()
-	MiniMapTracking:SetPoint("BOTTOMRIGHT", Minimap, -3, 3)
+	MiniMapTracking:SetPoint("BOTTOMRIGHT", Minimap, -2, 0)
 	MiniMapTrackingBorder:Hide()
 	MiniMapTrackingBackground:Hide()
 	B.ReskinIcon(MiniMapTrackingIcon)
+
+	MiniMapTracking:SetHighlightTexture(DB.bdTex)
+	local hl = MiniMapTracking:GetHighlightTexture()
+	hl:SetVertexColor(1, 1, 1, .25)
+	hl:SetAllPoints(MiniMapTrackingIcon)
 
 	-- Mail icon
 	MiniMapMailFrame:ClearAllPoints()
@@ -116,8 +121,8 @@ function module:RecycleBin()
 	}
 
 	local bu = CreateFrame("Button", "RecycleBinToggleButton", Minimap)
-	bu:SetSize(24, 24)
-	bu:SetPoint("BOTTOMLEFT", -15, -15)
+	bu:SetSize(30, 30)
+	bu:SetPoint("BOTTOMRIGHT", -15, -6)
 	bu.Icon = bu:CreateTexture(nil, "ARTWORK")
 	bu.Icon:SetAllPoints()
 	bu.Icon:SetTexture(DB.binTex)
@@ -128,7 +133,7 @@ function module:RecycleBin()
 	local bin = CreateFrame("Frame", "RecycleBinFrame", UIParent)
 	bin:SetPoint("RIGHT", bu, "LEFT", -3, -6)
 	bin:SetSize(width, height)
-	bin:SetFrameStrata("LOW")
+	bin:SetFrameStrata("TOOLTIP")
 	bin:Hide()
 
 	local tex = B.SetGradient(bin, "H", 0, 0, 0, 0, alpha, width, height)
