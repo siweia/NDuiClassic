@@ -270,6 +270,7 @@ function G:SetupClickCast(parent)
 
 	local textIndex, barTable = {
 		["target"] = TARGET,
+		["focus"] = SET_FOCUS,
 		["follow"] = FOLLOW,
 	}, {}
 
@@ -343,7 +344,7 @@ function G:SetupClickCast(parent)
 		local value, key, modKey = options[1]:GetText(), options[2].Text:GetText(), options[3].Text:GetText()
 		if not value or not key then UIErrorsFrame:AddMessage(DB.InfoColor..L["Incomplete Input"]) return end
 		if tonumber(value) and not GetSpellInfo(value) then UIErrorsFrame:AddMessage(DB.InfoColor..L["Incorrect SpellID"]) return end
-		if (not tonumber(value)) and value ~= "target" and value ~= "follow" and not value:match("/") then UIErrorsFrame:AddMessage(DB.InfoColor..L["Invalid Input"]) return end
+		if (not tonumber(value)) and value ~= "target" and value ~= "focus" and value ~= "follow" and not strmatch(value, "/") then UIErrorsFrame:AddMessage(DB.InfoColor..L["Invalid Input"]) return end
 		if not modKey or modKey == NONE then modKey = "" end
 		local clickSet = modKey..key
 		if NDuiADB["RaidClickSets"][DB.MyClass][clickSet] then UIErrorsFrame:AddMessage(DB.InfoColor..L["Existing ClickSet"]) return end
@@ -645,11 +646,13 @@ function G:SetupUnitFrame(parent)
 
 	local sliderRange = {
 		["Player"] = {150, 300},
+		["Focus"] = {150, 300},
 		["Pet"] = {100, 200},
 	}
 
 	local defaultValue = {
 		["Player"] = {245, 24, 4, 2},
+		["Focus"] = {200, 22, 3, 2},
 		["Pet"] = {120, 18, 2},
 	}
 
@@ -671,13 +674,21 @@ function G:SetupUnitFrame(parent)
 	end
 	createOptionGroup(scroll.child, L["Player&Target"], -10, "Player", updatePlayerSize)
 
+	local function updateFocusSize()
+		local frame = _G.oUF_Focus
+		if frame then
+			SetUnitFrameSize(frame, "Focus")
+		end
+	end
+	createOptionGroup(scroll.child, L["FocusUF"], -340, "Focus", updateFocusSize)
+
 	local subFrames = {_G.oUF_Pet, _G.oUF_ToT, _G.oUF_ToToT}
 	local function updatePetSize()
 		for _, frame in pairs(subFrames) do
 			SetUnitFrameSize(frame, "Pet")
 		end
 	end
-	createOptionGroup(scroll.child, L["Pet&*Target"], -340, "Pet", updatePetSize)
+	createOptionGroup(scroll.child, L["Pet&*Target"], -670, "Pet", updatePetSize)
 end
 
 function G:SetupRaidFrame(parent)

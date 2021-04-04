@@ -72,6 +72,9 @@ function oUF:DisableBlizzard(unit)
 	elseif(unit == 'target') then
 		handleFrame(TargetFrame)
 		handleFrame(ComboFrame)
+	elseif(unit == 'focus') then
+		handleFrame(FocusFrame)
+		handleFrame(TargetofFocusFrame)
 	elseif(unit == 'targettarget') then
 		handleFrame(TargetFrameToT)
 	elseif(unit:match('party%d?$')) then
