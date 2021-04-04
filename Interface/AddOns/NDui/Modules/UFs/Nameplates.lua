@@ -576,7 +576,7 @@ function UF:CreatePlates()
 	local health = CreateFrame("StatusBar", nil, self)
 	health:SetAllPoints()
 	health:SetStatusBarTexture(DB.normTex)
-	health.backdrop = B.SetBD(health, 0) -- don't mess up with libs
+	health.backdrop = B.SetBD(health) -- don't mess up with libs
 	B:SmoothBar(health)
 
 	self.Health = health
