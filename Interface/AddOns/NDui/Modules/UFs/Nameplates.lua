@@ -860,7 +860,7 @@ function UF:CreatePlayerPlate()
 	UF:CreateHealthBar(self)
 	UF:CreatePowerBar(self)
 	UF:CreateClassPower(self)
-	if C.db["Auras"]["ClassAuras"] and not DB.isClassic then auras:CreateLumos(self) end
+	--if C.db["Auras"]["ClassAuras"] then auras:CreateLumos(self) end
 	if not C.db["Nameplate"]["ClassPowerOnly"] then UF:CreateEneryTicker(self) end
 
 	local textFrame = CreateFrame("Frame", nil, self.Power)
