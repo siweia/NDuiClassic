@@ -264,6 +264,8 @@ local function setupClickSets(self)
 
 	for _, data in pairs(NDuiADB["RaidClickSets"][DB.MyClass]) do
 		local key, modKey, value = unpack(data)
+		if key == KEY_BUTTON1 and modKey == "SHIFT" then self.focuser = true end
+
 		for _, v in ipairs(keyList) do
 			if v[1] == key and v[2] == modKey then
 				if tonumber(value) then
@@ -272,6 +274,8 @@ local function setupClickSets(self)
 					self:SetAttribute(format(v[3], "spell"), name)
 				elseif value == "target" then
 					self:SetAttribute(format(v[3], "type"), "target")
+				elseif value == "focus" then
+					self:SetAttribute(format(v[3], "type"), "focus")
 				elseif value == "follow" then
 					self:SetAttribute(format(v[3], "type"), "macro")
 					self:SetAttribute(format(v[3], "macrotext"), "/follow mouseover")

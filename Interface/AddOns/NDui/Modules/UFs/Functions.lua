@@ -335,8 +335,10 @@ end
 local textScaleFrames = {
 	["player"] = true,
 	["target"] = true,
+	["focus"] = true,
 	["pet"] = true,
 	["tot"] = true,
+	["focustarget"] = true,
 }
 function UF:UpdateTextScale()
 	local scale = C.db["UFs"]["UFTextScale"]
@@ -474,6 +476,10 @@ function UF:CreateCastBar(self)
 		cb:SetFrameLevel(10)
 		cb:SetSize(C.db["UFs"]["TargetCBWidth"], C.db["UFs"]["TargetCBHeight"])
 		createBarMover(cb, L["Target Castbar"], "TargetCB", C.UFs.Targetcb)
+	elseif mystyle == "focus" then
+		cb:SetFrameLevel(10)
+		cb:SetSize(C.db["UFs"]["FocusCBWidth"], C.db["UFs"]["FocusCBHeight"])
+		createBarMover(cb, L["Focus Castbar"], "FocusCB", C.UFs.Focuscb)
 	elseif mystyle == "nameplate" then
 		cb:SetPoint("TOPLEFT", self, "BOTTOMLEFT", 0, -5)
 		cb:SetPoint("TOPRIGHT", self, "BOTTOMRIGHT", 0, -5)
@@ -742,6 +748,11 @@ function UF:CreateAuras(self)
 		bu.numBuffs = 0
 		bu.numDebuffs = 10
 		bu.iconsPerRow = 5
+	elseif mystyle == "focus" then
+		bu:SetPoint("TOPLEFT", self.Power, "BOTTOMLEFT", 0, -10)
+		bu.numBuffs = 0
+		bu.numDebuffs = 14
+		bu.iconsPerRow = 7
 	elseif mystyle == "raid" then
 		if C.db["UFs"]["RaidBuffIndicator"] then
 			bu.initialAnchor = "LEFT"
