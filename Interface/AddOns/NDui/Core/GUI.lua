@@ -273,6 +273,7 @@ G.DefaultSettings = {
 		ItemLevel = true,
 		ShowItemLevel = true,
 		HideErrors = true,
+		Focuser = true,
 		ExpRep = true,
 		Interrupt = false,
 		OwnInterrupt = true,
@@ -934,6 +935,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Misc", "AutoDismount", L["AutoDismount"], true},
 		{1, "Misc", "TradeTabs", L["TradeTabs"], nil, nil, nil, L["TradeTabsTips"]},
 		{1, "Misc", "InstantDelete", L["InstantDelete"].."*", true},
+		{1, "Misc", "Focuser", L["Easy Focus"]},
 	},
 	[14] = {
 		{1, "ACCOUNT", "VersionCheck", L["Version Check"]},
