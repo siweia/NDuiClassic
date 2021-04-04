@@ -773,8 +773,9 @@ function G:SetupCastbar(parent)
 	local scroll = G:CreateScroll(panel, 260, 540)
 
 	createOptionTitle(scroll.child, L["Castbar Colors"], -10)
-	createOptionSwatch(scroll.child, L["Interruptible Color"], C.db["UFs"]["CastingColor"], 40, -40)
-	createOptionSwatch(scroll.child, L["NotInterruptible Color"], C.db["UFs"]["NotInterruptColor"], 40, -70)
+	createOptionSwatch(scroll.child, "", C.db["UFs"]["CastingColor"], 120, -55)
+	--createOptionSwatch(scroll.child, L["Interruptible Color"], C.db["UFs"]["CastingColor"], 40, -40)
+	--createOptionSwatch(scroll.child, L["NotInterruptible Color"], C.db["UFs"]["NotInterruptColor"], 40, -70)
 
 	local defaultValue = {
 		["Player"] = {300, 20},
