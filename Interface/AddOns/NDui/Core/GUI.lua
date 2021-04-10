@@ -641,20 +641,20 @@ end
 
 -- Config
 local HeaderTag = "|cff00cc4c"
-local NewFeatureTag = "|TInterface\\OptionsFrame\\UI-OptionsFrame-NewFeatureIcon:0|t"
+local NewTag = "|TInterface\\OptionsFrame\\UI-OptionsFrame-NewFeatureIcon:0|t"
 
 G.TabList = {
 	L["Actionbar"],
 	L["Bags"],
 	L["Unitframes"],
-	NewFeatureTag..L["RaidFrame"],
+	NewTag..L["RaidFrame"],
 	L["Nameplate"],
 	L["PlayerPlate"],
 	L["Auras"],
 	L["Raid Tools"],
 	L["ChatFrame"],
 	L["Maps"],
-	L["Skins"],
+	NewTag..L["Skins"],
 	L["Tooltip"],
 	L["Misc"],
 	L["UI Settings"],
@@ -743,7 +743,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{4, "UFs", "BuffIndicatorType", L["BuffIndicatorType"].."*", nil, {L["BI_Blocks"], L["BI_Icons"], L["BI_Numbers"]}, refreshRaidFrameIcons},
 		{3, "UFs", "BuffIndicatorScale", L["BuffIndicatorScale"].."*", true, {.8, 2, .1}, refreshRaidFrameIcons},
 		{1, "UFs", "InstanceAuras", HeaderTag..L["Instance Auras"], nil, setupRaidDebuffs, nil, L["InstanceAurasTip"]},
-		{1, "UFs", "DispellOnly", NewFeatureTag..L["DispellableOnly"], nil, nil, nil, L["DispellableOnlyTip"]},
+		{1, "UFs", "DispellOnly", NewTag..L["DispellableOnly"], nil, nil, nil, L["DispellableOnlyTip"]},
 		{1, "UFs", "AurasClickThrough", L["RaidAuras ClickThrough"], nil, nil, nil, L["ClickThroughTip"]},
 		{3, "UFs", "RaidDebuffScale", L["RaidDebuffScale"].."*", true, {.8, 2, .1}, refreshRaidFrameIcons},
 		{},--blank
@@ -905,7 +905,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{},--blank
 		{1, "Skins", "Skada", L["Skada Skin"]},
 		{1, "Skins", "Details", L["Details Skin"], nil, resetDetails},
-		{4, "Skins", "ToggleDirection", L["ToggleDirection"].."*", true, {L["LEFT"], L["RIGHT"], L["TOP"], L["BOTTOM"], DISABLE}, updateToggleDirection},
+		{4, "Skins", "ToggleDirection", NewTag..L["ToggleDirection"].."*", true, {L["LEFT"], L["RIGHT"], L["TOP"], L["BOTTOM"], DISABLE}, updateToggleDirection},
 		{1, "Skins", "Recount", L["Recount Skin"]},
 		{},--blank
 		{1, "Skins", "DBM", L["DBM Skin"]},
