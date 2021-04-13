@@ -5,8 +5,7 @@ if DB.Client ~= "zhCN" then return end
 local strsplit, pairs = string.split, pairs
 
 local hx = {
-	"初版支持TBC beta，",
-	"动作条有个不影响使用的报错，需要等暴雪修复。",
+	"初版支持TBC beta，有问题请反馈。",
 }
 
 local f
