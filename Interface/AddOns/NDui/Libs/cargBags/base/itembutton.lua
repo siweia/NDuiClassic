@@ -84,6 +84,8 @@ function ItemButton:Create(tpl, parent)
 	if btnNIT then btnNIT:SetTexture("") end
 	if btnBIT then btnBIT:SetTexture("") end
 
+	button:RegisterForDrag("LeftButton") -- fix button drag in 9.0
+
 	return button
 end
 
