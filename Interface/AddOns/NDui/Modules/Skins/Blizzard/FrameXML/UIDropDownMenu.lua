@@ -59,30 +59,26 @@ tinsert(C.defaultThemes, function()
 				local uncheck = _G["DropDownList"..level.."Button"..i.."UnCheck"]
 				if isCheckTexture(uncheck) then uncheck:SetTexture("") end
 
-				if isCheckTexture(check) then
-					if not bu.notCheckable then
-						toggleBackdrop(bu, true)
+				if not bu.notCheckable then
+					toggleBackdrop(bu, true)
 
-						-- only reliable way to see if button is radio or or check...
-						local _, co = check:GetTexCoord()
-						if co == 0 then
-							check:SetTexture("Interface\\Buttons\\UI-CheckBox-Check")
-							check:SetVertexColor(r, g, b, 1)
-							check:SetSize(20, 20)
-							check:SetDesaturated(true)
-						else
-							check:SetTexture(DB.bdTex)
-							check:SetVertexColor(r, g, b, .6)
-							check:SetSize(10, 10)
-							check:SetDesaturated(false)
-						end
-
-						check:SetTexCoord(0, 1, 0, 1)
+					-- only reliable way to see if button is radio or or check...
+					local _, co = check:GetTexCoord()
+					if co == 0 then
+						check:SetTexture("Interface\\Buttons\\UI-CheckBox-Check")
+						check:SetVertexColor(r, g, b, 1)
+						check:SetSize(20, 20)
+						check:SetDesaturated(true)
 					else
-						toggleBackdrop(bu, false)
+						check:SetTexture(DB.bdTex)
+						check:SetVertexColor(r, g, b, .6)
+						check:SetSize(10, 10)
+						check:SetDesaturated(false)
 					end
+
+					check:SetTexCoord(0, 1, 0, 1)
 				else
-					check:SetSize(16, 16)
+					toggleBackdrop(bu, false)
 				end
 			end
 		end
