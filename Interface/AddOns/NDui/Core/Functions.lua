@@ -1168,6 +1168,7 @@ do
 	function B:ReskinCollapse(isAtlas)
 		self:SetHighlightTexture("")
 		self:SetPushedTexture("")
+		self:SetDisabledTexture("")
 
 		local bg = B.CreateBDFrame(self, .25, true)
 		bg:ClearAllPoints()
