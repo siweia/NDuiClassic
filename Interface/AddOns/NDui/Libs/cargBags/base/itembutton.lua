@@ -47,6 +47,10 @@ local mt_gen_key = {__index = function(self,k) self[k] = {}; return self[k]; end
 	@param slotID <number>
 	@return button <ItemButton>
 ]]
+local function BankSplitStack(button, split)
+	SplitContainerItem(button:GetParent():GetID(), button:GetID(), split)
+end
+
 function ItemButton:New(bagID, slotID)
 	self.recycled = self.recycled or setmetatable({}, mt_gen_key)
 
@@ -58,6 +62,13 @@ function ItemButton:New(bagID, slotID)
 	button:SetID(slotID)
 	button:Show()
 	button:HookScript("OnEnter", button.OnEnter)
+	if bagID == BANK_CONTAINER then
+		button.GetInventorySlot = ButtonInventorySlot
+		button.UpdateTooltip = BankFrameItemButton_OnEnter
+		button.SplitStack = BankSplitStack
+	else
+		button.UpdateTooltip = ContainerFrameItemButton_OnUpdate
+	end
 
 	return button
 end
