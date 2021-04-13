@@ -4,7 +4,7 @@ local B, C, L, DB = unpack(ns)
 C.themes["Blizzard_AuctionUI"] = function()
 	local r, g, b = DB.r, DB.g, DB.b
 
-	B.SetBD(AuctionFrame, 2, -10, 0, 10)
+	B.SetBD(AuctionFrame, nil, 2, -10, 0, 10)
 	B.StripTextures(AuctionProgressFrame)
 	B.SetBD(AuctionProgressFrame)
 
