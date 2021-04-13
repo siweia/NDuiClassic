@@ -29,11 +29,35 @@ C.themes["Blizzard_InspectUI"] = function()
 
 	B.ReskinPortraitFrame(InspectFrame, 15, -15, -35, 73)
 	B.StripTextures(InspectPaperDollFrame)
-	B.StripTextures(InspectHonorFrame)
 
-	for i = 1, 2 do
+	for i = 1, 3 do
 		B.ReskinTab(_G["InspectFrameTab"..i])
 	end
 
 	B.ReskinRotationButtons(InspectModelFrame)
+
+	-- PVP, temporary disabled in 38285
+	--B.StripTextures(InspectPVPFrame)
+
+	-- Talent
+	B.StripTextures(InspectTalentFrame)
+	B.Reskin(InspectTalentFrameCancelButton)
+	B.ReskinScroll(InspectTalentFrameScrollFrameScrollBar)
+	if InspectTalentFrameCloseButton then
+		InspectTalentFrameCloseButton:Hide() -- should be removed by blizzard in future builds
+	end
+
+	for i = 1, 3 do
+		B.ReskinTab(_G["InspectTalentFrameTab"..i])
+	end
+
+	for i = 1, MAX_NUM_TALENTS do
+		local talent = _G["InspectTalentFrameTalent"..i]
+		local icon = _G["InspectTalentFrameTalent"..i.."IconTexture"]
+		if talent then
+			B.StripTextures(talent)
+			icon:SetTexCoord(.08, .92, .08, .92)
+			B.CreateBDFrame(icon)
+		end
+	end
 end
