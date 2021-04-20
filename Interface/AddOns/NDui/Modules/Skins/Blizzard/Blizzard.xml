@@ -6,7 +6,6 @@
 	<Script file="Blizzard_DebugTools.lua"/>
 	<Script file="Blizzard_FlightMap.lua"/>
 	<Script file="Blizzard_GMChatUI.lua"/>
-	<Script file="Blizzard_GMSurveyUI.lua"/>
 	<Script file="Blizzard_InspectUI.lua"/>
 	<Script file="Blizzard_MacroUI.lua"/>
 	<Script file="Blizzard_RaidUI.lua"/>
