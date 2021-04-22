@@ -1,4 +1,4 @@
-## Interface: 11306
+## Interface: 11307
 ## Title: |cff0080ffNDui|r Classic
 ## X-Credits: Elv, Freebaser, Haleth, Haste, Leatrix, lightspark, Loshine, Neavo, p3lim, Paopao001, Qulight, Ray, Rubgrsch, Tuller, zork.
 ## Author: Siweia
