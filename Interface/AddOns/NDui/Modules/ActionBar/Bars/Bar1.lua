@@ -124,7 +124,7 @@ function Bar:CreateBar1()
 	]])
 	RegisterStateDriver(frame, "page", actionPage)
 
-	-- Credit: ShowActionCount, prozhong
+	-- FrameXML/ActionButton.lua
 	hooksecurefunc("ActionButton_UpdateCount", self.FixActionCount)
 end
 
