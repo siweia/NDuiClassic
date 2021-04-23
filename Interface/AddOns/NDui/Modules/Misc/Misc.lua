@@ -65,11 +65,14 @@ function M:OnLogin()
 	end)
 
 	-- Instant delete
-	hooksecurefunc(StaticPopupDialogs["DELETE_GOOD_ITEM"], "OnShow", function(self)
-		if C.db["Misc"]["InstantDelete"] then
-			self.editBox:SetText(DELETE_ITEM_CONFIRM_STRING)
-		end
-	end)
+	local deleteDialog = StaticPopupDialogs["DELETE_GOOD_ITEM"]
+	if deleteDialog.OnShow then
+		hooksecurefunc(deleteDialog, "OnShow", function(self)
+			if C.db["Misc"]["InstantDelete"] then
+				self.editBox:SetText(DELETE_ITEM_CONFIRM_STRING)
+			end
+		end)
+	end
 
 	-- Fix blizz error
 	MAIN_MENU_MICRO_ALERT_PRIORITY = MAIN_MENU_MICRO_ALERT_PRIORITY or {}
