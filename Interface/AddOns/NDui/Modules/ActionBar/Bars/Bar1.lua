@@ -36,35 +36,15 @@ function Bar:UpdateAllScale()
 	UpdateActionbarScale("BarStance")
 end
 
-local REAGENTS_STRING = SPELL_REAGENTS.."(.+)"
-
-function Bar:GetActionCount(action)
-	B.ScanTip:SetOwner(UIParent, "ANCHOR_NONE")
-	B.ScanTip:SetAction(action)
-	for i = 1, B.ScanTip:NumLines() do
-		local line = _G["NDui_ScanTooltipTextLeft"..i]
-		if not line then break end
-		local text = line:GetText()
-		local itemName = text and strmatch(text, REAGENTS_STRING)
-		if itemName then
-			return GetItemCount(itemName)
-		end
-	end
-end
-
 function Bar:FixActionCount()
+	local text = self.Count
 	local action = self.action
-	local texture = GetActionTexture(action)
-	if not texture then return end
-
-	if not IsItemAction(action) and GetActionCount(action) == 0 then
-		local count = Bar:GetActionCount(action)
-		if count then
-			if count > 999 then
-				self.Count:SetText("*")
-			else
-				self.Count:SetText(count)
-			end
+	local count = GetActionCount(action)
+	if not IsItemAction(action) and count > 0 then
+		if count > (self.maxDisplayCount or 999) then
+			self.Count:SetText("*")
+		else
+			self.Count:SetText(count)
 		end
 	end
 end
