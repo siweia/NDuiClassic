@@ -41,9 +41,7 @@ local module = B:GetModule("AurasTable")
 		OnSuccess，用于监控技能成功施放的触发器，仅当技能成功施放时开启计时条。如果不填写，则计时条由你获得该法术光环时触发；
 		UnitID，用于过滤目标法术的来源，默认为player玩家自身。如果设置为all，则监控队伍/团队里的所有成员。
 ]]
-function hehe(spellid)
-	print(GetItemSpell(spellid))
-end
+
 -- 全职业的相关监控
 local list = {
 	["Enchant Aura"] = {	-- 附魔及饰品组
