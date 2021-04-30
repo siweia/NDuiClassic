@@ -36,8 +36,14 @@ C.themes["Blizzard_InspectUI"] = function()
 
 	B.ReskinRotationButtons(InspectModelFrame)
 
-	-- PVP, temporary disabled in 38285
-	--B.StripTextures(InspectPVPFrame)
+	-- PVP,
+	B.StripTextures(InspectPVPFrame)
+
+	for i = 1, 3 do
+		local tName = "InspectPVPTeam"..i
+		B.StripTextures(_G[tName])
+		B.CreateBDFrame(_G[tName.."Background"], .25)
+	end
 
 	-- Talent
 	B.StripTextures(InspectTalentFrame)

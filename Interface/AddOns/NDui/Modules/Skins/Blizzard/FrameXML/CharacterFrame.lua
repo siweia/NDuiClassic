@@ -20,15 +20,6 @@ tinsert(C.defaultThemes, function()
 		hl:SetPoint("BOTTOMRIGHT", tab.bg, -C.mult, C.mult)
 	end
 
-	HonorFrameProgressBar:SetWidth(320)
-	HonorFrameProgressBar:SetStatusBarTexture(DB.bdTex)
-	B.CreateBDFrame(HonorFrameProgressBar, .25)
-	HonorFrameProgressBar:SetPoint("TOPLEFT", 22, -73)
-
-	local bg = B.CreateBDFrame(HonorFrame, .25)
-	bg:SetPoint("TOPLEFT", 21, -105)
-	bg:SetPoint("BOTTOMRIGHT", -41, 80)
-
 	B.StripTextures(PaperDollFrame)
 	B.StripTextures(CharacterAttributesFrame)
 	local bg = B.CreateBDFrame(CharacterAttributesFrame, .25)
@@ -137,6 +128,12 @@ tinsert(C.defaultThemes, function()
 	PetPaperDollPetInfo:SetScript("OnEvent", updateHappiness)
 	PetPaperDollPetInfo:SetScript("OnShow", updateHappiness)
 
-	-- HonorFrame
-	B.StripTextures(HonorFrame)
+	-- PVP
+	B.StripTextures(PVPFrame)
+
+	for i = 1, 3 do
+		local tName = "PVPTeam"..i
+		B.StripTextures(_G[tName])
+		B.CreateBDFrame(_G[tName.."Background"], .25)
+	end
 end)
