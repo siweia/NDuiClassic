@@ -500,8 +500,9 @@ end)
 
 TT:RegisterTooltips("Blizzard_DebugTools", function()
 	TT.ReskinTooltip(FrameStackTooltip)
-	TT.ReskinTooltip(EventTraceTooltip)
 	FrameStackTooltip:SetScale(UIParent:GetScale())
-	EventTraceTooltip:SetParent(UIParent)
-	EventTraceTooltip:SetFrameStrata("TOOLTIP")
+end)
+
+TT:RegisterTooltips("Blizzard_EventTrace", function()
+	TT.ReskinTooltip(EventTraceTooltip)
 end)
