@@ -56,7 +56,6 @@ tinsert(C.defaultThemes, function()
 		local icon = bu.Icon
 
 		_G[name.."NameFrame"]:Hide()
-		_G[name.."SpellBorder"]:Hide()
 
 		icon:SetPoint("TOPLEFT", 3, -2)
 		B.ReskinIcon(icon)
@@ -68,7 +67,6 @@ tinsert(C.defaultThemes, function()
 	restyleSpellButton(QuestInfoSpellObjectiveFrame)
 
 	local function restyleRewardButton(bu, isMapQuestInfo)
-		bu.NameFrame:Hide()
 		if bu.IconBorder then bu.IconBorder:SetAlpha(0) end
 
 		if isMapQuestInfo then

@@ -49,7 +49,6 @@ local list = {
 		{AuraID = 20580, UnitID = "player"},	-- 影遁 暗夜
 		{AuraID = 20594, UnitID = "player"},	-- 石像形态 矮人
 		{AuraID = 26635, UnitID = "player"},	-- 狂暴 巨魔
-		{AuraID = 23234, UnitID = "player"},	-- 血性狂暴 兽人
 		{AuraID = 23230, UnitID = "player"},	-- 血性狂暴 兽人，减治疗
 	},
 	["Raid Buff"] = {		-- 团队增益组
