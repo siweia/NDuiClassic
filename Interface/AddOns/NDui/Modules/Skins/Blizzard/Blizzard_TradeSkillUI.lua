@@ -60,10 +60,17 @@ C.themes["Blizzard_TradeSkillUI"] = function()
 
 	B.ReskinCollapse(TradeSkillCollapseAllButton)
 	TradeSkillExpandButtonFrame:DisableDrawLayer("BACKGROUND")
-	for i = 1, 8 do
-		local bu = _G["TradeSkillSkill"..i]
-		B.ReskinCollapse(bu)
-	end
+
+	TradeSkillFrame:HookScript("OnShow", function()
+		for i = 1, 22 do
+			local bu = _G["TradeSkillSkill"..i]
+			if bu and not bu.styled then
+				B.ReskinCollapse(bu)
+				bu.styled = true
+			end
+		end
+	end)
+
 	B.ReskinDropDown(TradeSkillSubClassDropDown)
 	B.ReskinDropDown(TradeSkillInvSlotDropDown)
 
