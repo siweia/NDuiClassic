@@ -2,6 +2,8 @@
 local B, C, L, DB = unpack(ns)
 local module = B:GetModule("Chat")
 
+local C_GuildInfo_CanEditOfficerNote = C_GuildInfo.CanEditOfficerNote
+
 function module:Chatbar()
 	if not C.db["Chat"]["Chatbar"] then return end
 
@@ -57,7 +59,7 @@ function module:Chatbar()
 			ChatFrame_OpenChat("/raid ", chatFrame)
 		end},
 		{.25, 1, .25, GUILD.."/"..OFFICER, function(_, btn)
-			if btn == "RightButton" and CanEditOfficerNote() then
+			if btn == "RightButton" and C_GuildInfo_CanEditOfficerNote() then
 				ChatFrame_OpenChat("/o ", chatFrame)
 			else
 				ChatFrame_OpenChat("/g ", chatFrame)
