@@ -4,7 +4,6 @@ local Bar = B:RegisterModule("Actionbar")
 
 local _G = _G
 local tinsert, next = tinsert, next
-local GetActionTexture = GetActionTexture
 local cfg = C.Bars.bar1
 local margin, padding = C.Bars.margin, C.Bars.padding
 
@@ -34,39 +33,6 @@ function Bar:UpdateAllScale()
 	UpdateActionbarScale("BarExit")
 	UpdateActionbarScale("BarPet")
 	UpdateActionbarScale("BarStance")
-end
-
-local REAGENTS_STRING = SPELL_REAGENTS.."(.+)"
-
-function Bar:GetActionCount(action)
-	B.ScanTip:SetOwner(UIParent, "ANCHOR_NONE")
-	B.ScanTip:SetAction(action)
-	for i = 1, B.ScanTip:NumLines() do
-		local line = _G["NDui_ScanTooltipTextLeft"..i]
-		if not line then break end
-		local text = line:GetText()
-		local itemName = text and strmatch(text, REAGENTS_STRING)
-		if itemName then
-			return GetItemCount(itemName)
-		end
-	end
-end
-
-function Bar:FixActionCount()
-	local action = self.action
-	local texture = GetActionTexture(action)
-	if not texture then return end
-
-	if not IsItemAction(action) and GetActionCount(action) == 0 then
-		local count = Bar:GetActionCount(action)
-		if count then
-			if count > 999 then
-				self.Count:SetText("*")
-			else
-				self.Count:SetText(count)
-			end
-		end
-	end
 end
 
 local function SetFrameSize(frame, size, num)
@@ -143,9 +109,6 @@ function Bar:CreateBar1()
 		end
 	]])
 	RegisterStateDriver(frame, "page", actionPage)
-
-	-- Credit: ShowActionCount, prozhong
-	hooksecurefunc("ActionButton_UpdateCount", self.FixActionCount)
 end
 
 function Bar:OnLogin()
