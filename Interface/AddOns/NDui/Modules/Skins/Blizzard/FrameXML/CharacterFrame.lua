@@ -62,6 +62,17 @@ tinsert(C.defaultThemes, function()
 		icon:SetTexCoord(a+.2, c-.2, b+.018, d-.018)
 	end
 
+	-- needs review
+	for _, direc in pairs({"Left", "Right"}) do
+		for i = 1, 6 do
+			local frameName = "PlayerStatFrame"..direc..i
+			local label = _G[frameName.."Label"]
+			local text = _G[frameName.."StatText"]
+			label:SetFontObject(Game13Font)
+			text:SetFontObject(Game13Font)
+		end
+	end
+
 	-- SkillFrame
 	B.StripTextures(SkillFrame)
 	B.ReskinScroll(SkillListScrollFrameScrollBar)
