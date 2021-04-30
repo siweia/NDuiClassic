@@ -19,6 +19,7 @@ local floor, ceil = math.floor, math.ceil
 
 DB.Devs = {
 	["箭灵-法尔班克斯"] = true,
+	["Huniverster-Badge of Justice"] = true,
 }
 local function isDeveloper()
 	return DB.Devs[DB.MyFullName]
