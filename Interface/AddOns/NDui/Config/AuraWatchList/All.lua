@@ -41,7 +41,9 @@ local module = B:GetModule("AurasTable")
 		OnSuccess，用于监控技能成功施放的触发器，仅当技能成功施放时开启计时条。如果不填写，则计时条由你获得该法术光环时触发；
 		UnitID，用于过滤目标法术的来源，默认为player玩家自身。如果设置为all，则监控队伍/团队里的所有成员。
 ]]
-
+function hehe(spellid)
+	print(GetItemSpell(spellid))
+end
 -- 全职业的相关监控
 local list = {
 	["Enchant Aura"] = {	-- 附魔及饰品组
@@ -50,11 +52,30 @@ local list = {
 		{AuraID = 20594, UnitID = "player"},	-- 石像形态 矮人
 		{AuraID = 26635, UnitID = "player"},	-- 狂暴 巨魔
 		{AuraID = 23230, UnitID = "player"},	-- 血性狂暴 兽人，减治疗
+		-- 附魔药水
+		{AuraID = 28093, UnitID = "player"},	-- 闪电之速，猫鼬
+		{AuraID = 28515, UnitID = "player"},	-- 铁盾药水
+		{AuraID = 28504, UnitID = "player"},	-- 特效无梦睡眠药水
+		{AuraID = 28506, UnitID = "player"},	-- 英雄药水
+		{AuraID = 28507, UnitID = "player"},	-- 加速药水
+		{AuraID = 28508, UnitID = "player"},	-- 毁灭药水
+		{AuraID = 28511, UnitID = "player"},	-- 防护火焰药水
+		{AuraID = 28512, UnitID = "player"},	-- 防护冰霜药水
+		{AuraID = 28513, UnitID = "player"},	-- 防护自然药水
+		{AuraID = 28537, UnitID = "player"},	-- 防护暗影药水
+		{AuraID = 28538, UnitID = "player"},	-- 防护神圣药水
+		-- 饰品
 	},
 	["Raid Buff"] = {		-- 团队增益组
-		-- 嗜血相关
-		--{AuraID = 2825, UnitID = "player"},		-- 嗜血
+		-- 战鼓
+		{AuraID = 35474, UnitID = "player"},	-- 恐慌之鼓
+		{AuraID = 35475, UnitID = "player"},	-- 战争之鼓
+		{AuraID = 35476, UnitID = "player"},	-- 战斗之鼓
+		{AuraID = 35477, UnitID = "player"},	-- 速度之鼓
+		{AuraID = 35478, UnitID = "player"},	-- 恢复之鼓
 		-- 团队增益或减伤
+		{AuraID = 2825, UnitID = "player"},		-- 嗜血
+		{AuraID = 32182, UnitID = "player"},	-- 英勇
 		{AuraID = 1022, UnitID = "player"},		-- 保护祝福
 		{AuraID = 6940, UnitID = "player"},		-- 牺牲祝福
 		{AuraID = 1044, UnitID = "player"},		-- 自由祝福
