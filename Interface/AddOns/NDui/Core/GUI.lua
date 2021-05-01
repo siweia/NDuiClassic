@@ -257,6 +257,7 @@ G.DefaultSettings = {
 		Loot = true,
 		Shadow = true,
 		FontScale = 1,
+		ExpandStat = true,
 	},
 	Tooltip = {
 		CombatHide = false,
