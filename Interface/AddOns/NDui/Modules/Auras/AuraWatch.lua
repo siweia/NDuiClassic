@@ -127,19 +127,6 @@ local function BuildNamesForSpellRank()
 	end
 end
 
-local function ConvertIntCDToNameTable()
-	local newTable = {}
-	for spellID, value in pairs(IntCD.List) do
-		local name = GetSpellInfo(spellID)
-		if name then
-			newTable[name] = value
-		end
-	end
-
-	wipe(IntCD.List)
-	IntCD.List = newTable
-end
-
 local function BuildUnitIDTable()
 	for _, VALUE in pairs(AuraList) do
 		for _, value in pairs(VALUE.List) do
@@ -190,6 +177,8 @@ local function tooltipOnEnter(self)
 		GameTooltip:SetInventoryItem("player", self.spellID)
 	elseif self.type == 4 then
 		GameTooltip:SetUnitAura(self.unitID, self.id, self.filter)
+	elseif self.type == 5 then
+		GameTooltip:SetTotem(self.spellID)
 	end
 	GameTooltip:Show()
 end
@@ -312,7 +301,6 @@ local function InitSetup()
 	ConvertTable()
 	BuildAuraList()
 	BuildNamesForSpellRank()
-	ConvertIntCDToNameTable()
 	BuildUnitIDTable()
 	BuildCooldownTable()
 	B:RegisterEvent("SPELLS_CHANGED", BuildCooldownTable)
@@ -407,10 +395,9 @@ function A:AuraWatch_UpdateCD()
 					end
 				elseif value.TotemID then
 					local haveTotem, name, start, duration, icon = GetTotemInfo(value.TotemID)
-					local id = select(7, GetSpellInfo(name))
 					if haveTotem then
 						if group.Mode:lower() == "icon" then name = nil end
-						A:AuraWatch_SetupCD(KEY, name, icon, start, duration, false, 1, id)
+						A:AuraWatch_SetupCD(KEY, name, icon, start, duration, false, 5, value.TotemID)
 					end
 				end
 			end
@@ -419,7 +406,7 @@ function A:AuraWatch_UpdateCD()
 end
 
 -- UpdateAura
-function A:AuraWatch_SetupAura(index, UnitID, name, icon, count, duration, expires, id, filter, flash)
+function A:AuraWatch_SetupAura(index, UnitID, name, icon, count, duration, expires, id, filter, flash, spellID)
 	if not index then return end
 
 	local frames = FrameList[index]
@@ -449,6 +436,7 @@ function A:AuraWatch_SetupAura(index, UnitID, name, icon, count, duration, expir
 	frame.unitID = UnitID
 	frame.id = id
 	frame.filter = filter
+	frame.spellID = spellID
 
 	frames.Index = (frames.Index + 1 > maxFrames) and maxFrames or frames.Index + 1
 end
@@ -461,7 +449,7 @@ function A:AuraWatch_UpdateAura(spellName, spellID, UnitID, index, bool)
 		end
 		if value and value.AuraID and value.UnitID == UnitID then
 			local filter = bool and "HELPFUL" or "HARMFUL"
-			local name, icon, count, _, duration, expires, caster, _, _, spellID, _, _, _, _, _, number = UnitAura(value.UnitID, index, filter)
+			local name, icon, count, _, duration, expires, caster, _, _, _, _, _, _, _, _, number = UnitAura(value.UnitID, index, filter)
 			if value.Combat and not InCombatLockdown() then return false end
 			if value.Caster and value.Caster:lower() ~= caster then return false end
 			if value.Stack and count and value.Stack > count then return false end
@@ -479,7 +467,7 @@ function A:AuraWatch_UpdateAura(spellName, spellID, UnitID, index, bool)
 				end
 			end
 			if value.Timeless then duration, expires = 0, 0 end
-			return KEY, value.UnitID, name, icon, count, duration, expires, index, filter, value.Flash
+			return KEY, value.UnitID, name, icon, count, duration, expires, index, filter, value.Flash, spellID
 		end
 	end
 	return false
@@ -622,14 +610,14 @@ local cache = {}
 function A:AuraWatch_UpdateInt(_, ...)
 	if not IntCD.List then return end
 
-	local timestamp, eventType, _, sourceGUID, sourceName, sourceFlags, _, destGUID, destName, destFlags, _, _, spellName = ...
-	local value = IntCD.List[spellName]
-	if value and cache[timestamp] ~= spellName and A:IsAuraTracking(value, eventType, sourceGUID, sourceName, sourceFlags, destGUID, destName, destFlags) then
+	local timestamp, eventType, _, sourceGUID, sourceName, sourceFlags, _, destGUID, destName, destFlags, _, spellID = ...
+	local value = IntCD.List[spellID]
+	if value and cache[timestamp] ~= spellID and A:IsAuraTracking(value, eventType, sourceGUID, sourceName, sourceFlags, destGUID, destName, destFlags) then
 		local guid, name = destGUID, destName
 		if value.OnSuccess then guid, name = sourceGUID, sourceName end
 
 		A:AuraWatch_SetupInt(value.IntID, value.ItemID, value.Duration, value.UnitID, guid, name)
-		cache[timestamp] = spellName
+		cache[timestamp] = spellID
 	end
 
 	if #cache > 666 then wipe(cache) end
