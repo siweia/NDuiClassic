@@ -144,6 +144,9 @@ local function CreateRaidStyle(self)
 	UF:CreateRaidDebuffs(self)
 	UF:CreateThreatBorder(self)
 	UF:CreateAuras(self)
+	UF:CreateBuffs(self)
+	UF:CreateDebuffs(self)
+	UF:RefreshAurasByCombat(self)
 	UF:CreateBuffIndicator(self)
 end
 
@@ -182,6 +185,7 @@ function UF:OnLogin()
 	local showPartyPetFrame = C.db["UFs"]["PartyPetFrame"]
 	local petWidth, petHeight = C.db["UFs"]["PartyPetWidth"], C.db["UFs"]["PartyPetHeight"]
 	local showTeamIndex = C.db["UFs"]["ShowTeamIndex"]
+	local showSolo = C.db["UFs"]["ShowSolo"]
 
 	if C.db["Nameplate"]["Enable"] then
 		UF:SetupCVars()
@@ -277,7 +281,7 @@ function UF:OnLogin()
 
 			local party = oUF:SpawnHeader("oUF_Party", nil, "solo,party",
 			"showPlayer", true,
-			"showSolo", false,
+			"showSolo", showSolo,
 			"showParty", true,
 			"showRaid", false,
 			"xoffset", xOffset,
@@ -306,7 +310,7 @@ function UF:OnLogin()
 
 				local partyPet = oUF:SpawnHeader("oUF_PartyPet", nil, "solo,party",
 				"showPlayer", true,
-				"showSolo", false,
+				"showSolo", showSolo,
 				"showParty", true,
 				"showRaid", false,
 				"xoffset", xOffset,
@@ -336,7 +340,7 @@ function UF:OnLogin()
 			local function CreateGroup(name, i)
 				local group = oUF:SpawnHeader(name, nil, "solo,party,raid",
 				"showPlayer", true,
-				"showSolo", false,
+				"showSolo", showSolo and not showPartyFrame,
 				"showParty", not showPartyFrame,
 				"showRaid", true,
 				"xoffset", 5,
@@ -389,7 +393,7 @@ function UF:OnLogin()
 			local function CreateGroup(name, i)
 				local group = oUF:SpawnHeader(name, nil, "solo,party,raid",
 				"showPlayer", true,
-				"showSolo", false,
+				"showSolo", showSolo and not showPartyFrame,
 				"showParty", not showPartyFrame,
 				"showRaid", true,
 				"xoffset", 5,

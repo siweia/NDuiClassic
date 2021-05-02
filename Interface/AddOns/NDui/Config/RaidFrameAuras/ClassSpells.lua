@@ -2,22 +2,25 @@ local _, ns = ...
 local B, C, L, DB = unpack(ns)
 local module = B:GetModule("AurasTable")
 
--- 角标的相关法术 [spellID] = {anchor, {r, g, b}}
+-- 角标的相关法术 [spellID] = {anchor, {r, g, b}, ALL}
 C.CornerBuffs = {
 	["PRIEST"] = {
-		[17]     = {"BOTTOMLEFT", {.7, .7, .7}},		-- 真言术盾
-		[139]    = {"TOPLEFT", {.4, .7, .2}},			-- 恢复
-		[6788]   = {"BOTTOMRIGHT", {.8, .1, .1}, true},	-- 虚弱灵魂
+		[17]     = {"TOPLEFT", {.7, .7, .7}},			-- 真言术盾
+		[139]    = {"TOPRIGHT", {.4, .7, .2}},			-- 恢复
+		[6788]   = {"TOP", {.8, .1, .1}, true},			-- 虚弱灵魂
+		[41635]  = {"BOTTOMRIGHT", {.2, .7, .2}},		-- 愈合导言
+		[6346]   = {"BOTTOM", {1, .8, 0}},				-- 防恐结界
 	},
 	["DRUID"] = {
-		[467]    = {"BOTTOMRIGHT", {.3, 1, .3}},		-- 荆棘术
+		[467]    = {"TOPLEFT", {.3, 1, .3}},			-- 荆棘术
 		[774]    = {"TOPRIGHT", {.8, .4, .8}},			-- 回春
 		[8936]   = {"RIGHT", {.2, .8, .2}},				-- 愈合
+		[29166]  = {"TOP", {0, .4, 1}},					-- 激活
 	},
 	["PALADIN"] = {
-		[1022]   = {"TOPRIGHT", {.2, .2, 1}, true},		-- 保护
-		[6940]   = {"RIGHT", {.89, .1, .1}, true},		-- 牺牲
+		[1022]   = {"BOTTOMRIGHT", {.2, .2, 1}, true},	-- 保护
 		[1044]   = {"BOTTOMRIGHT", {.89, .45, 0}, true},-- 自由
+		[6940]   = {"BOTTOMRIGHT", {.89, .1, .1}, true},-- 牺牲
 		[25771]  = {"TOP", {.86, .11, .11}, true},		-- 自律
 	},
 	["WARLOCK"] = {
@@ -33,9 +36,13 @@ C.CornerBuffs = {
 	["WARRIOR"] = {
 		[6673]   = {"TOPRIGHT", {1, .5, .2}},			-- 战斗怒吼
 	},
-	["SHAMAN"] = {},
+	["SHAMAN"] = {
+		[974]    = {"TOPLEFT", {1, .8, 0}},				-- 大地之盾
+	},
+	["HUNTER"] = {
+		[34477]  = {"BOTTOMRIGHT", {.9, .1, .1}},		-- 误导
+	},
 	["ROGUE"] = {},
-	["HUNTER"] = {},
 }
 
 -- 团队框体职业相关Buffs

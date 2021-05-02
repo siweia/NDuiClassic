@@ -484,7 +484,7 @@ local function Enable(self)
 		local buffs = self.Buffs
 		if(buffs) then
 			buffs.__owner = self
-			buffs.ForceUpdate = ForceUpdateui
+			buffs.ForceUpdate = ForceUpdate
 
 			buffs.createdIcons = buffs.createdIcons or 0
 			buffs.anchoredIcons = 0
