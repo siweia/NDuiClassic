@@ -86,7 +86,7 @@ function S:PlayerStats()
 
 	local function CreateStatHeader(parent, index, category)
 		local header = CreateFrame("Frame", "NDuiStatCategory"..index, parent, "CharacterStatFrameCategoryTemplate")
-		header:SetPoint("TOP", 0, -2 - (index-1)*150)
+		header:SetPoint("TOP", 0, -25 - (index-1)*150)
 		header.Background:Hide()
 		header.Title:SetText(category)
 		header.Title:SetTextColor(cr, cg, cb)
@@ -126,6 +126,34 @@ function S:PlayerStats()
 	B.ReskinArrow(bu, "right")
 	bu.collapse = not C.db["Skins"]["ExpandStat"]
 
+	local function ToggleMagicRes(collapse)
+		if collapse then
+			CharacterResistanceFrame:ClearAllPoints()
+			CharacterResistanceFrame:SetPoint("TOPRIGHT", PaperDollFrame, "TOPLEFT", 297, -77)
+			CharacterResistanceFrame:SetParent(PaperDollFrame)
+
+			for i = 1, 5 do
+				local bu = _G["MagicResFrame"..i]
+				if i > 1 then
+					bu:ClearAllPoints()
+					bu:SetPoint("TOP", _G["MagicResFrame"..(i-1)], "BOTTOM")
+				end
+			end
+		else
+			CharacterResistanceFrame:ClearAllPoints()
+			CharacterResistanceFrame:SetPoint("TOPLEFT", stat, 25, -5)
+			CharacterResistanceFrame:SetParent(stat)
+
+			for i = 1, 5 do
+				local bu = _G["MagicResFrame"..i]
+				if i > 1 then
+					bu:ClearAllPoints()
+					bu:SetPoint("LEFT", _G["MagicResFrame"..(i-1)], "RIGHT", 5, 0)
+				end
+			end
+		end
+	end
+
 	local function ToggleStatPanel(collapse)
 		if collapse then
 			B.SetupArrow(bu.__texture, "right")
@@ -136,6 +164,7 @@ function S:PlayerStats()
 			CharacterAttributesFrame:Hide()
 			statPanel:Show()
 		end
+		ToggleMagicRes(collapse)
 	end
 
 	bu:SetScript("OnClick", function(self)
