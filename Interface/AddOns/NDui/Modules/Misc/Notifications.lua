@@ -28,21 +28,16 @@ local infoType = {
 	["SPELL_AURA_BROKEN_SPELL"] = L["BrokenSpell"],
 }
 
-local spellBlackList = {
+local blackList = {
+	[99] = true,		-- 夺魂咆哮
 	[122] = true,		-- 冰霜新星
 	[1776] = true,		-- 凿击
 	[1784] = true,		-- 潜行
 	[5246] = true,		-- 破胆怒吼
 	[8122] = true,		-- 心灵尖啸
+	[31661] = true,		-- 龙息术
+	[33395] = true,		-- 冰冻术
 }
-
-local blackList = {}
-for spellID in pairs(spellBlackList) do
-	local name = GetSpellInfo(spellID)
-	if name then
-		blackList[name] = true
-	end
-end
 
 function M:IsAllyPet(sourceFlags)
 	if DB:IsMyPet(sourceFlags) or (not C.db["Misc"]["OwnInterrupt"] and (sourceFlags == DB.PartyPetFlags or sourceFlags == DB.RaidPetFlags)) then
@@ -53,7 +48,7 @@ end
 function M:InterruptAlert_Update(...)
 	if C.db["Misc"]["AlertInInstance"] and (not IsInInstance()) then return end
 
-	local _, eventType, _, sourceGUID, sourceName, sourceFlags, _, _, destName, _, _, _, spellName, _, _, extraskillName, _, auraType = ...
+	local _, eventType, _, sourceGUID, sourceName, sourceFlags, _, _, destName, _, _, spellID, _, _, extraskillID, _, _, auraType = ...
 	if not sourceGUID or sourceName == destName then return end
 
 	if UnitInRaid(sourceName) or UnitInParty(sourceName) or M:IsAllyPet(sourceFlags) then
@@ -61,11 +56,11 @@ function M:InterruptAlert_Update(...)
 		if infoText then
 			if infoText == L["BrokenSpell"] then
 				if not C.db["Misc"]["BrokenSpell"] then return end
-				if auraType and auraType == AURA_TYPE_BUFF or blackList[spellName] then return end
-				SendChatMessage(format(infoText, sourceName, extraskillName, destName, spellName), msgChannel())
+				if auraType and auraType == AURA_TYPE_BUFF or blackList[spellID] then return end
+				SendChatMessage(format(infoText, sourceName..GetSpellLink(extraskillID), destName..GetSpellLink(spellID)), msgChannel())
 			else
 				if C.db["Misc"]["OwnInterrupt"] and sourceName ~= DB.MyName and not M:IsAllyPet(sourceFlags) then return end
-				SendChatMessage(format(infoText, sourceName, spellName, destName, extraskillName), msgChannel())
+				SendChatMessage(format(infoText, sourceName..GetSpellLink(spellID), destName..GetSpellLink(extraskillID)), msgChannel())
 			end
 		end
 	end
