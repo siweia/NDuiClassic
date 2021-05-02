@@ -864,7 +864,7 @@ function module:OnLogin()
 	B:RegisterEvent("AUCTION_HOUSE_CLOSED", module.CloseBags)
 
 	-- Fixes
-	BankFrame.GetRight = function() return f.bank:GetRight() end
+	--BankFrame.GetRight = function() return f.bank:GetRight() end	-- maybe useless for now
 	BankFrameItemButton_Update = B.Dummy
 
 	-- Shift key alert
