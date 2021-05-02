@@ -86,7 +86,7 @@ function S:PlayerStats()
 
 	local function CreateStatHeader(parent, index, category)
 		local header = CreateFrame("Frame", "NDuiStatCategory"..index, parent, "CharacterStatFrameCategoryTemplate")
-		header:SetPoint("TOP", 0, -25 - (index-1)*150)
+		header:SetPoint("TOP", 0, -35 - (index-1)*150)
 		header.Background:Hide()
 		header.Title:SetText(category)
 		header.Title:SetTextColor(cr, cg, cb)
