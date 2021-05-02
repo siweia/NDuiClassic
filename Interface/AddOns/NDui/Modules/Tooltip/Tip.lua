@@ -352,7 +352,7 @@ function TT:ReskinTooltip()
 		self.tipStyled = true
 	end
 
-	self.bg:SetBackdropBorderColor(0, 0, 0)
+	B.SetBorderColor(self.bg)
 	if C.db["Tooltip"]["ClassColor"] and self.GetItem then
 		local _, item = self:GetItem()
 		if item then

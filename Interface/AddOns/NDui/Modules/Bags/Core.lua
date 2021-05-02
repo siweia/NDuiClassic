@@ -104,11 +104,11 @@ function module:CreateBagToggle()
 	bu:SetScript("OnClick", function()
 		ToggleFrame(self.BagBar)
 		if self.BagBar:IsShown() then
-			bu:SetBackdropBorderColor(1, .8, 0)
+			bu.bg:SetBackdropBorderColor(1, .8, 0)
 			PlaySound(SOUNDKIT.IG_BACKPACK_OPEN)
 			if self.keyring and self.keyring:IsShown() then self.keyToggle:Click() end
 		else
-			bu:SetBackdropBorderColor(0, 0, 0)
+			B.SetBorderColor(bu.bg)
 			PlaySound(SOUNDKIT.IG_BACKPACK_CLOSE)
 		end
 	end)
@@ -124,11 +124,11 @@ function module:CreateKeyToggle()
 	bu:SetScript("OnClick", function()
 		ToggleFrame(self.keyring)
 		if self.keyring:IsShown() then
-			bu:SetBackdropBorderColor(1, .8, 0)
+			bu.bg:SetBackdropBorderColor(1, .8, 0)
 			PlaySound(SOUNDKIT.KEY_RING_OPEN)
 			if self.BagBar and self.BagBar:IsShown() then self.bagToggle:Click() end
 		else
-			bu:SetBackdropBorderColor(0, 0, 0)
+			B.SetBorderColor(bu.bg)
 			PlaySound(SOUNDKIT.KEY_RING_CLOSE)
 		end
 	end)
@@ -260,7 +260,7 @@ function module:CreateSplitButton()
 	bu.Icon:SetPoint("TOPLEFT", -1, 3)
 	bu.Icon:SetPoint("BOTTOMRIGHT", 1, -3)
 	bu.__turnOff = function()
-		bu:SetBackdropBorderColor(0, 0, 0)
+		B.SetBorderColor(bu.bg)
 		bu.text = nil
 		splitFrame:Hide()
 		splitEnable = nil
@@ -269,7 +269,7 @@ function module:CreateSplitButton()
 		module:SelectToggleButton(1)
 		splitEnable = not splitEnable
 		if splitEnable then
-			self:SetBackdropBorderColor(1, .8, 0)
+			self.bg:SetBackdropBorderColor(1, .8, 0)
 			self.text = enabledText
 			splitFrame:Show()
 			editbox:SetText(C.db["Bags"]["SplitCount"])
@@ -311,7 +311,7 @@ function module:CreateFavouriteButton()
 	bu.Icon:SetPoint("TOPLEFT", -5, 0)
 	bu.Icon:SetPoint("BOTTOMRIGHT", 5, -5)
 	bu.__turnOff = function()
-		bu:SetBackdropBorderColor(0, 0, 0)
+		B.SetBorderColor(bu.bg)
 		bu.text = nil
 		favouriteEnable = nil
 	end
@@ -319,7 +319,7 @@ function module:CreateFavouriteButton()
 		module:SelectToggleButton(2)
 		favouriteEnable = not favouriteEnable
 		if favouriteEnable then
-			self:SetBackdropBorderColor(1, .8, 0)
+			self.bg:SetBackdropBorderColor(1, .8, 0)
 			self.text = enabledText
 		else
 			self.__turnOff()
@@ -367,7 +367,7 @@ function module:CreateJunkButton()
 	bu.Icon:SetPoint("TOPLEFT", C.mult, -3)
 	bu.Icon:SetPoint("BOTTOMRIGHT", -C.mult, -3)
 	bu.__turnOff = function()
-		bu:SetBackdropBorderColor(0, 0, 0)
+		B.SetBorderColor(bu.bg)
 		bu.text = nil
 		customJunkEnable = nil
 	end
@@ -380,7 +380,7 @@ function module:CreateJunkButton()
 		module:SelectToggleButton(3)
 		customJunkEnable = not customJunkEnable
 		if customJunkEnable then
-			self:SetBackdropBorderColor(1, .8, 0)
+			self.bg:SetBackdropBorderColor(1, .8, 0)
 			self.text = enabledText
 		else
 			bu.__turnOff()
@@ -421,7 +421,7 @@ function module:CreateDeleteButton()
 	bu.Icon:SetPoint("TOPLEFT", 3, -2)
 	bu.Icon:SetPoint("BOTTOMRIGHT", -1, 2)
 	bu.__turnOff = function()
-		bu:SetBackdropBorderColor(0, 0, 0)
+		bu.bg:SetBackdropBorderColor(0, 0, 0)
 		bu.text = nil
 		deleteEnable = nil
 	end
@@ -429,7 +429,7 @@ function module:CreateDeleteButton()
 		module:SelectToggleButton(4)
 		deleteEnable = not deleteEnable
 		if deleteEnable then
-			self:SetBackdropBorderColor(1, .8, 0)
+			self.bg:SetBackdropBorderColor(1, .8, 0)
 			self.text = enabledText
 		else
 			bu.__turnOff()

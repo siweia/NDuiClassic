@@ -261,6 +261,7 @@ G.DefaultSettings = {
 		FontOutline = true,
 		Loot = true,
 		Shadow = true,
+		GreyBD = false,
 		FontScale = 1,
 		ExpandStat = true,
 	},
@@ -624,7 +625,7 @@ end
 
 local function updateSkinAlpha()
 	for _, frame in pairs(C.frames) do
-		B:SetBackdropColor(frame, 0, 0, 0, C.db["Skins"]["SkinAlpha"])
+		frame:SetBackdropColor(0, 0, 0, C.db["Skins"]["SkinAlpha"])
 	end
 end
 
@@ -909,6 +910,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Skins", "Loot", L["Loot"], true},
 		{1, "Skins", "Shadow", L["Shadow"]},
 		{1, "Skins", "FontOutline", L["FontOutline"], true},
+		{1, "Skins", "GreyBD", NewTag..L["GreyBackdrop"], nil, nil, nil, L["GreyBackdropTip"]},
 		{3, "Skins", "SkinAlpha", L["SkinAlpha"].."*", nil, {0, 1, .05}, updateSkinAlpha},
 		{3, "Skins", "FontScale", L["GlobalFontScale"], true, {.5, 1.5, .05}},
 		{},--blank
@@ -922,7 +924,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{},--blank
 		{1, "Skins", "Skada", L["Skada Skin"]},
 		{1, "Skins", "Details", L["Details Skin"], nil, resetDetails},
-		{4, "Skins", "ToggleDirection", NewTag..L["ToggleDirection"].."*", true, {L["LEFT"], L["RIGHT"], L["TOP"], L["BOTTOM"], DISABLE}, updateToggleDirection},
+		{4, "Skins", "ToggleDirection", L["ToggleDirection"].."*", true, {L["LEFT"], L["RIGHT"], L["TOP"], L["BOTTOM"], DISABLE}, updateToggleDirection},
 		{1, "Skins", "Recount", L["Recount Skin"]},
 		{},--blank
 		{1, "Skins", "DBM", L["DBM Skin"]},
