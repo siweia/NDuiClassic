@@ -43,6 +43,7 @@ function A:OnLogin()
 	A.DebuffFrame:SetPoint("TOPRIGHT", A.DebuffFrame.mover)
 
 	-- Elements
+	A:Totems()
 	A:InitReminder()
 end
 

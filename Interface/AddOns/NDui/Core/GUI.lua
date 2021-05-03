@@ -66,6 +66,9 @@ G.DefaultSettings = {
 	},
 	Auras = {
 		Reminder = true,
+		Totems = true,
+		VerticalTotems = true,
+		TotemSize = 32,
 		ClassAuras = false,
 		ReverseBuffs = false,
 		BuffSize = 30,
@@ -129,7 +132,7 @@ G.DefaultSettings = {
 		HealthColor = 1,
 		BuffIndicatorType = 1,
 		BuffIndicatorScale = 1,
-		EnergyTicker = true,
+		EnergyTicker = false,
 		UFTextScale = 1,
 		SmoothAmount = .3,
 		ToToT = false,
@@ -500,6 +503,11 @@ local function updateReminder()
 	B:GetModule("Auras"):InitReminder()
 end
 
+local function refreshTotemBar()
+	if not C.db["Auras"]["Totems"] then return end
+	B:GetModule("Auras"):TotemBar_Init()
+end
+
 local function updateChatSticky()
 	B:GetModule("Chat"):ChatWhisperSticky()
 end
@@ -837,6 +845,10 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "AuraWatch", "WatchSpellRank", L["AuraWatch WatchSpellRank"], nil, nil, nil, L["WatchSpellRankTip"]},
 		{1, "AuraWatch", "ClickThrough", L["AuraWatch ClickThrough"], nil, nil, nil, L["ClickThroughTip"]},
 		{3, "AuraWatch", "IconScale", L["AuraWatch IconScale"], true, {.8, 2, .1}},
+		{},--blank
+		{1, "Auras", "Totems", HeaderTag..L["Enable Totembar"]},
+		{1, "Auras", "VerticalTotems", L["VerticalTotems"].."*", nil, nil, refreshTotemBar},
+		{3, "Auras", "TotemSize", L["TotemSize"].."*", true, {24, 60, 1}, refreshTotemBar},
 		{},--blank
 		{1, "Auras", "Reminder", L["Enable Reminder"].."*", nil, nil, updateReminder, L["ReminderTip"]},
 		{},--blank
