@@ -44,6 +44,7 @@ local channelingTicks = { -- ElvUI data
 	[11699] = 5, -- Drain Life(Rank 5)
 	[11700] = 5, -- Drain Life(Rank 6)
 	[27219] = 5, -- Drain Life(Rank 7)
+	[27220] = 5, -- Drain Life(Rank 8)
 	[5740] =  4, --Rain of Fire(Rank 1)
 	[6219] =  4, --Rain of Fire(Rank 2)
 	[11677] =  4, --Rain of Fire(Rank 3)
