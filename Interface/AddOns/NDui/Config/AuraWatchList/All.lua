@@ -79,6 +79,8 @@ local list = {
 		{AuraID = 1022, UnitID = "player"},		-- 保护祝福
 		{AuraID = 6940, UnitID = "player"},		-- 牺牲祝福
 		{AuraID = 1044, UnitID = "player"},		-- 自由祝福
+		{AuraID = 29166, UnitID = "player"},	-- 激活
+		{AuraID = 10060, UnitID = "player"},	-- 能量灌注
 	},
 	["Raid Debuff"] = {		-- 团队减益组
 		--{AuraID = 209858, UnitID = "player"},	-- 死疽溃烂
@@ -95,6 +97,7 @@ local list = {
 		{AuraID = 1022, UnitID = "target"},		-- 保护祝福
 		{AuraID = 19574, UnitID = "target"},	-- 狂野怒火
 		{AuraID = 23920, UnitID = "target"},	-- 法术反射
+		{AuraID = 33206, UnitID = "target"},	-- 痛苦压制
 	},
 	["InternalCD"] = {		-- 自定义内置冷却组
 		--{IntID = 240447, Duration = 20},	-- 践踏
