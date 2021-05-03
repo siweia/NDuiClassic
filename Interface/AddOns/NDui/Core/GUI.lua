@@ -669,7 +669,7 @@ G.TabList = {
 	NewTag..L["RaidFrame"],
 	L["Nameplate"],
 	L["PlayerPlate"],
-	L["Auras"],
+	NewTag..L["Auras"],
 	L["Raid Tools"],
 	L["ChatFrame"],
 	L["Maps"],
@@ -846,7 +846,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "AuraWatch", "ClickThrough", L["AuraWatch ClickThrough"], nil, nil, nil, L["ClickThroughTip"]},
 		{3, "AuraWatch", "IconScale", L["AuraWatch IconScale"], true, {.8, 2, .1}},
 		{},--blank
-		{1, "Auras", "Totems", HeaderTag..L["Enable Totembar"]},
+		{1, "Auras", "Totems", NewTag..HeaderTag..L["Enable Totembar"]},
 		{1, "Auras", "VerticalTotems", L["VerticalTotems"].."*", nil, nil, refreshTotemBar},
 		{3, "Auras", "TotemSize", L["TotemSize"].."*", true, {24, 60, 1}, refreshTotemBar},
 		{},--blank
