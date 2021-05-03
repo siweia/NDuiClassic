@@ -49,7 +49,9 @@ local list = {
 		{AuraID = 20580, UnitID = "player"},	-- 影遁 暗夜
 		{AuraID = 20594, UnitID = "player"},	-- 石像形态 矮人
 		{AuraID = 26635, UnitID = "player"},	-- 狂暴 巨魔
-		{AuraID = 23230, UnitID = "player"},	-- 血性狂暴 兽人，减治疗
+		{AuraID = 20572, UnitID = "player"},	-- 血性狂暴 兽人
+		{AuraID = 33697, UnitID = "player"},	-- 血性狂暴 兽人
+		{AuraID = 33702, UnitID = "player"},	-- 血性狂暴 兽人
 		-- 附魔药水
 		{AuraID = 28093, UnitID = "player"},	-- 闪电之速，猫鼬
 		{AuraID = 28515, UnitID = "player"},	-- 铁盾药水
