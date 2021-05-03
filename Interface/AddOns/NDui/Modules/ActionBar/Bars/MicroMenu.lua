@@ -65,7 +65,7 @@ function Bar:MicroMenu()
 	if not C.db["Actionbar"]["MicroMenu"] then return end
 
 	local menubar = CreateFrame("Frame", nil, UIParent)
-	menubar:SetSize(238, 22)
+	menubar:SetSize(265, 22)
 	B.Mover(menubar, L["Menubar"], "Menubar", C.Skins.MicroMenuPos)
 	Bar:MicroMenu_Lines(menubar)
 
@@ -84,6 +84,7 @@ function Bar:MicroMenu()
 		{"guild", MicroButtonTooltipText(SOCIAL_BUTTON, "TOGGLESOCIAL"), function() ToggleFrame(FriendsFrame) end},
 		{"LFG", MicroButtonTooltipText(WORLDMAP_BUTTON, "TOGGLEWORLDMAP"), ToggleWorldMap},
 		{"collections", MicroButtonTooltipText(HELP_BUTTON, "TOGGLEHELP"), function() ToggleFrame(HelpFrame) end},
+		{"store", BLIZZARD_STORE, function() ToggleStoreUI() end},
 		{"help", MicroButtonTooltipText(MAINMENU_BUTTON, "TOGGLEGAMEMENU"), function() ToggleFrame(GameMenuFrame) PlaySound(SOUNDKIT.IG_MINIMAP_OPEN) end},
 		{"bags", MicroButtonTooltipText(BAGSLOT, "OPENALLBAGS"), function() ToggleAllBags() end},
 	}
