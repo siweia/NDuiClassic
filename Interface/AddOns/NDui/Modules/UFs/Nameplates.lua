@@ -14,6 +14,16 @@ local INTERRUPTED = INTERRUPTED
 local _QuestieTooltips, _QuestiePlayer, _QuestieQuest
 
 -- Init
+function UF:PlateInsideView()
+	if C.db["Nameplate"]["InsideView"] then
+		SetCVar("nameplateOtherTopInset", .05)
+		SetCVar("nameplateOtherBottomInset", .08)
+	else
+		SetCVar("nameplateOtherTopInset", -1)
+		SetCVar("nameplateOtherBottomInset", -1)
+	end
+end
+
 function UF:UpdatePlateScale()
 	SetCVar("namePlateMinScale", C.db["Nameplate"]["MinScale"])
 	SetCVar("namePlateMaxScale", C.db["Nameplate"]["MinScale"])
@@ -30,6 +40,7 @@ function UF:UpdatePlateSpacing()
 end
 
 function UF:SetupCVars()
+	UF:PlateInsideView()
 	SetCVar("nameplateOverlapH", .8)
 	UF:UpdatePlateSpacing()
 	UF:UpdatePlateAlpha()

@@ -540,6 +540,10 @@ local function updateToggleDirection()
 	B:GetModule("Skins"):RefreshToggleDirection()
 end
 
+local function updatePlateInsideView()
+	B:GetModule("UnitFrames"):PlateInsideView()
+end
+
 local function updatePlateSpacing()
 	B:GetModule("UnitFrames"):UpdatePlateSpacing()
 end
@@ -708,7 +712,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Actionbar", "Cooldown", HeaderTag..L["Show Cooldown"]},
 		{1, "Actionbar", "OverrideWA", L["HideCooldownOnWA"].."*", true},
 		{1, "Actionbar", "DecimalCD", L["Decimal Cooldown"].."*"},
-		{1, "Misc", "SendActionCD", L["SendActionCD"].."*", true, nil, nil, L["SendActionCDTip"]},
+		{1, "Misc", "SendActionCD", HeaderTag..L["SendActionCD"].."*", true, nil, nil, L["SendActionCDTip"]},
 		{},--blank
 		{1, "Actionbar", "Hotkeys", L["Actionbar Hotkey"].."*", nil, nil, updateHotkeys},
 		{1, "Actionbar", "Macro", L["Actionbar Macro"], true},
@@ -808,6 +812,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Nameplate", "ColorBorder", L["ColorBorder"].."*", true, nil, refreshNameplates},
 		{1, "Nameplate", "QuestIndicator", L["QuestIndicator"], nil, nil, nil, L["QuestIndicatorAddOns"]},
 		{1, "Nameplate", "CastTarget", NewTag..L["PlateCastTarget"].."*", true, nil, nil, L["PlateCastTargetTip"]},
+		{1, "Nameplate", "InsideView", NewTag..L["Nameplate InsideView"].."*", nil, nil, updatePlateInsideView},
 		{},--blank
 		{1, "Nameplate", "ColoredTarget", HeaderTag..L["ColoredTarget"].."*", nil, nil, nil, L["ColoredTargetTip"]},
 		{1, "Nameplate", "ColoredFocus", NewTag..HeaderTag..L["ColoredFocus"].."*", true, nil, nil, L["ColoredFocusTip"]},
