@@ -178,6 +178,28 @@ function B:OnCastSent()
 	element.SafeZone.castSent = true
 end
 
+local function UpdateSpellTarget(self, unit)
+	if not C.db["Nameplate"]["CastTarget"] then return end
+	if not self.spellTarget or not unit then return end
+
+	local unitTarget = unit.."target"
+	if UnitExists(unitTarget) then
+		local nameString
+		if UnitIsUnit(unitTarget, "player") then
+			nameString = format("|cffff0000%s|r", ">"..strupper(YOU).."<")
+		else
+			nameString = B.HexRGB(B.UnitColor(unitTarget))..UnitName(unitTarget)
+		end
+		self.spellTarget:SetText(nameString)
+	end
+end
+
+local function ResetSpellTarget(self)
+	if self.spellTarget then
+		self.spellTarget:SetText("")
+	end
+end
+
 function B:PostCastStart(unit)
 	self:SetAlpha(1)
 	self.Spark:Show()
@@ -218,6 +240,15 @@ function B:PostCastStart(unit)
 			self.Icon:SetTexture(136243)
 		end
 	end
+
+	if self.__owner.mystyle == "nameplate" then
+		-- Spell target
+		UpdateSpellTarget(self, unit)
+	end
+end
+
+function B:PostCastUpdate(unit)
+	UpdateSpellTarget(self, unit)
 end
 
 function B:PostUpdateInterruptible(unit)
@@ -236,12 +267,14 @@ function B:PostCastStop()
 	end
 	self:SetValue(self.max or 1)
 	self:Show()
+	ResetSpellTarget(self)
 end
 
 function B:PostChannelStop()
 	self.fadeOut = true
 	self:SetValue(0)
 	self:Show()
+	ResetSpellTarget(self)
 end
 
 function B:PostCastFailed()
@@ -249,4 +282,5 @@ function B:PostCastFailed()
 	self:SetValue(self.max or 1)
 	self.fadeOut = true
 	self:Show()
+	ResetSpellTarget(self)
 end

@@ -521,6 +521,12 @@ function UF:CreateCastBar(self)
 		cb.Icon:SetSize(iconSize, iconSize)
 		cb.Icon:SetPoint("BOTTOMRIGHT", cb, "BOTTOMLEFT", -5, 0)
 		cb.timeToHold = .5
+
+		local spellTarget = B.CreateFS(cb, C.db["Nameplate"]["NameTextSize"]+3)
+		spellTarget:ClearAllPoints()
+		spellTarget:SetJustifyH("LEFT")
+		spellTarget:SetPoint("TOPLEFT", name, "BOTTOMLEFT", 0, -2)
+		cb.spellTarget = spellTarget
 	end
 
 	if mystyle == "nameplate" then
@@ -536,6 +542,8 @@ function UF:CreateCastBar(self)
 	cb.PostChannelStart = B.PostCastStart
 	cb.PostCastStop = B.PostCastStop
 	cb.PostChannelStop = B.PostChannelStop
+	cb.PostCastDelayed = B.PostCastUpdate
+	cb.PostChannelUpdate = B.PostCastUpdate
 	cb.PostCastFailed = B.PostCastFailed
 	cb.PostCastInterrupted = B.PostCastFailed
 	cb.PostCastInterruptible = B.PostUpdateInterruptible
