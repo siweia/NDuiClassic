@@ -309,7 +309,7 @@ G.DefaultSettings = {
 		TradeTabs = true,
 		InstantDelete = true,
 		RaidTool = true,
-		RMRune = false,
+		--RMRune = false,
 		DBMCount = "10",
 		EasyMarkKey = 1,
 		EasyMarking = true,
@@ -879,7 +879,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 	},
 	[8] = {
 		{1, "Misc", "RaidTool", HeaderTag..L["Raid Manger"]},
-		{1, "Misc", "RMRune", L["Runes Check"].."*", true},
+		--{1, "Misc", "RMRune", L["Runes Check"].."*", true},
 		{4, "Misc", "EasyMarkKey", NewTag..L["EasyMark"].."*", nil, {"CTRL", "ALT", "SHIFT", DISABLE}, nil, L["EasyMarkTip"]},
 		{2, "Misc", "DBMCount", L["DBMCount"].."*", true, nil, nil, L["DBMCountTip"]},
 		{},--blank
@@ -1182,6 +1182,10 @@ local function CreateOption(i)
 			end
 
 			B.CreateFS(dd, 14, name, "system", "CENTER", 0, 25)
+			if tooltip then
+				dd.title = L["Tips"]
+				B.AddTooltip(dd, "ANCHOR_RIGHT", tooltip, "info")
+			end
 		-- Colorswatch
 		elseif optType == 5 then
 			local swatch = B.CreateColorSwatch(parent, name, NDUI_VARIABLE(key, value))
