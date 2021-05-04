@@ -19,6 +19,12 @@ function UF:UpdatePlateScale()
 	SetCVar("namePlateMaxScale", C.db["Nameplate"]["MinScale"])
 end
 
+function UF:UpdatePlateAlpha()
+	SetCVar("nameplateMinAlpha", C.db["Nameplate"]["MinAlpha"])
+	SetCVar("nameplateMaxAlpha", C.db["Nameplate"]["MinAlpha"])
+	SetCVar("nameplateNotSelectedAlpha", C.db["Nameplate"]["MinAlpha"])
+end
+
 function UF:UpdatePlateSpacing()
 	SetCVar("nameplateOverlapV", C.db["Nameplate"]["VerticalSpacing"])
 end
@@ -26,6 +32,7 @@ end
 function UF:SetupCVars()
 	SetCVar("nameplateOverlapH", .8)
 	UF:UpdatePlateSpacing()
+	UF:UpdatePlateAlpha()
 	SetCVar("nameplateSelectedAlpha", 1)
 
 	UF:UpdatePlateScale()
