@@ -242,6 +242,13 @@ function B:PostCastStart(unit)
 	end
 
 	if self.__owner.mystyle == "nameplate" then
+		-- Major spells
+		if C.db["Nameplate"]["CastbarGlow"] and B:GetModule("UnitFrames").MajorSpells[self.spellID] then
+			B.ShowOverlayGlow(self.glowFrame)
+		else
+			B.HideOverlayGlow(self.glowFrame)
+		end
+
 		-- Spell target
 		UpdateSpellTarget(self, unit)
 	end

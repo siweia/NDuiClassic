@@ -933,3 +933,24 @@ function UF:TogglePlateVisibility()
 		UF.PlateVisibility(plate, "PLAYER_REGEN_DISABLED")
 	end
 end
+
+UF.MajorSpells = {}
+function UF:RefreshMajorSpells()
+	wipe(UF.MajorSpells)
+
+	for spellID in pairs(C.MajorSpells) do
+		local name = GetSpellInfo(spellID)
+		if name then
+			local modValue = NDuiADB["MajorSpells"][spellID]
+			if modValue == nil then
+				UF.MajorSpells[spellID] = true
+			end
+		end
+	end
+
+	for spellID, value in pairs(NDuiADB["MajorSpells"]) do
+		if value then
+			UF.MajorSpells[spellID] = true
+		end
+	end
+end

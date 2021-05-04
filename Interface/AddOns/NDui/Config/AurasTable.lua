@@ -107,6 +107,25 @@ function module:BuildNameListFromID()
 	end
 end
 
+function module:CheckMajorSpells()
+	for spellID in pairs(C.MajorSpells) do
+		local name = GetSpellInfo(spellID)
+		if name then
+			if NDuiADB["MajorSpells"][spellID] then
+				NDuiADB["MajorSpells"][spellID] = nil
+			end
+		else
+			if DB.isDeveloper then print("Invalid cornerspell ID: "..spellID) end
+		end
+	end
+
+	for spellID, value in pairs(NDuiADB["MajorSpells"]) do
+		if value == false and C.MajorSpells[spellID] == nil then
+			NDuiADB["MajorSpells"][spellID] = nil
+		end
+	end
+end
+
 function module:OnLogin()
 	-- Cleanup data
 	if next(NDuiADB["RaidDebuffs"]) and not NDuiADB["RaidDebuffs"]["raid"] and not NDuiADB["RaidDebuffs"]["other"] then
@@ -128,5 +147,7 @@ function module:OnLogin()
 	if not next(NDuiADB["CornerBuffs"][DB.MyClass]) then
 		B.CopyTable(C.CornerBuffs[DB.MyClass], NDuiADB["CornerBuffs"][DB.MyClass])
 	end
-	self:BuildNameListFromID()
+	module:BuildNameListFromID()
+
+	module:CheckMajorSpells()
 end

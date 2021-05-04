@@ -195,6 +195,7 @@ function UF:OnLogin()
 		UF:AddInterruptInfo()
 		UF:QuestIconCheck()
 		UF:RefreshPlateOnFactionChanged()
+		UF:RefreshMajorSpells()
 
 		oUF:RegisterStyle("Nameplates", UF.CreatePlates)
 		oUF:SetActiveStyle("Nameplates")

@@ -26,3 +26,8 @@ C.CustomUnits = {
 C.ShowPowerList = {
 	[155432] = true, -- 魔力使者
 }
+
+-- 重要读条高亮
+C.MajorSpells = {
+	[27072] = true,	-- 寒冰箭
+}

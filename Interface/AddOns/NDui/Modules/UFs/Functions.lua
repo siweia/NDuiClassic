@@ -522,6 +522,9 @@ function UF:CreateCastBar(self)
 		cb.Icon:SetPoint("BOTTOMRIGHT", cb, "BOTTOMLEFT", -5, 0)
 		cb.timeToHold = .5
 
+		cb.glowFrame = B.CreateGlowFrame(cb, iconSize)
+		cb.glowFrame:SetPoint("CENTER", cb.Icon)
+
 		local spellTarget = B.CreateFS(cb, C.db["Nameplate"]["NameTextSize"]+3)
 		spellTarget:ClearAllPoints()
 		spellTarget:SetJustifyH("LEFT")

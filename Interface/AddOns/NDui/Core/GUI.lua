@@ -243,6 +243,7 @@ G.DefaultSettings = {
 		TargetColor = {r=0, g=.6, b=1},
 		ColoredFocus = false,
 		FocusColor = {r=1, g=.8, b=0},
+		CastbarGlow = true,
 		CastTarget = false,
 	},
 	Skins = {
@@ -356,6 +357,7 @@ G.AccountSettings = {
 	ProfileNames = {},
 	Help = {},
 	CustomTex = "",
+	MajorSpells = {},
 }
 
 -- Initial settings
@@ -460,6 +462,10 @@ end
 
 local function setupNameplateFilter()
 	G:SetupNameplateFilter(guiPage[5])
+end
+
+local function setupPlateCastbarGlow()
+	G:PlateCastbarGlow(guiPage[5])
 end
 
 local function setupAuraWatch()
@@ -814,6 +820,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Nameplate", "QuestIndicator", L["QuestIndicator"], nil, nil, nil, L["QuestIndicatorAddOns"]},
 		{1, "Nameplate", "CastTarget", NewTag..L["PlateCastTarget"].."*", true, nil, nil, L["PlateCastTargetTip"]},
 		{1, "Nameplate", "InsideView", NewTag..L["Nameplate InsideView"].."*", nil, nil, updatePlateInsideView},
+		{1, "Nameplate", "CastbarGlow", NewTag..L["PlateCastbarGlow"].."*", true, setupPlateCastbarGlow, nil, L["PlateCastbarGlowTip"]},
 		{},--blank
 		{1, "Nameplate", "ColoredTarget", HeaderTag..L["ColoredTarget"].."*", nil, nil, nil, L["ColoredTargetTip"]},
 		{1, "Nameplate", "ColoredFocus", NewTag..HeaderTag..L["ColoredFocus"].."*", true, nil, nil, L["ColoredFocusTip"]},
