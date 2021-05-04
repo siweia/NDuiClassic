@@ -450,6 +450,7 @@ L["ShowChatItemLevel"] = "Показывать уровень предметов
 L["NameTextSize"] = "Размер шрифта имени"
 L["HealthTextSize"] = "Размер шрифта здоровья"
 L["Nameplate MinScale"] = "Масштаб не активных индикаторов здоровья"
+L["Nameplate MinAlpha"] = "Прозрачность не активных индикаторов здоровья"
 L["TargetIndicator"] = "Настройка индикаторов цели"
 L["TopArrow"] = "Стрелка вверху"
 L["RightArrow"] = "Стрелка справа"
