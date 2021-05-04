@@ -142,6 +142,11 @@ end
 function module:CreateSortButton(name)
 	local bu = B.CreateButton(self, 24, 24, true, DB.sortTex)
 	bu:SetScript("OnClick", function()
+		if C.db["Bags"]["BagSortMode"] == 3 then
+			UIErrorsFrame:AddMessage(DB.InfoColor..L["BagSortDisabled"])
+			return
+		end
+
 		if InCombatLockdown() then
 			UIErrorsFrame:AddMessage(DB.InfoColor..ERR_NOT_IN_COMBAT)
 			return
@@ -850,7 +855,7 @@ function module:OnLogin()
 	end
 
 	-- Sort order
-	SetSortBagsRightToLeft(not C.db["Bags"]["ReverseSort"])
+	SetSortBagsRightToLeft(C.db["Bags"]["BagSortMode"] == 1)
 	SetInsertItemsLeftToRight(false)
 
 	-- Init

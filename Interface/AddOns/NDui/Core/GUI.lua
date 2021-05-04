@@ -45,7 +45,7 @@ G.DefaultSettings = {
 		BagsWidth = 12,
 		BankWidth = 14,
 		BagsiLvl = true,
-		ReverseSort = false,
+		BagSortMode = 1,
 		ItemFilter = true,
 		DeleteButton = true,
 		FavouriteItems = {},
@@ -468,7 +468,7 @@ local function setupAuraWatch()
 end
 
 local function updateBagSortOrder()
-	SetSortBagsRightToLeft(not C.db["Bags"]["ReverseSort"])
+	SetSortBagsRightToLeft(C.db["Bags"]["BagSortMode"] == 1)
 end
 
 local function updateBagStatus()
@@ -725,12 +725,12 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{},--blank
 		{1, "Bags", "ItemFilter", L["Bags ItemFilter"].."*", nil, setupBagFilter, updateBagStatus},
 		{1, "Bags", "GatherEmpty", L["Bags GatherEmpty"].."*", true, nil, updateBagStatus},
-		{1, "Bags", "ReverseSort", L["Bags ReverseSort"].."*", nil, nil, updateBagSortOrder},
-		{1, "Bags", "BagsiLvl", L["Bags Itemlevel"].."*", true, nil, updateBagStatus},
 		{1, "Bags", "SpecialBagsColor", L["SpecialBagsColor"].."*", nil, nil, updateBagStatus, L["SpecialBagsColorTip"]},
-		{1, "Bags", "ShowNewItem", L["Bags ShowNewItem"]},
-		{3, "Bags", "iLvlToShow", L["iLvlToShow"].."*", true, {1, 100, 1}, nil, L["iLvlToShowTip"]},
-		{1, "Bags", "DeleteButton", L["Bags DeleteButton"]},
+		{1, "Bags", "DeleteButton", L["Bags DeleteButton"], true},
+		{1, "Bags", "BagsiLvl", L["Bags Itemlevel"].."*", nil, nil, updateBagStatus},
+		{1, "Bags", "ShowNewItem", L["Bags ShowNewItem"], true},
+		{3, "Bags", "iLvlToShow", L["iLvlToShow"].."*", nil, {1, 500, 1}, nil, L["iLvlToShowTip"]},
+		{4, "Bags", "BagSortMode", L["BagSortMode"].."*", true, {L["Forward"], L["Backward"], DISABLE}, updateBagSortOrder},
 		{},--blank
 		{3, "Bags", "BagsScale", L["Bags Scale"], false, {.5, 1.5, .1}},
 		{3, "Bags", "IconSize", L["Bags IconSize"], true, {30, 42, 1}},
