@@ -29,5 +29,5 @@ C.ShowPowerList = {
 
 -- 重要读条高亮
 C.MajorSpells = {
-	[27072] = true,	-- 寒冰箭
+	--[27072] = true,	-- 寒冰箭
 }
