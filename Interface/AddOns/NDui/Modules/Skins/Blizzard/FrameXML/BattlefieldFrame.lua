@@ -23,4 +23,10 @@ tinsert(C.defaultThemes, function()
 	B.Reskin(ArenaFrameJoinButton)
 	B.Reskin(ArenaFrameCancelButton)
 	B.Reskin(ArenaFrameGroupJoinButton)
+
+	-- Temp fix for ArenaFrame label
+	local relF, parent, relT, x, y = ArenaFrameFrameLabel:GetPoint()
+	if parent == BattlefieldFrame then
+		ArenaFrameFrameLabel:SetPoint(relF, ArenaFrame, relT, x, y)
+	end
 end)
