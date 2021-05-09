@@ -221,12 +221,9 @@ function UF:OnLogin()
 	local numGroups = C.db["UFs"]["NumGroups"]
 	local scale = C.db["UFs"]["SimpleRaidScale"]/10
 	local raidWidth, raidHeight = C.db["UFs"]["RaidWidth"], C.db["UFs"]["RaidHeight"]
-	local showPartyFrame = C.db["UFs"]["PartyFrame"]
 	local partyWidth, partyHeight = C.db["UFs"]["PartyWidth"], C.db["UFs"]["PartyHeight"]
-	local showPartyPetFrame = C.db["UFs"]["PartyPetFrame"]
 	local petWidth, petHeight = C.db["UFs"]["PartyPetWidth"], C.db["UFs"]["PartyPetHeight"]
 	local showTeamIndex = C.db["UFs"]["ShowTeamIndex"]
-	local showSolo = C.db["UFs"]["ShowSolo"]
 
 	if C.db["Nameplate"]["Enable"] then
 		UF:SetupCVars()
