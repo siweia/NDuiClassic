@@ -144,6 +144,7 @@ G.DefaultSettings = {
 		RaidBuffSize = 12,
 		ShowRaidDebuff = true,
 		RaidDebuffSize = 12,
+		SmartRaid = false,
 
 		PlayerWidth = 245,
 		PlayerHeight = 24,
@@ -618,6 +619,10 @@ local function updateSmoothingAmount()
 	B:SetSmoothingAmount(C.db["UFs"]["SmoothAmount"])
 end
 
+local function updateAllHeaders()
+	B:GetModule("UnitFrames"):UpdateAllHeaders()
+end
+
 local function updateMapFader()
 	B:GetModule("Maps"):MapFader()
 end
@@ -787,8 +792,9 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{3, "UFs", "RaidDebuffScale", L["RaidDebuffScale"].."*", true, {.8, 2, .1}, refreshRaidFrameIcons},
 		{},--blank
 		{1, "UFs", "RaidClickSets", HeaderTag..L["Enable ClickSets"], nil, setupClickCast},
-		{1, "UFs", "ShowSolo", NewTag..L["ShowSolo"], true, nil, nil, L["ShowSoloTip"]},
-		{1, "UFs", "ShowTeamIndex", L["RaidFrame TeamIndex"]},
+		{1, "UFs", "ShowSolo", NewTag..L["ShowSolo"].."*", nil, nil, updateAllHeaders, L["ShowSoloTip"]},
+		{1, "UFs", "ShowTeamIndex", L["RaidFrame TeamIndex"], true},
+		{1, "UFs", "SmartRaid", NewTag..L["SmartRaid"].."*", nil, nil, updateAllHeaders, L["SmartRaidTip"]},
 		{1, "UFs", "HorizonRaid", L["Horizon RaidFrame"], true},
 		{4, "UFs", "RaidHealthColor", L["HealthColor"].."*", nil, {L["Default Dark"], L["ClassColorHP"], L["GradientHP"]}, updateRaidTextScale},
 		{4, "UFs", "RaidHPMode", L["RaidHPMode"].."*", true, {L["DisableRaidHP"], L["RaidHPPercent"], L["RaidHPCurrent"], L["RaidHPLost"]}, updateRaidNameText},
