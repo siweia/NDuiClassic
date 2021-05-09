@@ -13,7 +13,9 @@ local frames = {
 
 	-- Blizz Frames
 	["AddonList"] = false,
+	["ArenaFrame"] = false,
 	["AudioOptionsFrame"] = false,
+	["BattlefieldFrame"] = false,
 	["ChannelFrame"] = false,
 	["ChatConfigFrame"] = false,
 	["DressUpFrame"] = false,
