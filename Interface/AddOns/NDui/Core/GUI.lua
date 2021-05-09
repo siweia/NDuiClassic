@@ -696,7 +696,7 @@ G.TabList = {
 	L["Maps"],
 	NewTag..L["Skins"],
 	L["Tooltip"],
-	L["Misc"],
+	NewTag..L["Misc"],
 	L["UI Settings"],
 	L["Profile"],
 }
@@ -989,7 +989,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 	[13] = {
 		{1, "Misc", "ItemLevel", HeaderTag..L["Show ItemQuality"]},
 		{1, "Misc", "ShowItemLevel", L["Show ItemLevel"].."*"},
-		{1, "Misc", "GemNEnchant", L["Show GemNEnchant"].."*", true},
+		{1, "Misc", "GemNEnchant", NewTag..L["Show GemNEnchant"].."*", true},
 		{},--blank
 		{1, "Misc", "FasterLoot", L["Faster Loot"].."*", nil, nil, updateFasterLoot},
 		{1, "Misc", "HideErrors", L["Hide Error"].."*", true, nil, updateErrorBlocker},
