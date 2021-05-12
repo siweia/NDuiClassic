@@ -193,7 +193,7 @@ local function ToggleMagicRes()
     if C.db["Misc"]["ExpandStat"] then
         CharacterResistanceFrame:ClearAllPoints()
         CharacterResistanceFrame:SetPoint("TOPLEFT", M.StatPanel.child, 25, -5)
-        CharacterResistanceFrame:SetParent(M.StatPanel)
+        CharacterResistanceFrame:SetParent(M.StatPanel.child)
 
         for i = 1, 5 do
             local bu = _G["MagicResFrame"..i]
@@ -239,6 +239,8 @@ local function ToggleStatPanel(texture)
 end
 
 function M:CharacterStatePanel()
+	if not C.db["Skins"]["BlizzardSkins"] then return end   -- disable if skins off, needs review
+
 	local statPanel = CreateFrame("Frame", "NDuiStatePanel", PaperDollFrame)
 	statPanel:SetSize(200, 422)
 	statPanel:SetPoint("TOPLEFT", PaperDollFrame, "TOPRIGHT", -32, -15-C.mult)
