@@ -272,7 +272,6 @@ G.DefaultSettings = {
 		Shadow = true,
 		GreyBD = false,
 		FontScale = 1,
-		ExpandStat = true,
 	},
 	Tooltip = {
 		CombatHide = false,
@@ -318,6 +317,8 @@ G.DefaultSettings = {
 		EasyMarking = true,
 		BlockInvite = false,
 		SendActionCD = false,
+		StatOrder = "12345",
+		ExpandStat = true,
 	},
 	Tutorial = {
 		Complete = false,
