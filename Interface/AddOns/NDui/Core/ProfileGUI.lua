@@ -586,7 +586,7 @@ function G:ImportGUIData()
 				NDuiADB[value][tonumber(index)] = name
 			end
 		elseif tonumber(arg1) then
-			if value == "DBMCount" then
+			if value == "DBMCount" or value == "StatOrder" then
 				C.db[key][value] = arg1
 			else
 				C.db[key][value] = tonumber(arg1)
