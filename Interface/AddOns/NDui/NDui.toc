@@ -3,8 +3,8 @@
 ## X-Credits: Elv, Freebaser, Haleth, Haste, Leatrix, lightspark, Loshine, Neavo, p3lim, Paopao001, Qulight, Ray, Rubgrsch, Tuller, zork.
 ## Author: Siweia
 ## Notes: More than a UI.
-## Version: 1.28.9
-## X-Support: TBC beta
+## Version: 1.28.10
+## X-Support: TBC Classic
 ## X-Website: https://github.com/siweia/NDuiClassic
 ## SavedVariables: NDuiADB, NDuiPDB
 ## SavedVariablesPerCharacter: NDuiDB
