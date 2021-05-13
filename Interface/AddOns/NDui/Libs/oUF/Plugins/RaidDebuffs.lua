@@ -109,14 +109,9 @@ local function UpdateDebuffFrame(self, name, icon, count, debuffType, duration, 
 	end
 end
 
-local instType
+local instID
 local function checkInstance()
-	local _, instanceType = GetInstanceInfo()
-	if instanceType == "raid" then
-		instType = "raid"
-	else
-		instType = "other"
-	end
+	instID = select(8, GetInstanceInfo())
 end
 
 local function Update(self, _, unit)
@@ -133,7 +128,7 @@ local function Update(self, _, unit)
 	local prio
 
 	for i = 1, 32 do
-		local name, icon, count, debuffType, duration, expiration, caster, _, _, spellId = UnitAura(unit, i, rd.filter)
+		local name, icon, count, debuffType, duration, expiration, _, _, _, spellId = UnitAura(unit, i, rd.filter)
 		if not name then break end
 
 		if rd.ShowDispellableDebuff and debuffType and (not isCharmed) and (not canAttack) then
@@ -151,8 +146,9 @@ local function Update(self, _, unit)
 		end
 
 		local instPrio
-		if instType and debuffs[instType] then
-			instPrio = debuffs[instType][spellId]
+		local data = instID and debuffs[instID] or debuffs[0]
+		if data then
+			instPrio = data[spellId]
 		end
 
 		if not RaidDebuffsIgnore[spellId] and instPrio and (instPrio == 6 or instPrio > rd.priority) then
