@@ -604,7 +604,6 @@ function module:OnLogin()
 		self.Favourite:SetSize(30, 30)
 		self.Favourite:SetPoint("TOPLEFT", -12, 9)
 
-		self.Quest = B.CreateFS(self, 26, "!", "system", "LEFT", 3, 0)
 		self.iLvl = B.CreateFS(self, 12, "", false, "BOTTOMLEFT", 1, 2)
 
 		if showNewItem then
@@ -701,11 +700,8 @@ function module:OnLogin()
 	end
 
 	function MyButton:OnUpdateQuest(item)
-		self.Quest:Hide()
-
 		if item.isQuestItem then
 			self:SetBackdropBorderColor(.8, .8, 0)
-			self.Quest:Show()
 		elseif item.rarity and item.rarity > -1 then
 			local color = DB.QualityColors[item.rarity]
 			self:SetBackdropBorderColor(color.r, color.g, color.b)
