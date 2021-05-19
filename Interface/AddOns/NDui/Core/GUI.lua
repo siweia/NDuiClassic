@@ -301,7 +301,7 @@ G.DefaultSettings = {
 		BrokenSpell = false,
 		FasterLoot = true,
 		AutoQuest = false,
-		QuestNotifier = false,
+		QuestNotification = false,
 		QuestProgress = false,
 		OnlyCompleteRing = false,
 		ExplosiveCache = {},
@@ -641,8 +641,8 @@ local function updateInterruptAlert()
 	B:GetModule("Misc"):InterruptAlert()
 end
 
-local function updateQuestNotifier()
-	B:GetModule("Misc"):QuestNotifier()
+local function updateQuestNotification()
+	B:GetModule("Misc"):QuestNotification()
 end
 
 local function updateFasterLoot()
@@ -893,7 +893,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{4, "Misc", "EasyMarkKey", NewTag..L["EasyMark"].."*", nil, {"CTRL", "ALT", "SHIFT", DISABLE}, nil, L["EasyMarkTip"]},
 		{2, "Misc", "DBMCount", L["DBMCount"].."*", true, nil, nil, L["DBMCountTip"]},
 		{},--blank
-		{1, "Misc", "QuestNotifier", HeaderTag..L["QuestNotifier"].."*", nil, nil, updateQuestNotifier},
+		{1, "Misc", "QuestNotification", HeaderTag..L["QuestNotification"].."*", nil, nil, updateQuestNotification},
 		{1, "Misc", "QuestProgress", L["QuestProgress"].."*"},
 		{1, "Misc", "OnlyCompleteRing", L["OnlyCompleteRing"].."*", true},
 		{},--blank

@@ -8,7 +8,7 @@
 	<Script file="ItemLevel.lua"/>
 	<Script file="Mail.lua"/>
 	<Script file="Notifications.lua"/>
-	<Script file="QuestNotifier.lua"/>
+	<Script file="QuestNotification.lua"/>
 	<Script file="RaidTool.lua"/>
 	<Script file="TradeTabs.lua"/>
 </Ui>
