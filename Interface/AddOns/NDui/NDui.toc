@@ -4,7 +4,7 @@
 ## Author: Siweia
 ## Notes: More than a UI.
 ## Version: 1.28.10
-## X-Support: TBC Classic
+## X-Support: BC Classic
 ## X-Website: https://github.com/siweia/NDuiClassic
 ## SavedVariables: NDuiADB, NDuiPDB
 ## SavedVariablesPerCharacter: NDuiDB
