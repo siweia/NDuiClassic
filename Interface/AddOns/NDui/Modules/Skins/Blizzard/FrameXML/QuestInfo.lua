@@ -67,6 +67,7 @@ tinsert(C.defaultThemes, function()
 	restyleSpellButton(QuestInfoSpellObjectiveFrame)
 
 	local function restyleRewardButton(bu, isMapQuestInfo)
+		if bu.NameFrame then bu.NameFrame:SetAlpha(0) end
 		if bu.IconBorder then bu.IconBorder:SetAlpha(0) end
 
 		if isMapQuestInfo then
