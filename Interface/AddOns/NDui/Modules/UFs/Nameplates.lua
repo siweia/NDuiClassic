@@ -14,6 +14,10 @@ local INTERRUPTED = INTERRUPTED
 local _QuestieTooltips, _QuestiePlayer, _QuestieQuest
 
 -- Init
+function UF:UpdatePlateRange()
+	SetCVar("nameplateMaxDistance", C.db["Nameplate"]["PlateRange"])
+end
+
 function UF:UpdatePlateScale()
 	SetCVar("namePlateMinScale", C.db["Nameplate"]["MinScale"])
 	SetCVar("namePlateMaxScale", C.db["Nameplate"]["MinScale"])
@@ -30,6 +34,7 @@ function UF:UpdatePlateSpacing()
 end
 
 function UF:SetupCVars()
+	UF:UpdatePlateRange()
 	SetCVar("nameplateOverlapH", .8)
 	UF:UpdatePlateSpacing()
 	UF:UpdatePlateAlpha()
