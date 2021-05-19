@@ -1,5 +1,5 @@
 ## Interface: 11307
-## Title: |cff0080ffNDui|r Classic
+## Title: |cff0080ffNDui|r |cffffffffClassic|r
 ## X-Credits: Elv, Freebaser, Haleth, Haste, Leatrix, lightspark, Loshine, Neavo, p3lim, Paopao001, Qulight, Ray, Rubgrsch, Tuller, zork.
 ## Author: Siweia
 ## Notes: More than a UI.
