@@ -29,4 +29,17 @@ tinsert(C.defaultThemes, function()
 	if parent == BattlefieldFrame then
 		ArenaFrameFrameLabel:SetPoint(relF, ArenaFrame, relT, x, y)
 	end
+
+	-- ArenaRegistrarFrame
+	ArenaAvailableServicesText:SetTextColor(1, 1, 1)
+	ArenaAvailableServicesText:SetShadowColor(0, 0, 0)
+
+	B.ReskinPortraitFrame(ArenaRegistrarFrame, 15, -15, -30, 65)
+	B.StripTextures(ArenaRegistrarGreetingFrame)
+	ArenaRegistrarFrameEditBox:SetHeight(20)
+	ArenaRegistrarFrameEditBox:DisableDrawLayer("BACKGROUND")
+	B.ReskinEditBox(ArenaRegistrarFrameEditBox)
+	B.Reskin(ArenaRegistrarFrameGoodbyeButton)
+	B.Reskin(ArenaRegistrarFramePurchaseButton)
+	B.Reskin(ArenaRegistrarFrameCancelButton)
 end)
