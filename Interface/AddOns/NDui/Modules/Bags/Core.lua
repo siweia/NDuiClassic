@@ -13,7 +13,7 @@ local IsControlKeyDown, IsAltKeyDown, DeleteCursorItem = IsControlKeyDown, IsAlt
 local SortBankBags, SortBags, InCombatLockdown, ClearCursor = SortBankBags, SortBags, InCombatLockdown, ClearCursor
 local GetContainerItemID, SplitContainerItem = GetContainerItemID, SplitContainerItem
 local NUM_BAG_SLOTS = NUM_BAG_SLOTS or 4
-local NUM_BANKBAGSLOTS = NUM_BANKBAGSLOTS or 6
+local NUM_BANKBAGSLOTS = NUM_BANKBAGSLOTS or 7
 
 function module:UpdateAnchors(parent, bags)
 	if not parent:IsShown() then return end
