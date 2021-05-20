@@ -220,7 +220,7 @@ function M:ShowItemLevel()
 	CharacterFrame:HookScript("OnShow", M.ItemLevel_UpdatePlayer)
 	B:RegisterEvent("PLAYER_EQUIPMENT_CHANGED", M.ItemLevel_UpdatePlayer)
 	CharacterModelFrameRotateRightButton:ClearAllPoints()
-	CharacterModelFrameRotateRightButton:SetPoint("BOTTOM", CharacterModelFrame, "TOP")
+	CharacterModelFrameRotateRightButton:SetPoint("BOTTOMLEFT", CharacterFrameTab1, "TOPLEFT", 0, 2)
 
 	-- iLvl on InspectFrame
 	B:RegisterEvent("INSPECT_READY", M.ItemLevel_UpdateInspect)
