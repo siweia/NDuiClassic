@@ -6,6 +6,8 @@ tinsert(C.defaultThemes, function()
 	B.ReskinRotationButtons(CharacterModelFrame)
 	B.ReskinDropDown(PlayerStatFrameLeftDropDown)
 	B.ReskinDropDown(PlayerStatFrameRightDropDown)
+	B.ReskinDropDown(PlayerTitleDropDown)
+	PlayerTitleDropDownText:SetPoint("LEFT", 27, 2)
 
 	local CHARACTERFRAME_SUBFRAMES = CHARACTERFRAME_SUBFRAMES or 5
 
