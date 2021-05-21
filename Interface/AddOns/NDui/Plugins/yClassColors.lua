@@ -141,12 +141,12 @@ end
 hooksecurefunc("WhoList_Update", updateWhoList)
 
 -- Battlefield board
-local MAX_SCORE_BUTTONS = MAX_SCORE_BUTTONS or 22
+local SCORE_BUTTONS_MAX = SCORE_BUTTONS_MAX or 20
 
 hooksecurefunc("WorldStateScoreFrame_Update", function()
 	local offset = FauxScrollFrame_GetOffset(WorldStateScoreScrollFrame)
 
-	for i = 1, MAX_SCORE_BUTTONS do
+	for i = 1, SCORE_BUTTONS_MAX do
 		local index = offset + i
 		local fullName, _, _, _, _, faction, _, _, class = GetBattlefieldScore(index)
 		if fullName then
@@ -162,7 +162,9 @@ hooksecurefunc("WorldStateScoreFrame_Update", function()
 			end
 
 			local button = _G["WorldStateScoreButton"..i]
-			button.name.text:SetText(name)
+			if button then
+				button.name.text:SetText(name)
+			end
 		end
 	end
 end)
