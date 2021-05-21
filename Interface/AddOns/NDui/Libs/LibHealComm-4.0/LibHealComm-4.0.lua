@@ -758,7 +758,7 @@ local function getBaseHealAmount(spellData, spellName, spellRank)
 	if type(average) == "number" then
 		return average
 	end
-	local requiresLevel = spellData.levels[spellRank]
+	local requiresLevel = spellData.levels[spellRank] or spellData.levels[1] -- dirty fix, precaution
 	return average[min(playerLevel - requiresLevel + 1, #average)]
 end
 
