@@ -4,7 +4,7 @@ local Bar = B:GetModule("Actionbar")
 
 -- Texture credit: 胡里胡涂
 local _G = getfenv(0)
-local tinsert, pairs = table.insert, pairs
+local tinsert, pairs, type = table.insert, pairs, type
 local buttonList = {}
 
 function Bar:MicroButton_SetupTexture(icon, texture)
@@ -17,22 +17,51 @@ function Bar:MicroButton_SetupTexture(icon, texture)
 end
 
 function Bar:MicroButton_Create(parent, data)
-	local texture, tip, func = unpack(data)
+	local texture, method, tooltip = unpack(data)
 
-	local bu = CreateFrame("Button", nil, parent)
+	local bu = CreateFrame("Frame", nil, parent)
 	tinsert(buttonList, bu)
 	bu:SetSize(22, 22)
-	bu:SetFrameStrata("BACKGROUND")
-	bu:SetScript("OnClick", func)
-	B.AddTooltip(bu, "ANCHOR_TOP", tip)
 
 	local icon = bu:CreateTexture(nil, "ARTWORK")
 	Bar:MicroButton_SetupTexture(icon, texture)
 
-	bu:SetHighlightTexture(DB.MicroTex..texture)
-	local hl = bu:GetHighlightTexture()
-	Bar:MicroButton_SetupTexture(hl, texture)
-	if not C.db["Skins"]["ClassLine"] then hl:SetVertexColor(1, 1, 1) end
+	if type(method) == "string" then
+		local button = _G[method]
+		button:SetHitRectInsets(0, 0, 0, 0)
+		button:SetParent(bu)
+		button:ClearAllPoints(bu)
+		button:SetAllPoints(bu)
+		button.SetPoint = B.Dummy
+		button:UnregisterAllEvents()
+		button:SetNormalTexture(nil)
+		button:SetPushedTexture(nil)
+		button:SetDisabledTexture(nil)
+		if tooltip then
+			B.AddTooltip(button, "ANCHOR_RIGHT", tooltip)
+		else
+			button:HookScript("OnEnter", function(self)
+				GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+				GameTooltip:Show()
+			end)
+		end
+
+		local hl = button:GetHighlightTexture()
+		Bar:MicroButton_SetupTexture(hl, texture)
+		if not C.db["Skins"]["ClassLine"] then hl:SetVertexColor(1, 1, 1) end
+
+		local flash = button.Flash
+		Bar:MicroButton_SetupTexture(flash, texture)
+		if not C.db["Skins"]["ClassLine"] then flash:SetVertexColor(1, 1, 1) end
+	else
+		bu:SetScript("OnMouseUp", method)
+		B.AddTooltip(bu, "ANCHOR_RIGHT", tooltip)
+
+		local hl = bu:CreateTexture(nil, "HIGHLIGHT")
+		hl:SetBlendMode("ADD")
+		Bar:MicroButton_SetupTexture(hl, texture)
+		if not C.db["Skins"]["ClassLine"] then hl:SetVertexColor(1, 1, 1) end
+	end
 end
 
 function Bar:MicroMenu_Lines(parent)
@@ -41,7 +70,7 @@ function Bar:MicroMenu_Lines(parent)
 	local cr, cg, cb = 0, 0, 0
 	if C.db["Skins"]["ClassLine"] then cr, cg, cb = DB.r, DB.g, DB.b end
 
-	local width, height = 150, 20
+	local width, height = 200, 20
 	local anchors = {
 		["LEFT"] = {.5, 0},
 		["RIGHT"] = {0, .5}
@@ -71,22 +100,16 @@ function Bar:MicroMenu()
 
 	-- Generate Buttons
 	local buttonInfo = {
-		{"player", MicroButtonTooltipText(CHARACTER_BUTTON, "TOGGLECHARACTER0"), function() ToggleFrame(CharacterFrame) end},
-		{"spellbook", MicroButtonTooltipText(SPELLBOOK_ABILITIES_BUTTON, "TOGGLESPELLBOOK"), function() ToggleFrame(SpellBookFrame) end},
-		{"talents", MicroButtonTooltipText(TALENTS, "TOGGLETALENTS"), function()
-			if UnitLevel("player") < SHOW_SPEC_LEVEL then
-				UIErrorsFrame:AddMessage(DB.InfoColor..format(FEATURE_BECOMES_AVAILABLE_AT_LEVEL, SHOW_SPEC_LEVEL))
-			else
-				ToggleTalentFrame()
-			end
-		end},
-		{"quests", MicroButtonTooltipText(QUESTLOG_BUTTON, "TOGGLEQUESTLOG"), ToggleQuestLog},
-		{"guild", MicroButtonTooltipText(SOCIAL_BUTTON, "TOGGLESOCIAL"), function() ToggleFrame(FriendsFrame) end},
-		{"LFG", MicroButtonTooltipText(WORLDMAP_BUTTON, "TOGGLEWORLDMAP"), ToggleWorldMap},
-		{"collections", MicroButtonTooltipText(HELP_BUTTON, "TOGGLEHELP"), function() ToggleFrame(HelpFrame) end},
-		{"store", BLIZZARD_STORE, function() ToggleStoreUI() end},
-		{"help", MicroButtonTooltipText(MAINMENU_BUTTON, "TOGGLEGAMEMENU"), function() ToggleFrame(GameMenuFrame) PlaySound(SOUNDKIT.IG_MINIMAP_OPEN) end},
-		{"bags", MicroButtonTooltipText(BAGSLOT, "OPENALLBAGS"), function() ToggleAllBags() end},
+		{"player", "CharacterMicroButton", MicroButtonTooltipText(CHARACTER_BUTTON, "TOGGLECHARACTER0")},
+		{"spellbook", "SpellbookMicroButton", MicroButtonTooltipText(SPELLBOOK_ABILITIES_BUTTON, "TOGGLESPELLBOOK")},
+		{"talents", "TalentMicroButton", MicroButtonTooltipText(TALENTS, "TOGGLETALENTS")},
+		{"quests", "QuestLogMicroButton", MicroButtonTooltipText(QUESTLOG_BUTTON, "TOGGLEQUESTLOG")},
+		{"guild", "SocialsMicroButton", MicroButtonTooltipText(SOCIAL_BUTTON, "TOGGLESOCIAL")},
+		{"LFG", "WorldMapMicroButton", MicroButtonTooltipText(WORLDMAP_BUTTON, "TOGGLEWORLDMAP")},
+		{"store", function() ToggleStoreUI() end, BLIZZARD_STORE},
+		{"collections", "HelpMicroButton", MicroButtonTooltipText(HELP_BUTTON, "TOGGLEHELP")},
+		{"help", "MainMenuMicroButton", MicroButtonTooltipText(MAINMENU_BUTTON, "TOGGLEGAMEMENU")},
+		{"bags", function() ToggleAllBags() end, MicroButtonTooltipText(BAGSLOT, "OPENALLBAGS")},
 	}
 	for _, info in pairs(buttonInfo) do
 		Bar:MicroButton_Create(menubar, info)
@@ -101,7 +124,10 @@ function Bar:MicroMenu()
 		end
 	end
 
-	-- Taint Fix
-	ToggleFrame(SpellBookFrame)
-	ToggleFrame(SpellBookFrame)
+	-- Default elements
+	B.HideObject(MicroButtonPortrait)
+	B.HideObject(MainMenuBarDownload)
+	B.HideObject(HelpOpenWebTicketButton)
+	B.HideObject(MainMenuBarPerformanceBar)
+	MainMenuMicroButton:SetScript("OnUpdate", nil)
 end
