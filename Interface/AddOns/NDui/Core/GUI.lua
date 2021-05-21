@@ -88,6 +88,7 @@ G.DefaultSettings = {
 		Portrait = true,
 		PlayerDebuff = false,
 		ToTAuras = false,
+		Arena = true,
 		Castbars = true,
 		SwingBar = false,
 		SwingTimer = false,
@@ -157,6 +158,9 @@ G.DefaultSettings = {
 		PetWidth = 120,
 		PetHeight = 18,
 		PetPowerHeight = 2,
+		BossWidth = 150,
+		BossHeight = 22,
+		BossPowerHeight = 2,
 
 		CastingColor = {r=.3, g=.7, b=1},
 		--NotInterruptColor = {r=1, g=.5, b=.5},
@@ -759,6 +763,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "UFs", "SwingBar", L["UFs SwingBar"]},
 		{1, "UFs", "SwingTimer", L["UFs SwingTimer"], true, nil, nil, L["SwingTimer Tip"]},
 		{},--blank
+		{1, "UFs", "Arena", L["Arena Frame"]},
 		{1, "UFs", "Portrait", L["UFs Portrait"]},
 		{1, "UFs", "ClassPower", L["UFs ClassPower"], true},
 		{1, "UFs", "PlayerDebuff", L["Player Debuff"]},

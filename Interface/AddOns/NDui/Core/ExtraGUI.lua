@@ -726,12 +726,14 @@ function G:SetupUnitFrame(parent)
 		["Player"] = {150, 300},
 		["Focus"] = {150, 300},
 		["Pet"] = {100, 200},
+		["Boss"] = {100, 300},
 	}
 
 	local defaultValue = {
 		["Player"] = {245, 24, 4, 2},
 		["Focus"] = {200, 22, 3, 2},
 		["Pet"] = {120, 18, 2},
+		["Boss"] = {150, 22, 2},
 	}
 
 	local function createOptionGroup(parent, title, offset, value, func)
@@ -767,6 +769,15 @@ function G:SetupUnitFrame(parent)
 		end
 	end
 	createOptionGroup(scroll.child, L["Pet&*Target"], -670, "Pet", updatePetSize)
+
+	local function updateBossSize()
+		for _, frame in pairs(ns.oUF.objects) do
+			if frame.mystyle == "boss" or frame.mystyle == "arena" then
+				SetUnitFrameSize(frame, "Boss")
+			end
+		end
+	end
+	createOptionGroup(scroll.child, L["ArenaFrame"], -930, "Boss", updateBossSize)
 end
 
 function G:SetupRaidFrame(parent)

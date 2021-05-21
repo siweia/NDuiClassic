@@ -183,7 +183,7 @@ function UF:CreateHealthText(self)
 	elseif mystyle == "nameplate" then
 		self:Tag(name, "[nplevel][name]")
 	elseif mystyle == "arena" then
-		self:Tag(name, "[arenaspec] [color][name]")
+		self:Tag(name, " [color][name]")
 	elseif mystyle == "raid" and C.db["UFs"]["SimpleMode"] and C.db["UFs"]["ShowTeamIndex"] and not self.isPartyPet and not self.isPartyFrame then
 		self:Tag(name, "[group].[nplevel][color][name]")
 	else
@@ -333,6 +333,7 @@ local textScaleFrames = {
 	["pet"] = true,
 	["tot"] = true,
 	["focustarget"] = true,
+	["arena"] = true,
 }
 function UF:UpdateTextScale()
 	local scale = C.db["UFs"]["UFTextScale"]
@@ -474,6 +475,9 @@ function UF:CreateCastBar(self)
 		cb:SetFrameLevel(10)
 		cb:SetSize(C.db["UFs"]["FocusCBWidth"], C.db["UFs"]["FocusCBHeight"])
 		createBarMover(cb, L["Focus Castbar"], "FocusCB", C.UFs.Focuscb)
+	elseif mystyle == "boss" or mystyle == "arena" then
+		cb:SetPoint("TOPRIGHT", self.Power, "BOTTOMRIGHT", 0, -8)
+		cb:SetSize(self:GetWidth(), 10)
 	elseif mystyle == "nameplate" then
 		cb:SetPoint("TOPLEFT", self, "BOTTOMLEFT", 0, -5)
 		cb:SetPoint("TOPRIGHT", self, "BOTTOMRIGHT", 0, -5)
@@ -485,11 +489,13 @@ function UF:CreateCastBar(self)
 	name:SetPoint("RIGHT", timer, "LEFT", -5, 0)
 	name:SetJustifyH("LEFT")
 
-	cb.Icon = cb:CreateTexture(nil, "ARTWORK")
-	cb.Icon:SetSize(cb:GetHeight(), cb:GetHeight())
-	cb.Icon:SetPoint("BOTTOMRIGHT", cb, "BOTTOMLEFT", -3, 0)
-	cb.Icon:SetTexCoord(unpack(DB.TexCoord))
-	B.SetBD(cb.Icon)
+	if mystyle ~= "boss" and mystyle ~= "arena" then
+		cb.Icon = cb:CreateTexture(nil, "ARTWORK")
+		cb.Icon:SetSize(cb:GetHeight(), cb:GetHeight())
+		cb.Icon:SetPoint("BOTTOMRIGHT", cb, "BOTTOMLEFT", -3, 0)
+		cb.Icon:SetTexCoord(unpack(DB.TexCoord))
+		B.SetBD(cb.Icon)
+	end
 
 	if mystyle == "player" then
 		if C.db["UFs"]["LagString"] then
@@ -532,7 +538,7 @@ function UF:CreateCastBar(self)
 		cb.spellTarget = spellTarget
 	end
 
-	if mystyle == "nameplate" then
+	if mystyle == "nameplate" or mystyle == "boss" or mystyle == "arena" then
 		cb.decimal = "%.1f"
 	else
 		cb.decimal = "%.2f"
@@ -623,6 +629,7 @@ end
 local filteredStyle = {
 	["target"] = true,
 	["nameplate"] = true,
+	["arena"] = true,
 }
 
 function UF.PostUpdateIcon(element, _, button, _, _, duration, expiration, debuffType)
@@ -699,7 +706,7 @@ function UF.CustomFilter(element, unit, button, name, _, _, _, _, _, caster, isS
 		else
 			element.__owner.rawSpellID = nil
 		end
-	elseif style == "nameplate" then
+	elseif style == "nameplate" or style == "boss" or style == "arena" then
 		if element.__owner.isNameOnly then
 			return NDuiADB["NameplateFilter"][1][spellID] or C.WhiteList[spellID]
 		elseif NDuiADB["NameplateFilter"][2][spellID] or C.BlackList[spellID] then

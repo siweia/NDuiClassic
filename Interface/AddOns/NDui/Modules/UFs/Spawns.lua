@@ -125,6 +125,21 @@ local function CreatePetStyle(self)
 	UF:CreateRaidMark(self)
 end
 
+local function CreateArenaStyle(self)
+	self.mystyle = "arena"
+	SetUnitFrameSize(self, "Boss")
+
+	UF:CreateHeader(self)
+	UF:CreateHealthBar(self)
+	UF:CreateHealthText(self)
+	UF:CreatePowerBar(self)
+	UF:CreateCastBar(self)
+	UF:CreateRaidMark(self)
+	UF:CreateBuffs(self)
+	UF:CreateDebuffs(self)
+--	UF:CreatePVPClassify(self)
+end
+
 local function CreateRaidStyle(self)
 	self.mystyle = "raid"
 	self.Range = {
@@ -291,6 +306,21 @@ function UF:OnLogin()
 			oUF:SetActiveStyle("ToToT")
 			local targettargettarget = oUF:Spawn("targettargettarget", "oUF_ToToT")
 			B.Mover(targettargettarget, L["TototUF"], "TototUF", C.UFs.ToToTPos)
+		end
+
+		if C.db["UFs"]["Arena"] then
+			oUF:RegisterStyle("Arena", CreateArenaStyle)
+			oUF:SetActiveStyle("Arena")
+			local arena = {}
+			for i = 1, 5 do
+				arena[i] = oUF:Spawn("arena"..i, "oUF_Arena"..i)
+				local moverWidth, moverHeight = arena[i]:GetWidth(), arena[i]:GetHeight()+8
+				if i == 1 then
+					arena[i].mover = B.Mover(arena[i], L["ArenaFrame"]..i, "Arena1", {"RIGHT", UIParent, "RIGHT", -350, -90}, moverWidth, moverHeight)
+				else
+					arena[i].mover = B.Mover(arena[i], L["ArenaFrame"]..i, "Arena"..i, {"BOTTOM", arena[i-1], "TOP", 0, 50}, moverWidth, moverHeight)
+				end
+			end
 		end
 
 		UF:UpdateTextScale()
