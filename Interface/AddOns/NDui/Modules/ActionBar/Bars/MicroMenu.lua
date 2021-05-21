@@ -38,12 +38,8 @@ function Bar:MicroButton_Create(parent, data)
 		button:SetPushedTexture(nil)
 		button:SetDisabledTexture(nil)
 		if tooltip then
-			B.AddTooltip(button, "ANCHOR_RIGHT", tooltip)
-		else
-			button:HookScript("OnEnter", function(self)
-				GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-				GameTooltip:Show()
-			end)
+			button.title = "|cffffffff"..tooltip
+			B.AddTooltip(button, "ANCHOR_RIGHT", button.newbieText, "system")
 		end
 
 		local hl = button:GetHighlightTexture()
