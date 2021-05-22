@@ -758,7 +758,7 @@ local function getBaseHealAmount(spellData, spellName, spellRank)
 	if type(average) == "number" then
 		return average
 	end
-	local requiresLevel = spellData.levels[spellRank] or spellData.levels[1] -- dirty fix, precaution
+	local requiresLevel = spellData.levels[spellRank]
 	return average[min(playerLevel - requiresLevel + 1, #average)]
 end
 
@@ -1132,12 +1132,12 @@ if( playerClass == "PRIEST" ) then
 		local CureDisease = GetSpellInfo(528)
 		local BindingHeal = GetSpellInfo(32546) or "Binding Heal"
 		local EmpoweredHealing = GetSpellInfo(33158) or "Empowered Healing"
-		local Renewal = GetSpellInfo(37563) or "Renewal" -- T4 bonus
+		--local Renewal = GetSpellInfo(37563) or "Renewal" -- T4 bonus
 
 		hotData[Renew] = {coeff = 1, interval = 3, ticks = 5, levels = {8, 14, 20, 26, 32, 38, 44, 50, 56, 60, 65, 70}, averages = {
 			45, 100, 175, 245, 315, 400, 510, 650, 810, 970, 1010, 1110 }}
 		hotData[GreaterHealHot] = hotData[Renew]
-		hotData[Renewal] = {coeff = 0, interval = 3, ticks = 3, levels = {70}, averages = {150}}
+		--hotData[Renewal] = {coeff = 0, interval = 3, ticks = 3, levels = {70}, averages = {150}}
 
 		spellData[FlashHeal] = {coeff = 1.5 / 3.5, levels = {20, 26, 32, 38, 44, 50, 56, 61, 67}, averages = {
 			{avg(193, 237), avg(194, 239), avg(196, 241), avg(198, 243),  avg(200, 245), avg(202, 247)},
