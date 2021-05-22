@@ -384,7 +384,7 @@ function UF:UpdateForQuestie(npcID)
 			if _QuestiePlayer.currentQuestlog[questID] then
 				foundObjective = true
 
-				if tooltip.objective.Needed then
+				if tooltip.objective and tooltip.objective.Needed then
 					progressText = tooltip.objective.Needed - tooltip.objective.Collected
 					if progressText == 0 then
 						foundObjective = nil
