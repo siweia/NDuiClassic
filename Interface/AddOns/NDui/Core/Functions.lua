@@ -1650,7 +1650,7 @@ do
 
 	object = EnumerateFrames()
 	while object do
-		if object.IsForbidden and not object:IsForbidden() and not handled[object:GetObjectType()] then
+		if not object:IsForbidden() and not handled[object:GetObjectType()] then
 			addapi(object)
 			handled[object:GetObjectType()] = true
 		end
