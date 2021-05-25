@@ -1,6 +1,12 @@
 local _, ns = ...
 local B, C, L, DB = unpack(ns)
 
+local function replaceBlueColor(bar, r, g, b)
+	if r == 0 and g == 0 and b > .99 then
+		bar:SetStatusBarColor(0, .6, 1, .5)
+	end
+end
+
 tinsert(C.defaultThemes, function()
 	B.ReskinPortraitFrame(CharacterFrame, 15, -15, -35, 73)
 	B.ReskinRotationButtons(CharacterModelFrame)
@@ -81,26 +87,33 @@ tinsert(C.defaultThemes, function()
 	B.Reskin(SkillFrameCancelButton)
 	B.ReskinCollapse(SkillFrameCollapseAllButton)
 	B.StripTextures(SkillFrameExpandButtonFrame)
+
 	B.ReskinScroll(SkillDetailScrollFrame.ScrollBar)
 	B.CreateBDFrame(SkillDetailScrollFrame, .25)
 	SkillDetailStatusBarBorder:SetAlpha(0)
 	SkillDetailStatusBar:SetStatusBarTexture(DB.bdTex)
 	B.CreateBDFrame(SkillDetailStatusBar, .25)
+	hooksecurefunc(SkillDetailStatusBar, "SetStatusBarColor", replaceBlueColor)
+
+	local button = SkillDetailStatusBarUnlearnButton
+	B.Reskin(button)
+	button.__bg:SetInside(nil, 7, 7)
+	button:SetPoint("LEFT", SkillDetailStatusBar, "RIGHT", 2, 0)
+	local tex = button:CreateTexture()
+	tex:SetTexture(DB.closeTex)
+	tex:SetVertexColor(1, 0, 0)
+	tex:SetAllPoints(button.__bg)
 
 	for i = 1, 12 do
 		B.ReskinCollapse(_G["SkillTypeLabel"..i])
-		B.CreateBDFrame(_G["SkillRankFrame"..i], .25)
-		_G["SkillRankFrame"..i.."Border"]:SetAlpha(0)
-		_G["SkillRankFrame"..i.."Bar"]:SetTexture(DB.bdTex)
+		local name = "SkillRankFrame"..i
+		local bar = _G[name]
+		local border = _G[name.."Border"]
+		bar:SetStatusBarTexture(DB.bdTex)
+		B.CreateBDFrame(bar, .25)
+		hooksecurefunc(bar, "SetStatusBarColor", replaceBlueColor)
+		border:SetAlpha(0)
 	end
-
-	hooksecurefunc("SkillFrame_SetStatusBar", function(statusBarID, skillIndex)
-		local _, _, _, _, numTempPoints, _, _, _, stepCost, rankCost = GetSkillLineInfo(skillIndex)
-		local statusBar = _G["SkillRankFrame"..statusBarID]
-		if not stepCost and not (rankCost or (numTempPoints > 0)) then
-			statusBar:SetStatusBarColor(0, .6, 1, .5)
-		end
-	end)
 
 	-- PetFrame
 	B.StripTextures(PetPaperDollFrame)
