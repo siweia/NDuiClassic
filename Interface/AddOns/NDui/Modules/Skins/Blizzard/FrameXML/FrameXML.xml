@@ -35,7 +35,6 @@
 	<Script file="QuestInfo.lua"/>
 	<Script file="RaidFrame.lua"/>
 	<Script file="ReadyCheck.lua"/>
-	<Script file="ReputationFrame.lua"/>
 	<Script file="ScriptErrorsFrame.lua"/>
 	<Script file="SpellBookFrame.lua"/>
 	<Script file="StackSplitFrame.lua"/>
