@@ -62,6 +62,7 @@ L["Tooltip"] = "Подсказки"
 L["Misc"] = "Дополнительно"
 L["UI Settings"] = "Настройки UI"
 L["Enable Actionbar"] = "Включить панели команд"
+L["ActionBarTip"] = "|nIf uncheck, micromenu will be disabled as well." -- need translation
 L["Actionbar Hotkey"] = "Показывать горячие клавиши"
 L["Actionbar Macro"] = "Показывать макросы"
 L["Actionbar Item Counts"] = "Показывать кол-во вещей"

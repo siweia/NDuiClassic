@@ -713,7 +713,7 @@ G.TabList = {
 
 G.OptionList = { -- type, key, value, name, horizon, doubleline
 	[1] = {
-		{1, "Actionbar", "Enable", HeaderTag..L["Enable Actionbar"]},
+		{1, "Actionbar", "Enable", HeaderTag..L["Enable Actionbar"], nil, nil, nil, L["ActionBarTip"]},
 		{},--blank
 		{1, "Actionbar", "MicroMenu", L["Micromenu"]},
 		{1, "Actionbar", "ShowStance", L["ShowStanceBar"], true},

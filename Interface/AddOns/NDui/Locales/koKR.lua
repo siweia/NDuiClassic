@@ -62,6 +62,7 @@ L["Tooltip"] = "툴팁"
 L["Misc"] = "편의성"
 L["UI Settings"] = "UI세팅"
 L["Enable Actionbar"] = "액션바 사용"
+L["ActionBarTip"] = "|nIf uncheck, micromenu will be disabled as well." -- need translation
 L["Actionbar Hotkey"] = "단축키표시"
 L["Actionbar Macro"] = "매크로표시"
 L["Actionbar Item Counts"] = "수량표시"
