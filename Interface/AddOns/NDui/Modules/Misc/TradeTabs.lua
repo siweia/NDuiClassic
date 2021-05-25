@@ -73,6 +73,13 @@ local tradeList = {
 		[12180] = true,
 		[26790] = true,
 	},
+	["Jewelcrafting"] = {
+		[25229] = true,
+		[25230] = true,
+		[28894] = true,
+		[28895] = true,
+		[28897] = true,
+	},
 	["Poisons"] = {
 		[2842] = true,
 	},
