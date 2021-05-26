@@ -51,6 +51,7 @@ tinsert(C.defaultThemes, function()
 			"InterfaceOptionsControlsPanelLootAtMouse",
 			"InterfaceOptionsCombatPanelTargetOfTarget",
 			"InterfaceOptionsCombatPanelFlashLowHealthWarning",
+			"InterfaceOptionsCombatPanelAutoRange",
 			"InterfaceOptionsCombatPanelEnableFloatingCombatText",
 			"InterfaceOptionsCombatPanelAutoSelfCast",
 			"InterfaceOptionsDisplayPanelRotateMinimap",
