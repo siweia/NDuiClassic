@@ -192,26 +192,28 @@ end
 local function ToggleMagicRes()
 	if C.db["Misc"]["ExpandStat"] then
 		CharacterResistanceFrame:ClearAllPoints()
-		CharacterResistanceFrame:SetPoint("TOPLEFT", M.StatPanel.child, 25, -5)
+		CharacterResistanceFrame:SetPoint("TOPLEFT", M.StatPanel.child, 28, -5)
 		CharacterResistanceFrame:SetParent(M.StatPanel.child)
+		CharacterModelFrame:SetSize(231, 320) -- size in retail
 
 		for i = 1, 5 do
 			local bu = _G["MagicResFrame"..i]
 			if i > 1 then
 				bu:ClearAllPoints()
-				bu:SetPoint("LEFT", _G["MagicResFrame"..(i-1)], "RIGHT", 5, 0)
+				bu:SetPoint("LEFT", _G["MagicResFrame"..(i-1)], "RIGHT", 3, 0)
 			end
 		end
 	else
 		CharacterResistanceFrame:ClearAllPoints()
 		CharacterResistanceFrame:SetPoint("TOPRIGHT", PaperDollFrame, "TOPLEFT", 297, -77)
 		CharacterResistanceFrame:SetParent(PaperDollFrame)
+		CharacterModelFrame:SetSize(233, 224)
 
 		for i = 1, 5 do
 			local bu = _G["MagicResFrame"..i]
 			if i > 1 then
 				bu:ClearAllPoints()
-				bu:SetPoint("TOP", _G["MagicResFrame"..(i-1)], "BOTTOM")
+				bu:SetPoint("TOP", _G["MagicResFrame"..(i-1)], "BOTTOM", 0, -3)
 			end
 		end
 	end
