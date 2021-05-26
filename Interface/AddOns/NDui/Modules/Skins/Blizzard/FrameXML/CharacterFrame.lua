@@ -62,12 +62,14 @@ tinsert(C.defaultThemes, function()
 		if icon then icon:SetShown(button.hasItem) end
 	end)
 
+	local newResIcons = {136116, 135826, 136074, 135843, 135945}
 	for i = 1, 5 do
 		local bu = _G["MagicResFrame"..i]
 		bu:SetSize(25, 25)
 		local icon = bu:GetRegions()
-		local a, b, _, _, _, _, c, d = icon:GetTexCoord()
-		icon:SetTexCoord(a+.2, c-.2, b+.018, d-.018)
+		B.ReskinIcon(icon)
+		icon:SetTexture(newResIcons[i])
+		icon:SetAlpha(.5)
 	end
 
 	-- needs review
