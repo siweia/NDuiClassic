@@ -13,6 +13,7 @@ local UnitRangedDamage = UnitRangedDamage
 local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
 local UnitGUID = UnitGUID
 local IsPlayerMoving = IsPlayerMoving
+local UnitCastingInfo = UnitCastingInfo
 
 local meleeing, rangeing, lasthit
 local MainhandID = GetInventoryItemID("player", 16)
@@ -84,7 +85,7 @@ do
 			if checkelapsed > .02 then
 				-- little hack for detecting melee stop
 				-- improve... dw sucks at this point -.-
-				if (slamtime > 0) and (lasthit + self.speed + slamtime < now) then
+				if lasthit + self.speed + slamtime < now then
 					self:Hide()
 					self:SetScript("OnUpdate", nil)
 					SwingStopped(self)
@@ -97,7 +98,7 @@ do
 			end
 		end
 
-		local spell = CastingInfo()
+		local spell = UnitCastingInfo("player")
 		if slam == spell then
 			-- slamelapsed: time to add for one slam
 			slamelapsed = slamelapsed + elapsed
