@@ -136,7 +136,7 @@ tinsert(C.defaultThemes, function()
 	hooksecurefunc("QuestLog_Update", function()
 		for i = 1, QUESTS_DISPLAYED, 1 do
 			local bu = _G["QuestLogTitle"..i]
-			if bu.isHeader and not bu.styled then
+			if bu and not bu.styled then
 				B.ReskinCollapse(bu)
 				bu.styled = true
 			end
