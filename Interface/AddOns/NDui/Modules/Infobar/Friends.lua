@@ -14,10 +14,13 @@ local BNet_GetClientEmbeddedTexture, BNet_GetValidatedCharacterName, BNet_GetCli
 local CanCooperateWithGameAccount, GetRealZoneText, GetQuestDifficultyColor = CanCooperateWithGameAccount, GetRealZoneText, GetQuestDifficultyColor
 local BNGetNumFriends, BNGetFriendInfo, BNGetGameAccountInfo, BNGetNumFriendGameAccounts, BNGetFriendGameAccountInfo = BNGetNumFriends, BNGetFriendInfo, BNGetGameAccountInfo, BNGetNumFriendGameAccounts, BNGetFriendGameAccountInfo
 local HybridScrollFrame_GetOffset, HybridScrollFrame_Update = HybridScrollFrame_GetOffset, HybridScrollFrame_Update
-local BNET_CLIENT_WOW, UNKNOWN, GUILD_ONLINE_LABEL = BNET_CLIENT_WOW, UNKNOWN, GUILD_ONLINE_LABEL
+local BNET_CLIENT_WOW, UNKNOWN, GUILD_ONLINE_LABEL, CHARACTER_FRIEND = BNET_CLIENT_WOW, UNKNOWN, GUILD_ONLINE_LABEL, CHARACTER_FRIEND
 local FRIENDS_TEXTURE_ONLINE, FRIENDS_TEXTURE_AFK, FRIENDS_TEXTURE_DND = FRIENDS_TEXTURE_ONLINE, FRIENDS_TEXTURE_AFK, FRIENDS_TEXTURE_DND
-local WOW_PROJECT_ID = WOW_PROJECT_ID or 1
-local CLIENT_WOW_CLASSIC = "WoV"
+local EXPANSION_NAME0 = EXPANSION_NAME0
+local WOW_PROJECT_ID = WOW_PROJECT_ID or 5
+local WOW_PROJECT_60 = WOW_PROJECT_CLASSIC or 2
+local WOW_PROJECT_MAINLINE = WOW_PROJECT_MAINLINE or 1
+local CLIENT_WOW_DIFF = "WoV"
 
 local r, g, b = DB.r, DB.g, DB.b
 local infoFrame, updateRequest, prevTime
@@ -88,9 +91,15 @@ local function buildBNetTable(num)
 					infoText = zoneName
 				end
 			else
-				infoText = gameText
+				if wowProjectID == WOW_PROJECT_MAINLINE then
+					infoText = CHARACTER_FRIEND
+				elseif wowProjectID == WOW_PROJECT_60 then
+					infoText = EXPANSION_NAME0
+				else
+					infoText = gameText
+				end
 			end
-			if client == BNET_CLIENT_WOW and wowProjectID ~= WOW_PROJECT_ID then client = CLIENT_WOW_CLASSIC end
+			if client == BNET_CLIENT_WOW and wowProjectID ~= WOW_PROJECT_ID then client = CLIENT_WOW_DIFF end
 
 			tinsert(bnetTable, {i, accountName, charName, gameID, client, realmName, status, class, level, infoText, note, broadcastText, broadcastTime})
 		end
@@ -237,6 +246,17 @@ local function buttonOnEnter(self)
 			local clientString = BNet_GetClientEmbeddedTexture(client, 16)
 			if client == BNET_CLIENT_WOW then
 				realmName = (DB.MyRealm == realmName or realmName == "") and "" or "-"..realmName
+
+				-- Get realm name from gameText
+				if wowProjectID == WOW_PROJECT_MAINLINE then
+					local zone, realm = strmatch(gameText, "(.-)%s%-%s(.+)")
+					if realm then
+						gameText, realmName = zone, "-"..realm
+					end
+				elseif wowProjectID == WOW_PROJECT_60 then
+					gameText = zoneName
+				end
+
 				class = DB.ClassList[class]
 				local classColor = B.HexRGB(B.ClassColor(class))
 				if faction == "Horde" then
@@ -246,7 +266,7 @@ local function buttonOnEnter(self)
 				end
 				GameTooltip:AddLine(format("%s%s %s%s%s", clientString, level, classColor, charName, realmName))
 
-				if wowProjectID ~= WOW_PROJECT_ID then zoneName = gameText end
+				if wowProjectID ~= WOW_PROJECT_ID then zoneName = "*"..gameText end
 				GameTooltip:AddLine(format("%s%s", inactiveZone, zoneName))
 			else
 				GameTooltip:AddLine(format("|cffffffff%s%s", clientString, accountName))
@@ -343,7 +363,7 @@ function info:FriendsPanel_UpdateButton(button)
 		end
 		button.name:SetText(format("%s%s|r (%s|r)", DB.InfoColor, accountName, name))
 		button.zone:SetText(format("%s%s", zoneColor, infoText))
-		if client == CLIENT_WOW_CLASSIC then
+		if client == CLIENT_WOW_DIFF then
 			button.gameIcon:SetTexture(BNet_GetClientTexture(BNET_CLIENT_WOW))
 			button.gameIcon:SetVertexColor(.3, .3, .3)
 		else
