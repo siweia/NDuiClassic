@@ -14,7 +14,7 @@ local function reskinScrollArrow(self, direction)
 	tex:SetAllPoints()
 	B.CreateBDFrame(tex, .25)
 	B.SetupArrow(tex, direction)
-	self.__texture = tex
+	self.bgTex = tex
 
 	self:HookScript("OnEnter", B.Texture_OnEnter)
 	self:HookScript("OnLeave", B.Texture_OnLeave)
