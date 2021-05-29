@@ -6,3 +6,13 @@
 ## Version: 1.27.6
 ## X-Support: Classic
 ## X-Website: https://github.com/siweia/NDuiClassic
+## SavedVariables: NDuiADB, NDuiPDB
+## SavedVariablesPerCharacter: NDuiDB
+
+Init.lua
+Locales\Locales.xml
+Core\Core.xml
+Config\Config.xml
+Libs\Libs.xml
+Modules\Modules.xml
+Plugins\Plugins.xml
