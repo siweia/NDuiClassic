@@ -63,13 +63,27 @@ C.themes["Blizzard_AuctionUI"] = function()
 		end
 	end)
 
-	local abuttons = {"BrowseBidButton", "BrowseBuyoutButton", "BrowseCloseButton", "BrowseSearchButton", "BidBidButton", "BidBuyoutButton", "BidCloseButton", "AuctionsCloseButton", "AuctionsCancelAuctionButton", "AuctionsCreateAuctionButton", "AuctionsNumStacksMaxButton", "AuctionsStackSizeMaxButton"}
-	for i = 1, #abuttons do
-		local bu = _G[abuttons[i]]
-		if not bu then
-			print(abuttons[i])
+	local abuttons = {
+		"BrowseBidButton",
+		"BrowseBuyoutButton",
+		"BrowseCloseButton",
+		"BrowseSearchButton",
+		"BrowseResetButton",
+		"BidBidButton",
+		"BidBuyoutButton",
+		"BidCloseButton",
+		"AuctionsCloseButton",
+		"AuctionsCancelAuctionButton",
+		"AuctionsCreateAuctionButton",
+		"AuctionsNumStacksMaxButton",
+		"AuctionsStackSizeMaxButton",
+	}
+	for _, name in pairs(abuttons) do
+		local button = _G[name]
+		if not button then
+			if DB.isDeveloper then print(name, "not found.") end
 		else
-			B.Reskin(_G[abuttons[i]])
+			B.Reskin(button)
 		end
 	end
 
