@@ -1,5 +1,5 @@
 -----------------------------------------
--- SortBags 2.0.2, shirsig
+-- SortBags 2.0.5, shirsig
 -- https://github.com/shirsig/SortBags
 -----------------------------------------
 local _G, _M = getfenv(0), {}
@@ -66,7 +66,7 @@ local RODS = set(6218, 6339, 11130, 11145, 16207, 22461, 22462, 22463)
 
 local TOOLS = union(
 	RODS,
-	set(5060, 7005, 12709, 19727, 5956, 2901, 6219, 10498, 9149, 15846, 6256, 6365, 6367)
+	set(5060, 7005, 12709, 19727, 5956, 2901, 6219, 10498, 9149, 15846, 6256, 6365, 6367, 20815, 20824)
 );
 
 local ENCHANTING_MATERIALS = set(
@@ -89,13 +89,13 @@ local LEATHER = set(5116, 6470, 6471, 7286, 7287, 7392, 11512, 12607, 12731, 293
 local CLASSES = {
 	-- arrow
 	{
-		containers = {2101, 7278, 5439, 11362, 3573, 3605, 7371, 8217, 2662, 19319, 34100, 34105, 18714, 29144, 29143},
-		items = set(2512, 2515, 3030, 3464, 9399, 10579, 11285, 19316, 18042, 12654, 28053, 24417, 30611, 31949, 24412, 28056, 33803, 34581, 31737, 30319),
+		containers = {2101, 5439, 7278, 11362, 3573, 3605, 7371, 8217, 2662, 19319, 18714, 29143, 29144, 34105, 34100},
+		items = set(2512, 2515, 3030, 3464, 9399, 11285, 12654, 18042, 19316, 28053, 31737, 10579, 34581, 28056, 31949, 24412, 24417, 30611, 33803, 30319),
 	},
 	-- bullet
 	{
-		containers = {2102, 7279, 5441, 11363, 3574, 3604, 7372, 8218, 2663, 19320, 34099, 34106, 29118},
-		items = set(2516, 4960, 8067, 2519, 5568, 8068, 3033, 8069, 3465, 10512, 11284, 10513, 11630, 19317, 15997, 13377, 28060, 23772, 30612, 32883, 32882, 28061, 23773, 34582, 31735),
+		containers = {2102, 5441, 7279, 11363, 3574, 3604, 7372, 8218, 2663, 19320, 29118, 34106, 34099},
+		items = set(2516, 2519, 3033, 3465, 4960, 5568, 8067, 8068, 8069, 10512, 10513, 11284, 11630, 13377, 15997, 19317, 30612, 32883, 32882, 28060, 28061, 23772, 23773, 34582, 31735),
 	},
 	-- soul
 	{
@@ -229,12 +229,12 @@ function LT(a, b)
 end
 
 function Move(src, dst)
-    local texture, _, srcLocked = GetContainerItemInfo(src.container, src.position)
-    local _, _, dstLocked = GetContainerItemInfo(dst.container, dst.position)
-    
+	local texture, _, srcLocked = GetContainerItemInfo(src.container, src.position)
+	local _, _, dstLocked = GetContainerItemInfo(dst.container, dst.position)
+
 	if texture and not srcLocked and not dstLocked then
 		ClearCursor()
-       	PickupContainerItem(src.container, src.position)
+		PickupContainerItem(src.container, src.position)
 		PickupContainerItem(dst.container, dst.position)
 
 		if src.item == dst.item then
@@ -251,34 +251,34 @@ function Move(src, dst)
 
 		coroutine.yield()
 		return true
-    end
+	end
 end
 
 do
-    local patterns = {}
-    for i = 1, 10 do
-    	local text = gsub(format(ITEM_SPELL_CHARGES, i), '(-?%d+)(.-)|4([^;]-);', function(numberString, gap, numberForms)
-	        local singular, dual, plural
-	        _, _, singular, dual, plural = strfind(numberForms, '(.+):(.+):(.+)');
-	        if not singular then
-	            _, _, singular, plural = strfind(numberForms, '(.+):(.+)')
-	        end
-	        local i = abs(tonumber(numberString))
-	        local numberForm
-	        if i == 1 then
-	            numberForm = singular
-	        elseif i == 2 then
-	            numberForm = dual or plural
-	        else
-	            numberForm = plural
-	        end
-	        return numberString .. gap .. numberForm
-	    end)
-        patterns[text] = i
-    end
+	local patterns = {}
+	for i = 1, 10 do
+		local text = gsub(format(ITEM_SPELL_CHARGES, i), '(-?%d+)(.-)|4([^;]-);', function(numberString, gap, numberForms)
+			local singular, dual, plural
+			_, _, singular, dual, plural = strfind(numberForms, '(.+):(.+):(.+)');
+			if not singular then
+				_, _, singular, plural = strfind(numberForms, '(.+):(.+)')
+			end
+			local i = abs(tonumber(numberString))
+			local numberForm
+			if i == 1 then
+				numberForm = singular
+			elseif i == 2 then
+				numberForm = dual or plural
+			else
+				numberForm = plural
+			end
+			return numberString .. gap .. numberForm
+		end)
+		patterns[text] = i
+	end
 
 	function itemCharges(text)
-        return patterns[text]
+		return patterns[text]
 	end
 end
 
@@ -460,13 +460,13 @@ end
 function ContainerClass(container)
 	if container ~= 0 and container ~= BANK_CONTAINER then
 		local name = GetBagName(container)
-		if name then		
+		if name then
 			for class, info in pairs(CLASSES) do
 				for _, itemID in pairs(info.containers) do
 					if name == GetItemInfo(itemID) then
 						return class
 					end
-				end	
+				end
 			end
 		end
 	end
@@ -482,7 +482,7 @@ function Item(container, position)
 		local sortKey = {}
 
 		-- hearthstone
-		if itemID == 6948 then
+		if itemID == 6948 or itemID == 184871 then
 			tinsert(sortKey, 1)
 
 		-- mounts
@@ -547,7 +547,7 @@ function Item(container, position)
 			tinsert(sortKey, 14)
 			tinsert(sortKey, sellPrice)
 		end
-		
+
 		tinsert(sortKey, classId)
 		tinsert(sortKey, slot)
 		tinsert(sortKey, subClassId)
