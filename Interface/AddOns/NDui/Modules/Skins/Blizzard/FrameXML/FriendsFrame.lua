@@ -202,6 +202,7 @@ tinsert(C.defaultThemes, function()
 
 	B.StripTextures(GuildMemberDetailFrame)
 	B.SetBD(GuildMemberDetailFrame)
+	GuildMemberDetailFrame:SetPoint("TOPLEFT", GuildFrame, "TOPRIGHT", 4, -15)
 	B.ReskinClose(GuildMemberDetailCloseButton)
 	B.CreateBD(GuildMemberNoteBackground, .25)
 	B.CreateBD(GuildMemberOfficerNoteBackground, .25)
