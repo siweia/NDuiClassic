@@ -37,6 +37,7 @@ G.DefaultSettings = {
 		CustomBarNumButtons = 12,
 		CustomBarNumPerRow = 12,
 		ShowStance = true,
+		EquipColor = false,
 	},
 	Bags = {
 		Enable = true,
@@ -504,6 +505,15 @@ local function updateHotkeys()
 	end
 end
 
+local function updateEquipColor()
+	local Bar = B:GetModule("Actionbar")
+	for _, button in pairs(Bar.buttons) do
+		if button.Border and button.action then
+			Bar.UpdateEquipItemColor(button)
+		end
+	end
+end
+
 local function updateBuffFrame()
 	local A = B:GetModule("Auras")
 	A:UpdateOptions()
@@ -694,7 +704,7 @@ local HeaderTag = "|cff00cc4c"
 local NewTag = "|TInterface\\OptionsFrame\\UI-OptionsFrame-NewFeatureIcon:0|t"
 
 G.TabList = {
-	L["Actionbar"],
+	NewTag..L["Actionbar"],
 	L["Bags"],
 	NewTag..L["Unitframes"],
 	L["RaidFrame"],
@@ -737,6 +747,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Actionbar", "Macro", L["Actionbar Macro"], true},
 		{1, "Actionbar", "Count", L["Actionbar Item Counts"]},
 		{1, "Actionbar", "Classcolor", L["ClassColor BG"], true},
+		{1, "Actionbar", "EquipColor", NewTag..L["EquipColor"].."*", nil, nil, updateEquipColor},
 	},
 	[2] = {
 		{1, "Bags", "Enable", HeaderTag..L["Enable Bags"]},

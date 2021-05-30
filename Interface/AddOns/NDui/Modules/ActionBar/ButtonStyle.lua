@@ -3,7 +3,8 @@ local B, C, L, DB = unpack(ns)
 
 local Bar = B:GetModule("Actionbar")
 local _G = getfenv(0)
-local pairs, gsub = pairs, string.gsub
+local pairs, gsub, unpack = pairs, gsub, unpack
+local IsEquippedAction = IsEquippedAction
 
 local function CallButtonFunctionByName(button, func, ...)
 	if button and func and button[func] then
@@ -122,6 +123,7 @@ local function SetupBackdrop(icon)
 	else
 		bg:SetBackdropColor(.2, .2, .2, .25)
 	end
+	icon:GetParent().__bg = bg
 end
 
 local keyButton = gsub(KEY_BUTTON4, "%d", "")
@@ -169,6 +171,16 @@ function Bar:UpdateHotKey()
 	end
 end
 
+function Bar:UpdateEquipItemColor()
+	if not self.__bg then return end
+
+	if C.db["Actionbar"]["EquipColor"] and IsEquippedAction(self.action) then
+		self.__bg:SetBackdropBorderColor(0, .7, .1)
+	else
+		self.__bg:SetBackdropBorderColor(0, 0, 0)
+	end
+end
+
 function Bar:StyleActionButton(button, cfg)
 	if not button then return end
 	if button.__styled then return end
@@ -189,7 +201,7 @@ function Bar:StyleActionButton(button, cfg)
 	local pushedTexture = button:GetPushedTexture()
 	local highlightTexture = button:GetHighlightTexture()
 	--normal buttons do not have a checked texture, but checkbuttons do and normal actionbuttons are checkbuttons
-	local checkedTexture = nil
+	local checkedTexture
 	if button.GetCheckedTexture then checkedTexture = button:GetCheckedTexture() end
 	local floatingBG = _G[buttonName.."FloatingBG"]
 
@@ -209,10 +221,11 @@ function Bar:StyleActionButton(button, cfg)
 	SetupTexture(normalTexture, cfg.normalTexture, "SetNormalTexture", button)
 	SetupTexture(pushedTexture, cfg.pushedTexture, "SetPushedTexture", button)
 	SetupTexture(highlightTexture, cfg.highlightTexture, "SetHighlightTexture", button)
-	SetupTexture(checkedTexture, cfg.checkedTexture, "SetCheckedTexture", button)
-
-	checkedTexture:SetColorTexture(1, .8, 0, .35)
 	highlightTexture:SetColorTexture(1, 1, 1, .25)
+	if checkedTexture then
+		SetupTexture(checkedTexture, cfg.checkedTexture, "SetCheckedTexture", button)
+		checkedTexture:SetColorTexture(1, .8, 0, .35)
+	end
 
 	--cooldown
 	SetupCooldown(cooldown, cfg.cooldown)
@@ -360,4 +373,6 @@ function Bar:ReskinBars()
 	hooksecurefunc("PetActionButton_SetHotkeys", Bar.UpdateHotKey)
 	Bar:UpdateStanceHotKey()
 	B:RegisterEvent("UPDATE_BINDINGS", Bar.UpdateStanceHotKey)
+	-- Equip item
+	hooksecurefunc("ActionButton_Update", Bar.UpdateEquipItemColor)
 end
