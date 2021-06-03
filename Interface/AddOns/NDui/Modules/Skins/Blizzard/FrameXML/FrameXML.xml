@@ -37,7 +37,6 @@
 	<Script file="ReadyCheck.lua"/>
 	<Script file="ScriptErrorsFrame.lua"/>
 	<Script file="SpellBookFrame.lua"/>
-	<Script file="StackSplitFrame.lua"/>
 	<Script file="StaticPopup.lua"/>
 	<Script file="TabardFrame.lua"/>
 	<Script file="TaxiFrame.lua"/>
