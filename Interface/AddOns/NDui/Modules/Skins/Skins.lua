@@ -4,6 +4,7 @@ local S = B:RegisterModule("Skins")
 
 local pairs, wipe = pairs, wipe
 local IsAddOnLoaded = IsAddOnLoaded
+local LE_ITEM_QUALITY_COMMON, BAG_ITEM_QUALITY_COLORS = LE_ITEM_QUALITY_COMMON, BAG_ITEM_QUALITY_COLORS
 
 C.defaultThemes = {}
 C.themes = {}
@@ -32,6 +33,19 @@ function S:LoadDefaultSkins()
 		if func then
 			func()
 			C.themes[addonName] = nil
+		end
+	end)
+
+	hooksecurefunc("SetItemButtonQuality", function(button, quality)
+		if quality then
+			if quality >= LE_ITEM_QUALITY_COMMON and BAG_ITEM_QUALITY_COLORS[quality] then
+				button.IconBorder:Show()
+				button.IconBorder:SetVertexColor(BAG_ITEM_QUALITY_COLORS[quality].r, BAG_ITEM_QUALITY_COLORS[quality].g, BAG_ITEM_QUALITY_COLORS[quality].b)
+			else
+				button.IconBorder:Hide()
+			end
+		else
+			button.IconBorder:Hide()
 		end
 	end)
 end
