@@ -1028,7 +1028,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "ACCOUNT", "VersionCheck", L["Version Check"]},
 		{1, "ACCOUNT", "DisableInfobars", L["DisableInfobars"], true},
 		{},--blank
-		{3, "ACCOUNT", "UIScale", L["Setup UIScale"], false, {.4, 1.15, .01}},
+		{3, "ACCOUNT", "UIScale", L["Setup UIScale"], false, {.4, 1.15, .01}, nil, L["UIScaleTip"]},
 		{1, "ACCOUNT", "LockUIScale", HeaderTag..L["Lock UIScale"], true},
 		{},--blank
 		{4, "ACCOUNT", "TexStyle", L["Texture Style"], false, {}},

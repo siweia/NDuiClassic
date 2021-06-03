@@ -688,3 +688,4 @@ L["SmartRaidTip"] = "|nIf enabled, only show raidframe if there are more than 5 
 L["PlateRange"] = "Nameplate range"
 L["LanguageFilterTip"] = "You need to uncheck language filter in GUI and restart your game client to get access into CN battlenet support."
 L["EquipColor"] = "Equip item border"
+L["UIScaleTip"] = "|nIf UIScale is lower than 0.64, some blizzard addons and third-party addons may acting weird."

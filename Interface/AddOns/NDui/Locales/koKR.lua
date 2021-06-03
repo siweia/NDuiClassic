@@ -688,3 +688,4 @@ L["SmartRaidTip"] = "|n유저가 5인이상 파티맺을 시에만 레이드 공
 L["PlateRange"] = "네임플레이트 거리표시"
 L["LanguageFilterTip"] = "You need to uncheck language filter in GUI and restart your game client to get access into CN battlenet support."
 L["EquipColor"] = "Equip item border"
+L["UIScaleTip"] = "|nIf UIScale is lower than 0.64, some blizzard addons and third-party addons may acting weird."

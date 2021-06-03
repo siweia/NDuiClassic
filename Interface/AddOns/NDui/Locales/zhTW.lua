@@ -688,3 +688,4 @@ L["SmartRaidTip"] = "|n啟用後，只有隊伍人數超過5人時，才顯示�
 L["PlateRange"] = "名條顯示距離"
 L["LanguageFilterTip"] = "需要在控制臺取消關閉語言過濾器，並重啓游戲後才能正常連接國服戰網支持。"
 L["EquipColor"] = "已裝備物品染色邊框"
+L["UIScaleTip"] = "|n當UI縮放低於0.64時，部分暴雪插件和第三方插件可能會出現奇怪的問題。"
