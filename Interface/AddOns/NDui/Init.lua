@@ -83,6 +83,9 @@ function B:SetupUIScale(init)
 		local ratio = 768 / DB.ScreenHeight
 		C.mult = (pixel / scale) - ((pixel - ratio) / scale)
 	elseif not InCombatLockdown() then
+		if scale >= .64 then
+			SetCVar("UIscale", scale)
+		end
 		UIParent:SetScale(scale)
 	end
 end
