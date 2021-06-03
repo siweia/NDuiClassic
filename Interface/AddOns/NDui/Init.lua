@@ -84,7 +84,7 @@ function B:SetupUIScale(init)
 		C.mult = (pixel / scale) - ((pixel - ratio) / scale)
 	elseif not InCombatLockdown() then
 		if scale >= .64 then
-			SetCVar("UIscale", scale)
+			SetCVar("UIscale", scale) -- Fix blizzard chatframe offset
 		end
 		UIParent:SetScale(scale)
 	end
