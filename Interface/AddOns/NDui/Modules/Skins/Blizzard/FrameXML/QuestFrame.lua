@@ -1,6 +1,23 @@
 local _, ns = ...
 local B, C, L, DB = unpack(ns)
 
+local function UpdateQuestItemQuality(self)
+	local button = self.__owner
+	local index = button:GetID()
+	local itemName, _, _, quality = GetQuestLogRewardInfo(index)
+	if not itemName then
+		itemName, _, _, quality = GetQuestLogChoiceInfo(index)
+	end
+	if not itemName then
+		itemName = GetQuestLogRewardSpell(index)
+		quality = 1
+	end
+	if itemName and quality then
+		local color = DB.QualityColors[quality]
+		button.bg:SetBackdropBorderColor(color.r, color.g, color.b)
+	end
+end
+
 tinsert(C.defaultThemes, function()
 	B.ReskinPortraitFrame(QuestFrame, 15, -15, -30, 65)
 
@@ -144,10 +161,14 @@ tinsert(C.defaultThemes, function()
 	end)
 
 	for i = 1, 10 do
-		local icon = _G["QuestLogItem"..i.."IconTexture"]
-		icon:SetTexCoord(.08, .92, .08, .92)
-		B.CreateBDFrame(icon)
-		local nameFrame = _G["QuestLogItem"..i.."NameFrame"]
+		local name = "QuestLogItem"..i
+		local button = _G[name]
+		local icon = _G[name.."IconTexture"]
+		button.bg = B.ReskinIcon(icon)
+		icon.__owner = button
+		hooksecurefunc(icon, "SetTexture", UpdateQuestItemQuality)
+
+		local nameFrame = _G[name.."NameFrame"]
 		nameFrame:Hide()
 		local bg = B.CreateBDFrame(nameFrame, .25)
 		bg:SetPoint("TOPLEFT", icon, "TOPRIGHT", 3, C.mult)
