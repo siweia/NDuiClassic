@@ -110,7 +110,7 @@ tinsert(C.defaultThemes, function()
 	-- Bank
 
 	BankFrame.CloseButton = BankCloseButton
-	B.ReskinPortraitFrame(BankFrame, 25, -10, 0, 70)
+	B.ReskinPortraitFrame(BankFrame, 15, -10, 10, 80)
 	B.Reskin(BankFramePurchaseButton)
 	BankSlotsFrame:DisableDrawLayer("BORDER")
 	BankPortraitTexture:Hide()
