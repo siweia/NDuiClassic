@@ -10,7 +10,6 @@ local list = {
 		{AuraID = 13163, UnitID = "player"},	-- 灵猴守护
 		{AuraID = 27045, UnitID = "player"},	-- 野性守护
 		{AuraID = 34074, UnitID = "player"},	-- 蝰蛇守护
-		{AuraID = 19577, UnitID = "pet"},		-- 胁迫
 	},
 	["Target Aura"] = {		-- 目标光环组
 		{AuraID = 14325, UnitID = "target"},	-- 猎人印记
@@ -31,6 +30,7 @@ local list = {
 		{AuraID = 6150, UnitID = "player"},		-- 快速射击
 		{AuraID = 13159, UnitID = "pet"},		-- 豹群守护
 		{AuraID = 19574, UnitID = "pet"},		-- 狂野怒火
+		{AuraID = 19577, UnitID = "pet"},		-- 胁迫
 	},
 	["Focus Aura"] = {		-- 焦点光环组
 	},
