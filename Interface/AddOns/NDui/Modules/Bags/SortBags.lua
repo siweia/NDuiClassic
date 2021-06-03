@@ -58,9 +58,9 @@ local function union(...)
 	return t
 end
 
-local SPECIAL = set(5462, 17696, 17117, 13347, 13289, 11511)
+local SPECIAL = set(5462, 13347, 11511, 38233)
 
-local KEYS = set(9240, 17191, 13544, 12324, 16309, 12384, 20402)
+local KEYS = set(9240, 11511, 17191, 13544, 12324, 16309, 12384, 20402)
 
 local RODS = set(6218, 6339, 11130, 11145, 16207, 22461, 22462, 22463)
 
@@ -146,28 +146,27 @@ local CLASSES = {
 
 do
 	local f = CreateFrame'Frame'
-	f:SetScript('OnEvent', function()
-		f:SetScript('OnUpdate', function()
+	local lastUpdate = 0
+	local function updateHandler()
+		if GetTime() - lastUpdate > 1 then
 			for _, container in pairs(BAG_CONTAINERS) do
 				for position = 1, GetContainerNumSlots(container) do
 					SetScanTooltip(container, position)
 				end
 			end
-			f:SetScript('OnUpdate', nil)
-		end)
-	end)
-	f:RegisterEvent'PLAYER_LOGIN'
-end
-
-do
-	local f = CreateFrame'Frame'
-	f:SetScript('OnEvent', function()
-		for _, container in pairs(BANK_BAG_CONTAINERS) do
-			for position = 1, GetContainerNumSlots(container) do
-				SetScanTooltip(container, position)
+			for _, container in pairs(BANK_BAG_CONTAINERS) do
+				for position = 1, GetContainerNumSlots(container) do
+					SetScanTooltip(container, position)
+				end
 			end
+			f:SetScript('OnUpdate', nil)
 		end
+	end
+	f:SetScript('OnEvent', function()
+		lastUpdate = GetTime()
+		f:SetScript('OnUpdate', updateHandler)
 	end)
+	f:RegisterEvent'BAG_UPDATE'
 	f:RegisterEvent'BANKFRAME_OPENED'
 end
 
