@@ -54,14 +54,14 @@ tinsert(C.defaultThemes, function()
 			button:SetPushedTexture("")
 			button:GetHighlightTexture():SetColorTexture(1, 1, 1, .25)
 
-			button.icon:SetTexCoord(.08, .92, .08, .92)
+			button.icon:SetTexCoord(unpack(DB.TexCoord))
 			button.bg = B.CreateBDFrame(button, .25)
 
-			searchOverlay:SetPoint("TOPLEFT", -C.mult, C.mult)
-			searchOverlay:SetPoint("BOTTOMRIGHT", C.mult, -C.mult)
+			button.searchOverlay:SetOutside()
+			B.ReskinIconBorder(button.IconBorder)
 		end
 
-		local f = B.CreateBDFrame(con, nil, true)
+		local f = B.SetBD(con)
 		f:SetPoint("TOPLEFT", 8, -4)
 		f:SetPoint("BOTTOMRIGHT", -4, 3)
 
@@ -74,14 +74,8 @@ tinsert(C.defaultThemes, function()
 
 		for i = 1, frame.size do
 			local itemButton = _G[name.."Item"..i]
-			if itemButton.bg then
-				local texture, _, _, quality = GetContainerItemInfo(id, itemButton:GetID())
-				if texture and quality and quality > 1 then
-					local color = DB.QualityColors[quality]
-					itemButton.bg:SetBackdropBorderColor(color.r, color.g, color.b)
-				else
-					itemButton.bg:SetBackdropBorderColor(0, 0, 0)
-				end
+			if _G[name.."Item"..i.."IconQuestTexture"]:IsShown() then
+				itemButton.IconBorder:SetVertexColor(1, 1, 0)
 			end
 		end
 

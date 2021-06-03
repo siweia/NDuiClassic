@@ -30,10 +30,13 @@ tinsert(C.defaultThemes, function()
 	local function reskinButton(bu)
 		bu:SetNormalTexture("")
 		bu:SetPushedTexture("")
-		bu.icon:SetTexCoord(.08, .92, .08, .92)
-		bu.IconBorder:SetAlpha(0)
-		bu:GetHighlightTexture():SetColorTexture(1, 1, 1, .25)
-		B.CreateBDFrame(bu, .25)
+		local hl = bu:GetHighlightTexture()
+		hl:SetColorTexture(1, 1, 1, .25)
+		hl:SetInside()
+		bu.icon:SetTexCoord(unpack(DB.TexCoord))
+		bu.icon:SetInside()
+		bu.bg = B.CreateBDFrame(bu.icon, .25)
+		B.ReskinIconBorder(bu.IconBorder)
 	end
 
 	for i = 1, MAX_TRADE_ITEMS do
