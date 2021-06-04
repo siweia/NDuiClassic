@@ -50,6 +50,7 @@ tinsert(C.defaultThemes, function()
 	B.ReskinPortraitFrame(GossipFrame, 15, -15, -30, 65)
 	B.Reskin(GossipFrameGreetingGoodbyeButton)
 	B.ReskinScroll(GossipGreetingScrollFrameScrollBar)
+	B.StripTextures(GossipFrameGreetingPanel)
 
 	local NUMGOSSIPBUTTONS = NUMGOSSIPBUTTONS or 32
 
