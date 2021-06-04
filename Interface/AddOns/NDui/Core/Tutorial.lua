@@ -156,8 +156,8 @@ end
 -- BigWigs
 local function ForceBigwigs()
 	if not IsAddOnLoaded("BigWigs") then return end
-	if BigWigs3DB then wipe(BigWigs3DB) end
-	BigWigs3DB = {
+	if BigWigsClassicDB then wipe(BigWigsClassicDB) end
+	BigWigsClassicDB = {
 		["namespaces"] = {
 			["BigWigs_Plugins_Bars"] = {
 				["profiles"] = {

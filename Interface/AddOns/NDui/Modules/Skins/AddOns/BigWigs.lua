@@ -83,7 +83,7 @@ end
 
 function S:BigWigsSkin()
 	if not C.db["Skins"]["Bigwigs"] or not IsAddOnLoaded("BigWigs") then return end
-	if not BigWigs3DB then return end
+	if not BigWigsClassicDB then return end
 
 	if IsAddOnLoaded("BigWigs_Plugins") then
 		registerStyle()
