@@ -84,7 +84,7 @@ function B:SetupUIScale(init)
 		C.mult = (pixel / scale) - ((pixel - ratio) / scale)
 	elseif not InCombatLockdown() then
 		if scale >= .64 then
-			SetCVar("UIscale", scale) -- Fix blizzard chatframe offset
+			SetCVar("uiscale", scale) -- Fix blizzard chatframe offset
 		end
 		UIParent:SetScale(scale)
 	end
@@ -106,6 +106,7 @@ end
 
 B:RegisterEvent("PLAYER_LOGIN", function()
 	-- Initial
+	SetCVar("useUiScale", "1") -- Fix blizzard chatframe offset
 	B:SetupUIScale()
 	B:RegisterEvent("UI_SCALE_CHANGED", UpdatePixelScale)
 	B:SetSmoothingAmount(C.db["UFs"]["SmoothAmount"])
