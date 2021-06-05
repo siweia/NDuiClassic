@@ -76,7 +76,7 @@ tinsert(C.defaultThemes, function()
 		for j = 1, 3 do
 			local currency = _G["MerchantItem"..i.."AltCurrencyFrameItem"..j]
 			local texture = _G["MerchantItem"..i.."AltCurrencyFrameItem"..j.."Texture"]
-			currency:SetPoint("BOTTOMLEFT", button, "BOTTOMRIGHT", 3, 0)
+			currency:SetPoint("BOTTOMLEFT", item.ItemButton, "BOTTOMRIGHT", 3, 0)
 			B.ReskinIcon(texture)
 		end
 	end
@@ -100,13 +100,13 @@ tinsert(C.defaultThemes, function()
 	hooksecurefunc("MerchantFrame_UpdateCurrencies", function()
 		for i = 1, MAX_MERCHANT_CURRENCIES do
 			local bu = _G["MerchantToken"..i]
-			if bu and not bu.reskinned then
+			if bu and not bu.styled then
 				local icon = _G["MerchantToken"..i.."Icon"]
 				local count = _G["MerchantToken"..i.."Count"]
 				count:SetPoint("TOPLEFT", bu, "TOPLEFT", -2, 0)
 				B.ReskinIcon(icon)
 
-				bu.reskinned = true
+				bu.styled = true
 			end
 		end
 	end)
