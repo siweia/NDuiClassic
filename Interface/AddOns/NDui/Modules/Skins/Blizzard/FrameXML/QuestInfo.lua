@@ -1,5 +1,6 @@
 local _, ns = ...
 local B, C, L, DB = unpack(ns)
+local r, g, b = DB.r, DB.g, DB.b
 
 local function clearHighlight()
 	for _, button in pairs(QuestInfoRewardsFrame.RewardButtons) do
@@ -96,8 +97,6 @@ local function SetTextColor_White(font)
 end
 
 tinsert(C.defaultThemes, function()
-	local r, g, b = DB.r, DB.g, DB.b
-
 	-- Item reward highlight
 	QuestInfoItemHighlight:GetRegions():Hide()
 	hooksecurefunc(QuestInfoItemHighlight, "SetPoint", setHighlight)
@@ -158,8 +157,7 @@ tinsert(C.defaultThemes, function()
 				if not spellReward.styled then
 					local icon = spellReward.Icon
 					local nameFrame = spellReward.NameFrame
-					icon:SetTexCoord(.08, .92, .08, .92)
-					B.CreateBDFrame(icon)
+					B.ReskinIcon(icon)
 					nameFrame:Hide()
 					local bg = B.CreateBDFrame(nameFrame, .25)
 					bg:SetPoint("TOPLEFT", icon, "TOPRIGHT", 0, 2)
