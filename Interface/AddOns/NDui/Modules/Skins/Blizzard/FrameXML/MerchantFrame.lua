@@ -44,7 +44,9 @@ local function UpdateMerchantItemQuality(self, link)
 		MerchantFrame_RegisterForQualityUpdates()
 	end
 	self.Name:SetTextColor(textR, textG, textB)
-	self.ItemButton.bg:SetBackdropBorderColor(borderR, borderG, borderB)
+	if self.ItemButton.bg then
+		self.ItemButton.bg:SetBackdropBorderColor(borderR, borderG, borderB)
+	end
 end
 
 tinsert(C.defaultThemes, function()
