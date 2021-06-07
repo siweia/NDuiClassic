@@ -73,7 +73,7 @@ local function UpdateCategoriesAnchor()
 	local prev
 	for _, frame in pairs(framesToSort) do
 		if not prev then
-			frame:SetPoint("TOP", 0, -95)
+			frame:SetPoint("TOP", 0, -105)
 		else
 			frame:SetPoint("TOP", prev, "BOTTOM")
 		end
@@ -137,7 +137,8 @@ local function CreateStatRow(parent, index)
 	background:SetAtlas("UI-Character-Info-Line-Bounce", true)
 	background:SetAlpha(.3)
 	background:SetPoint("CENTER")
-	background:SetShown(index%2 == 1)
+	background:SetShown(index%2 == 0)
+	frame.background = background
 
 	return frame
 end
@@ -173,7 +174,12 @@ local function CreatePlayerILvl(parent, category)
 	line:SetPoint("BOTTOM", header, 0, 5)
 	line:SetColorTexture(1, 1, 1, .25)
 
-	M.PlayerILvl = B.CreateFS(CreateStatRow(frame, 1), 16)
+	local iLvlFrame = CreateStatRow(frame, 1)
+	iLvlFrame:SetHeight(30)
+	iLvlFrame.background:Show()
+	iLvlFrame.background:SetAtlas("UI-Character-Info-ItemLevel-Bounce", true)
+
+	M.PlayerILvl = B.CreateFS(iLvlFrame, 20)
 end
 
 local function GetItemSlotLevel(unit, index)
@@ -189,11 +195,11 @@ local function GetILvlTextColor(level)
 	if level >= 150 then
 		return 1, .5, 0
 	elseif level >= 115 then
-		return .78, .27, .98
+		return .63, .2, .93
 	elseif level >= 80 then
-		return 0, .56, .94
+		return 0, .43, .87
 	elseif level >= 45 then
-		return .08, .7, 0
+		return .12, 1, 0
 	else
 		return 1, 1, 1
 	end
