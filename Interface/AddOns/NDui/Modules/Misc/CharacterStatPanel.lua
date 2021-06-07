@@ -3,7 +3,7 @@ local B, C, L, DB = unpack(ns)
 local M = B:GetModule("Misc")
 
 local wipe, gmatch, tinsert, ipairs, pairs = wipe, gmatch, tinsert, ipairs, pairs
-local tonumber, tostring = tonumber, tostring
+local tonumber, tostring, max = tonumber, tostring, max
 local cr, cg, cb = DB.r, DB.g, DB.b
 
 local function SetCharacterStats(statsTable, category)
@@ -73,7 +73,7 @@ local function UpdateCategoriesAnchor()
 	local prev
 	for _, frame in pairs(framesToSort) do
 		if not prev then
-			frame:SetPoint("TOP", 0, -35)
+			frame:SetPoint("TOP", 0, -95)
 		else
 			frame:SetPoint("TOP", prev, "BOTTOM")
 		end
@@ -137,7 +137,7 @@ local function CreateStatRow(parent, index)
 	background:SetAtlas("UI-Character-Info-Line-Bounce", true)
 	background:SetAlpha(.3)
 	background:SetPoint("CENTER")
-	background:SetShown(index%2 == 0)
+	background:SetShown(index%2 == 1)
 
 	return frame
 end
@@ -153,6 +153,84 @@ local function CreateHeaderArrow(parent, direct, func)
 	bu:SetSize(18, 18)
 	bu.__owner = parent
 	bu:SetScript("OnClick", func)
+end
+
+local function CreatePlayerILvl(parent, category)
+	local frame = CreateFrame("Frame", "NDuiStatCategoryIlvl", parent)
+	frame:SetWidth(200)
+	frame:SetHeight(42 + 16)
+	frame:SetPoint("TOP", 0, -35)
+
+	local header = CreateFrame("Frame", "$parentHeader", frame, "CharacterStatFrameCategoryTemplate")
+	header:SetPoint("TOP")
+	header.Background:Hide()
+	header.Title:SetText(category)
+	header.Title:SetTextColor(cr, cg, cb)
+	frame.header = header
+
+	local line = frame:CreateTexture(nil, "ARTWORK")
+	line:SetSize(180, C.mult)
+	line:SetPoint("BOTTOM", header, 0, 5)
+	line:SetColorTexture(1, 1, 1, .25)
+
+	M.PlayerILvl = B.CreateFS(CreateStatRow(frame, 1), 16)
+end
+
+local function GetItemSlotLevel(unit, index)
+	local level
+	local itemLink = GetInventoryItemLink(unit, index)
+	if itemLink then
+		level = select(4, GetItemInfo(itemLink))
+	end
+	return tonumber(level) or 0
+end
+
+local function GetILvlTextColor(level)
+	if level >= 150 then
+		return 1, .5, 0
+	elseif level >= 115 then
+		return .78, .27, .98
+	elseif level >= 80 then
+		return 0, .56, .94
+	elseif level >= 45 then
+		return .08, .7, 0
+	else
+		return 1, 1, 1
+	end
+end
+
+function M:UpdatePlayerILvl()
+	if not M.PlayerILvl then return end
+
+	local total, level = 0
+	for index = 1, 15 do
+		if index ~= 4 then
+			level = GetItemSlotLevel("player", index)
+			if level > 0 then
+				total = total + level
+			end
+		end
+	end
+
+	local mainhand = GetItemSlotLevel("player", 16)
+	local offhand = GetItemSlotLevel("player", 17)
+	local ranged = GetItemSlotLevel("player", 18)
+
+	--[[
+ 		Note: We have to unify iLvl with others who use MerInspect,
+		 although it seems incorrect for Hunter with two melee weapons.
+	]]
+	if mainhand > 0 and offhand > 0 then
+		total = total + mainhand + offhand
+	elseif offhand > 0 and ranged > 0 then
+		total = total + offhand + ranged
+	else
+		total = total + max(mainhand, offhand, ranged) * 2
+	end
+
+	local average = B:Round(total/16, 1)
+	M.PlayerILvl:SetText(average)
+	M.PlayerILvl:SetTextColor(GetILvlTextColor(average))
 end
 
 local function CreateStatHeader(parent, index, category)
@@ -266,6 +344,11 @@ function M:CharacterStatePanel()
 		scrollBar:SetValue(scrollBar:GetValue() - step)
 	end)
 
+	-- Player iLvl
+	CreatePlayerILvl(stat, L["ItemLevel"])
+	hooksecurefunc("PaperDollFrame_UpdateStats", M.UpdatePlayerILvl)
+
+	-- Player stats
 	local categories = {
 		"PLAYERSTAT_BASE_STATS",
 		"PLAYERSTAT_DEFENSES",
