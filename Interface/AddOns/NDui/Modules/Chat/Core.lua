@@ -58,7 +58,7 @@ local function GradientBackground(self)
 	frame:SetFrameLevel(0)
 	frame:SetShown(C.db["Chat"]["ChatBGType"] == 3)
 
-	local tex = B.SetGradient(frame, "H", 0, 0, 0, .5, 0)
+	local tex = B.SetGradient(frame, "H", 0, 0, 0, .7, 0)
 	tex:SetOutside()
 	local line = B.SetGradient(frame, "H", cr, cg, cb, .5, 0, nil, C.mult)
 	line:SetPoint("BOTTOMLEFT", frame, "TOPLEFT")
@@ -109,10 +109,21 @@ function module:SkinChat()
 	B.HideObject(self.buttonFrame)
 	--B.HideObject(self.ScrollBar)
 	B.HideObject(self.ScrollToBottomButton)
+	module:ToggleChatFrameTextures(self)
 
 	self.oldAlpha = self.oldAlpha or 0 -- fix blizz error, need reviewed
 
 	self.styled = true
+end
+
+function module:ToggleChatFrameTextures(frame)
+	if C.db["Chat"]["ChatBGType"] == 1 then
+		frame:EnableDrawLayer("BORDER")
+		frame:EnableDrawLayer("BACKGROUND")
+	else
+		frame:DisableDrawLayer("BORDER")
+		frame:DisableDrawLayer("BACKGROUND")
+	end
 end
 
 function module:ToggleChatBackground()
@@ -124,6 +135,7 @@ function module:ToggleChatBackground()
 		if frame.__gradient then
 			frame.__gradient:SetShown(C.db["Chat"]["ChatBGType"] == 3)
 		end
+		module:ToggleChatFrameTextures(frame)
 	end
 end
 
