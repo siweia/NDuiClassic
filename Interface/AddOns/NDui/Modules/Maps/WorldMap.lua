@@ -115,7 +115,8 @@ end
 
 function module:MapPartyDots()
 	local WorldMapUnitPin, WorldMapUnitPinSizes
-	local partyTexture = "WhiteCircle-RaidBlips"
+	--local partyTexture = "WhiteCircle-RaidBlips"
+	local partyTexture = "Interface\\OptionsFrame\\VoiceChat-Record"
 
 	local function setPinTexture(self)
 		self:SetPinTexture("raid", partyTexture)
