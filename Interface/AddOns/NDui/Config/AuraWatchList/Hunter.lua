@@ -5,6 +5,7 @@ local module = B:GetModule("AurasTable")
 -- 猎人的法术监控
 local list = {
 	["Player Aura"] = {		-- 玩家光环组
+		{AuraID = 3662, UnitID = "pet"},		-- 治疗宠物
 		{AuraID = 5118, UnitID = "player"},		-- 猎豹守护
 		{AuraID = 13161, UnitID = "player"},	-- 野兽守护
 		{AuraID = 13163, UnitID = "player"},	-- 灵猴守护
