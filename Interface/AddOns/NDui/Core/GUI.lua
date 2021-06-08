@@ -82,7 +82,7 @@ G.DefaultSettings = {
 		Enable = true,
 		ClickThrough = false,
 		IconScale = 1,
-		WatchSpellRank = false,
+		WatchSpellRank = true,
 	},
 	UFs = {
 		Enable = true,
