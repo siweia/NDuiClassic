@@ -182,6 +182,7 @@ local followerAssignees = {
 }
 
 local autoGossipTypes = {
+	["taxi"] = true,
 	["gossip"] = true,
 	["banker"] = true,
 	["vendor"] = true,
