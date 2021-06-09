@@ -336,13 +336,45 @@ function UF:BuffIndicatorOnUpdate(elapsed)
 	B.CooldownOnUpdate(self, elapsed, true)
 end
 
+UF.CornerSpells = {}
+function UF:UpdateCornerSpells()
+	wipe(UF.CornerSpells)
+
+	for spellID, value in pairs(C.CornerBuffs[DB.MyClass]) do
+		local modData = NDuiADB["CornerSpells"][DB.MyClass]
+		if not (modData and modData[spellID]) then
+			local r, g, b = unpack(value[2])
+			UF.CornerSpells[spellID] = {value[1], {r, g, b}, value[3]}
+		end
+	end
+
+	for spellID, value in pairs(NDuiADB["CornerSpells"][DB.MyClass]) do
+		if next(value) then
+			local r, g, b = unpack(value[2])
+			UF.CornerSpells[spellID] = {value[1], {r, g, b}, value[3]}
+		end
+	end
+end
+
+UF.CornerSpellsByName = {}
+function UF:BuildNameListFromID()
+	wipe(UF.CornerSpellsByName)
+
+	for spellID, value in pairs(UF.CornerSpells) do
+		local name = GetSpellInfo(spellID)
+		if name then
+			UF.CornerSpellsByName[name] = value
+		end
+	end
+end
+
 local found = {}
 local auraFilter = {"HELPFUL", "HARMFUL"}
 
 function UF:UpdateBuffIndicator(event, unit)
 	if event == "UNIT_AURA" and self.unit ~= unit then return end
 
-	local spellList = NDuiADB["CornerBuffs"][DB.MyClass]
+	local spellList = UF.CornerSpells
 	local buttons = self.BuffIndicator
 	unit = self.unit
 
@@ -351,7 +383,7 @@ function UF:UpdateBuffIndicator(event, unit)
 		for i = 1, 32 do
 			local name, texture, count, _, duration, expiration, caster, _, _, spellID = UnitAura(unit, i, filter)
 			if not name then break end
-			local value = spellList[spellID] or C.CornerBuffsByName[name]
+			local value = spellList[spellID] or UF.CornerSpellsByName[name]
 			if value and (value[3] or caster == "player" or caster == "pet") then
 				for _, bu in pairs(buttons) do
 					if bu.anchor == value[1] then

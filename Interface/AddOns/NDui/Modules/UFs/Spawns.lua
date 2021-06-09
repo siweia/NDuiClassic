@@ -328,6 +328,8 @@ function UF:OnLogin()
 
 	if C.db["UFs"]["RaidFrame"] then
 		UF:AddClickSetsListener()
+		UF:UpdateCornerSpells()
+		UF:BuildNameListFromID()
 		UF.headers = {}
 
 		-- Hide Default RaidFrame

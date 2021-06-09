@@ -746,7 +746,7 @@ function UF.RaidDebuffFilter(element, _, _, name, _, _, _, _, _, caster, _, _, s
 	local parent = element.__owner
 	if debuffBlackList[spellID] then
 		return false
-	elseif (C.db["UFs"]["RaidBuffIndicator"] and C.CornerBuffsByName[name]) or parent.RaidDebuffs.spellID == spellID or parent.rawSpellID == spellID then
+	elseif (C.db["UFs"]["RaidBuffIndicator"] and UF.CornerSpellsByName[name]) or parent.RaidDebuffs.spellID == spellID or parent.rawSpellID == spellID then
 		return false
 	elseif isBossAura then
 		return true

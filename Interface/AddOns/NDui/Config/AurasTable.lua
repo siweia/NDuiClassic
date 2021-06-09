@@ -1,7 +1,9 @@
 local _, ns = ...
 local B, C, L, DB = unpack(ns)
 local module = B:RegisterModule("AurasTable")
-local pairs, next, format, wipe = pairs, next, string.format, wipe
+
+local pairs, next, format, wipe, unpack, tinsert = pairs, next, format, wipe, unpack, tinsert
+local GetRealZoneText, GetSpellInfo = GetRealZoneText, GetSpellInfo
 
 -- AuraWatch
 local AuraWatchList = {}
@@ -105,17 +107,21 @@ function module:RegisterDebuff(_, instID, _, spellID, level)
 	RaidDebuffs[instID][spellID] = level
 end
 
-function module:BuildNameListFromID()
-	if not C.CornerBuffsByName then C.CornerBuffsByName = {} end
-	wipe(C.CornerBuffsByName)
+function module:CheckCornerSpells()
+	if not NDuiADB["CornerSpells"][DB.MyClass] then NDuiADB["CornerSpells"][DB.MyClass] = {} end
+	local data = C.CornerBuffs[DB.MyClass]
+	if not data then return end
 
-	local myCornerBuffs = NDuiADB["CornerBuffs"][DB.MyClass]
-	if not myCornerBuffs then return end
-
-	for spellID, value in pairs(myCornerBuffs) do
+	for spellID, value in pairs(data) do
 		local name = GetSpellInfo(spellID)
-		if name then
-			C.CornerBuffsByName[name] = value
+		if not name then
+			if DB.isDeveloper then print("Invalid cornerspell ID: "..spellID) end
+		end
+	end
+
+	for spellID, value in pairs(NDuiADB["CornerSpells"][DB.MyClass]) do
+		if not next(value) and C.CornerBuffs[DB.MyClass][spellID] == nil then
+			NDuiADB["CornerSpells"][DB.MyClass][spellID] = nil
 		end
 	end
 end
@@ -157,11 +163,6 @@ function module:OnLogin()
 	C.RaidBuffs = RaidBuffs
 	C.RaidDebuffs = RaidDebuffs
 
-	if not NDuiADB["CornerBuffs"][DB.MyClass] then NDuiADB["CornerBuffs"][DB.MyClass] = {} end
-	if not next(NDuiADB["CornerBuffs"][DB.MyClass]) then
-		B.CopyTable(C.CornerBuffs[DB.MyClass], NDuiADB["CornerBuffs"][DB.MyClass])
-	end
-	module:BuildNameListFromID()
-
+	module:CheckCornerSpells()
 	module:CheckMajorSpells()
 end
