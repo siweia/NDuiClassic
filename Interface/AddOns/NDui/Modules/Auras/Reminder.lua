@@ -50,7 +50,7 @@ function A:Reminder_Update(cfg)
 	if depends and not cfg.dependsKnown then isPlayerSpell = false end
 	if combat and InCombatLockdown() then isInCombat = true end
 	if instance and inInst and (instType == "scenario" or instType == "party" or instType == "raid") then isInInst = true end
-	if pvp and (instType == "pvp" or GetZonePVPInfo() == "combat") then isInPVP = true end
+	if pvp and (instType == "arena" or instType == "pvp" or GetZonePVPInfo() == "combat") then isInPVP = true end
 	if not combat and not instance and not pvp then isInCombat, isInInst, isInPVP = true, true, true end
 
 	frame:Hide()
