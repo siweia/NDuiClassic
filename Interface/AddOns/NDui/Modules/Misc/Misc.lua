@@ -42,7 +42,7 @@ function M:OnLogin()
 	self:UpdateErrorBlocker()
 	self:TradeTargetInfo()
 	self:MenuButton_Add()
-	self:AutoDismount()
+	self:ToggleTaxiDismount()
 	self:BidPriceHighlight()
 	self:BlockStrangerInvite()
 
@@ -412,31 +412,19 @@ function M:MenuButton_Add()
 	hooksecurefunc("UnitPopup_ShowMenu", M.MenuButton_Show)
 end
 
--- Auto dismount and auto stand
-function M:AutoDismount()
-	if not C.db["Misc"]["AutoDismount"] then return end
-
-	local standString = {
-		[ERR_LOOT_NOTSTANDING] = true,
-		[SPELL_FAILED_NOT_STANDING] = true,
-	}
-
-	local dismountString = {
-		[ERR_ATTACK_MOUNTED] = true,
-		[ERR_NOT_WHILE_MOUNTED] = true,
-		[ERR_TAXIPLAYERALREADYMOUNTED] = true,
-		[SPELL_FAILED_NOT_MOUNTED] = true,
-	}
-
-	local function updateEvent(event, ...)
-		local _, msg = ...
-		if standString[msg] then
-			DoEmote("STAND")
-		elseif dismountString[msg] then
-			Dismount()
-		end
+-- Auto dismount on Taxi
+local function dismountCheck()
+	if IsMounted() then
+		Dismount()
 	end
-	B:RegisterEvent("UI_ERROR_MESSAGE", updateEvent)
+end
+
+function M:ToggleTaxiDismount()
+	if C.db["Misc"]["AutoDismount"] then
+		B:RegisterEvent("TAXIMAP_OPENED", dismountCheck)
+	else
+		B:UnregisterEvent("TAXIMAP_OPENED", dismountCheck)
+	end
 end
 
 -- Block invite from strangers
