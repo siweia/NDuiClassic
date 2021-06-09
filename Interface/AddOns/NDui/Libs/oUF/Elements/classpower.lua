@@ -92,7 +92,8 @@ local function Update(self, event, unit, powerType)
 	local cur, max, mod, oldMax
 	if(event ~= 'ClassPowerDisable') then
 		local powerID = ClassPowerID
-		cur = UnitPower(unit, powerID, true)
+		--cur = UnitPower(unit, powerID, true)
+		cur = GetComboPoints(unit, "target")	-- has to use GetComboPoints in classic
 		max = UnitPowerMax(unit, powerID)
 		mod = UnitPowerDisplayMod(powerID)
 
@@ -246,6 +247,7 @@ local function Enable(self, unit)
 		if(RequirePower) then
 			self:RegisterEvent('UNIT_DISPLAYPOWER', VisibilityPath)
 		end
+		self:RegisterEvent('PLAYER_TARGET_CHANGED', VisibilityPath, true)
 
 		element.ClassPowerEnable = ClassPowerEnable
 		element.ClassPowerDisable = ClassPowerDisable
@@ -270,6 +272,7 @@ local function Disable(self)
 		ClassPowerDisable(self)
 
 		self:UnregisterEvent('UNIT_DISPLAYPOWER', VisibilityPath)
+		self:UnregisterEvent('PLAYER_TARGET_CHANGED', VisibilityPath)
 		self:UnregisterEvent('SPELLS_CHANGED', Visibility)
 	end
 end
