@@ -325,6 +325,7 @@ G.DefaultSettings = {
 		SendActionCD = false,
 		StatOrder = "12345",
 		ExpandStat = true,
+		PetHappiness = true,
 	},
 	Tutorial = {
 		Complete = false,
@@ -676,6 +677,10 @@ local function toggleTaxiDismount()
 	B:GetModule("Misc"):ToggleTaxiDismount()
 end
 
+local function togglePetHappiness()
+	B:GetModule("Misc"):TogglePetHappiness()
+end
+
 local function updateSkinAlpha()
 	for _, frame in pairs(C.frames) do
 		frame:SetBackdropColor(0, 0, 0, C.db["Skins"]["SkinAlpha"])
@@ -720,7 +725,7 @@ G.TabList = {
 	L["Maps"],
 	L["Skins"],
 	L["Tooltip"],
-	L["Misc"],
+	NewTag..L["Misc"],
 	L["UI Settings"],
 	L["Profile"],
 }
@@ -1023,10 +1028,11 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Misc", "Mail", L["Mail Tool"]},
 		{1, "ACCOUNT", "AutoBubbles", L["AutoBubbles"], true},
 		{1, "Misc", "EnhancedMenu", L["TargetEnhancedMenu"], nil, nil, nil, L["MenuEnhancedTips"]},
-		{1, "Misc", "AutoDismount", L["AutoDismount"].."*", true, nil, toggleTaxiDismount, L["AutoDismountTip"]},
+		{1, "Misc", "AutoDismount", NewTag..L["AutoDismount"].."*", true, nil, toggleTaxiDismount, L["AutoDismountTip"]},
 		{1, "Misc", "TradeTabs", L["TradeTabs"], nil, nil, nil, L["TradeTabsTips"]},
 		{1, "Misc", "InstantDelete", L["InstantDelete"].."*", true},
 		{1, "Misc", "Focuser", L["Easy Focus"]},
+		{1, "Misc", "PetHappiness", NewTag..L["PetHappiness"].."*", true, nil, togglePetHappiness},
 	},
 	[14] = {
 		{1, "ACCOUNT", "VersionCheck", L["Version Check"]},

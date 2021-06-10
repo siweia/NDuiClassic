@@ -15,6 +15,7 @@ local GetTime, GetCVarBool, SetCVar = GetTime, GetCVarBool, SetCVar
 local GetNumLootItems, LootSlot = GetNumLootItems, LootSlot
 local GetInstanceInfo = GetInstanceInfo
 local IsGuildMember, BNGetGameAccountInfoByGUID, C_FriendList_IsFriend = IsGuildMember, BNGetGameAccountInfoByGUID, C_FriendList.IsFriend
+local UnitName, GetPetHappiness = UnitName, GetPetHappiness
 
 --[[
 	Miscellaneous 各种有用没用的小玩意儿
@@ -45,6 +46,7 @@ function M:OnLogin()
 	self:ToggleTaxiDismount()
 	self:BidPriceHighlight()
 	self:BlockStrangerInvite()
+	self:TogglePetHappiness()
 
 	-- Auto chatBubbles
 	if NDuiADB["AutoBubbles"] then
@@ -435,4 +437,37 @@ function M:BlockStrangerInvite()
 			StaticPopup_Hide("PARTY_INVITE")
 		end
 	end)
+end
+
+-- Hunter pet happiness
+local petHappinessStr, lastHappiness = {
+	[1] = L["PetUnhappy"],
+	[2] = L["PetBadMood"],
+	[3] = L["PetHappy"],
+}
+
+local function CheckPetHappiness(_, unit)
+	if unit ~= "pet" then return end
+
+	local happiness = GetPetHappiness()
+	if not lastHappiness or lastHappiness ~= happiness then
+		local str = petHappinessStr[happiness]
+		if str then
+			local petName = UnitName(unit)
+			UIErrorsFrame:AddMessage(format(str, DB.InfoColor, petName))
+			print(DB.NDuiString, format(str, DB.InfoColor, petName))
+		end
+
+		lastHappiness = happiness
+	end
+end
+
+function M:TogglePetHappiness()
+	if DB.MyClass ~= "HUNTER" then return end
+
+	if C.db["Misc"]["PetHappiness"] then
+		B:RegisterEvent("UNIT_HAPPINESS", CheckPetHappiness)
+	else
+		B:UnregisterEvent("UNIT_HAPPINESS", CheckPetHappiness)
+	end
 end

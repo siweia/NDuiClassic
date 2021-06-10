@@ -690,3 +690,7 @@ L["PlateRange"] = "Nameplate range" -- need translation
 L["LanguageFilterTip"] = "You need to uncheck language filter in GUI and restart your game client to get access into CN battlenet support." -- need translation
 L["EquipColor"] = "Equip item border" -- need translation
 L["UIScaleTip"] = "|nIf UIScale is lower than 0.64, some blizzard addons and third-party addons may acting weird." -- need translation
+L["PetHappiness"] = "Hunter pet happiness" -- need translation
+L["PetUnhappy"] = "%sYour pet [%s] is about to run away." -- need translation
+L["PetBadMood"] = "%sYour pet [%s] is not in a good mood." -- need translation
+L["PetHappy"] = "%sYour pet [%s] feels happy now." -- need translation
