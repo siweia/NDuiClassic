@@ -35,6 +35,17 @@ local function UpdateQuestItemQuality(self)
 	end
 end
 
+local function ReskinQuestItem(button)
+	button.NameFrame:Hide()
+	local icon = button.Icon
+	icon.__owner = button
+	button.bg = B.ReskinIcon(icon)
+
+	local bg = B.CreateBDFrame(button, .25)
+	bg:SetPoint("TOPLEFT", button.bg, "TOPRIGHT", 2, 0)
+	bg:SetPoint("BOTTOMRIGHT", button.bg, 100, 0)
+end
+
 tinsert(C.defaultThemes, function()
 	B.ReskinPortraitFrame(QuestFrame, 15, -15, -30, 65)
 
@@ -62,15 +73,9 @@ tinsert(C.defaultThemes, function()
 
 	for i = 1, MAX_REQUIRED_ITEMS do
 		local button = _G["QuestProgressItem"..i]
-		button.NameFrame:Hide()
-		button.bg = B.ReskinIcon(button.Icon)
+		ReskinQuestItem(button)
 		button.__id = i
-		button.Icon.__owner = button
 		hooksecurefunc(button.Icon, "SetTexture", UpdateProgressItemQuality)
-	
-		local bg = B.CreateBDFrame(button, .25)
-		bg:SetPoint("TOPLEFT", button.bg, "TOPRIGHT", 2, 0)
-		bg:SetPoint("BOTTOMRIGHT", button.bg, 100, 0)
 	end
 
 	QuestDetailScrollFrame:SetWidth(302) -- else these buttons get cut off
@@ -174,18 +179,9 @@ tinsert(C.defaultThemes, function()
 	end)
 
 	for i = 1, 10 do
-		local name = "QuestLogItem"..i
-		local button = _G[name]
-		local icon = _G[name.."IconTexture"]
-		button.bg = B.ReskinIcon(icon)
-		icon.__owner = button
-		hooksecurefunc(icon, "SetTexture", UpdateQuestItemQuality)
-
-		local nameFrame = _G[name.."NameFrame"]
-		nameFrame:Hide()
-		local bg = B.CreateBDFrame(nameFrame, .25)
-		bg:SetPoint("TOPLEFT", icon, "TOPRIGHT", 3, C.mult)
-		bg:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", 100, -C.mult)
+		local button = _G["QuestLogItem"..i]
+		ReskinQuestItem(button)
+		hooksecurefunc(button.Icon, "SetTexture", UpdateQuestItemQuality)
 	end
 
 	C_Timer.After(3, function()
