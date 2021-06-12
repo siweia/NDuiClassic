@@ -351,7 +351,7 @@ function M:CharacterStatePanel()
 	end)
 
 	-- Player iLvl
-	CreatePlayerILvl(stat, L["ItemLevel"])
+	CreatePlayerILvl(stat, STAT_AVERAGE_ITEM_LEVEL)
 	hooksecurefunc("PaperDollFrame_UpdateStats", M.UpdatePlayerILvl)
 
 	-- Player stats

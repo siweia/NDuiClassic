@@ -628,8 +628,12 @@ function module:OnLogin()
 		[3] = {0, .5, .8, .25},
 	}
 
+	local iLvlItemClassIDs = {
+		[LE_ITEM_CLASS_ARMOR] = true,
+		[LE_ITEM_CLASS_WEAPON] = true,
+	}	
 	local function isItemNeedsLevel(item)
-		return item.link and item.level and item.rarity > 1 and (item.classID == LE_ITEM_CLASS_WEAPON or item.classID == LE_ITEM_CLASS_ARMOR)
+		return item.link and item.level and item.rarity > 1 and iLvlItemClassIDs[item.classID]
 	end
 
 	local function UpdatePawnArrow(self, item)
