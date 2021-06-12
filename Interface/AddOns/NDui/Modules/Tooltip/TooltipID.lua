@@ -6,7 +6,9 @@ local strmatch, format, tonumber, select, strfind = string.match, string.format,
 local UnitAura, GetItemCount, GetItemInfo, GetUnitName = UnitAura, GetItemCount, GetItemInfo, GetUnitName
 local GetMouseFocus = GetMouseFocus
 local BAGSLOT, BANK = BAGSLOT, BANK
-local SELL_PRICE_TEXT = format("%s:", SELL_PRICE)
+local SELL_PRICE_TEXT = format("%s: |cffffffff%%s|r", SELL_PRICE)
+local ITEM_LEVEL_STR = gsub(ITEM_LEVEL_PLUS, "%+", "")
+ITEM_LEVEL_STR = format("|cffffd100%s|r|n%%s", ITEM_LEVEL_STR)
 
 local types = {
 	spell = SPELLS.."ID:",
@@ -45,12 +47,17 @@ function TT:UpdateItemSellPrice()
 					end
 
 					local cost = (tonumber(count) or 1) * price
-					self:AddDoubleLine(SELL_PRICE_TEXT, setupMoneyString(cost), nil,nil,nil, 1,1,1)
+					self:AddLine(format(SELL_PRICE_TEXT, setupMoneyString(cost)))
 				end
 			end
 		end
 	end
 end
+
+local iLvlItemClassIDs = {
+	[LE_ITEM_CLASS_ARMOR] = true,
+	[LE_ITEM_CLASS_WEAPON] = true,
+}
 
 function TT:AddLineForID(id, linkType, noadd)
 	for i = 1, self:NumLines() do
@@ -62,11 +69,9 @@ function TT:AddLineForID(id, linkType, noadd)
 	if not noadd then self:AddLine(" ") end
 
 	if linkType == types.item then
-		TT.UpdateItemSellPrice(self)
-
 		local bagCount = GetItemCount(id)
 		local bankCount = GetItemCount(id, true) - bagCount
-		local name, _, _, itemLevel, _, _, _, itemStackCount = GetItemInfo(id)
+		local name, _, _, itemLevel, _, _, _, itemStackCount, _, _, _, classID = GetItemInfo(id)
 		if bankCount > 0 then
 			self:AddDoubleLine(BAGSLOT.."/"..BANK..":", DB.InfoColor..bagCount.."/"..bankCount)
 		elseif bagCount > 0 then
@@ -75,8 +80,12 @@ function TT:AddLineForID(id, linkType, noadd)
 		if itemStackCount and itemStackCount > 1 then
 			self:AddDoubleLine(L["Stack Cap"]..":", DB.InfoColor..itemStackCount)
 		end
-		if name and itemLevel and itemLevel > 1 then
-			self:AddDoubleLine(L["ItemLevel"]..":", DB.InfoColor..itemLevel)
+		if name and itemLevel and itemLevel > 1 and iLvlItemClassIDs[classID] then
+			local line = _G[self:GetName().."TextLeft2"]
+			local lineText = line and line:GetText()
+			if lineText then
+				line:SetFormattedText(ITEM_LEVEL_STR, itemLevel, lineText)
+			end
 		end
 	end
 
@@ -109,7 +118,10 @@ function TT:SetItemID()
 		local id = strmatch(link, "item:(%d+):")
 		local keystone = strmatch(link, "|Hkeystone:([0-9]+):")
 		if keystone then id = tonumber(keystone) end
-		if id then TT.AddLineForID(self, id, types.item) end
+		if id then
+			TT.UpdateItemSellPrice(self)
+			TT.AddLineForID(self, id, types.item)
+		end
 	end
 end
 
