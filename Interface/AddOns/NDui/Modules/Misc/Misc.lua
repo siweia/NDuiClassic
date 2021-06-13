@@ -42,11 +42,11 @@ function M:OnLogin()
 	self:UpdateFasterLoot()
 	self:UpdateErrorBlocker()
 	self:TradeTargetInfo()
-	self:MenuButton_Add()
 	self:ToggleTaxiDismount()
 	self:BidPriceHighlight()
 	self:BlockStrangerInvite()
 	self:TogglePetHappiness()
+	self:QuickMenuButton()
 
 	-- Auto chatBubbles
 	if NDuiADB["AutoBubbles"] then
@@ -360,58 +360,65 @@ do
 	B:RegisterEvent("ADDON_LOADED", setupMisc)
 end
 
--- Add friend and guild invite on target menu
-function M:MenuButton_OnClick(info)
-	local name, server = UnitName(info.unit)
-	if server and server ~= "" then name = name.."-"..server end
-
-	if info.value == "name" then
-		if MailFrame:IsShown() then
-			MailFrameTab_OnClick(nil, 2)
-			SendMailNameEditBox:SetText(name)
-			SendMailNameEditBox:HighlightText()
-		else
-			local editBox = ChatEdit_ChooseBoxForSend()
-			local hasText = (editBox:GetText() ~= "")
-			ChatEdit_ActivateChat(editBox)
-			editBox:Insert(name)
-			if not hasText then editBox:HighlightText() end
-		end
-	elseif info.value == "guild" then
-		GuildInvite(name)
-	end
+-- Buttons to enhance popup menu
+function M:MenuButton_AddFriend()
+	C_FriendList.AddFriend(M.MenuButtonName)
 end
 
-function M:MenuButton_Show(_, unit)
-	if UIDROPDOWNMENU_MENU_LEVEL > 1 then return end
-
-	if unit and (unit == "target" or string.find(unit, "party") or string.find(unit, "raid")) then
-		local info = UIDropDownMenu_CreateInfo()
-		info.text = M.MenuButtonList["name"]
-		info.arg1 = {value = "name", unit = unit}
-		info.func = M.MenuButton_OnClick
-		info.notCheckable = true
-		UIDropDownMenu_AddButton(info)
-
-		if IsInGuild() and UnitIsPlayer(unit) and not UnitCanAttack("player", unit) and not UnitIsUnit("player", unit) then
-			info = UIDropDownMenu_CreateInfo()
-			info.text = M.MenuButtonList["guild"]
-			info.arg1 = {value = "guild", unit = unit}
-			info.func = M.MenuButton_OnClick
-			info.notCheckable = true
-			UIDropDownMenu_AddButton(info)
-		end
-	end
+function M:MenuButton_CopyName()
+	local editBox = ChatEdit_ChooseBoxForSend()
+	local hasText = (editBox:GetText() ~= "")
+	ChatEdit_ActivateChat(editBox)
+	editBox:Insert(M.MenuButtonName)
+	if not hasText then editBox:HighlightText() end
 end
 
-function M:MenuButton_Add()
-	if not C.db["Misc"]["EnhancedMenu"] then return end
+function M:MenuButton_GuildInvite()
+	GuildInvite(M.MenuButtonName)
+end
 
-	M.MenuButtonList = {
-		["name"] = COPY_NAME,
-		["guild"] = gsub(CHAT_GUILD_INVITE_SEND, HEADER_COLON, ""),
+function M:QuickMenuButton()
+	if not C.db["Misc"]["MenuButton"] then return end
+
+	local menuList = {
+		{text = ADD_FRIEND, func = M.MenuButton_AddFriend, color = {0, .6, 1}},
+		{text = gsub(CHAT_GUILD_INVITE_SEND, HEADER_COLON, ""), func = M.MenuButton_GuildInvite, color = {0, .8, 0}},
+		{text = COPY_NAME, func = M.MenuButton_CopyName, color = {1, 0, 0}},
 	}
-	hooksecurefunc("UnitPopup_ShowMenu", M.MenuButton_Show)
+
+	local frame = CreateFrame("Frame", "NDuiMenuButtonFrame", DropDownList1)
+	frame:SetSize(10, 10)
+	frame:SetPoint("TOPLEFT")
+	frame:Hide()
+	for i = 1, 3 do
+		local button = CreateFrame("Button", nil, frame)
+		button:SetSize(25, 10)
+		button:SetPoint("TOPLEFT", frame, (i-1)*28 + 2, -2)
+		B.PixelIcon(button, nil, true)
+		button.Icon:SetColorTexture(unpack(menuList[i].color))
+		B.CreateSD(button.bg)
+		button:SetScript("OnClick", menuList[i].func)
+		B.AddTooltip(button, "ANCHOR_TOP", menuList[i].text)
+	end
+
+	hooksecurefunc("UnitPopup_ShowMenu", function(dropdownMenu)
+		if UIDROPDOWNMENU_MENU_LEVEL > 1 then return end
+
+		local unit = dropdownMenu.unit
+		local isPlayer = unit and UnitIsPlayer(unit)
+		if not isPlayer and not dropdownMenu.chatType then
+			frame:Hide()
+			return
+		end
+
+		local name = dropdownMenu.name
+		local server = dropdownMenu.server
+		if not server then
+			server = DB.MyRealm
+		end
+		M.MenuButtonName = name.."-"..server
+		frame:Show()
+	end)
 end
 
 -- Auto dismount on Taxi
