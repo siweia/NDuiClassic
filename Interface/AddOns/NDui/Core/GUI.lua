@@ -715,7 +715,7 @@ local NewTag = "|TInterface\\OptionsFrame\\UI-OptionsFrame-NewFeatureIcon:0|t"
 G.TabList = {
 	NewTag..L["Actionbar"],
 	L["Bags"],
-	NewTag..L["Unitframes"],
+	L["Unitframes"],
 	L["RaidFrame"],
 	L["Nameplate"],
 	L["PlayerPlate"],
@@ -783,7 +783,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "UFs", "SwingBar", L["UFs SwingBar"]},
 		{1, "UFs", "SwingTimer", L["UFs SwingTimer"], true, nil, nil, L["SwingTimer Tip"]},
 		{},--blank
-		{1, "UFs", "Arena", NewTag..HeaderTag..L["Arena Frame"]},
+		{1, "UFs", "Arena", HeaderTag..L["Arena Frame"]},
 		{1, "UFs", "ToToT", HeaderTag..L["UFs ToToT"], true},
 		{1, "UFs", "Portrait", L["UFs Portrait"]},
 		{1, "UFs", "ClassPower", L["UFs ClassPower"], true},
@@ -1027,7 +1027,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Misc", "HideErrors", L["Hide Error"].."*", true, nil, updateErrorBlocker},
 		{1, "Misc", "Mail", L["Mail Tool"]},
 		{1, "ACCOUNT", "AutoBubbles", L["AutoBubbles"], true},
-		{1, "Misc", "MenuButton", L["MenuButton"], nil, nil, nil, L["MenuButtonTip"]},
+		{1, "Misc", "MenuButton", NewTag..L["MenuButton"], nil, nil, nil, L["MenuButtonTip"]},
 		{1, "Misc", "AutoDismount", NewTag..L["AutoDismount"].."*", true, nil, toggleTaxiDismount, L["AutoDismountTip"]},
 		{1, "Misc", "TradeTabs", L["TradeTabs"], nil, nil, nil, L["TradeTabsTips"]},
 		{1, "Misc", "InstantDelete", L["InstantDelete"].."*", true},
