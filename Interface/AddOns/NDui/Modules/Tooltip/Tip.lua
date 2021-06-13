@@ -405,6 +405,15 @@ function TT:SetupTooltipFonts()
 	end
 end
 
+function TT:FixRecipeItemNameWidth()
+	for i = 1, self:NumLines() do
+		local line = _G["GameTooltipTextLeft"..i]
+		if line:GetHeight() > 40 then
+			line:SetWidth(line:GetWidth() + 1)
+		end
+	end
+end
+
 function TT:OnLogin()
 	GameTooltip.StatusBar = GameTooltipStatusBar
 	GameTooltip:HookScript("OnTooltipCleared", TT.OnTooltipCleared)
@@ -415,9 +424,10 @@ function TT:OnLogin()
 	hooksecurefunc("GameTooltip_SetDefaultAnchor", TT.GameTooltip_SetDefaultAnchor)
 	hooksecurefunc("GameTooltip_SetBackdropStyle", TT.SharedTooltip_SetBackdropStyle)
 	hooksecurefunc("GameTooltip_AnchorComparisonTooltips", TT.GameTooltip_ComparisonFix)
+	TT:SetupTooltipFonts()
+	GameTooltip:HookScript("OnTooltipSetItem", TT.FixRecipeItemNameWidth)
 
 	-- Elements
-	TT:SetupTooltipFonts()
 	TT:ReskinTooltipIcons()
 	TT:SetupTooltipID()
 	TT:TargetedInfo()
