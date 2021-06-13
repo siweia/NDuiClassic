@@ -87,6 +87,8 @@ function TT:AddLineForID(id, linkType, noadd)
 		if itemStackCount and itemStackCount > 1 then
 			self:AddDoubleLine(L["Stack Cap"]..":", DB.InfoColor..itemStackCount)
 		end
+
+		-- iLvl info like retail, but looks inperfect for shoppingtooltips
 		if name and itemLevel and itemLevel > 1 and iLvlItemClassIDs[classID] then
 			for i = 1, self:NumLines() do
 				local line = _G[self:GetName().."TextLeft"..i]
@@ -96,8 +98,9 @@ function TT:AddLineForID(id, linkType, noadd)
 					local nextText = nextLine and nextLine:GetText()
 					if nextText then
 						nextLine:SetFormattedText(ITEM_LEVEL_STR, itemLevel, nextText)
-						break
+						nextLine:SetJustifyH("LEFT") -- fix string anchor at second line
 					end
+					break
 				end
 			end
 		end
