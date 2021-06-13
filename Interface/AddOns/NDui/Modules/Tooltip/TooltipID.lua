@@ -6,7 +6,7 @@ local strmatch, format, tonumber, select, strfind = string.match, string.format,
 local UnitAura, GetItemCount, GetItemInfo, GetUnitName = UnitAura, GetItemCount, GetItemInfo, GetUnitName
 local GetMouseFocus = GetMouseFocus
 local BAGSLOT, BANK = BAGSLOT, BANK
-local SELL_PRICE_TEXT = format("%s: |cffffffff%%s|r", SELL_PRICE)
+local SELL_PRICE_TEXT = format("|cffffffff%s%s%%s|r", SELL_PRICE, HEADER_COLON)
 local ITEM_LEVEL_STR = gsub(ITEM_LEVEL_PLUS, "%+", "")
 ITEM_LEVEL_STR = format("|cffffd100%s|r|n%%s", ITEM_LEVEL_STR)
 
@@ -73,6 +73,11 @@ function TT:AddLineForID(id, linkType, noadd)
 		local text = line:GetText()
 		if text and text == linkType then return end
 	end
+
+	if linkType == types.item then
+		TT.UpdateItemSellPrice(self)
+	end
+
 	if not noadd then self:AddLine(" ") end
 
 	if linkType == types.item then
@@ -88,7 +93,7 @@ function TT:AddLineForID(id, linkType, noadd)
 			self:AddDoubleLine(L["Stack Cap"]..":", DB.InfoColor..itemStackCount)
 		end
 
-		-- iLvl info like retail, but looks inperfect for shoppingtooltips
+		-- iLvl info like retail
 		if name and itemLevel and itemLevel > 1 and iLvlItemClassIDs[classID] then
 			for i = 1, self:NumLines() do
 				local line = _G[self:GetName().."TextLeft"..i]
@@ -98,7 +103,7 @@ function TT:AddLineForID(id, linkType, noadd)
 					local nextText = nextLine and nextLine:GetText()
 					if nextText then
 						nextLine:SetFormattedText(ITEM_LEVEL_STR, itemLevel, nextText)
-						nextLine:SetJustifyH("LEFT") -- fix string anchor at second line
+						nextLine:SetJustifyH("LEFT")
 					end
 					break
 				end
@@ -136,7 +141,6 @@ function TT:SetItemID()
 		local keystone = strmatch(link, "|Hkeystone:([0-9]+):")
 		if keystone then id = tonumber(keystone) end
 		if id then
-			TT.UpdateItemSellPrice(self)
 			TT.AddLineForID(self, id, types.item)
 		end
 	end
