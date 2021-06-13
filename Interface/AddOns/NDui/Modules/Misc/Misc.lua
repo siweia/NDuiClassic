@@ -16,6 +16,7 @@ local GetNumLootItems, LootSlot = GetNumLootItems, LootSlot
 local GetInstanceInfo = GetInstanceInfo
 local IsGuildMember, BNGetGameAccountInfoByGUID, C_FriendList_IsFriend = IsGuildMember, BNGetGameAccountInfoByGUID, C_FriendList.IsFriend
 local UnitName, GetPetHappiness = UnitName, GetPetHappiness
+local UnitIsPlayer, GuildInvite, C_FriendList_AddFriend = UnitIsPlayer, GuildInvite, C_FriendList.AddFriend
 
 --[[
 	Miscellaneous 各种有用没用的小玩意儿
@@ -362,7 +363,7 @@ end
 
 -- Buttons to enhance popup menu
 function M:MenuButton_AddFriend()
-	C_FriendList.AddFriend(M.MenuButtonName)
+	C_FriendList_AddFriend(M.MenuButtonName)
 end
 
 function M:MenuButton_CopyName()

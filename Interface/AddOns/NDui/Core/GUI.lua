@@ -1027,7 +1027,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Misc", "HideErrors", L["Hide Error"].."*", true, nil, updateErrorBlocker},
 		{1, "Misc", "Mail", L["Mail Tool"]},
 		{1, "ACCOUNT", "AutoBubbles", L["AutoBubbles"], true},
-		{1, "Misc", "MenuButton", L["MenuButton"], nil, nil, nil, L["MenuButtonTips"]},
+		{1, "Misc", "MenuButton", L["MenuButton"], nil, nil, nil, L["MenuButtonTip"]},
 		{1, "Misc", "AutoDismount", NewTag..L["AutoDismount"].."*", true, nil, toggleTaxiDismount, L["AutoDismountTip"]},
 		{1, "Misc", "TradeTabs", L["TradeTabs"], nil, nil, nil, L["TradeTabsTips"]},
 		{1, "Misc", "InstantDelete", L["InstantDelete"].."*", true},
