@@ -20,11 +20,18 @@ local types = {
 	azerite = L["Trait"].."ID:",
 }
 
-local function setupMoneyString(amount)
-	local module = B:GetModule("Infobar")
-	if module then
-		return module:GetMoneyString(amount, true)
-	end
+local function createIcon(index)
+	return format("|TInterface\\MoneyFrame\\UI-%sIcon:14:14:0:0|t", index)
+end
+
+local function setupMoneyString(money)
+	local g, s, c = floor(money/1e4), floor(money/100) % 100, money % 100
+	local str = ""
+	if g > 0 then str = str.." "..g..createIcon("Gold") end
+	if s > 0 then str = str.." "..s..createIcon("Silver") end
+	if c > 0 then str = str.." "..c..createIcon("Copper") end
+
+	return str
 end
 
 function TT:UpdateItemSellPrice()
@@ -43,7 +50,7 @@ function TT:UpdateItemSellPrice()
 					if object == "Button" then -- ContainerFrameItem, QuestInfoItem, PaperDollItem
 						count = frame.count
 					elseif object == "CheckButton" then -- MailItemButton or ActionButton
-						count = frame.count or tonumber(frame.Count:GetText())
+						count = frame.count or frame.Count:GetText()
 					end
 
 					local cost = (tonumber(count) or 1) * price
@@ -81,10 +88,17 @@ function TT:AddLineForID(id, linkType, noadd)
 			self:AddDoubleLine(L["Stack Cap"]..":", DB.InfoColor..itemStackCount)
 		end
 		if name and itemLevel and itemLevel > 1 and iLvlItemClassIDs[classID] then
-			local line = _G[self:GetName().."TextLeft2"]
-			local lineText = line and line:GetText()
-			if lineText then
-				line:SetFormattedText(ITEM_LEVEL_STR, itemLevel, lineText)
+			for i = 1, self:NumLines() do
+				local line = _G[self:GetName().."TextLeft"..i]
+				local lineText = line and line:GetText()
+				if strfind(lineText, name) then
+					local nextLine = _G[self:GetName().."TextLeft"..(i+1)]
+					local nextText = nextLine and nextLine:GetText()
+					if nextText then
+						nextLine:SetFormattedText(ITEM_LEVEL_STR, itemLevel, nextText)
+						break
+					end
+				end
 			end
 		end
 	end
