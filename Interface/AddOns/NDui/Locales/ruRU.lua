@@ -693,3 +693,4 @@ L["PetBadMood"] = "%sYour pet [%s] is not in a good mood." -- need translation
 L["PetHappy"] = "%sYour pet [%s] feels happy now." -- need translation
 L["MenuButton"] = "Popup menu buttons" -- need translation
 L["MenuButtonTip"] = "|nCreate colorful buttons on popup menu to add friend, guild invite and copy name." -- need translation
+L["SaveMailTarget"] = "Save mail recipient" -- need translation
