@@ -134,6 +134,7 @@ function M:RefreshButtonInfo()
 						slotFrame.iLvlText:SetTextColor(color.r, color.g, color.b)
 					end
 					M:ItemLevel_UpdateGemInfo(link, unit, index, slotFrame)
+					M:UpdateInspectILvl()
 
 					pending[index] = nil
 				end
@@ -197,19 +198,32 @@ function M:ItemLevel_UpdatePlayer()
 	M:ItemLevel_SetupLevel(CharacterFrame, "Character", "player")
 end
 
+function M:UpdateInspectILvl()
+	if not M.InspectILvl then return end
+
+	M:UpdateUnitILvl(InspectFrame.unit, M.InspectILvl)
+	M.InspectILvl:SetFormattedText("iLvl %s", M.InspectILvl:GetText())
+end
+
 local anchored
 local function AnchorInspectRotate()
 	if anchored then return end
 	InspectModelFrameRotateRightButton:ClearAllPoints()
-	InspectModelFrameRotateRightButton:SetPoint("BOTTOM", InspectModelFrame, "TOP")
+	InspectModelFrameRotateRightButton:SetPoint("BOTTOMLEFT", InspectFrameTab1, "TOPLEFT", 0, 2)
+
+	M.InspectILvl = B.CreateFS(InspectFrame, 15)
+	M.InspectILvl:ClearAllPoints()
+	M.InspectILvl:SetPoint("TOP", InspectLevelText, "BOTTOM", 0, -4)
+
 	anchored = true
 end
 
 function M:ItemLevel_UpdateInspect(...)
 	local guid = ...
 	if InspectFrame and InspectFrame.unit and UnitGUID(InspectFrame.unit) == guid then
-		M:ItemLevel_SetupLevel(InspectFrame, "Inspect", InspectFrame.unit)
 		AnchorInspectRotate()
+		M:ItemLevel_SetupLevel(InspectFrame, "Inspect", InspectFrame.unit)
+		M:UpdateInspectILvl()
 	end
 end
 
