@@ -397,7 +397,6 @@ function M:QuickMenuButton()
 		button:SetPoint("TOPLEFT", frame, (i-1)*28 + 2, -2)
 		B.PixelIcon(button, nil, true)
 		button.Icon:SetColorTexture(unpack(menuList[i].color))
-		B.CreateSD(button.bg)
 		button:SetScript("OnClick", menuList[i].func)
 		B.AddTooltip(button, "ANCHOR_TOP", menuList[i].text)
 	end
