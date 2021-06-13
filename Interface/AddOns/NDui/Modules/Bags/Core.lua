@@ -14,6 +14,7 @@ local SortBankBags, SortBags, InCombatLockdown, ClearCursor = SortBankBags, Sort
 local GetContainerItemID, SplitContainerItem = GetContainerItemID, SplitContainerItem
 local NUM_BAG_SLOTS = NUM_BAG_SLOTS or 4
 local NUM_BANKBAGSLOTS = NUM_BANKBAGSLOTS or 7
+local ITEM_STARTS_QUEST = ITEM_STARTS_QUEST
 
 function module:UpdateAnchors(parent, bags)
 	if not parent:IsShown() then return end
@@ -482,6 +483,29 @@ function module:CloseBags()
 	CloseAllBags()
 end
 
+local questItemCache = {}
+function module:IsAcceptableQuestItem(link)
+	if not link then return end
+
+	local canAccept = questItemCache[link]
+	if not canAccept then
+		B.ScanTip:SetOwner(UIParent, "ANCHOR_NONE")
+		B.ScanTip:SetHyperlink(link)
+
+		for i = 2, B.ScanTip:NumLines() do
+			local line = _G["NDui_ScanTooltipTextLeft"..i]
+			local lineText = line and line:GetText()
+			if lineText and strmatch(lineText, ITEM_STARTS_QUEST) then
+				canAccept = true
+				questItemCache[link] = true
+				break
+			end
+		end
+	end
+
+	return canAccept
+end
+
 function module:OnLogin()
 	if not C.db["Bags"]["Enable"] then return end
 
@@ -604,6 +628,7 @@ function module:OnLogin()
 		self.Favourite:SetSize(30, 30)
 		self.Favourite:SetPoint("TOPLEFT", -12, 9)
 
+		self.Quest = B.CreateFS(self, 30, "!", "system", "LEFT", 3, 0)
 		self.iLvl = B.CreateFS(self, 12, "", false, "BOTTOMLEFT", 1, 2)
 
 		if showNewItem then
@@ -712,6 +737,8 @@ function module:OnLogin()
 		else
 			self:SetBackdropBorderColor(0, 0, 0)
 		end
+
+		self.Quest:SetShown(item.isQuestItem and module:IsAcceptableQuestItem(item.link))
 	end
 
 	function MyContainer:OnContentsChanged()
