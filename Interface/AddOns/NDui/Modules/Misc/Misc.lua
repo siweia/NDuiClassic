@@ -401,8 +401,8 @@ function M:QuickMenuButton()
 		B.AddTooltip(button, "ANCHOR_TOP", menuList[i].text)
 	end
 
-	hooksecurefunc("UnitPopup_ShowMenu", function(dropdownMenu)
-		if UIDROPDOWNMENU_MENU_LEVEL > 1 then return end
+	hooksecurefunc("ToggleDropDownMenu", function(level, _, dropdownMenu)
+		if level and level > 1 then return end
 
 		local unit = dropdownMenu.unit
 		local isPlayer = unit and UnitIsPlayer(unit)
