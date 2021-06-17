@@ -81,6 +81,7 @@ local list = {
 		{AuraID = 1044, UnitID = "player"},		-- 自由祝福
 		{AuraID = 29166, UnitID = "player"},	-- 激活
 		{AuraID = 10060, UnitID = "player"},	-- 能量灌注
+		{AuraID = 13159, UnitID = "player"},	-- 豹群守护
 	},
 	["Raid Debuff"] = {		-- 团队减益组
 		--{AuraID = 209858, UnitID = "player"},	-- 死疽溃烂
