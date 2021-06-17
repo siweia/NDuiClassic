@@ -147,7 +147,7 @@ function Bar:HunterAspectBar()
 	else
 		aspectFrame:SetSize(width, height)
 	end
-	aspectFrame.mover = B.Mover(aspectFrame, L["AspectBar"], "AspectBar", {"BOTTOM", _G.NDui_ActionBarPet, "TOP", 0, 3})
+	aspectFrame.mover = B.Mover(aspectFrame, L["AspectBar"], "AspectBar", {"BOTTOMLEFT", 415, 25})
 
 	Bar.CheckKnownAspects()
 	B:RegisterEvent("LEARNED_SPELL_IN_TAB", Bar.CheckKnownAspects)

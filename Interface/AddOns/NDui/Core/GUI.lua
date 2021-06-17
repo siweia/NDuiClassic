@@ -39,8 +39,8 @@ G.DefaultSettings = {
 		ShowStance = true,
 		EquipColor = false,
 		AspectBar = true,
-		AspectSize = 24,
-		VerticleAspect = false,
+		AspectSize = 25,
+		VerticleAspect = true,
 	},
 	Bags = {
 		Enable = true,
