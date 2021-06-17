@@ -694,3 +694,6 @@ L["PetHappy"] = "%sYour pet [%s] feels happy now." -- need translation
 L["MenuButton"] = "Popup menu buttons" -- need translation
 L["MenuButtonTip"] = "|nCreate colorful buttons on popup menu to add friend, guild invite and copy name." -- need translation
 L["SaveMailTarget"] = "Save mail recipient" -- need translation
+L["AspectBar"] = "HunterAspectBar" -- need translation
+L["AspectSize"] = "Aspect icon size" -- need translation
+L["VerticleAspect"] = "Verticle AspectBar" -- need translation

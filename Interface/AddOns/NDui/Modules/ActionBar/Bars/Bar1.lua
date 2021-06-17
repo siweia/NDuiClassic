@@ -129,4 +129,5 @@ function Bar:OnLogin()
 	Bar:ReskinBars()
 	Bar:UpdateAllScale()
 	Bar:MicroMenu()
+	Bar:HunterAspectBar()
 end
