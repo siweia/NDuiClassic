@@ -113,24 +113,34 @@ end
 function Bar:UpdateAspectStatus()
 	if not aspectFrame then return end
 
-	if C.db["Actionbar"]["AspectBar"] then
-		aspectFrame:Show()
-
-		local size = C.db["Actionbar"]["AspectSize"]
-		local width, height = size*7 + 3*8, size + 3*2
-		if C.db["Actionbar"]["VerticleAspect"] then
-			aspectFrame:SetSize(height, width)
-			aspectFrame.mover:SetSize(height, width)
-		else
-			aspectFrame:SetSize(width, height)
-			aspectFrame.mover:SetSize(width, height)
-		end
-
-		for _, value in pairs(aspectButtons) do
-			value[1]:SetSize(size, size)
-		end
-		Bar:UpdateAspectAnchor()
+	local size = C.db["Actionbar"]["AspectSize"]
+	local width, height = size*7 + 3*8, size + 3*2
+	if C.db["Actionbar"]["VerticleAspect"] then
+		aspectFrame:SetSize(height, width)
+		aspectFrame.mover:SetSize(height, width)
 	else
+		aspectFrame:SetSize(width, height)
+		aspectFrame.mover:SetSize(width, height)
+	end
+
+	for _, value in pairs(aspectButtons) do
+		value[1]:SetSize(size, size)
+	end
+	Bar:UpdateAspectAnchor()
+end
+
+function Bar:ToggleAspectBar()
+	if not aspectFrame then return end
+
+	if C.db["Actionbar"]["AspectBar"] then
+		Bar.CheckKnownAspects()
+		B:RegisterEvent("LEARNED_SPELL_IN_TAB", Bar.CheckKnownAspects)
+		Bar:CheckActiveAspect("player")
+		B:RegisterEvent("UNIT_AURA", Bar.CheckActiveAspect)
+		aspectFrame:Show()
+	else
+		B:UnregisterEvent("LEARNED_SPELL_IN_TAB", Bar.CheckKnownAspects)
+		B:UnregisterEvent("UNIT_AURA", Bar.CheckActiveAspect)
 		aspectFrame:Hide()
 	end
 end
@@ -149,9 +159,5 @@ function Bar:HunterAspectBar()
 	end
 	aspectFrame.mover = B.Mover(aspectFrame, L["AspectBar"], "AspectBar", {"BOTTOMLEFT", 415, 25})
 
-	Bar.CheckKnownAspects()
-	B:RegisterEvent("LEARNED_SPELL_IN_TAB", Bar.CheckKnownAspects)
-
-	Bar:CheckActiveAspect("player")
-	B:RegisterEvent("UNIT_AURA", Bar.CheckActiveAspect)
+	Bar:ToggleAspectBar()
 end

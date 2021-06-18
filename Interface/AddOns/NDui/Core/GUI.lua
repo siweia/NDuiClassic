@@ -524,6 +524,10 @@ local function updateAspectStatus()
 	B:GetModule("Actionbar"):UpdateAspectStatus()
 end
 
+local function toggleAspectBar()
+	B:GetModule("Actionbar"):ToggleAspectBar()
+end
+
 local function updateBuffFrame()
 	local A = B:GetModule("Auras")
 	A:UpdateOptions()
@@ -767,7 +771,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Actionbar", "Classcolor", L["ClassColor BG"], true},
 		{1, "Actionbar", "EquipColor", NewTag..L["EquipColor"].."*", nil, nil, updateEquipColor},
 		{},--blank
-		{1, "Actionbar", "AspectBar", NewTag..HeaderTag..L["AspectBar"].."*", nil, nil, updateAspectStatus},
+		{1, "Actionbar", "AspectBar", NewTag..HeaderTag..L["AspectBar"].."*", nil, nil, toggleAspectBar},
 		{1, "Actionbar", "VerticleAspect", L["VerticleAspect"].."*", nil, nil, updateAspectStatus},
 		{3, "Actionbar", "AspectSize", L["AspectSize"].."*", true, {24, 60, 1}, updateAspectStatus},
 	},
