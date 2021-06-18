@@ -48,7 +48,7 @@ function Bar:CreateAspectButton(spellID, index)
 	button:RegisterEvent("ACTIONBAR_UPDATE_COOLDOWN")
 	button:SetScript("OnEvent", Bar.UpdateAspectCooldown)
 
-	button.cover = button:CreateTexture(nil, "ARTWORK")
+	button.cover = button:CreateTexture(nil, "ARTWORK", nil, 5)
 	button.cover:SetInside()
 	button.cover:SetTexCoord(unpack(DB.TexCoord))
 	button.cover:SetTexture("Interface\\Icons\\Spell_Nature_WispSplode")
