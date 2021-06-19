@@ -130,7 +130,7 @@ function M:TradeTabs_Reskin()
 end
 
 local index = 1
-function M:TradeTabs_Create(spellID)
+function M:TradeTabs_Create(spellID, tradeName)
 	local name, _, texture = GetSpellInfo(spellID)
 
 	local tab = CreateFrame("CheckButton", nil, TradeSkillFrame, "SpellBookSkillLineTabTemplate, SecureActionButtonTemplate")
@@ -147,7 +147,7 @@ function M:TradeTabs_Create(spellID)
 
 	local cover = CreateFrame("Frame", nil, tab)
 	cover:SetAllPoints()
-	cover:EnableMouse(true)
+	if tradeName ~= "Enchanting" then cover:EnableMouse(true) end -- clickthru on enchant
 	tab.cover = cover
 
 	tab:SetPoint("TOPLEFT", TradeSkillFrame, "TOPRIGHT", C.db["Skins"]["BlizzardSkins"] and -30 or -33, -70 - (index-1)*45)
@@ -169,7 +169,7 @@ function M:TradeTabs_OnLoad()
 			hasCooking = true
 		end
 
-		self:TradeTabs_Create(spellID)
+		self:TradeTabs_Create(spellID, tradeName)
 	end
 
 	if hasCooking then
