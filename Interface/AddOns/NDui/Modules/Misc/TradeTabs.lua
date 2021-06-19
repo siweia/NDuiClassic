@@ -180,6 +180,8 @@ function M:TradeTabs_OnLoad()
 	M:TradeTabs_Update()
 	B:RegisterEvent("TRADE_SKILL_SHOW", M.TradeTabs_Update)
 	B:RegisterEvent("TRADE_SKILL_CLOSE", M.TradeTabs_Update)
+	B:RegisterEvent("CRAFT_SHOW", M.TradeTabs_Update)
+	B:RegisterEvent("CRAFT_CLOSE", M.TradeTabs_Update)
 	B:RegisterEvent("CURRENT_SPELL_CAST_CHANGED", M.TradeTabs_Update)
 end
 
