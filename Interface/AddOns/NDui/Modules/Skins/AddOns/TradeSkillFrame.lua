@@ -3,9 +3,7 @@ local B, C, L, DB = unpack(ns)
 local S = B:GetModule("Skins")
 
 local strfind = strfind
-local TradeSkillFrame_SetSelection, TradeSkillFrame_Update = TradeSkillFrame_SetSelection, TradeSkillFrame_Update
 local GetTradeSkillSelectionIndex, GetTradeSkillInfo, GetNumTradeSkills = GetTradeSkillSelectionIndex, GetTradeSkillInfo, GetNumTradeSkills
-local CraftFrame_SetSelection, CraftFrame_Update = CraftFrame_SetSelection, CraftFrame_Update
 local GetCraftSelectionIndex, GetCraftInfo, GetNumCrafts = GetCraftSelectionIndex, GetCraftInfo, GetNumCrafts
 
 local skinIndex = 0
@@ -47,6 +45,8 @@ local function CreateSearchWidget(parent, anchor)
 	searchBox:SetPoint("TOPLEFT", title, "TOPRIGHT", 3, 3)
 	searchBox:SetPoint("BOTTOMRIGHT", anchor, "BOTTOMRIGHT", 0, -26)
 	searchBox:HookScript("OnEscapePressed", removeInputText)
+	searchBox.title = L["Tips"]
+	B.AddTooltip(searchBox, "ANCHOR_TOP", L["TradeSearchTip"]..L["EditBox Tip"], "info")
 
 	local nextButton = createArrowButton(searchBox, searchBox, "down")
 	local prevButton = createArrowButton(searchBox, nextButton, "up")
@@ -228,7 +228,7 @@ function S:EnhancedTradeSkill()
 		if not text or text == "" then return end
 
 		if not GetTradeSearchResult(text, 1, GetNumTradeSkills(), 1) then
-			print("你搜索的不存在")
+			UIErrorsFrame:AddMessage(DB.InfoColor..L["InvalidName"])
 		end
 	end)
 
@@ -237,7 +237,7 @@ function S:EnhancedTradeSkill()
 		if not text or text == "" then return end
 
 		if not GetTradeSearchResult(text, GetTradeSkillSelectionIndex() + 1, GetNumTradeSkills(), 1) then
-			print("没有更多匹配选项。")
+			UIErrorsFrame:AddMessage(DB.InfoColor..L["NoMatchReult"])
 		end
 	end)
 
@@ -246,7 +246,7 @@ function S:EnhancedTradeSkill()
 		if not text or text == "" then return end
 
 		if not GetTradeSearchResult(text, GetTradeSkillSelectionIndex() - 1, 1, -1) then
-			print("没有更多匹配选项。")
+			UIErrorsFrame:AddMessage(DB.InfoColor..L["NoMatchReult"])
 		end
 	end)
 end
@@ -384,7 +384,7 @@ function S:EnhancedCraft()
 		if not text or text == "" then return end
 
 		if not GetCraftSearchResult(text, 1, GetNumCrafts(), 1) then
-			print("你搜索的不存在")
+			UIErrorsFrame:AddMessage(DB.InfoColor..L["InvalidName"])
 		end
 	end)
 
@@ -393,7 +393,7 @@ function S:EnhancedCraft()
 		if not text or text == "" then return end
 
 		if not GetCraftSearchResult(text, GetCraftSelectionIndex()+1, GetNumCrafts(), 1) then
-			print("没有更多匹配选项。")
+			UIErrorsFrame:AddMessage(DB.InfoColor..L["NoMatchReult"])
 		end
 	end)
 
@@ -402,7 +402,7 @@ function S:EnhancedCraft()
 		if not text or text == "" then return end
 
 		if not GetCraftSearchResult(text, GetCraftSelectionIndex()-1, 1, -1) then
-			print("没有更多匹配选项。")
+			UIErrorsFrame:AddMessage(DB.InfoColor..L["NoMatchReult"])
 		end
 	end)
 end

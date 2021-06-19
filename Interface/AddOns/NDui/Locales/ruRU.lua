@@ -697,3 +697,6 @@ L["SaveMailTarget"] = "Save mail recipient" -- need translation
 L["AspectBar"] = "HunterAspectBar" -- need translation
 L["AspectSize"] = "Aspect icon size" -- need translation
 L["VerticleAspect"] = "Verticle AspectBar" -- need translation
+L["TradeSearchTip"] = "|nSearch the recipe name you need, press key ESC to clear input.|n" -- need translation
+L["InvalidName"] = "Invalid content input." -- need translation
+L["NoMatchReult"] = "No more matched results." -- need translation
