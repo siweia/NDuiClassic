@@ -2,6 +2,12 @@ local _, ns = ...
 local B, C, L, DB = unpack(ns)
 local S = B:GetModule("Skins")
 
+local strfind = strfind
+local TradeSkillFrame_SetSelection, TradeSkillFrame_Update = TradeSkillFrame_SetSelection, TradeSkillFrame_Update
+local GetTradeSkillSelectionIndex, GetTradeSkillInfo, GetNumTradeSkills = GetTradeSkillSelectionIndex, GetTradeSkillInfo, GetNumTradeSkills
+local CraftFrame_SetSelection, CraftFrame_Update = CraftFrame_SetSelection, CraftFrame_Update
+local GetCraftSelectionIndex, GetCraftInfo, GetNumCrafts = GetCraftSelectionIndex, GetCraftInfo, GetNumCrafts
+
 local skinIndex = 0
 function S:TradeSkill_OnEvent(addon)
 	if addon == "Blizzard_CraftUI" then
@@ -21,6 +27,74 @@ function S:TradeSkillSkin()
 	if not C.db["Skins"]["TradeSkills"] then return end
 
 	B:RegisterEvent("ADDON_LOADED", S.TradeSkill_OnEvent)
+end
+
+local function createArrowButton(parent, anchor, direction)
+	local button = CreateFrame("Button", nil, parent)
+	button:SetPoint("LEFT", anchor, "RIGHT", 3, 0)
+	B.ReskinArrow(button, direction)
+	button:SetSize(20, 20)
+	return button
+end
+
+local function removeInputText(self)
+	self:SetText("")
+end
+
+local function CreateSearchWidget(parent, anchor)
+	local title = B.CreateFS(parent, 15, SEARCH, "system", "TOPLEFT", 28, -48)
+	local searchBox = B.CreateEditBox(parent, 150, 20)
+	searchBox:SetPoint("TOPLEFT", title, "TOPRIGHT", 3, 3)
+	searchBox:SetPoint("BOTTOMRIGHT", anchor, "BOTTOMRIGHT", 0, -26)
+	searchBox:HookScript("OnEscapePressed", removeInputText)
+
+	local nextButton = createArrowButton(searchBox, searchBox, "down")
+	local prevButton = createArrowButton(searchBox, nextButton, "up")
+
+	return searchBox, nextButton, prevButton
+end
+
+local function updateScrollBarValue(scrollBar, maxSkills, selectSkill)
+	local _, maxValue = scrollBar:GetMinMaxValues()
+	if maxValue == 0 then return end
+	local maxIndex = maxSkills - 22
+	if maxIndex <= 0 then return end
+	local selectIndex = selectSkill - 22
+	if selectIndex < 0 then selectIndex = 0 end
+
+	scrollBar:SetValue(selectIndex / maxIndex * maxValue)
+end
+
+local function updateTradeSelection(i, maxSkills)
+	TradeSkillFrame_SetSelection(i)
+	TradeSkillFrame_Update()
+	updateScrollBarValue(TradeSkillListScrollFrameScrollBar, maxSkills, GetTradeSkillSelectionIndex())
+end
+
+local function GetTradeSearchResult(text, from, to, step)
+	for i = from, to, step do
+		local skillName, skillType = GetTradeSkillInfo(i)
+		if skillType ~= "header" and strfind(skillName, text) then
+			updateTradeSelection(i, GetNumTradeSkills())
+			return true
+		end
+	end
+end
+
+local function updateCraftSelection(i, maxSkills)
+	CraftFrame_SetSelection(i)
+	CraftFrame_Update()
+	updateScrollBarValue(CraftListScrollFrameScrollBar, maxSkills, GetCraftSelectionIndex())
+end
+
+local function GetCraftSearchResult(text, from, to, step)
+	for i = from, to, step do
+		local skillName, skillType = GetCraftInfo(i)
+		if skillType ~= "header" and strfind(skillName, text) then
+			updateCraftSelection(i, GetNumCrafts())
+			return true
+		end
+	end
 end
 
 -- LeatrixPlus
@@ -143,8 +217,38 @@ function S:EnhancedTradeSkill()
 		TradeSkillCancelButton:ClearAllPoints()
 		TradeSkillCancelButton:SetPoint("BOTTOMRIGHT", TradeSkillFrame, "BOTTOMRIGHT", -42, 78)
 		TradeSkillRankFrame:ClearAllPoints()
-		TradeSkillRankFrame:SetPoint("TOPLEFT", TradeSkillFrame, "TOPLEFT", 24, -44)
+		TradeSkillRankFrame:SetPoint("TOPLEFT", TradeSkillFrame, 24, -24)
 	end
+
+	-- Search widgets
+	local searchBox, nextButton, prevButton = CreateSearchWidget(TradeSkillFrame, TradeSkillRankFrame)
+
+	searchBox:HookScript("OnEnterPressed", function(self)
+		local text = self:GetText()
+		if not text or text == "" then return end
+
+		if not GetTradeSearchResult(text, 1, GetNumTradeSkills(), 1) then
+			print("你搜索的不存在")
+		end
+	end)
+
+	nextButton:SetScript("OnClick", function()
+		local text = searchBox:GetText()
+		if not text or text == "" then return end
+
+		if not GetTradeSearchResult(text, GetTradeSkillSelectionIndex() + 1, GetNumTradeSkills(), 1) then
+			print("没有更多匹配选项。")
+		end
+	end)
+
+	prevButton:SetScript("OnClick", function()
+		local text = searchBox:GetText()
+		if not text or text == "" then return end
+
+		if not GetTradeSearchResult(text, GetTradeSkillSelectionIndex() - 1, 1, -1) then
+			print("没有更多匹配选项。")
+		end
+	end)
 end
 
 function S:EnhancedCraft()
@@ -191,7 +295,7 @@ function S:EnhancedCraft()
 
 	-- Move craft frame points (such as Beast Training)
 	CraftFramePointsLabel:ClearAllPoints()
-	CraftFramePointsLabel:SetPoint("TOPLEFT", CraftFrame, "TOPLEFT", 100, -50)
+	CraftFramePointsLabel:SetPoint("TOPLEFT", CraftFrame, "TOPLEFT", 100, -70)
 	CraftFramePointsText:ClearAllPoints()
 	CraftFramePointsText:SetPoint("LEFT", CraftFramePointsLabel, "RIGHT", 3, 0)
 
@@ -270,6 +374,35 @@ function S:EnhancedCraft()
 		CraftCancelButton:ClearAllPoints()
 		CraftCancelButton:SetPoint("BOTTOMRIGHT", CraftFrame, "BOTTOMRIGHT", -42, 78)
 		CraftRankFrame:ClearAllPoints()
-		CraftRankFrame:SetPoint("TOPLEFT", CraftFrame, "TOPLEFT", 24, -44)
+		CraftRankFrame:SetPoint("TOPLEFT", CraftFrame, 24, -24)
 	end
+
+	local searchBox, nextButton, prevButton = CreateSearchWidget(CraftFrame, CraftRankFrame)
+
+	searchBox:HookScript("OnEnterPressed", function(self)
+		local text = self:GetText()
+		if not text or text == "" then return end
+
+		if not GetCraftSearchResult(text, 1, GetNumCrafts(), 1) then
+			print("你搜索的不存在")
+		end
+	end)
+
+	nextButton:SetScript("OnClick", function()
+		local text = searchBox:GetText()
+		if not text or text == "" then return end
+
+		if not GetCraftSearchResult(text, GetCraftSelectionIndex()+1, GetNumCrafts(), 1) then
+			print("没有更多匹配选项。")
+		end
+	end)
+
+	prevButton:SetScript("OnClick", function()
+		local text = searchBox:GetText()
+		if not text or text == "" then return end
+
+		if not GetCraftSearchResult(text, GetCraftSelectionIndex()-1, 1, -1) then
+			print("没有更多匹配选项。")
+		end
+	end)
 end
