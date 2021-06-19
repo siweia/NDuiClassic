@@ -494,6 +494,8 @@ info.onLeave = function()
 end
 
 info.onMouseUp = function(_, btn)
+	if InCombatLockdown() then UIErrorsFrame:AddMessage(DB.InfoColor..ERR_NOT_IN_COMBAT) return end
+
 	if btn ~= "LeftButton" then return end
 	if infoFrame then infoFrame:Hide() end
 	ToggleFrame(FriendsFrame)

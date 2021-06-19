@@ -337,6 +337,8 @@ info.onLeave = function()
 end
 
 info.onMouseUp = function()
+	if InCombatLockdown() then UIErrorsFrame:AddMessage(DB.InfoColor..ERR_NOT_IN_COMBAT) return end
+
 	if not IsInGuild() then return end
 	infoFrame:Hide()
 	ToggleFrame(FriendsFrame)

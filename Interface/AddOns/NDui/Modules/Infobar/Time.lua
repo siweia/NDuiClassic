@@ -97,6 +97,9 @@ info.onLeave = B.HideTooltip
 
 info.onMouseUp = function(_, btn)
 	if btn == "RightButton" then
-		ToggleFrame(TimeManagerFrame)
+		TimeManager_LoadUI()
+		if TimeManager_Toggle then
+			TimeManager_Toggle()
+		end
 	end
 end
