@@ -65,7 +65,7 @@ function M:CreateItemString(frame, strType)
 	if frame.fontCreated then return end
 
 	for index, slot in pairs(inspectSlots) do
-		if index ~= 4 then
+		--if index ~= 4 then	-- need color border for some shirts
 			local slotFrame = _G[strType..slot.."Slot"]
 			slotFrame.iLvlText = B.CreateFS(slotFrame, DB.Font[2]+1)
 			slotFrame.iLvlText:ClearAllPoints()
@@ -78,7 +78,7 @@ function M:CreateItemString(frame, strType)
 				slotFrame["textureIcon"..i] = M:CreateItemTexture(slotFrame, relF, iconX, iconY)
 			end
 			M.CreateColorBorder(slotFrame)
-		end
+		--end
 	end
 
 	frame.fontCreated = true
@@ -157,7 +157,7 @@ function M:ItemLevel_SetupLevel(frame, strType, unit)
 	M:CreateItemString(frame, strType)
 
 	for index, slot in pairs(inspectSlots) do
-		if index ~= 4 then
+		--if index ~= 4 then
 			local slotFrame = _G[strType..slot.."Slot"]
 			slotFrame.iLvlText:SetText("")
 			for i = 1, 5 do
@@ -190,7 +190,7 @@ function M:ItemLevel_SetupLevel(frame, strType, unit)
 					M.QualityUpdater:Show()
 				end
 			end
-		end
+		--end
 	end
 end
 
