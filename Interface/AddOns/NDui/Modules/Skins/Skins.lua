@@ -59,7 +59,6 @@ function S:OnLogin()
 	self:DBMSkin()
 	self:SkadaSkin()
 	self:BigWigsSkin()
-	self:PostalSkin()
 	self:LoadOtherSkins()
 
 	-- Register skin
