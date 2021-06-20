@@ -2,6 +2,7 @@ local _, ns = ...
 local B, C, L, DB = unpack(ns)
 local S = B:GetModule("Skins")
 
+-- Credit: LeatrixPlus
 local strfind = strfind
 local GetTradeSkillSelectionIndex, GetTradeSkillInfo, GetNumTradeSkills = GetTradeSkillSelectionIndex, GetTradeSkillInfo, GetNumTradeSkills
 local GetCraftSelectionIndex, GetCraftInfo, GetNumCrafts = GetCraftSelectionIndex, GetCraftInfo, GetNumCrafts
@@ -113,12 +114,26 @@ function S:GetCraftSearchResult(text, from, to, step)
 	end
 end
 
--- LeatrixPlus
+local SharedWindowData = {
+	area = "override",
+	pushable = 1,
+	xoffset = -16,
+	yoffset = 12,
+	bottomClampOverride = 140 + 12,
+	width = 714,
+	height = 487,
+	whileDead = 1,
+}
+
+local function ResizeHighlightFrame(self)
+	self:SetWidth(290)
+end
+
 function S:EnhancedTradeSkill()
 	if TradeSkillFrame:GetWidth() > 700 then return end
 
 	-- Make the tradeskill frame double-wide
-	UIPanelWindows["TradeSkillFrame"] = {area = "override", pushable = 1, xoffset = -16, yoffset = 12, bottomClampOverride = 140 + 12, width = 714, height = 487, whileDead = 1}
+	UIPanelWindows["TradeSkillFrame"] = SharedWindowData
 
 	-- Size the tradeskill frame
 	TradeSkillFrame:SetWidth(714)
@@ -153,15 +168,12 @@ function S:EnhancedTradeSkill()
 	end
 
 	-- Set highlight bar width when shown
-	hooksecurefunc(TradeSkillHighlightFrame, "Show", function(self)
-		self:SetWidth(290)
-	end)
+	hooksecurefunc(TradeSkillHighlightFrame, "Show", ResizeHighlightFrame)
 
 	-- Move the tradeskill detail frame to the right and stretch it to full height
 	TradeSkillDetailScrollFrame:ClearAllPoints()
 	TradeSkillDetailScrollFrame:SetPoint("TOPLEFT", TradeSkillFrame, "TOPLEFT", 352, -74)
 	TradeSkillDetailScrollFrame:SetSize(298, 336)
-	-- TradeSkillReagent1:SetHeight(500) -- Debug
 
 	-- Hide detail scroll frame textures
 	TradeSkillDetailScrollFrameTop:SetAlpha(0)
@@ -269,7 +281,7 @@ end
 
 function S:EnhancedCraft()
 	-- Make the craft frame double-wide
-	UIPanelWindows["CraftFrame"] = {area = "override", pushable = 1, xoffset = -16, yoffset = 12, bottomClampOverride = 140 + 12, width = 714, height = 487, whileDead = 1}
+	UIPanelWindows["CraftFrame"] = SharedWindowData
 
 	-- Size the craft frame
 	CraftFrame:SetWidth(714)
@@ -316,9 +328,7 @@ function S:EnhancedCraft()
 	CraftFramePointsText:SetPoint("LEFT", CraftFramePointsLabel, "RIGHT", 3, 0)
 
 	-- Set highlight bar width when shown
-	hooksecurefunc(CraftHighlightFrame, "Show", function(self)
-		self:SetWidth(290)
-	end)
+	hooksecurefunc(CraftHighlightFrame, "Show", ResizeHighlightFrame)
 
 	-- Move the craft detail frame to the right and stretch it to full height
 	CraftDetailScrollFrame:ClearAllPoints()
