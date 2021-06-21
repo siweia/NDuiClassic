@@ -211,7 +211,7 @@ local function AnchorInspectRotate()
 	InspectModelFrameRotateRightButton:ClearAllPoints()
 	InspectModelFrameRotateRightButton:SetPoint("BOTTOMLEFT", InspectFrameTab1, "TOPLEFT", 0, 2)
 
-	M.InspectILvl = B.CreateFS(InspectFrame, 15)
+	M.InspectILvl = B.CreateFS(InspectPaperDollFrame, 15)
 	M.InspectILvl:ClearAllPoints()
 	M.InspectILvl:SetPoint("TOP", InspectLevelText, "BOTTOM", 0, -4)
 
