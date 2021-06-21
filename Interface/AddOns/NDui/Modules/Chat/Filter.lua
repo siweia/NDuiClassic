@@ -44,11 +44,12 @@ end
 
 C.BadBoys = {} -- debug
 local chatLines, prevLineID, filterResult = {}, 0, false
+local msgTable = {[1]="", [2]={}, [3]=0}
 
 function module:GetFilterResult(event, msg, name, flag, guid)
 	if name == DB.MyName or (event == "CHAT_MSG_WHISPER" and flag == "GM") or flag == "DEV" then
 		return
-	elseif guid and C.db["Chat"]["AllowFriends"] and (IsGuildMember(guid) or BNGetGameAccountInfoByGUID(guid) or C_FriendList_IsFriend(guid) or IsGUIDInGroup(guid)) then
+	elseif guid and (IsGuildMember(guid) or BNGetGameAccountInfoByGUID(guid) or C_FriendList_IsFriend(guid) or IsGUIDInGroup(guid)) then
 		return
 	end
 
@@ -57,7 +58,7 @@ function module:GetFilterResult(event, msg, name, flag, guid)
 		return true
 	end
 
-	if C.BadBoys[name] and C.BadBoys[name] >= 5 then return true end
+	if C.db["Chat"]["BlockSpammer"] and C.BadBoys[name] and C.BadBoys[name] >= 5 then return true end
 
 	local filterMsg = gsub(msg, "|H.-|h(.-)|h", "%1")
 	filterMsg = gsub(filterMsg, "|c%x%x%x%x%x%x%x%x", "")
@@ -100,7 +101,11 @@ function module:GetFilterResult(event, msg, name, flag, guid)
 	end
 
 	-- ECF Repeat Filter
-	local msgTable = {name, {}, GetTime()}
+	-- reset value
+	msgTable[1] = name
+	wipe(msgTable[2])
+	msgTable[3] = GetTime()
+	-- handle msg
 	if filterMsg == "" then filterMsg = msg end
 	for i = 1, #filterMsg do
 		msgTable[2][i] = filterMsg:byte(i)
