@@ -734,7 +734,7 @@ G.TabList = {
 	L["PlayerPlate"],
 	L["Auras"],
 	L["Raid Tools"],
-	L["ChatFrame"],
+	NewTag..L["ChatFrame"],
 	L["Maps"],
 	L["Skins"],
 	L["Tooltip"],
