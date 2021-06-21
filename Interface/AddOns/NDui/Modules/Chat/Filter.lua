@@ -44,7 +44,6 @@ end
 
 C.BadBoys = {} -- debug
 local chatLines, prevLineID, filterResult = {}, 0, false
-local msgTable = {[1]="", [2]={}, [3]=0}
 
 function module:GetFilterResult(event, msg, name, flag, guid)
 	if name == DB.MyName or (event == "CHAT_MSG_WHISPER" and flag == "GM") or flag == "DEV" then
@@ -101,20 +100,17 @@ function module:GetFilterResult(event, msg, name, flag, guid)
 	end
 
 	-- ECF Repeat Filter
-	-- reset value
-	msgTable[1] = name
-	wipe(msgTable[2])
-	msgTable[3] = GetTime()
-	-- handle msg
+	local msgTable = {name, {}, GetTime()}
 	if filterMsg == "" then filterMsg = msg end
 	for i = 1, #filterMsg do
 		msgTable[2][i] = filterMsg:byte(i)
 	end
+	local chatLines = chatLines
 	local chatLinesSize = #chatLines
 	chatLines[chatLinesSize+1] = msgTable
 	for i = 1, chatLinesSize do
 		local line = chatLines[i]
-		if line[1] == msgTable[1] and ((msgTable[3] - line[3] < .6) or module:CompareStrDiff(line[2], msgTable[2]) <= .1) then
+		if line[1] == msgTable[1] and ((event == "CHAT_MSG_CHANNEL" and msgTable[3] - line[3] < .6) or module:CompareStrDiff(line[2], msgTable[2]) <= .1) then
 			tremove(chatLines, i)
 			return true
 		end
@@ -123,7 +119,7 @@ function module:GetFilterResult(event, msg, name, flag, guid)
 end
 
 function module:UpdateChatFilter(event, msg, author, _, _, _, flag, _, _, _, _, lineID, guid)
-	if lineID == 0 or lineID ~= prevLineID then
+	if lineID ~= prevLineID then
 		prevLineID = lineID
 
 		local name = Ambiguate(author, "none")
