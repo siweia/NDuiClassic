@@ -178,6 +178,32 @@ local function isItemHasLevel(link)
 	end
 end
 
+local socketWatchList = {
+	["BLUE"] = true,
+	["RED"] = true,
+	["YELLOW"] = true,
+	["COGWHEEL"] = true,
+	["HYDRAULIC"] = true,
+	["META"] = true,
+	["PRISMATIC"] = true,
+}
+
+local function GetSocketTexture(socket, count)
+	return strrep("|TInterface\\ItemSocketingFrame\\UI-EmptySocket-"..socket..":0|t", count)
+end
+
+local function isItemHasGem(link)
+	local text = ""
+	local stats = GetItemStats(link)
+	for stat, count in pairs(stats) do
+		local socket = strmatch(stat, "EMPTY_SOCKET_(%S+)")
+		if socket and socketWatchList[socket] then
+			text = text..GetSocketTexture(socket, count)
+		end
+	end
+	return text
+end
+
 local itemCache = {}
 local function convertItemLevel(link)
 	if itemCache[link] then return itemCache[link] end
@@ -186,7 +212,7 @@ local function convertItemLevel(link)
 	if itemLink then
 		local name, itemLevel = isItemHasLevel(itemLink)
 		if name and itemLevel then
-			link = gsub(link, "|h%[(.-)%]|h", "|h["..name.."("..itemLevel..")]|h")
+			link = gsub(link, "|h%[(.-)%]|h", "|h["..name.."("..itemLevel..")]|h"..isItemHasGem(itemLink))
 			itemCache[link] = link
 		end
 	end
