@@ -95,18 +95,13 @@ function TT:AddLineForID(id, linkType, noadd)
 
 		-- iLvl info like retail
 		if name and itemLevel and itemLevel > 1 and iLvlItemClassIDs[classID] then
-			for i = 1, self:NumLines() do
-				local line = _G[self:GetName().."TextLeft"..i]
-				local lineText = line and line:GetText()
-				if strfind(lineText, name) then
-					local nextLine = _G[self:GetName().."TextLeft"..(i+1)]
-					local nextText = nextLine and nextLine:GetText()
-					if nextText then
-						nextLine:SetFormattedText(ITEM_LEVEL_STR, itemLevel, nextText)
-						nextLine:SetJustifyH("LEFT")
-					end
-					break
-				end
+			local tipName = self:GetName()
+			local index = strfind(tipName, "Shopping") and 3 or 2
+			local line = _G[tipName.."TextLeft"..index]
+			local lineText = line and line:GetText()
+			if lineText then
+				line:SetFormattedText(ITEM_LEVEL_STR, itemLevel, lineText)
+				line:SetJustifyH("LEFT")
 			end
 		end
 	end
