@@ -698,3 +698,5 @@ L["VerticleAspect"] = "Verticle AspectBar" -- need translation
 L["TradeSearchTip"] = "|nSearch the recipe name you need, press key ESC to clear input.|n" -- need translation
 L["InvalidName"] = "Invalid content input." -- need translation
 L["NoMatchReult"] = "No more matched results." -- need translation
+L["BlockSpammer"] = "Block spammer message" -- need translation
+L["BlockSpammerTip"] = "|nIf enanbled, repeat messages spammer will be blocked, you won't receive any messages from it any more." -- need translation

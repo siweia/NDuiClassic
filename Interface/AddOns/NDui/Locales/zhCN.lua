@@ -699,4 +699,4 @@ L["TradeSearchTip"] = "|n输入你要搜索的配方名称，按Esc清空输入�
 L["InvalidName"] = "你输入的内容不存在。"
 L["NoMatchReult"] = "没有更多匹配选项。"
 L["BlockSpammer"] = "阻止刷屏者的消息"
-L["BlockSpammerTip"] = "|n启用后，在聊天中重复广告刷屏的玩家会被屏蔽。"
+L["BlockSpammerTip"] = "|n启用后，在聊天中重复广告刷屏的玩家会被屏蔽，你不再收到来自他的任何消息。"
