@@ -280,8 +280,8 @@ end
 local function ToggleMagicRes()
 	if C.db["Misc"]["ExpandStat"] then
 		CharacterResistanceFrame:ClearAllPoints()
-		CharacterResistanceFrame:SetPoint("TOPLEFT", M.StatPanel, 28, -25)
-		CharacterResistanceFrame:SetParent(M.StatPanel)
+		CharacterResistanceFrame:SetPoint("TOPLEFT", M.StatPanel2, 28, -25)
+		CharacterResistanceFrame:SetParent(M.StatPanel2)
 		CharacterModelFrame:SetSize(231, 320) -- size in retail
 
 		for i = 1, 5 do
@@ -308,7 +308,7 @@ local function ToggleMagicRes()
 end
 
 local function UpdateStats()
-	if not (M.StatPanel and M.StatPanel:IsShown()) then return end
+	if not (M.StatPanel2 and M.StatPanel2:IsShown()) then return end
 
 	for _, frame in pairs(categoryFrames) do
 		SetCharacterStats(frame.statsTable, frame.category)
@@ -319,11 +319,11 @@ local function ToggleStatPanel(texture)
 	if C.db["Misc"]["ExpandStat"] then
 		B.SetupArrow(texture, "left")
 		CharacterAttributesFrame:Hide()
-		M.StatPanel:Show()
+		M.StatPanel2:Show()
 	else
 		B.SetupArrow(texture, "right")
 		CharacterAttributesFrame:Show()
-		M.StatPanel:Hide()
+		M.StatPanel2:Hide()
 	end
 	ToggleMagicRes()
 end
@@ -335,10 +335,10 @@ end
 function M:CharacterStatePanel()
 	if not C.db["Skins"]["BlizzardSkins"] then return end   -- disable if skins off, needs review
 
-	local statPanel = CreateFrame("Frame", "NDuiStatePanel", PaperDollFrame)
+	local statPanel = CreateFrame("Frame", "NDuiStatPanel", PaperDollFrame)
 	statPanel:SetSize(200, 422)
 	statPanel:SetPoint("TOPRIGHT", PaperDollFrame, "TOPRIGHT", -35, -16)
-	M.StatPanel = statPanel
+	M.StatPanel2 = statPanel
 
 	local scrollFrame = CreateFrame("ScrollFrame", nil, statPanel, "UIPanelScrollFrameTemplate")
 	scrollFrame:SetPoint("TOPLEFT", 0, -60)
