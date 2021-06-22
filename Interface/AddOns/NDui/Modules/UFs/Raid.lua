@@ -385,34 +385,33 @@ function UF:UpdateBuffIndicator(event, unit)
 			if not name then break end
 			local value = spellList[spellID] or UF.CornerSpellsByName[name]
 			if value and (value[3] or caster == "player" or caster == "pet") then
-				for _, bu in pairs(buttons) do
-					if bu.anchor == value[1] then
-						if C.db["UFs"]["BuffIndicatorType"] == 3 then
-							if duration and duration > 0 then
-								bu.expiration = expiration
-								bu:SetScript("OnUpdate", UF.BuffIndicatorOnUpdate)
-							else
-								bu:SetScript("OnUpdate", nil)
-							end
-							bu.timer:SetTextColor(unpack(value[2]))
+				local bu = buttons[value[1]]
+				if bu then
+					if C.db["UFs"]["BuffIndicatorType"] == 3 then
+						if duration and duration > 0 then
+							bu.expiration = expiration
+							bu:SetScript("OnUpdate", UF.BuffIndicatorOnUpdate)
 						else
-							if duration and duration > 0 then
-								bu.cd:SetCooldown(expiration - duration, duration)
-								bu.cd:Show()
-							else
-								bu.cd:Hide()
-							end
-							if C.db["UFs"]["BuffIndicatorType"] == 1 then
-								bu.icon:SetVertexColor(unpack(value[2]))
-							else
-								bu.icon:SetTexture(texture)
-							end
+							bu:SetScript("OnUpdate", nil)
 						end
-						if count > 1 then bu.count:SetText(count) end
-						bu:Show()
-						found[bu.anchor] = true
-						break
+						bu.timer:SetTextColor(unpack(value[2]))
+					else
+						if duration and duration > 0 then
+							bu.cd:SetCooldown(expiration - duration, duration)
+							bu.cd:Show()
+						else
+							bu.cd:Hide()
+						end
+						if C.db["UFs"]["BuffIndicatorType"] == 1 then
+							bu.icon:SetVertexColor(unpack(value[2]))
+						else
+							bu.icon:SetTexture(texture)
+						end
 					end
+
+					bu.count:SetText(count > 1 and count)
+					bu:Show()
+					found[bu.anchor] = true
 				end
 			end
 		end
@@ -476,7 +475,7 @@ function UF:CreateBuffIndicator(self)
 		bu.count = B.CreateFS(bu, 12, "")
 
 		bu.anchor = anchor
-		tinsert(buttons, bu)
+		buttons[anchor] = bu
 
 		UF:RefreshBuffIndicator(bu)
 	end
