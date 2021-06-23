@@ -19,6 +19,10 @@ tinsert(C.defaultThemes, function()
 		InterfaceOptionsFrameHeader:ClearAllPoints()
 		InterfaceOptionsFrameHeader:SetPoint("TOP", InterfaceOptionsFrame)
 
+		B.Reskin(InterfaceOptionsFrameDefaults)
+		B.Reskin(InterfaceOptionsFrameOkay)
+		B.Reskin(InterfaceOptionsFrameCancel)
+
 		if CompactUnitFrameProfilesGeneralOptionsFrameAutoActivateBG then
 			CompactUnitFrameProfilesGeneralOptionsFrameAutoActivateBG:Hide()
 		end
@@ -29,7 +33,6 @@ tinsert(C.defaultThemes, function()
 		line:SetColorTexture(1, 1, 1, .25)
 
 		local interfacePanels = {
-			"InterfaceOptionsFrame",
 			"InterfaceOptionsControlsPanel",
 			"InterfaceOptionsCombatPanel",
 			"InterfaceOptionsDisplayPanel",
