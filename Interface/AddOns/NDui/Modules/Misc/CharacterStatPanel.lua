@@ -377,6 +377,8 @@ function M:CharacterStatePanel()
 	-- Init
 	BuildListFromValue()
 	BuildValueFromList()
+	CharacterNameFrame:ClearAllPoints()
+	CharacterNameFrame:SetPoint("TOPLEFT", CharacterFrame, 130, -20)
 
 	-- Update data
 	hooksecurefunc("ToggleCharacter", UpdateStats)
