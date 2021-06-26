@@ -406,7 +406,8 @@ function M:QuickMenuButton()
 
 		local unit = dropdownMenu.unit
 		local isPlayer = unit and UnitIsPlayer(unit)
-		if not isPlayer and not dropdownMenu.chatType then
+		local isFriendMenu = dropdownMenu == FriendsDropDown -- menus on FriendsFrame
+		if not isPlayer and not dropdownMenu.chatType and not isFriendMenu then
 			frame:Hide()
 			return
 		end
