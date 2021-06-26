@@ -686,10 +686,6 @@ local function updateErrorBlocker()
 	B:GetModule("Misc"):UpdateErrorBlocker()
 end
 
-local function toggleTaxiDismount()
-	B:GetModule("Misc"):ToggleTaxiDismount()
-end
-
 local function togglePetHappiness()
 	B:GetModule("Misc"):TogglePetHappiness()
 end
@@ -1047,7 +1043,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Misc", "TradeTabs", L["TradeTabs"], nil, nil, nil, L["TradeTabsTips"]},
 		{1, "Misc", "InstantDelete", L["InstantDelete"].."*", true},
 		{1, "Misc", "Focuser", L["Easy Focus"]},
-		{1, "Misc", "AutoDismount", NewTag..L["AutoDismount"].."*", true, nil, toggleTaxiDismount, L["AutoDismountTip"]},
+		{1, "Misc", "AutoDismount", NewTag..L["AutoDismount"].."*", true, nil, nil, L["AutoDismountTip"]},
 		{1, "Misc", "MenuButton", NewTag..L["MenuButton"], nil, nil, nil, L["MenuButtonTip"]},
 		{1, "Misc", "PetHappiness", NewTag..L["PetHappiness"].."*", true, nil, togglePetHappiness},
 	},
