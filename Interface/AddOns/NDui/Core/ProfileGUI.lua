@@ -445,6 +445,8 @@ function G:ExportGUIData()
 				for spellID, data in pairs(value) do
 					if not bloodlustFilter[spellID] and class == DB.MyClass then
 						local anchor, color, filter = unpack(data)
+						anchor = anchor or ""
+						color = color or {"", "", ""}
 						text = text..";ACCOUNT:"..KEY..":"..class..":"..spellID..":"..anchor..":"..color[1]..":"..color[2]..":"..color[3]..":"..tostring(filter or false)
 					end
 				end
@@ -578,7 +580,11 @@ function G:ImportGUIData()
 				b = tonumber(b)
 				filter = toBoolean(filter)
 				if not NDuiADB[value][class] then NDuiADB[value][class] = {} end
-				NDuiADB[value][class][spellID] = {anchor, {r, g, b}, filter}
+				if anchor == "" then
+					NDuiADB[value][class][spellID] = {}
+				else
+					NDuiADB[value][class][spellID] = {anchor, {r, g, b}, filter}
+				end
 			elseif value == "ContactList" then
 				local name, r, g, b = select(3, strsplit(":", option))
 				NDuiADB[value][name] = r..":"..g..":"..b
