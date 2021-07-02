@@ -899,7 +899,7 @@ function G:SetupCastbar(parent)
 		box.__value = value
 		box:SetScript("OnClick", toggleCastbar)
 		box.title = L["Tips"]
-		B.AddTooltip(box, "ANCHOR_RIGHT", "|n施法条开关，无需重载插件。", "info")
+		B.AddTooltip(box, "ANCHOR_RIGHT", L["ToggleCastbarTip"], "info")
 
 		createOptionTitle(parent, title, offset)
 		createOptionSlider(parent, L["Castbar Width"], 100, 800, defaultValue[value][1], 30, offset-60, value.."CBWidth", func)
