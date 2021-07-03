@@ -271,7 +271,7 @@ local function setupClickSets(self)
 				if tonumber(value) then
 					local name = GetSpellInfo(value)
 					self:SetAttribute(format(v[3], "type"), "spell")
-					self:SetAttribute(format(v[3], "spell"), name)
+					self:SetAttribute(format(v[3], "spell"), value)
 				elseif value == "target" then
 					self:SetAttribute(format(v[3], "type"), "target")
 				elseif value == "focus" then
