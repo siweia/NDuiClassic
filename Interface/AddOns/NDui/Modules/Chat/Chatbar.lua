@@ -4,6 +4,12 @@ local module = B:GetModule("Chat")
 
 local C_GuildInfo_CanEditOfficerNote = C_GuildInfo.CanEditOfficerNote
 
+local function chatSwitchTip()
+	if not NDuiADB["Help"]["ChatSwitch"] then
+		B:ShowHelpTip(ChatFrame1.editBox, L["ChatSwitchHelp"], "TOP", 0, 5, nil, "ChatSwitch")
+	end
+end
+
 function module:Chatbar()
 	if not C.db["Chat"]["Chatbar"] then return end
 
@@ -24,7 +30,10 @@ function module:Chatbar()
 		bu:SetHitRectInsets(0, 0, -8, -8)
 		bu:RegisterForClicks("AnyUp")
 		if text then B.AddTooltip(bu, "ANCHOR_TOP", B.HexRGB(r, g, b)..text) end
-		if func then bu:SetScript("OnClick", func) end
+		if func then
+			bu:SetScript("OnClick", func)
+			bu:HookScript("OnClick", chatSwitchTip)
+		end
 
 		tinsert(buttonList, bu)
 		return bu

@@ -701,3 +701,4 @@ L["NoMatchReult"] = "No more matched results." -- need translation
 L["BlockSpammer"] = "Block spammer message" -- need translation
 L["BlockSpammerTip"] = "|nIf enanbled, repeat messages spammer will be blocked, you won't receive any messages from it any more." -- need translation
 L["ToggleCastbarTip"] = "|nOption to toggle castbars, no need to reload UI." -- need translation
+L["ChatSwitchHelp"] = "Press key Tab to switch available channels, it's a bit silly to click on bars all the time." -- need translation
