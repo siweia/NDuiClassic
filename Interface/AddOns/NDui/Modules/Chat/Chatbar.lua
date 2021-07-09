@@ -6,7 +6,7 @@ local C_GuildInfo_CanEditOfficerNote = C_GuildInfo.CanEditOfficerNote
 
 local function chatSwitchTip()
 	if not NDuiADB["Help"]["ChatSwitch"] then
-		B:ShowHelpTip(ChatFrame1.editBox, L["ChatSwitchHelp"], "TOP", 0, 5, nil, "ChatSwitch")
+		B:ShowHelpTip(ChatFrame1.editBox, L["ChatSwitchHelp"], "TOP", 0, 25, nil, "ChatSwitch")
 	end
 end
 
@@ -110,7 +110,7 @@ function module:Chatbar()
 		end
 		checkChannelStatus()
 		B:RegisterEvent("CHANNEL_UI_UPDATE", checkChannelStatus)
-		hooksecurefunc("ChatConfigChannelSettings_UpdateCheckboxes", checkChannelStatus) -- toggle in chatconfig
+		hooksecurefunc("ChatConfig_UpdateCheckboxes", checkChannelStatus) -- toggle in chatconfig
 
 		wcButton:SetScript("OnClick", function(_, btn)
 			if module.InWorldChannel then
