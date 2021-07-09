@@ -7,6 +7,7 @@ local strmatch, strfind, strupper = strmatch, strfind, strupper
 local IsPlayerSpell, GetSpellInfo, GetSpellTexture = IsPlayerSpell, GetSpellInfo, GetSpellTexture
 local CastSpellByID, GetTrackingTexture = CastSpellByID, GetTrackingTexture
 local UIFrameFadeOut, UIFrameFadeIn = UIFrameFadeOut, UIFrameFadeIn
+local GetInstanceInfo, GetDifficultyInfo = GetInstanceInfo, GetDifficultyInfo
 local C_Timer_After = C_Timer.After
 local cr, cg, cb = DB.r, DB.g, DB.b
 
@@ -373,6 +374,43 @@ function module:ShowMinimapHelpInfo()
 	end)
 end
 
+local function UpdateDifficultyFlag()
+	local frame = _G["NDuiMinimapDifficulty"]
+	local _, instanceType, difficulty, _, _, _, _, _, instanceGroupSize = GetInstanceInfo()
+	local _, _, isHeroic, _, displayHeroic = GetDifficultyInfo(difficulty)
+	if instanceType == "raid" or isHeroic or displayHeroic then
+		if isHeroic or displayHeroic then
+			frame.tex:SetTexCoord(0, .25, .0703125, .4296875)
+		else
+			frame.tex:SetTexCoord(0, .25, .5703125, .9296875)
+		end
+		frame.text:SetText(instanceGroupSize)
+		frame:Show()
+	else
+		frame:Hide()
+	end
+end
+
+function module:MinimapDifficulty()
+	local frame = CreateFrame("Frame", "NDuiMinimapDifficulty", Minimap)
+	frame:SetSize(38, 46)
+	frame:SetPoint("TOPRIGHT", Minimap, "TOPRIGHT", 2, 2)
+	frame:SetScale(.6)
+
+	local tex = frame:CreateTexture(nil, "ARTWORK")
+	tex:SetTexture("Interface\\Minimap\\UI-DungeonDifficulty-Button")
+	tex:SetPoint("CENTER")
+	tex:SetSize(64, 46)
+	tex:SetTexCoord(0, .25, .0703125, .4140625)
+	frame.tex = tex
+
+	frame.text = B.CreateFS(frame, 15, "", true, "CENTER", 1, -8)
+
+	B:RegisterEvent("GROUP_ROSTER_UPDATE", UpdateDifficultyFlag)
+	B:RegisterEvent("UPDATE_INSTANCE_INFO", UpdateDifficultyFlag)
+	B:RegisterEvent("INSTANCE_GROUP_SIZE_CHANGED", UpdateDifficultyFlag)
+end
+
 function module:SetupMinimap()
 	-- Shape and Position
 	Minimap:SetFrameLevel(10)
@@ -423,6 +461,7 @@ function module:SetupMinimap()
 	self:WhoPingsMyMap()
 	self:EasyTrackMenu()
 	self:ShowMinimapHelpInfo()
+	self:MinimapDifficulty()
 
 	if LibDBIcon10_TownsfolkTracker then
 		LibDBIcon10_TownsfolkTracker:DisableDrawLayer("OVERLAY")
