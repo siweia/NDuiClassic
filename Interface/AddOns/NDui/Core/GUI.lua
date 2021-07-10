@@ -332,7 +332,7 @@ G.DefaultSettings = {
 		BlockInvite = false,
 		SendActionCD = false,
 		StatOrder = "12345",
-		ExpandStat = true,
+		StatExpand = true,
 		PetHappiness = true,
 	},
 	Tutorial = {

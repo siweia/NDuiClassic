@@ -278,7 +278,7 @@ local function CreateStatHeader(parent, index, category)
 end
 
 local function ToggleMagicRes()
-	if C.db["Misc"]["ExpandStat"] then
+	if C.db["Misc"]["StatExpand"] then
 		CharacterResistanceFrame:ClearAllPoints()
 		CharacterResistanceFrame:SetPoint("TOPLEFT", M.StatPanel2, 28, -25)
 		CharacterResistanceFrame:SetParent(M.StatPanel2)
@@ -316,7 +316,7 @@ local function UpdateStats()
 end
 
 local function ToggleStatPanel(texture)
-	if C.db["Misc"]["ExpandStat"] then
+	if C.db["Misc"]["StatExpand"] then
 		B.SetupArrow(texture, "left")
 		CharacterAttributesFrame:Hide()
 		M.StatPanel2:Show()
@@ -390,8 +390,8 @@ function M:CharacterStatePanel()
 	B.ReskinArrow(bu, "right")
 
 	bu:SetScript("OnClick", function(self)
-		C.db["Misc"]["ExpandStat"] = not C.db["Misc"]["ExpandStat"]
-		ExpandCharacterFrame(C.db["Misc"]["ExpandStat"])
+		C.db["Misc"]["StatExpand"] = not C.db["Misc"]["StatExpand"]
+		ExpandCharacterFrame(C.db["Misc"]["StatExpand"])
 		ToggleStatPanel(self.__texture)
 	end)
 
@@ -402,7 +402,7 @@ function M:CharacterStatePanel()
 	end)
 
 	PaperDollFrame:HookScript("OnShow", function()
-		ExpandCharacterFrame(C.db["Misc"]["ExpandStat"])
+		ExpandCharacterFrame(C.db["Misc"]["StatExpand"])
 	end)
 end
 
