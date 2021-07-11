@@ -210,6 +210,7 @@ G.DefaultSettings = {
 		MapReveal = true,
 		MapRevealGlow = true,
 		MapFader = true,
+		DiffFlag = true,
 	},
 	Nameplate = {
 		Enable = true,
@@ -725,7 +726,7 @@ local HeaderTag = "|cff00cc4c"
 local NewTag = "|TInterface\\OptionsFrame\\UI-OptionsFrame-NewFeatureIcon:0|t"
 
 G.TabList = {
-	NewTag..L["Actionbar"],
+	L["Actionbar"],
 	L["Bags"],
 	NewTag..L["Unitframes"],
 	L["RaidFrame"],
@@ -733,8 +734,8 @@ G.TabList = {
 	L["PlayerPlate"],
 	L["Auras"],
 	L["Raid Tools"],
-	NewTag..L["ChatFrame"],
-	L["Maps"],
+	L["ChatFrame"],
+	NewTag..L["Maps"],
 	L["Skins"],
 	L["Tooltip"],
 	NewTag..L["Misc"],
@@ -768,9 +769,9 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Actionbar", "Macro", L["Actionbar Macro"], true},
 		{1, "Actionbar", "Count", L["Actionbar Item Counts"]},
 		{1, "Actionbar", "Classcolor", L["ClassColor BG"], true},
-		{1, "Actionbar", "EquipColor", NewTag..L["EquipColor"].."*", nil, nil, updateEquipColor},
+		{1, "Actionbar", "EquipColor", L["EquipColor"].."*", nil, nil, updateEquipColor},
 		{},--blank
-		{1, "Actionbar", "AspectBar", NewTag..HeaderTag..L["AspectBar"].."*", nil, nil, toggleAspectBar},
+		{1, "Actionbar", "AspectBar", HeaderTag..L["AspectBar"].."*", nil, nil, toggleAspectBar},
 		{1, "Actionbar", "VerticleAspect", L["VerticleAspect"].."*", nil, nil, updateAspectStatus},
 		{3, "Actionbar", "AspectSize", L["AspectSize"].."*", true, {24, 60, 1}, updateAspectStatus},
 	},
@@ -967,7 +968,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{},--blank
 		{1, "Chat", "EnableFilter", HeaderTag..L["Enable Chatfilter"]},
 		{1, "Chat", "BlockAddonAlert", L["Block Addon Alert"], true},
-		{1, "Chat", "BlockSpammer", NewTag..L["BlockSpammer"].."*", nil, nil, nil, L["BlockSpammerTip"]},
+		{1, "Chat", "BlockSpammer", L["BlockSpammer"].."*", nil, nil, nil, L["BlockSpammerTip"]},
 		{1, "Chat", "BlockStranger", "|cffff0000"..L["BlockStranger"].."*", nil, nil, nil, L["BlockStrangerTip"]},
 		{2, "ACCOUNT", "ChatFilterWhiteList", HeaderTag..L["ChatFilterWhiteList"].."*", true, nil, updateFilterWhiteList, L["ChatFilterWhiteListTip"]},
 		{3, "Chat", "Matches", L["Keyword Match"].."*", nil, {1, 3, 1}},
@@ -984,6 +985,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{3, "Map", "MapScale", L["Map Scale"], true, {.5, 1, .1}},
 		{},--blank
 		{1, "Map", "Clock", L["Minimap Clock"].."*", nil, nil, showMinimapClock},
+		{1, "Map", "DiffFlag", NewTag..L["Minimap DiffFlag"], true, nil, nil, L["DiffFlagTip"]},
 		{1, "Map", "CombatPulse", L["Minimap Pulse"]},
 		{1, "Map", "WhoPings", L["Show WhoPings"], true},
 		{1, "Map", "ShowRecycleBin", L["Show RecycleBin"]},
@@ -1046,9 +1048,9 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Misc", "TradeTabs", L["TradeTabs"], nil, nil, nil, L["TradeTabsTips"]},
 		{1, "Misc", "InstantDelete", L["InstantDelete"].."*", true},
 		{1, "Misc", "Focuser", L["Easy Focus"]},
-		{1, "Misc", "AutoDismount", NewTag..L["AutoDismount"].."*", true, nil, nil, L["AutoDismountTip"]},
+		{1, "Misc", "PetHappiness", L["PetHappiness"].."*", true, nil, togglePetHappiness},
 		{1, "Misc", "MenuButton", NewTag..L["MenuButton"], nil, nil, nil, L["MenuButtonTip"]},
-		{1, "Misc", "PetHappiness", NewTag..L["PetHappiness"].."*", true, nil, togglePetHappiness},
+		{1, "Misc", "AutoDismount", NewTag..L["AutoDismount"].."*", true, nil, nil, L["AutoDismountTip"]},
 	},
 	[14] = {
 		{1, "ACCOUNT", "VersionCheck", L["Version Check"]},

@@ -390,6 +390,7 @@ local function UpdateDifficultyFlag()
 end
 
 function module:MinimapDifficulty()
+	if not C.db["Map"]["DiffFlag"] then return end
 	if _G.MiniMapInstanceDifficulty then return end -- hide flag if blizz makes its own
 
 	local frame = CreateFrame("Frame", "NDuiMinimapDifficulty", Minimap)
