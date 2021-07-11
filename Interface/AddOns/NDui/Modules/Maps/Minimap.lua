@@ -390,6 +390,8 @@ local function UpdateDifficultyFlag()
 end
 
 function module:MinimapDifficulty()
+	if _G.MiniMapInstanceDifficulty then return end -- hide flag if blizz makes its own
+
 	local frame = CreateFrame("Frame", "NDuiMinimapDifficulty", Minimap)
 	frame:SetSize(38, 46)
 	frame:SetPoint("TOPRIGHT", Minimap, "TOPRIGHT", 2, 2)
