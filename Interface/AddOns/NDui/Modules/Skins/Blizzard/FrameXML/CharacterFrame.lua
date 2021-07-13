@@ -203,10 +203,19 @@ tinsert(C.defaultThemes, function()
 
 	-- PVP
 	B.StripTextures(PVPFrame)
+	B.ReskinArrow(PVPFrameToggleButton, "right")
 
 	for i = 1, 3 do
 		local tName = "PVPTeam"..i
 		B.StripTextures(_G[tName])
 		B.CreateBDFrame(_G[tName.."Background"], .25)
+	end
+
+	B.ReskinPortraitFrame(PVPTeamDetails, 12, -12, -5, 5)
+	B.Reskin(PVPTeamDetailsAddTeamMember)
+	B.ReskinArrow(PVPTeamDetailsToggleButton, "right")
+
+	for i = 1, 5 do
+		B.StripTextures(_G["PVPTeamDetailsFrameColumnHeader"..i])
 	end
 end)
