@@ -21,12 +21,22 @@ local function msgChannel()
 	return IsInRaid() and "RAID" or "PARTY"
 end
 
-local infoType = {
-	["SPELL_INTERRUPT"] = L["Interrupt"],
-	["SPELL_STOLEN"] = L["Steal"],
-	["SPELL_DISPEL"] = L["Dispel"],
-	["SPELL_AURA_BROKEN_SPELL"] = L["BrokenSpell"],
-}
+local infoType = {}
+
+function M:InterruptAlert_Toggle()
+	infoType["SPELL_STOLEN"] = C.db["Misc"]["DispellAlert"] and L["Steal"]
+	infoType["SPELL_DISPEL"] = C.db["Misc"]["DispellAlert"] and L["Dispel"]
+	infoType["SPELL_INTERRUPT"] = C.db["Misc"]["InterruptAlert"] and L["Interrupt"]
+	infoType["SPELL_AURA_BROKEN_SPELL"] = C.db["Misc"]["BrokenAlert"] and L["BrokenSpell"]
+end
+
+function M:InterruptAlert_IsEnabled()
+	for _, value in pairs(infoType) do
+		if value then
+			return true
+		end
+	end
+end
 
 local blackList = {
 	[99] = true,		-- 夺魂咆哮
@@ -40,34 +50,39 @@ local blackList = {
 }
 
 function M:IsAllyPet(sourceFlags)
-	if DB:IsMyPet(sourceFlags) or (not C.db["Misc"]["OwnInterrupt"] and (sourceFlags == DB.PartyPetFlags or sourceFlags == DB.RaidPetFlags)) then
+	if DB:IsMyPet(sourceFlags) or sourceFlags == DB.PartyPetFlags or sourceFlags == DB.RaidPetFlags then
 		return true
 	end
 end
 
 function M:InterruptAlert_Update(...)
-	if C.db["Misc"]["AlertInInstance"] and (not IsInInstance()) then return end
-
 	local _, eventType, _, sourceGUID, sourceName, sourceFlags, _, _, destName, _, _, spellID, _, _, extraskillID, _, _, auraType = ...
 	if not sourceGUID or sourceName == destName then return end
 
 	if UnitInRaid(sourceName) or UnitInParty(sourceName) or M:IsAllyPet(sourceFlags) then
 		local infoText = infoType[eventType]
 		if infoText then
+			local sourceSpellID, destSpellID
 			if infoText == L["BrokenSpell"] then
-				if not C.db["Misc"]["BrokenSpell"] then return end
 				if auraType and auraType == AURA_TYPE_BUFF or blackList[spellID] then return end
-				SendChatMessage(format(infoText, sourceName..GetSpellLink(extraskillID), destName..GetSpellLink(spellID)), msgChannel())
+				sourceSpellID, destSpellID = extraskillID, spellID
+			elseif infoText == L["Interrupt"] then
+				if C.db["Misc"]["OwnInterrupt"] and sourceName ~= DB.MyName and not DB:IsMyPet(sourceFlags) then return end
+				sourceSpellID, destSpellID = spellID, extraskillID
 			else
-				if C.db["Misc"]["OwnInterrupt"] and sourceName ~= DB.MyName and not M:IsAllyPet(sourceFlags) then return end
-				SendChatMessage(format(infoText, sourceName..GetSpellLink(spellID), destName..GetSpellLink(extraskillID)), msgChannel())
+				if C.db["Misc"]["OwnDispell"] and sourceName ~= DB.MyName and not DB:IsMyPet(sourceFlags) then return end
+				sourceSpellID, destSpellID = spellID, extraskillID
+			end
+
+			if sourceSpellID and destSpellID then
+				SendChatMessage(format(infoText, sourceName..GetSpellLink(sourceSpellID), destName..GetSpellLink(destSpellID)), msgChannel())
 			end
 		end
 	end
 end
 
 function M:InterruptAlert_CheckGroup()
-	if IsInGroup() then
+	if IsInGroup() and (not C.db["Misc"]["InstAlertOnly"] or (IsInInstance() and not IsPartyLFG())) then
 		B:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED", M.InterruptAlert_Update)
 	else
 		B:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED", M.InterruptAlert_Update)
@@ -75,7 +90,9 @@ function M:InterruptAlert_CheckGroup()
 end
 
 function M:InterruptAlert()
-	if C.db["Misc"]["Interrupt"] then
+	M:InterruptAlert_Toggle()
+
+	if M:InterruptAlert_IsEnabled() then
 		self:InterruptAlert_CheckGroup()
 		B:RegisterEvent("GROUP_LEFT", self.InterruptAlert_CheckGroup)
 		B:RegisterEvent("GROUP_JOINED", self.InterruptAlert_CheckGroup)
