@@ -82,7 +82,7 @@ function M:InterruptAlert_Update(...)
 end
 
 function M:InterruptAlert_CheckGroup()
-	if IsInGroup() and (not C.db["Misc"]["InstAlertOnly"] or (IsInInstance() and not IsPartyLFG())) then
+	if IsInGroup() and (not C.db["Misc"]["InstAlertOnly"] or IsInInstance()) then
 		B:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED", M.InterruptAlert_Update)
 	else
 		B:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED", M.InterruptAlert_Update)
