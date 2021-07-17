@@ -507,6 +507,10 @@ TT:RegisterTooltips("NDui", function()
 		if LootBarToolTip then
 			TT.ReskinTooltip(LootBarToolTip)
 		end
+		-- Altoholic
+		if AltoTooltip then
+			TT.ReskinTooltip(AltoTooltip)
+		end
 	end)
 end)
 
