@@ -405,15 +405,15 @@ function M:QuickMenuButton()
 	hooksecurefunc("ToggleDropDownMenu", function(level, _, dropdownMenu)
 		if level and level > 1 then return end
 
+		local name = dropdownMenu.name
 		local unit = dropdownMenu.unit
 		local isPlayer = unit and UnitIsPlayer(unit)
 		local isFriendMenu = dropdownMenu == FriendsDropDown -- menus on FriendsFrame
-		if not isPlayer and not dropdownMenu.chatType and not isFriendMenu then
+		if not name or (not isPlayer and not dropdownMenu.chatType and not isFriendMenu) then
 			frame:Hide()
 			return
 		end
 
-		local name = dropdownMenu.name
 		local server = dropdownMenu.server
 		if not server then
 			server = DB.MyRealm
