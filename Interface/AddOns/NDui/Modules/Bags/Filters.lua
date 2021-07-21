@@ -34,7 +34,7 @@ end
 local function isItemJunk(item)
 	if not C.db["Bags"]["ItemFilter"] then return end
 	if not C.db["Bags"]["FilterJunk"] then return end
-	return (item.rarity == LE_ITEM_QUALITY_POOR or NDuiADB["CustomJunkList"][item.id]) and item.sellPrice and item.sellPrice > 0
+	return (item.quality == LE_ITEM_QUALITY_POOR or NDuiADB["CustomJunkList"][item.id]) and item.hasPrice
 end
 
 local function isItemAmmo(item)
@@ -47,23 +47,35 @@ local function isItemAmmo(item)
 	end
 end
 
+local iLvlClassIDs = {
+	[LE_ITEM_CLASS_ARMOR] = true,
+	[LE_ITEM_CLASS_WEAPON] = true,
+}
+function module:IsItemHasLevel(item)
+	return iLvlClassIDs[item.classID]
+end
+
 local function isItemEquipment(item)
 	if not C.db["Bags"]["ItemFilter"] then return end
 	if not C.db["Bags"]["FilterEquipment"] then return end
-	return item.level and item.rarity > LE_ITEM_QUALITY_POOR and (item.classID == LE_ITEM_CLASS_WEAPON or item.classID == LE_ITEM_CLASS_ARMOR)
+	return item.link and item.quality > LE_ITEM_QUALITY_COMMON and module:IsItemHasLevel(item)
 end
 
+local consumableIDs = {
+	[LE_ITEM_CLASS_CONSUMABLE] = true,
+	[LE_ITEM_CLASS_ITEM_ENHANCEMENT] = true,
+}
 local function isItemConsumable(item)
 	if not C.db["Bags"]["ItemFilter"] then return end
 	if not C.db["Bags"]["FilterConsumable"] then return end
 	if isCustomFilter(item) == false then return end
-	return isCustomFilter(item) or (item.classID and (item.classID == LE_ITEM_CLASS_CONSUMABLE or item.classID == LE_ITEM_CLASS_ITEM_ENHANCEMENT))
+	return isCustomFilter(item) or consumableIDs[item.classID]
 end
 
 local function isItemLegendary(item)
 	if not C.db["Bags"]["ItemFilter"] then return end
 	if not C.db["Bags"]["FilterLegendary"] then return end
-	return item.rarity == LE_ITEM_QUALITY_LEGENDARY
+	return item.quality == LE_ITEM_QUALITY_LEGENDARY
 end
 
 local function isItemFavourite(item)

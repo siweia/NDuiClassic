@@ -653,12 +653,8 @@ function module:OnLogin()
 		[3] = {0, .5, .8, .25},
 	}
 
-	local iLvlItemClassIDs = {
-		[LE_ITEM_CLASS_ARMOR] = true,
-		[LE_ITEM_CLASS_WEAPON] = true,
-	}	
 	local function isItemNeedsLevel(item)
-		return item.link and item.level and item.rarity > 1 and iLvlItemClassIDs[item.classID]
+		return item.link and item.quality > 1 and module:IsItemHasLevel(item)
 	end
 
 	local function UpdatePawnArrow(self, item)
@@ -679,7 +675,7 @@ function module:OnLogin()
 		end
 
 		if self.JunkIcon then
-			if (MerchantFrame:IsShown() or customJunkEnable) and (item.rarity == LE_ITEM_QUALITY_POOR or NDuiADB["CustomJunkList"][item.id]) and item.sellPrice > 0 then
+			if (MerchantFrame:IsShown() or customJunkEnable) and (item.quality == LE_ITEM_QUALITY_POOR or NDuiADB["CustomJunkList"][item.id]) and item.hasPrice then
 				self.JunkIcon:Show()
 			else
 				self.JunkIcon:Hide()
@@ -692,15 +688,14 @@ function module:OnLogin()
 			self.Favourite:Hide()
 		end
 
+		self.iLvl:SetText("")
 		if C.db["Bags"]["BagsiLvl"] and isItemNeedsLevel(item) then
-			--local level = B.GetItemLevel(item.link, item.bagID, item.slotID) or item.level
 			local level = item.level
-			if level < C.db["Bags"]["iLvlToShow"] then level = "" end
-			local color = DB.QualityColors[item.rarity]
-			self.iLvl:SetText(level)
-			self.iLvl:SetTextColor(color.r, color.g, color.b)
-		else
-			self.iLvl:SetText("")
+			if level and level > C.db["Bags"]["iLvlToShow"] then
+				local color = DB.QualityColors[item.quality]
+				self.iLvl:SetText(level)
+				self.iLvl:SetTextColor(color.r, color.g, color.b)
+			end
 		end
 
 		if self.glowFrame then
@@ -731,8 +726,8 @@ function module:OnLogin()
 	function MyButton:OnUpdateQuest(item)
 		if item.isQuestItem then
 			self:SetBackdropBorderColor(.8, .8, 0)
-		elseif item.rarity and item.rarity > -1 then
-			local color = DB.QualityColors[item.rarity]
+		elseif item.quality and item.quality > -1 then
+			local color = DB.QualityColors[item.quality]
 			self:SetBackdropBorderColor(color.r, color.g, color.b)
 		else
 			self:SetBackdropBorderColor(0, 0, 0)
