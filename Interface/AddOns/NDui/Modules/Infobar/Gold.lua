@@ -8,7 +8,7 @@ local info = module:RegisterInfobar("Gold", C.Infobar.GoldPos)
 local format, pairs, wipe, unpack = string.format, pairs, table.wipe, unpack
 local CLASS_ICON_TCOORDS = CLASS_ICON_TCOORDS
 local GetMoney = GetMoney
-local GetContainerNumSlots, GetContainerItemLink, GetItemInfo, GetContainerItemInfo, UseContainerItem = GetContainerNumSlots, GetContainerItemLink, GetItemInfo, GetContainerItemInfo, UseContainerItem
+local GetContainerNumSlots, GetContainerItemInfo, UseContainerItem = GetContainerNumSlots, GetContainerItemInfo, UseContainerItem
 local C_Timer_After, IsControlKeyDown, IsShiftKeyDown = C_Timer.After, IsControlKeyDown, IsShiftKeyDown
 local CalculateTotalNumberOfFreeBagSlots = CalculateTotalNumberOfFreeBagSlots
 local slotString = L["Bags"]..": %s%d"
@@ -155,17 +155,12 @@ local function startSelling()
 	for bag = 0, 4 do
 		for slot = 1, GetContainerNumSlots(bag) do
 			if stop then return end
-			local link = GetContainerItemLink(bag, slot)
-			if link then
-				local price = select(11, GetItemInfo(link))
-				local _, count, _, quality, _, _, _, _, _, itemID = GetContainerItemInfo(bag, slot)
-				if (quality == 0 or NDuiADB["CustomJunkList"][itemID]) and price > 0 and not cache["b"..bag.."s"..slot] then
-					sellCount = sellCount + price*count
-					cache["b"..bag.."s"..slot] = true
-					UseContainerItem(bag, slot)
-					C_Timer_After(.15, startSelling)
-					return
-				end
+			local _, _, _, quality, _, _, link, _, noValue, itemID = GetContainerItemInfo(bag, slot)
+			if link and not noValue and (quality == 0 or NDuiADB["CustomJunkList"][itemID]) and not cache["b"..bag.."s"..slot] then
+				cache["b"..bag.."s"..slot] = true
+				UseContainerItem(bag, slot)
+				C_Timer_After(.15, startSelling)
+				return
 			end
 		end
 	end
