@@ -1053,9 +1053,9 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Misc", "InstantDelete", L["InstantDelete"].."*", true},
 		{1, "Misc", "Focuser", L["Easy Focus"]},
 		{1, "Misc", "PetHappiness", L["PetHappiness"].."*", true, nil, togglePetHappiness},
-		{1, "Misc", "MenuButton", NewTag..L["MenuButton"], nil, nil, nil, L["MenuButtonTip"]},
-		{1, "Misc", "AutoDismount", NewTag..L["AutoDismount"].."*", true, nil, nil, L["AutoDismountTip"]},
-		{1, "Misc", "BlockInvite", "|cffff0000"..L["BlockInvite"].."*", nil, nil, nil, L["BlockInviteTip"]},
+		{1, "Misc", "MenuButton", L["MenuButton"], nil, nil, nil, L["MenuButtonTip"]},
+		{1, "Misc", "AutoDismount", L["AutoDismount"].."*", true, nil, nil, L["AutoDismountTip"]},
+		{1, "Misc", "BlockInvite", NewTag.."|cffff0000"..L["BlockInvite"].."*", nil, nil, nil, L["BlockInviteTip"]},
 	},
 	[14] = {
 		{1, "ACCOUNT", "VersionCheck", L["Version Check"]},
