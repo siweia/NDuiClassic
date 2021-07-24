@@ -317,6 +317,7 @@ G.DefaultSettings = {
 		OwnDispell = true,
 		InstAlertOnly = true,
 		BrokenAlert = false,
+		LoCAlert = false,
 		FasterLoot = true,
 		AutoQuest = false,
 		QuestNotification = false,
@@ -953,7 +954,8 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Misc", "DispellAlert", HeaderTag..L["DispellAlert"].."*", nil, nil, updateInterruptAlert},
 		{1, "Misc", "OwnDispell", L["OwnDispell"].."*", true},
 		{1, "Misc", "BrokenAlert", HeaderTag..L["BrokenAlert"].."*", nil, nil, updateInterruptAlert, L["BrokenAlertTip"]},
-		{1, "Misc", "InstAlertOnly", L["InstAlertOnly"].."*", true, nil, updateInterruptAlert, L["InstAlertOnlyTip"]},
+		{1, "Misc", "LoCAlert", NewTag..HeaderTag..L["LoCAlert"].."*", true, nil, updateInterruptAlert, L["LoCAlertTip"]},
+		{1, "Misc", "InstAlertOnly", L["InstAlertOnly"].."*", nil, nil, updateInterruptAlert, L["InstAlertOnlyTip"]},
 		--{},--blank
 		--{1, "Misc", "PlacedItemAlert", L["Placed Item Alert"].."*"}, -- fix me: need more data
 	},

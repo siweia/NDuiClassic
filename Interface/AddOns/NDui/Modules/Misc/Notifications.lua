@@ -3,13 +3,15 @@ local B, C, L, DB = unpack(ns)
 local M = B:GetModule("Misc")
 
 local format, gsub, strsplit = string.format, string.gsub, string.split
-local pairs, tonumber = pairs, tonumber
+local pairs, tonumber, select = pairs, tonumber, select
 local IsInRaid, IsInGroup, IsInInstance, IsInGuild = IsInRaid, IsInGroup, IsInInstance, IsInGuild
 local UnitInRaid, UnitInParty, SendChatMessage = UnitInRaid, UnitInParty, SendChatMessage
 local UnitName, Ambiguate, GetTime = UnitName, Ambiguate, GetTime
 local GetSpellLink, GetSpellInfo, GetSpellCooldown = GetSpellLink, GetSpellInfo, GetSpellCooldown
 local GetActionInfo, GetMacroSpell, GetMacroItem = GetActionInfo, GetMacroSpell, GetMacroItem
 local GetItemInfo, GetItemInfoFromHyperlink = GetItemInfo, GetItemInfoFromHyperlink
+local UnitInBattleground, GetMinimapZoneText = UnitInBattleground, GetMinimapZoneText
+local AuraUtil_FindAuraByName = AuraUtil.FindAuraByName
 local C_ChatInfo_SendAddonMessage = C_ChatInfo.SendAddonMessage
 local C_ChatInfo_RegisterAddonMessagePrefix = C_ChatInfo.RegisterAddonMessagePrefix
 
@@ -18,10 +20,11 @@ local C_ChatInfo_RegisterAddonMessagePrefix = C_ChatInfo.RegisterAddonMessagePre
 	打断、偷取及驱散法术时的警报
 ]]
 local function msgChannel()
-	return IsInRaid() and "RAID" or "PARTY"
+	return UnitInBattleground("player") and "INSTANCE_CHAT" or IsInRaid() and "RAID" or "PARTY"
 end
 
 local infoType = {}
+local MyGUID = UnitGUID("player")
 
 function M:InterruptAlert_Toggle()
 	infoType["SPELL_STOLEN"] = C.db["Misc"]["DispellAlert"] and L["Steal"]
@@ -39,14 +42,30 @@ function M:InterruptAlert_IsEnabled()
 end
 
 local blackList = {
-	[99] = true,		-- 夺魂咆哮
-	[122] = true,		-- 冰霜新星
-	[1776] = true,		-- 凿击
-	[1784] = true,		-- 潜行
-	[5246] = true,		-- 破胆怒吼
-	[8122] = true,		-- 心灵尖啸
-	[31661] = true,		-- 龙息术
-	[33395] = true,		-- 冰冻术
+	[(GetSpellInfo(99))] = true,		-- 夺魂咆哮
+	[(GetSpellInfo(122))] = true,		-- 冰霜新星
+	[(GetSpellInfo(1776))] = true,		-- 凿击
+	[(GetSpellInfo(1784))] = true,		-- 潜行
+	[(GetSpellInfo(5246))] = true,		-- 破胆怒吼
+	[(GetSpellInfo(8122))] = true,		-- 心灵尖啸
+	[(GetSpellInfo(31661))] = true,		-- 龙息术
+	[(GetSpellInfo(33395))] = true,		-- 冰冻术
+}
+
+local LOCspells = {
+	[(GetSpellInfo(853))] = true, 		-- 制裁之锤
+	[(GetSpellInfo(1776))] = true, 		-- 凿击
+	[(GetSpellInfo(2070))] = true,		-- 闷棍
+	[(GetSpellInfo(2094))] = true, 		-- 致盲
+	[(GetSpellInfo(5246))] = true, 		-- 破胆怒吼
+	[(GetSpellInfo(5782))] = true, 		-- 恐惧
+	[(GetSpellInfo(8122))] = true, 		-- 心灵尖啸
+	[(GetSpellInfo(14308))] = true,		-- 冰冻陷阱
+	[(GetSpellInfo(15487))] = true,		-- 沉默
+	[(GetSpellInfo(19386))] = true, 	-- 翼龙钉刺
+	[(GetSpellInfo(19503))] = true, 	-- 驱散射击
+	[(GetSpellInfo(20066))] = true, 	-- 忏悔
+	[(GetSpellInfo(34490))] = true, 	-- 沉默射击
 }
 
 function M:IsAllyPet(sourceFlags)
@@ -56,15 +75,20 @@ function M:IsAllyPet(sourceFlags)
 end
 
 function M:InterruptAlert_Update(...)
-	local _, eventType, _, sourceGUID, sourceName, sourceFlags, _, _, destName, _, _, spellID, _, _, extraskillID, _, _, auraType = ...
+	local _, eventType, _, sourceGUID, sourceName, sourceFlags, _, destGUID, destName, _, _, spellID, spellName, _, extraskillID, _, _, auraType = ...
 	if not sourceGUID or sourceName == destName then return end
 
-	if UnitInRaid(sourceName) or UnitInParty(sourceName) or M:IsAllyPet(sourceFlags) then
+	if C.db["Misc"]["LoCAlert"] and eventType == "SPELL_AURA_APPLIED" and LOCspells[spellName] and destGUID == MyGUID then
+		local duration = select(5, AuraUtil_FindAuraByName(spellName, "player", "HARMFUL"))
+		if duration > 1.5 then
+			SendChatMessage(format(L["LossControl"], sourceName..GetSpellLink(spellID), destName, duration, GetMinimapZoneText()), msgChannel())
+		end
+	elseif UnitInRaid(sourceName) or UnitInParty(sourceName) or M:IsAllyPet(sourceFlags) then
 		local infoText = infoType[eventType]
 		if infoText then
 			local sourceSpellID, destSpellID
 			if infoText == L["BrokenSpell"] then
-				if auraType and auraType == AURA_TYPE_BUFF or blackList[spellID] then return end
+				if auraType and auraType == AURA_TYPE_BUFF or blackList[spellName] then return end
 				sourceSpellID, destSpellID = extraskillID, spellID
 			elseif infoText == L["Interrupt"] then
 				if C.db["Misc"]["OwnInterrupt"] and sourceName ~= DB.MyName and not DB:IsMyPet(sourceFlags) then return end
@@ -92,7 +116,7 @@ end
 function M:InterruptAlert()
 	M:InterruptAlert_Toggle()
 
-	if M:InterruptAlert_IsEnabled() then
+	if M:InterruptAlert_IsEnabled() or C.db["Misc"]["LoCAlert"] then
 		self:InterruptAlert_CheckGroup()
 		B:RegisterEvent("GROUP_LEFT", self.InterruptAlert_CheckGroup)
 		B:RegisterEvent("GROUP_JOINED", self.InterruptAlert_CheckGroup)
