@@ -709,3 +709,5 @@ L["ToggleCastbarTip"] = "|nOption to toggle castbars, no need to reload UI." -- 
 L["ChatSwitchHelp"] = "Press key Tab to switch available channels, it's a bit silly to click on bars all the time." -- need translation
 L["Minimap DiffFlag"] = "Show minimap difficulty" -- need translation
 L["DiffFlagTip"] = "|nIf enanbled, show difficulty flag on minimap TOPRIGHT corner." -- need translation
+L["WhisperSound"] = "Whisper message sound" -- need translation
+L["WhisperSoundTip"] = "|nPlay sound when the new whisper message is more than 5 seconds from previous one." -- need translation

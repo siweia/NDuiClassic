@@ -198,6 +198,7 @@ G.DefaultSettings = {
 		BlockStranger = false,
 		BlockSpammer = false,
 		ChatBGType = 2,
+		WhisperSound = true,
 	},
 	Map = {
 		DisableMap = false,
@@ -736,7 +737,7 @@ G.TabList = {
 	L["PlayerPlate"],
 	L["Auras"],
 	NewTag..L["Raid Tools"],
-	L["ChatFrame"],
+	NewTag..L["ChatFrame"],
 	NewTag..L["Maps"],
 	L["Skins"],
 	L["Tooltip"],
@@ -967,6 +968,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Chat", "WhisperColor", L["Differ WhisperColor"].."*", true},
 		{1, "Chat", "ChatItemLevel", L["ShowChatItemLevel"]},
 		{1, "Chat", "Freedom", L["Language Filter"], true},
+		{1, "Chat", "WhisperSound", NewTag..L["WhisperSound"].."*", nil, nil, nil, L["WhisperSoundTip"]},
 		{4, "ACCOUNT", "TimestampFormat", L["TimestampFormat"].."*", nil, {DISABLE, "03:27 PM", "03:27:32 PM", "15:27", "15:27:32"}},
 		{4, "Chat", "ChatBGType", L["ChatBGType"].."*", true, {DISABLE, L["Default Dark"], L["Gradient"]}, toggleChatBackground},
 		{},--blank
