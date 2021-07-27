@@ -45,7 +45,7 @@ cargBags.itemKeys["bindOn"] = function(i)
 	tip:SetOwner(UIParent, "ANCHOR_NONE")
 	tip:SetBagItem(i.bagID, i.slotID)
  
-	for j = 2, 4 do
+	for j = 2, 5 do
 		local line = _G["NDui_ScanTooltipTextLeft"..j]
 		local lineText = line and line:GetText()
 		if not lineText then break end
