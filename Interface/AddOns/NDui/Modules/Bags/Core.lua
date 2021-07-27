@@ -16,31 +16,58 @@ local NUM_BAG_SLOTS = NUM_BAG_SLOTS or 4
 local NUM_BANKBAGSLOTS = NUM_BANKBAGSLOTS or 7
 local ITEM_STARTS_QUEST = ITEM_STARTS_QUEST
 
+local anchorCache = {}
 function module:UpdateAnchors(parent, bags)
 	if not parent:IsShown() then return end
 
-	local anchor = parent
+	wipe(anchorCache)
+
+	local index = 1
+	anchorCache[index] = parent
+
 	for _, bag in ipairs(bags) do
 		if bag:GetHeight() > 45 then
 			bag:Show()
+			index = index + 1
+
+			bag:ClearAllPoints()
+			if (index-1) % 4 == 0 and C.db["Bags"]["MutliRows"] then
+				bag:SetPoint("BOTTOMRIGHT", anchorCache[index-4], "BOTTOMLEFT", -5, 0)
+			else
+				bag:SetPoint("BOTTOMLEFT", anchorCache[index-1], "TOPLEFT", 0, 5)
+			end
+			anchorCache[index] = bag
 		else
 			bag:Hide()
-		end
-		if bag:IsShown() then
-			bag:SetPoint("BOTTOMLEFT", anchor, "TOPLEFT", 0, 5)
-			anchor = bag
 		end
 	end
 end
 
 local function highlightFunction(button, match)
-	button:SetAlpha(match and 1 or .3)
+	button.searchOverlay:SetShown(not match)
 end
+
+local function IsItemMatched(type, text)
+	if not type or type == "" then return end
+	return strmatch(type, text)
+end
+
+local BagSmartFilter = {
+	default = function(item, text)
+		text = strlower(text)
+		if text == "boe" then
+			return item.bindOn == "equip"
+		else
+			return IsItemMatched(item.subType, text) or IsItemMatched(item.equipLoc, text) or IsItemMatched(item.name, text)
+		end
+	end,
+	_default = "default",
+}
 
 function module:CreateInfoFrame()
 	local infoFrame = CreateFrame("Button", nil, self)
 	infoFrame:SetPoint("TOPLEFT", 10, 0)
-	infoFrame:SetSize(160, 32)
+	infoFrame:SetSize(140, 32)
 	local icon = infoFrame:CreateTexture()
 	icon:SetSize(24, 24)
 	icon:SetPoint("LEFT")
@@ -55,10 +82,14 @@ function module:CreateInfoFrame()
 	local bg = B.CreateBDFrame(search, 0, true)
 	bg:SetPoint("TOPLEFT", -5, -5)
 	bg:SetPoint("BOTTOMRIGHT", 5, 5)
+	search.textFilters = BagSmartFilter
 
 	local tag = self:SpawnPlugin("TagDisplay", "[money]", infoFrame)
 	tag:SetFont(unpack(DB.Font))
 	tag:SetPoint("LEFT", icon, "RIGHT", 5, 0)
+
+	infoFrame.title = SEARCH
+	B.AddTooltip(infoFrame, "ANCHOR_TOPLEFT", DB.InfoColor..L["BagSearchTip"])
 end
 
 function module:CreateBagBar(settings, columns)
@@ -682,7 +713,7 @@ function module:OnLogin()
 			end
 		end
 
-		if C.db["Bags"]["FavouriteItems"][item.id] then
+		if C.db["Bags"]["FavouriteItems"][item.id] and not C.db["Bags"]["ItemFilter"] then
 			self.Favourite:Show()
 		else
 			self.Favourite:Hide()
@@ -736,6 +767,11 @@ function module:OnLogin()
 		self.Quest:SetShown(item.isQuestItem and module:IsAcceptableQuestItem(item.link))
 	end
 
+	function module:UpdateAllAnchors()
+		module:UpdateAnchors(f.main, ContainerGroups["Bag"])
+		module:UpdateAnchors(f.bank, ContainerGroups["Bank"])
+	end
+
 	function MyContainer:OnContentsChanged()
 		self:SortButtons("bagSlot")
 
@@ -770,8 +806,7 @@ function module:OnLogin()
 		end
 		self:SetSize(width + xOffset*2, height + offset)
 
-		module:UpdateAnchors(f.main, ContainerGroups["Bag"])
-		module:UpdateAnchors(f.bank, ContainerGroups["Bank"])
+		module:UpdateAllAnchors()
 	end
 
 	function MyContainer:OnCreate(name, settings)

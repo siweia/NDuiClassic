@@ -58,6 +58,7 @@ G.DefaultSettings = {
 		SplitCount = 1,
 		SpecialBagsColor = false,
 		iLvlToShow = 1,
+		MutliRows = false,
 
 		FilterJunk = true,
 		FilterAmmo = true,
@@ -504,6 +505,10 @@ local function updateBagStatus()
 	B:GetModule("Bags"):UpdateAllBags()
 end
 
+local function updateBagAnchor()
+	B:GetModule("Bags"):UpdateAllAnchors()
+end
+
 local function updateActionbarScale()
 	B:GetModule("Actionbar"):UpdateAllScale()
 end
@@ -731,7 +736,7 @@ local NewTag = "|TInterface\\OptionsFrame\\UI-OptionsFrame-NewFeatureIcon:0|t"
 
 G.TabList = {
 	L["Actionbar"],
-	L["Bags"],
+	NewTag..L["Bags"],
 	NewTag..L["Unitframes"],
 	L["RaidFrame"],
 	L["Nameplate"],
@@ -783,11 +788,12 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Bags", "Enable", HeaderTag..L["Enable Bags"]},
 		{},--blank
 		{1, "Bags", "ItemFilter", L["Bags ItemFilter"].."*", nil, setupBagFilter, updateBagStatus},
-		{1, "Bags", "GatherEmpty", L["Bags GatherEmpty"].."*", true, nil, updateBagStatus},
-		{1, "Bags", "SpecialBagsColor", L["SpecialBagsColor"].."*", nil, nil, updateBagStatus, L["SpecialBagsColorTip"]},
-		{1, "Bags", "DeleteButton", L["Bags DeleteButton"], true},
-		{1, "Bags", "BagsiLvl", L["Bags Itemlevel"].."*", nil, nil, updateBagStatus},
+		{1, "Bags", "MutliRows", NewTag..L["MutliRows"].."*", true, nil, updateBagAnchor, L["MutliRowsTip"]},
+		{1, "Bags", "GatherEmpty", L["Bags GatherEmpty"].."*", nil, nil, updateBagStatus},
+		{1, "Bags", "SpecialBagsColor", L["SpecialBagsColor"].."*", true, nil, updateBagStatus, L["SpecialBagsColorTip"]},
+		{1, "Bags", "DeleteButton", L["Bags DeleteButton"]},
 		{1, "Bags", "ShowNewItem", L["Bags ShowNewItem"], true},
+		{1, "Bags", "BagsiLvl", L["Bags Itemlevel"].."*", nil, nil, updateBagStatus},
 		{3, "Bags", "iLvlToShow", L["iLvlToShow"].."*", nil, {1, 500, 1}, nil, L["iLvlToShowTip"]},
 		{4, "Bags", "BagSortMode", L["BagSortMode"].."*", true, {L["Forward"], L["Backward"], DISABLE}, updateBagSortOrder},
 		{},--blank

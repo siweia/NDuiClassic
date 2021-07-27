@@ -311,6 +311,7 @@ function Implementation:GetItemInfo(bagID, slotID, i)
 		i.cdStart, i.cdFinish, i.cdEnable = GetContainerItemCooldown(bagID, slotID)
 		i.name, _, _, i.level, _, i.type, i.subType, _, i.equipLoc, _, _, i.classID, i.subClassID = GetItemInfo(itemLink)
 		i.isQuestItem = i.classID == LE_ITEM_CLASS_QUESTITEM
+		i.equipLoc = _G[i.equipLoc] -- INVTYPE to localized string
 
 		if itemID == PET_CAGE then
 			local petID, petLevel, petName = strmatch(itemLink, "|H%w+:(%d+):(%d+):.-|h%[(.-)%]|h")
