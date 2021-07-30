@@ -240,9 +240,17 @@ end
 local function UpdatePowerColorByIndex(power, index)
 	power.colorPower = (index == 2)
 	power.colorClass = (index ~= 2)
-	power.colorTapping = (index ~= 2)
-	power.colorDisconnected = (index ~= 2)
 	power.colorReaction = (index ~= 2)
+	if power.SetColorTapping then
+		power:SetColorTapping(index ~= 2)
+	else
+		power.colorTapping = (index ~= 2)
+	end
+	if power.SetColorDisconnected then
+		power:SetColorDisconnected(index ~= 2)
+	else
+		power.colorDisconnected = (index ~= 2)
+	end
 	power.colorHappiness = (DB.MyClass == "HUNTER" and index ~= 2)
 end
 
