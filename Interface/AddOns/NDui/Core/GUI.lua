@@ -737,14 +737,14 @@ local NewTag = "|TInterface\\OptionsFrame\\UI-OptionsFrame-NewFeatureIcon:0|t"
 G.TabList = {
 	L["Actionbar"],
 	NewTag..L["Bags"],
-	NewTag..L["Unitframes"],
+	L["Unitframes"],
 	L["RaidFrame"],
 	L["Nameplate"],
 	L["PlayerPlate"],
 	L["Auras"],
 	NewTag..L["Raid Tools"],
 	NewTag..L["ChatFrame"],
-	NewTag..L["Maps"],
+	L["Maps"],
 	L["Skins"],
 	L["Tooltip"],
 	NewTag..L["Misc"],
@@ -805,7 +805,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 	[3] = {
 		{1, "UFs", "Enable", HeaderTag..L["Enable UFs"], nil, setupUnitFrame, nil, L["HideUFWarning"]},
 		{},--blank
-		{1, "UFs", "Castbars", NewTag..HeaderTag..L["UFs Castbar"], nil, setupCastbar},
+		{1, "UFs", "Castbars", HeaderTag..L["UFs Castbar"], nil, setupCastbar},
 		{1, "UFs", "LagString", L["Castbar LagString"], true},
 		{1, "UFs", "SwingBar", L["UFs SwingBar"]},
 		{1, "UFs", "SwingTimer", L["UFs SwingTimer"], true, nil, nil, L["SwingTimer Tip"]},
@@ -999,7 +999,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{3, "Map", "MapScale", L["Map Scale"], true, {.5, 1, .1}},
 		{},--blank
 		{1, "Map", "Clock", L["Minimap Clock"].."*", nil, nil, showMinimapClock},
-		{1, "Map", "DiffFlag", NewTag..L["Minimap DiffFlag"], true, nil, nil, L["DiffFlagTip"]},
+		{1, "Map", "DiffFlag", L["Minimap DiffFlag"], true, nil, nil, L["DiffFlagTip"]},
 		{1, "Map", "CombatPulse", L["Minimap Pulse"]},
 		{1, "Map", "WhoPings", L["Show WhoPings"], true},
 		{1, "Map", "ShowRecycleBin", L["Show RecycleBin"]},
