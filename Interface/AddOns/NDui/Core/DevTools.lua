@@ -18,8 +18,9 @@ local gsub, pairs, tonumber, tostring = gsub, pairs, tonumber, tostring
 local floor, ceil = math.floor, math.ceil
 
 DB.Devs = {
-	["箭灵-法尔班克斯"] = true,
-	["Huniverster-BadgeofJustice"] = true,
+	["箭灵-法尔班克斯"] = true, -- classic
+	["Huniverster-BadgeofJustice"] = true, -- classic beta
+	["Huniverster-ClassicPTRRealm2"] = true, -- classic ptr
 }
 local function isDeveloper()
 	local rawName = gsub(DB.MyFullName, "%s", "")
