@@ -449,7 +449,7 @@ function A:AuraWatch_UpdateAura(unit, index, filter, name, icon, count, duration
 	for KEY, VALUE in pairs(AuraList) do
 		local value = VALUE.List[spellID]
 		if not value then
-			value = auraListByName[KEY] and auraListByName[KEY][spellName]
+			value = auraListByName[KEY] and auraListByName[KEY][name]
 		end
 		if value and value.AuraID and value.UnitID == unit then
 			if value.Combat and not inCombat then return end
