@@ -24,7 +24,7 @@ module:RegisterDebuff(TIER, INSTANCE, 0, 38221) -- 腐蚀印记
 module:RegisterDebuff(TIER, INSTANCE, 0, 38222) -- 腐蚀印记
 module:RegisterDebuff(TIER, INSTANCE, 0, 38230) -- 腐蚀印记
 module:RegisterDebuff(TIER, INSTANCE, 0, 38246) -- 肮脏淤泥
--- -鱼斯拉
+-- 鱼斯拉
 module:RegisterDebuff(TIER, INSTANCE, 0, 37284) -- 沸水
 -- 莫洛格里·踏潮者
 module:RegisterDebuff(TIER, INSTANCE, 0, 38023) -- 水之墓穴
@@ -41,7 +41,7 @@ module:RegisterDebuff(TIER, INSTANCE, 0, 38234) -- 冰霜震击
 module:RegisterDebuff(TIER, INSTANCE, 0, 37640) -- 旋风斩
 module:RegisterDebuff(TIER, INSTANCE, 0, 37675) -- 混乱冲击
 module:RegisterDebuff(TIER, INSTANCE, 0, 37676) -- 诱惑低语
--- 瓦斯琪女王
+-- 瓦丝琪女王
 module:RegisterDebuff(TIER, INSTANCE, 0, 38253) -- 毒液箭（被污染的元素）
 module:RegisterDebuff(TIER, INSTANCE, 0, 38258) -- 恐慌（盘牙精英）
 module:RegisterDebuff(TIER, INSTANCE, 0, 38262) -- 断筋（盘牙精英）
