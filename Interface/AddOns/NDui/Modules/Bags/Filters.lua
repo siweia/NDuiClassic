@@ -5,6 +5,7 @@ local module = B:GetModule("Bags")
 local LE_ITEM_QUALITY_POOR, LE_ITEM_QUALITY_LEGENDARY = LE_ITEM_QUALITY_POOR, LE_ITEM_QUALITY_LEGENDARY
 local LE_ITEM_CLASS_CONSUMABLE, LE_ITEM_CLASS_ITEM_ENHANCEMENT = LE_ITEM_CLASS_CONSUMABLE, LE_ITEM_CLASS_ITEM_ENHANCEMENT
 local LE_ITEM_CLASS_WEAPON, LE_ITEM_CLASS_ARMOR, LE_ITEM_CLASS_TRADEGOODS = LE_ITEM_CLASS_WEAPON, LE_ITEM_CLASS_ARMOR, LE_ITEM_CLASS_TRADEGOODS
+local AmmoEquipLoc = _G.INVTYPE_AMMO
 
 -- Custom filter for consumable
 local CustomFilterList = {
@@ -41,7 +42,7 @@ local function isItemAmmo(item)
 	if not C.db["Bags"]["ItemFilter"] then return end
 	if not C.db["Bags"]["FilterAmmo"] then return end
 	if DB.MyClass == "HUNTER" then
-		return item.equipLoc == "INVTYPE_AMMO" or module.BagsType[item.bagID] == -1
+		return item.equipLoc == AmmoEquipLoc or module.BagsType[item.bagID] == -1
 	elseif DB.MyClass == "WARLOCK" then
 		return item.id == 6265 or module.BagsType[item.bagID] == 1
 	end
