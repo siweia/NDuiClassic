@@ -198,9 +198,56 @@ function S:PostalSkin()
 	Postal_BlackBookButton:SetPoint("LEFT", SendMailNameEditBox, "RIGHT", 2, 0)
 end
 
+local function DecreaseTextSize(parent)
+	for i = 1, parent:GetNumChildren() do
+		local child = select(i, parent:GetChildren())
+		if child.Label then
+			child.Label:SetFontObject(Game13Font)
+
+			if child.Label:GetPoint() == "CENTER" and child.BackgroundTex then
+				child.BackgroundTex:Hide()
+
+				local line = child:CreateTexture(nil, "ARTWORK")
+				line:SetSize(130, C.mult)
+				line:SetPoint("BOTTOM", child.BackgroundTex)
+				line:SetColorTexture(1, 1, 1, .25)
+			end
+		end
+		if child.Value then child.Value:SetFontObject(Game13Font) end
+	end
+end
+
+function S:CharacterStatsTBC()
+	if not IsAddOnLoaded("CharacterStatsTBC") then return end
+
+	for i = 1, CharacterFrame:GetNumChildren() do
+		local child = select(i, CharacterFrame:GetChildren())
+		if child and child.leftStatsDropDown then
+			B.ReskinDropDown(child.leftStatsDropDown)
+			DecreaseTextSize(child.leftStatsDropDown)
+		end
+		if child and child.rightStatsDropDown then
+			B.ReskinDropDown(child.rightStatsDropDown)
+			DecreaseTextSize(child.rightStatsDropDown)
+		end
+	end
+
+	if CSC_SideStatsFrame then
+		B.StripTextures(CSC_SideStatsFrame)
+		B.SetBD(CSC_SideStatsFrame)
+		B.ReskinClose(CSC_SideStatsFrame.CloseButton)
+		B.ReskinScroll(CSC_SideStatsFrame.ScrollFrame.ScrollBar)
+
+		CSC_SideStatsFrame:SetHeight(421)
+		CSC_SideStatsFrame:SetPoint("LEFT", PaperDollItemsFrame, "RIGHT", -32, 29)
+		DecreaseTextSize(CSC_SideStatsFrame.ScrollChild)
+	end
+end
+
 function S:LoadOtherSkins()
 	self:WhatsTraining()
 	self:RecountSkin()
 	self:BindPad()
 	self:PostalSkin()
+	self:CharacterStatsTBC()
 end
