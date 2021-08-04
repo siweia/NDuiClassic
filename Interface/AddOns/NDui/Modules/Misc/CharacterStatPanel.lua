@@ -6,6 +6,8 @@ local wipe, gmatch, tinsert, ipairs, pairs = wipe, gmatch, tinsert, ipairs, pair
 local tonumber, tostring, max = tonumber, tostring, max
 local cr, cg, cb = DB.r, DB.g, DB.b
 
+local hasOtherAddon
+
 local function SetCharacterStats(statsTable, category)
 	if category == "PLAYERSTAT_BASE_STATS" then
 		PaperDollFrame_SetStat(statsTable[1], 1)
@@ -282,7 +284,7 @@ local function ToggleMagicRes()
 		CharacterResistanceFrame:ClearAllPoints()
 		CharacterResistanceFrame:SetPoint("TOPLEFT", M.StatPanel2, 28, -25)
 		CharacterResistanceFrame:SetParent(M.StatPanel2)
-		CharacterModelFrame:SetSize(231, 320) -- size in retail
+		if not hasOtherAddon then CharacterModelFrame:SetSize(231, 320) end -- size in retail
 
 		for i = 1, 5 do
 			local bu = _G["MagicResFrame"..i]
@@ -322,7 +324,7 @@ local function ToggleStatPanel(texture)
 		M.StatPanel2:Show()
 	else
 		B.SetupArrow(texture, "right")
-		CharacterAttributesFrame:Show()
+		CharacterAttributesFrame:SetShown(not hasOtherAddon)
 		M.StatPanel2:Hide()
 	end
 	ToggleMagicRes()
@@ -334,6 +336,8 @@ end
 
 function M:CharacterStatePanel()
 	if not C.db["Skins"]["BlizzardSkins"] then return end   -- disable if skins off, needs review
+
+	hasOtherAddon = IsAddOnLoaded("CharacterStatsTBC")
 
 	local statPanel = CreateFrame("Frame", "NDuiStatPanel", PaperDollFrame)
 	statPanel:SetSize(200, 422)
