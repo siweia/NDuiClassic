@@ -232,15 +232,16 @@ function S:CharacterStatsTBC()
 		end
 	end
 
-	if CSC_SideStatsFrame then
-		B.StripTextures(CSC_SideStatsFrame)
-		B.SetBD(CSC_SideStatsFrame)
-		B.ReskinClose(CSC_SideStatsFrame.CloseButton)
-		B.ReskinScroll(CSC_SideStatsFrame.ScrollFrame.ScrollBar)
+	local sideStatsFrame = _G.CSC_SideStatsFrame
+	if sideStatsFrame then
+		B.StripTextures(sideStatsFrame)
+		B.SetBD(sideStatsFrame)
+		B.ReskinClose(sideStatsFrame.CloseButton)
+		B.ReskinScroll(sideStatsFrame.ScrollFrame.ScrollBar)
 
-		CSC_SideStatsFrame:SetHeight(421)
-		CSC_SideStatsFrame:SetPoint("LEFT", PaperDollItemsFrame, "RIGHT", -32, 29)
-		DecreaseTextSize(CSC_SideStatsFrame.ScrollChild)
+		sideStatsFrame:SetHeight(421)
+		sideStatsFrame:SetPoint("LEFT", PaperDollItemsFrame, "RIGHT", -32, 29)
+		DecreaseTextSize(sideStatsFrame.ScrollChild)
 	end
 end
 
