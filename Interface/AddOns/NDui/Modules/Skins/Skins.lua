@@ -8,31 +8,54 @@ local LE_ITEM_QUALITY_COMMON, BAG_ITEM_QUALITY_COLORS = LE_ITEM_QUALITY_COMMON, 
 
 C.defaultThemes = {}
 C.themes = {}
+C.otherSkins = {}
 
-function S:LoadDefaultSkins()
-	if IsAddOnLoaded("AuroraClassic") or IsAddOnLoaded("Aurora") then return end
+function S:RegisterSkin(addonName, func)
+	C.otherSkins[addonName] = func
+end
 
-	-- Reskin Blizzard UIs
-	if not C.db["Skins"]["BlizzardSkins"] then return end
+function S:LoadSkins(list)
+	if not next(list) then return end
 
-	for _, func in pairs(C.defaultThemes) do
-		func()
-	end
-	wipe(C.defaultThemes)
-
-	for addonName, func in pairs(C.themes) do
+	for addonName, func in pairs(list) do
 		local isLoaded, isFinished = IsAddOnLoaded(addonName)
 		if isLoaded and isFinished then
 			func()
-			C.themes[addonName] = nil
+			list[addonName] = nil
 		end
 	end
+end
+
+function S:LoadAddOnSkins()
+	if IsAddOnLoaded("AuroraClassic") or IsAddOnLoaded("Aurora") then return end
+
+	-- Reskin Blizzard UIs
+	if not C.db["Skins"]["BlizzardSkins"] then
+		wipe(C.defaultThemes)
+		wipe(C.themes)
+	end
+
+	if next(C.defaultThemes) then
+		for _, func in pairs(C.defaultThemes) do
+			func()
+		end
+		wipe(C.defaultThemes)
+	end
+
+	S:LoadSkins(C.themes) -- blizzard ui
+	S:LoadSkins(C.otherSkins) -- other addons
 
 	B:RegisterEvent("ADDON_LOADED", function(_, addonName)
 		local func = C.themes[addonName]
 		if func then
 			func()
 			C.themes[addonName] = nil
+		end
+
+		local func = C.otherSkins[addonName]
+		if func then
+			func()
+			C.otherSkins[addonName] = nil
 		end
 	end)
 
@@ -51,7 +74,7 @@ function S:LoadDefaultSkins()
 end
 
 function S:OnLogin()
-	self:LoadDefaultSkins()
+	self:LoadAddOnSkins()
 
 	-- Add Skins
 	self:QuestTracker()
@@ -144,24 +167,4 @@ function S:RefreshToggleDirection()
 	for _, frame in pairs(toggleFrames) do
 		S:SetToggleDirection(frame)
 	end
-end
-
-function S:LoadWithAddOn(addonName, value, func)
-	local function loadFunc(event, addon)
-		if not C.db["Skins"][value] then return end
-
-		if event == "PLAYER_ENTERING_WORLD" then
-			B:UnregisterEvent(event, loadFunc)
-			if IsAddOnLoaded(addonName) then
-				func()
-				B:UnregisterEvent("ADDON_LOADED", loadFunc)
-			end
-		elseif event == "ADDON_LOADED" and addon == addonName then
-			func()
-			B:UnregisterEvent(event, loadFunc)
-		end
-	end
-
-	B:RegisterEvent("PLAYER_ENTERING_WORLD", loadFunc)
-	B:RegisterEvent("ADDON_LOADED", loadFunc)
 end
