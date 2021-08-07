@@ -77,13 +77,14 @@ local styleData = {
 	GetStyleName = function() return "NDui" end,
 }
 
-local function registerStyle()
+function S:RegisterBWStyle()
+	if not C.db["Skins"]["Bigwigs"] then return end
 	if not BigWigsAPI then return end
 
 	BigWigsAPI:RegisterBarStyle("NDui", styleData)
 	-- Force to use NDui style
 	local pending = true
-	hooksecurefunc(BigWigsAPI, "GetBarStyle", function(_, key)
+	hooksecurefunc(BigWigsAPI, "GetBarStyle", function()
 		if pending then
 			BigWigsAPI.GetBarStyle = function() return styleData end
 			pending = nil
@@ -92,8 +93,20 @@ local function registerStyle()
 end
 
 function S:BigWigsSkin()
-	if not C.db["Skins"]["Bigwigs"] or not IsAddOnLoaded("BigWigs") then return end
-	if not BigWigsClassicDB then return end
+	if not C.db["Skins"]["Bigwigs"] then return end
+--[[
+	if BigWigsLoader and BigWigsLoader.RegisterMessage then
+		BigWigsLoader.RegisterMessage(_, "BigWigs_FrameCreated", function(_, frame, name)
+			if name == "QueueTimer" and not frame.styled then
+				B.StripTextures(frame)
+				frame:SetStatusBarTexture(DB.normTex)
+				B.SetBD(frame)
 
-	S:RegisterSkin("BigWigs_Plugins", registerStyle)
+				frame.styled = true
+			end
+		end)
+	end]]
 end
+
+S:RegisterSkin("BigWigs", S.BigWigsSkin)
+S:RegisterSkin("BigWigs_Plugins", S.RegisterBWStyle)

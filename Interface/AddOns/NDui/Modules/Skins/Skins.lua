@@ -81,7 +81,6 @@ function S:OnLogin()
 	self:TradeSkillSkin()
 	self:DBMSkin()
 	self:SkadaSkin()
-	self:BigWigsSkin()
 	self:LoadOtherSkins()
 
 	-- Register skin
