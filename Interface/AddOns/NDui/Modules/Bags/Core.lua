@@ -592,7 +592,6 @@ function module:OnLogin()
 	local bagsWidth = C.db["Bags"]["BagsWidth"]
 	local bankWidth = C.db["Bags"]["BankWidth"]
 	local iconSize = C.db["Bags"]["IconSize"]
-	local deleteButton = C.db["Bags"]["DeleteButton"]
 	local showNewItem = C.db["Bags"]["ShowNewItem"]
 	local hasPawn = IsAddOnLoaded("Pawn")
 
