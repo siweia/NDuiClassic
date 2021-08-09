@@ -127,7 +127,7 @@ function module:CreateCollapseArrow()
 
 	local tag = self:SpawnPlugin("TagDisplay", "[money]", self)
 	tag:SetFont(unpack(DB.Font))
-	tag:SetPoint("RIGHT", bu, "LEFT", -3, 0)
+	tag:SetPoint("RIGHT", bu, "LEFT", -12, 0)
 	bu.tag = tag
 
 	bu.__owner = self
