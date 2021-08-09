@@ -59,6 +59,7 @@ G.DefaultSettings = {
 		SpecialBagsColor = false,
 		iLvlToShow = 1,
 		MultiRows = false,
+		HideWidgets = true,
 
 		FilterJunk = true,
 		FilterAmmo = true,
