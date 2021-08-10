@@ -56,9 +56,9 @@ function A:Reminder_Update(cfg)
 	frame:Hide()
 	if isPlayerSpell and (isInCombat or isInInst or isInPVP) and not UnitIsDeadOrGhost("player") then
 		for i = 1, 32 do
-			local name = UnitBuff("player", i)
+			local name, _, _, _, _, _, caster = UnitBuff("player", i)
 			if not name then break end
-			if name and cfg.spells[name] then
+			if name and (cfg.spells[name] or cfg.gemini[name] and caster == "player") then
 				frame:Hide()
 				return
 			end
