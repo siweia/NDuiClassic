@@ -58,7 +58,7 @@ function A:Reminder_Update(cfg)
 		for i = 1, 32 do
 			local name, _, _, _, _, _, caster = UnitBuff("player", i)
 			if not name then break end
-			if name and (cfg.spells[name] or cfg.gemini[name] and caster == "player") then
+			if name and (cfg.spells[name] or cfg.gemini and cfg.gemini[name] and caster == "player") then
 				frame:Hide()
 				return
 			end
