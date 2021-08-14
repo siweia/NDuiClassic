@@ -1,7 +1,7 @@
 if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then return end
 
 local major = "LibHealComm-4.0"
-local minor = 94
+local minor = 95
 assert(LibStub, format("%s requires LibStub.", major))
 
 local HealComm = LibStub:NewLibrary(major, minor)
@@ -75,7 +75,7 @@ local COMBATLOG_OBJECT_AFFILIATION_MINE = COMBATLOG_OBJECT_AFFILIATION_MINE
 local isTBC = WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC
 
 local spellRankTableData = {
-	[1] = { 774, 8936, 5185, 740, 635, 19750, 139, 2060, 596, 2061, 2054, 2050, 1064, 331, 8004, 136, 755, 689, 746, 33763, 32546 },
+	[1] = { 774, 8936, 5185, 740, 635, 19750, 139, 2060, 596, 2061, 2054, 2050, 1064, 331, 8004, 136, 755, 689, 746, 33763, 32546, 37563 },
 	[2] = { 1058, 8938, 5186, 8918, 639, 19939, 6074, 10963, 996, 9472, 2055, 2052, 10622, 332, 8008, 3111, 3698, 699, 1159 },
 	[3] = { 1430, 8939, 5187, 9862, 647, 19940, 6075, 10964, 10960, 9473, 6063, 2053, 10623, 547, 8010, 3661, 3699, 709, 3267 },
 	[4] = { 2090, 8940, 5188, 9863, 1026, 19941, 6076, 10965, 10961, 9474, 6064, 913, 10466, 3662, 3700, 7651, 3268, 25422 },
@@ -2349,7 +2349,7 @@ function HealComm:UNIT_SPELLCAST_START(unit, cast, spellID)
 
 	local castGUID = castGUIDs[spellID]
 	local castUnit = guidToUnit[castGUID]
-	if isTBC and not castUnit and spellID == 32546 and castGUID == UnitGUID("target") then
+	if isTBC and not castUnit and spellID == 32546 and castGUID == UnitGUID("target") then -- Binding Heal
 		castGUID = UnitGUID("player")
 		castUnit = "player"
 	end
@@ -2376,6 +2376,16 @@ end
 HealComm.UNIT_SPELLCAST_CHANNEL_START = HealComm.UNIT_SPELLCAST_START
 
 local spellCastSucceeded = {}
+local function hasNS()
+	local i=1
+	repeat
+		local spellID = select(10, UnitBuff("player", i))
+		if spellID == 17116 or spellID == 16188 then
+			return true
+		end
+		i = i + 1
+	until not spellID
+end
 
 function HealComm:UNIT_SPELLCAST_SUCCEEDED(unit, cast, spellID)
 	if( unit ~= "player") then return end
@@ -2385,12 +2395,12 @@ function HealComm:UNIT_SPELLCAST_SUCCEEDED(unit, cast, spellID)
 		hasDivineFavor = true
 	end
 
-	if spellData[spellName] and not spellData[spellName]._isChanneled then
+	if spellData[spellName] and not spellData[spellName]._isChanneled and not hasNS() then
 		hasDivineFavor = nil
 		parseHealEnd(playerGUID, nil, "name", spellID, false)
 		sendMessage(format("S::%d:0", spellID or 0))
 		spellCastSucceeded[spellID] = true
-	elseif spellID == 20473 or spellID == 20929 or spellID == 20930 then -- Holy Shock
+	elseif spellName == GetSpellInfo(20473) then -- Holy Shock
 		hasDivineFavor = nil
 	end
 end
@@ -2636,6 +2646,8 @@ function HealComm:UNIT_PET(unit)
 	if activeGUID and activeGUID ~= petGUID then
 		removeAllRecords(activeGUID)
 
+		rawset(self.compressGUID, activeGUID, nil)
+		rawset(self.decompressGUID, "p-"..strsub(UnitGUID(unit),8), nil)
 		guidToUnit[activeGUID] = nil
 		guidToGroup[activeGUID] = nil
 		activePets[unit] = nil
