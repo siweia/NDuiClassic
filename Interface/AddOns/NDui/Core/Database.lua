@@ -213,11 +213,21 @@ DB.ReminderBuffs = {
 	WARRIOR = {
 		{	spells = {	-- 战斗怒吼
 				[6673] = true,
-				[25289] = true,
 			},
 			depends = {6673, 5242, 6192, 11549, 11550, 11551, 25289, 2048},
 			gemini = {
 				[GetSpellInfo(469)] = true, -- 命令怒吼
+			},
+			combat = true,
+			instance = true,
+			pvp = true,
+		},
+		{	spells = {	-- 命令怒吼
+				[469] = true,
+			},
+			depend = 469,
+			gemini = {
+				[GetSpellInfo(6673)] = true, -- 战斗怒吼
 			},
 			combat = true,
 			instance = true,
