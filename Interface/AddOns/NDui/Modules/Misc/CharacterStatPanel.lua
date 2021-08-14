@@ -152,7 +152,13 @@ local function CreateHeaderArrow(parent, direct, func)
 
 	local bu = CreateFrame("Button", nil, parent)
 	bu:SetPoint(direct, parent.header, xOffset, 0)
-	B.ReskinArrow(bu, arrowDirec)
+	local tex = bu:CreateTexture()
+	tex:SetAllPoints()
+	B.SetupArrow(tex, arrowDirec)
+	bu.__texture = tex
+	bu:SetScript("OnEnter", B.Texture_OnEnter)
+	bu:SetScript("OnLeave", B.Texture_OnLeave)
+
 	bu:SetSize(18, 18)
 	bu.__owner = parent
 	bu:SetScript("OnClick", func)
