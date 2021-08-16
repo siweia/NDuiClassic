@@ -14,6 +14,10 @@ local INTERRUPTED = INTERRUPTED
 local _QuestieTooltips, _QuestiePlayer, _QuestieQuest
 
 -- Init
+function UF:ClampTargetPlate()
+	SetCVar("ClampTargetNameplateToScreen", C.db["Nameplate"]["ClampTarget"] and 1 or 0)
+end
+
 function UF:UpdatePlateRange()
 	SetCVar("nameplateMaxDistance", C.db["Nameplate"]["PlateRange"])
 end
@@ -34,6 +38,7 @@ function UF:UpdatePlateSpacing()
 end
 
 function UF:SetupCVars()
+	UF:ClampTargetPlate()
 	UF:UpdatePlateRange()
 	SetCVar("nameplateOverlapH", .8)
 	UF:UpdatePlateSpacing()
