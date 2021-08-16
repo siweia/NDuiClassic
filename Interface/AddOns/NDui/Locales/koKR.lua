@@ -716,3 +716,5 @@ L["WhisperSoundTip"] = "|nPlay sound when the new whisper message is more than 5
 L["MultiRows"] = "Anchor by rows"
 L["MultiRowsTip"] = "|nIf item filter enabled, every four bags will anchor into one row."
 L["BagSearchTip"] = "|nClick to search your bag items.|nYou can type in item names or item equip locations.|n'boe' for items that bind on equip and 'quest' for quest items."
+L["ClampTargetPlate"] = "Clamp Target Nameplate"
+L["ClampTargetPlateTip"] = "|nIf checked, the target namplate will always stay inside screen."

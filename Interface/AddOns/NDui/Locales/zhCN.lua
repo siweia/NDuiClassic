@@ -716,3 +716,5 @@ L["WhisperSoundTip"] = "|n启用后，当距离上一条密语超过5秒时，�
 L["MultiRows"] = "背包分组排序"
 L["MultiRowsTip"] = "|n启用后，当你开启背包分类存放时，将以4组为列排序，以适应多过滤启用的情况。"
 L["BagSearchTip"] = "|n点击对背包进行搜索。|n你可以搜索物品的名字或者装备的部位。|n输入boe可以直接搜索装绑，输入任务则搜索任务道具。"
+L["ClampTargetPlate"] = "锁定目标姓名板"
+L["ClampTargetPlateTip"] = "|n勾选后，当前选中的目标姓名板将始终停留在屏幕范围内。"
