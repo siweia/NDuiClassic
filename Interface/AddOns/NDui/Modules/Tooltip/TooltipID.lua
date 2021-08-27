@@ -50,7 +50,7 @@ function TT:UpdateItemSellPrice()
 					if object == "Button" then -- ContainerFrameItem, QuestInfoItem, PaperDollItem
 						count = frame.count
 					elseif object == "CheckButton" then -- MailItemButton or ActionButton
-						count = frame.count or frame.Count:GetText()
+						count = frame.count or (frame.Count and frame.Count:GetText())
 					end
 
 					local cost = (tonumber(count) or 1) * price
