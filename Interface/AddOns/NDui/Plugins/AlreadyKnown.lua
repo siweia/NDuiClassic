@@ -187,7 +187,7 @@ if not (isBlizzard_GuildBankUILoaded and isBlizzard_AuctionUILoaded) then
 	local function OnEvent(event, addonName)
 		if addonName == "Blizzard_GuildBankUI" then
 			isBlizzard_GuildBankUILoaded = true
-			hooksecurefunc("GuildBankFrame_Update", GuildBankFrame_Update)
+			--hooksecurefunc("GuildBankFrame_Update", GuildBankFrame_Update) -- needs review
 		elseif addonName == "Blizzard_AuctionUI" then
 			isBlizzard_AuctionUILoaded = true
 			hooksecurefunc("AuctionFrameBrowse_Update", AuctionFrameBrowse_Update)
