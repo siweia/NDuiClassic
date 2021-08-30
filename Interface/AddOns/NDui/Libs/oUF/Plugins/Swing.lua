@@ -5,13 +5,11 @@
 local _, ns = ...
 local oUF = ns.oUF
 
-local strfind = string.find
+local strfind, select = strfind, select
 local GetTime = GetTime
 local GetInventoryItemID = GetInventoryItemID
 local UnitAttackSpeed = UnitAttackSpeed
 local UnitRangedDamage = UnitRangedDamage
-local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
-local UnitGUID = UnitGUID
 local IsPlayerMoving = IsPlayerMoving
 local UnitCastingInfo = UnitCastingInfo
 
@@ -19,6 +17,7 @@ local meleeing, rangeing, lasthit
 local MainhandID = GetInventoryItemID("player", 16)
 local OffhandID = GetInventoryItemID("player", 17)
 local RangedID = GetInventoryItemID("player", 18)
+local playerGUID = UnitGUID("player")
 local AUTO_CAST_TIME = .65
 local delayTime = 0
 
@@ -282,10 +281,8 @@ local function Ranged(self, _, unit, _, spellID)
 	swingOH:SetScript("OnUpdate", nil)
 end
 
-local function Melee(self)
-	local _, subevent, _, GUID = CombatLogGetCurrentEventInfo()
-	if GUID ~= UnitGUID("player") then return end
-	if not strfind(subevent, "SWING") then return end
+local function Melee(self, event, _, sourceGUID)
+	if sourceGUID ~= playerGUID then return end
 
 	local bar = self.Swing
 	local swing = bar.Twohand
@@ -339,12 +336,11 @@ local function Melee(self)
 	lasthit = now
 end
 
-local function ParryHaste(self)
-	local _, subevent, _, _, _, _, tarGUID, _, missType = CombatLogGetCurrentEventInfo()
+local function ParryHaste(self, ...)
+	local destGUID, _, _, _, missType = select(7, ...)
 
-	if tarGUID ~= UnitGUID("player") then return end
+	if destGUID ~= playerGUID then return end
 	if not meleeing then return end
-	if not strfind(subevent, "MISSED") then return end
 	if missType ~= "PARRY" then return end
 
 	local bar = self.Swing
@@ -495,8 +491,9 @@ local function Enable(self, unit)
 			self:RegisterEvent("UNIT_RANGEDDAMAGE", RangedChange)
 		end
 		if not bar.disableMelee then
-			self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED", Melee, true)
-			self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED", ParryHaste, true)
+			self:RegisterCombatEvent("SWING_DAMAGE", Melee)
+			self:RegisterCombatEvent("SWING_MISSED", Melee)
+			self:RegisterCombatEvent("SWING_MISSED", ParryHaste)
 			self:RegisterEvent("UNIT_ATTACK_SPEED", MeleeChange)
 		end
 		self:RegisterEvent("PLAYER_REGEN_ENABLED", Ooc, true)
@@ -513,8 +510,9 @@ local function Disable(self)
 			self:UnregisterEvent("UNIT_RANGEDDAMAGE", RangedChange)
 		end
 		if not bar.disableMelee then
-			self:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED", Melee)
-			self:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED", ParryHaste)
+			self:UnregisterCombatEvent("SWING_DAMAGE", Melee)
+			self:UnregisterCombatEvent("SWING_MISSED", Melee)
+			self:UnregisterCombatEvent("SWING_MISSED", ParryHaste)
 			self:UnregisterEvent("UNIT_ATTACK_SPEED", MeleeChange)
 		end
 		self:UnregisterEvent("PLAYER_REGEN_ENABLED", Ooc)
