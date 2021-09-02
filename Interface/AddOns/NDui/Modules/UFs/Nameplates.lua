@@ -829,11 +829,13 @@ function UF:PlateVisibility(event)
 		UIFrameFadeIn(self.Health.bg, .3, self.Health.bg:GetAlpha(), 1)
 		UIFrameFadeIn(self.Power, .3, self.Power:GetAlpha(), 1)
 		UIFrameFadeIn(self.Power.bg, .3, self.Power.bg:GetAlpha(), 1)
+		UIFrameFadeIn(self.predicFrame, .3, self:GetAlpha(), 1)
 	else
 		UIFrameFadeOut(self.Health, 2, self.Health:GetAlpha(), alpha)
 		UIFrameFadeOut(self.Health.bg, 2, self.Health.bg:GetAlpha(), alpha)
 		UIFrameFadeOut(self.Power, 2, self.Power:GetAlpha(), alpha)
 		UIFrameFadeOut(self.Power.bg, 2, self.Power.bg:GetAlpha(), alpha)
+		UIFrameFadeOut(self.predicFrame, 2, self:GetAlpha(), alpha)
 	end
 end
 
@@ -881,6 +883,7 @@ function UF:CreatePlayerPlate()
 
 	UF:CreateHealthBar(self)
 	UF:CreatePowerBar(self)
+	UF:CreatePrediction(self)
 	UF:CreateClassPower(self)
 	--if C.db["Auras"]["ClassAuras"] then auras:CreateLumos(self) end
 	if not C.db["Nameplate"]["ClassPowerOnly"] then UF:CreateEneryTicker(self) end
