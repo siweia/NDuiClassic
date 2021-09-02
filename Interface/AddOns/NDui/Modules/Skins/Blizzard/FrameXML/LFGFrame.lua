@@ -2,8 +2,6 @@ local _, ns = ...
 local B, C, L, DB = unpack(ns)
 
 tinsert(C.defaultThemes, function()
-	if not LFGParentFrame then return end
-
 	local closeButton = select(3, LFGParentFrame:GetChildren())
 	if not LFGParentFrame.CloseButton then
 		LFGParentFrame.CloseButton = closeButton
