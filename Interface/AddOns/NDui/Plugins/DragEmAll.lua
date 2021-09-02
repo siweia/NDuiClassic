@@ -26,6 +26,7 @@ local frames = {
 	["HelpFrame"] = false,
 	["InterfaceOptionsFrame"] = false,
 	["ItemTextFrame"] = false,
+	["LFGParentFrame"] = false,
 	["LootFrame"] = false,
 	["MailFrame"] = false,
 	["MerchantFrame"] = false,
