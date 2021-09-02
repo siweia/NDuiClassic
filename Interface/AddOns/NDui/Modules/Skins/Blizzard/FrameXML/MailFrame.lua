@@ -48,8 +48,10 @@ tinsert(C.defaultThemes, function()
 	OpenMailDeleteButton:SetPoint("RIGHT", OpenMailCancelButton, "LEFT", -1, 0)
 	OpenMailReplyButton:SetPoint("RIGHT", OpenMailDeleteButton, "LEFT", -1, 0)
 
-	SendMailMoneySilver:SetPoint("LEFT", SendMailMoneyGold, "RIGHT", 1, 0)
-	SendMailMoneyCopper:SetPoint("LEFT", SendMailMoneySilver, "RIGHT", 1, 0)
+	SendMailMoneySilver.bg:SetPoint("BOTTOMRIGHT", -10, 0)
+	SendMailMoneyCopper.bg:SetPoint("BOTTOMRIGHT", -10, 0)
+	SendMailMoneySilver:SetPoint("LEFT", SendMailMoneyGold, "RIGHT", 18, 0)
+	SendMailMoneyCopper:SetPoint("LEFT", SendMailMoneySilver, "RIGHT", 8, 0)
 
 	SendMailSubjectEditBox:SetPoint("TOPLEFT", SendMailNameEditBox, "BOTTOMLEFT", 0, -1)
 
