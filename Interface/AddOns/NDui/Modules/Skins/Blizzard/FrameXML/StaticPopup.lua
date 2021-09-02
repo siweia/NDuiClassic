@@ -124,4 +124,12 @@ tinsert(C.defaultThemes, function()
 			self.styled = true
 		end
 	end)
+
+	-- PVP ready dialog
+	local PVPReadyDialog = PVPReadyDialog
+
+	B.StripTextures(PVPReadyDialog)
+	B.SetBD(PVPReadyDialog)
+	B.Reskin(PVPReadyDialog.enterButton)
+	B.Reskin(PVPReadyDialog.hideButton)
 end)
