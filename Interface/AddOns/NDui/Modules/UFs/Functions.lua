@@ -1072,29 +1072,25 @@ function UF:CreateExpRepBar(self)
 end
 
 function UF:CreatePrediction(self)
-	local myBar = CreateFrame("StatusBar", nil, self)
-	myBar:SetWidth(self:GetWidth())
-	myBar:SetPoint("TOP", self.Health, "TOP")
-	myBar:SetPoint("BOTTOM", self.Health, "BOTTOM")
-	myBar:SetPoint("LEFT", self.Health:GetStatusBarTexture(), "RIGHT")
-	myBar:SetStatusBarTexture(DB.normTex)
-	myBar:SetStatusBarColor(0, 1, 0, .5)
-	myBar:Hide()
+	local frame = CreateFrame("Frame", nil, self)
+	frame:SetAllPoints()
 
-	local otherBar = CreateFrame("StatusBar", nil, self)
-	otherBar:SetWidth(self:GetWidth())
-	otherBar:SetPoint("TOP", self.Health, "TOP")
-	otherBar:SetPoint("BOTTOM", self.Health, "BOTTOM")
-	otherBar:SetPoint("LEFT", myBar:GetStatusBarTexture(), "RIGHT")
-	otherBar:SetStatusBarTexture(DB.normTex)
-	otherBar:SetStatusBarColor(0, 1, 1, .5)
-	otherBar:Hide()
+	local mhpb = frame:CreateTexture(nil, "BORDER", nil, 5)
+	mhpb:SetWidth(1)
+	mhpb:SetTexture(DB.normTex)
+	mhpb:SetVertexColor(0, 1, .5, .5)
 
-	self.HealthPrediction = {
-		myBar = myBar,
-		otherBar = otherBar,
+	local ohpb = frame:CreateTexture(nil, "BORDER", nil, 5)
+	ohpb:SetWidth(1)
+	ohpb:SetTexture(DB.normTex)
+	ohpb:SetVertexColor(0, 1, 0, .5)
+
+	self.HealPredictionAndAbsorb = {
+		myBar = mhpb,
+		otherBar = ohpb,
 		maxOverflow = 1,
 	}
+	self.predicFrame = frame
 end
 
 function UF.PostUpdateAddPower(element, _, cur, max)
