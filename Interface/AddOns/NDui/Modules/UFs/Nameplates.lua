@@ -50,6 +50,8 @@ function UF:SetupCVars()
 	SetCVar("nameplateLargerScale", 1)
 	SetCVar("nameplateGlobalScale", 1)
 
+	B.HideOption(InterfaceOptionsNamesPanelUnitNameplatesNameplateMaxDistanceSlider) -- Use option in GUI
+
 	if IsAddOnLoaded("Questie") then
 		_QuestieQuest = QuestieLoader:ImportModule("QuestieQuest")
 		_QuestiePlayer = QuestieLoader:ImportModule("QuestiePlayer")
