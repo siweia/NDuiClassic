@@ -40,4 +40,52 @@ C.themes["Blizzard_GuildBankUI"] = function()
 			B.ReskinIconBorder(button.IconBorder)
 		end
 	end
+
+	for i = 1, 6 do
+		local tab = _G["GuildBankTab"..i]
+		local button = tab.Button
+		local icon = button.IconTexture
+
+		B.StripTextures(tab)
+		button:SetNormalTexture("")
+		button:SetPushedTexture("")
+		button:GetHighlightTexture():SetColorTexture(1, 1, 1, .25)
+		button:SetCheckedTexture(DB.textures.pushed)
+		B.CreateBDFrame(button)
+		icon:SetTexCoord(unpack(DB.TexCoord))
+
+		local a1, p, a2, x, y = button:GetPoint()
+		button:SetPoint(a1, p, a2, x + C.mult, y)
+	end
+
+	local NUM_GUILDBANK_ICONS_PER_ROW = 10
+	local NUM_GUILDBANK_ICON_ROWS = 9
+
+	GuildBankPopupFrame:GetChildren():Hide()
+	GuildBankPopupFrame.BG:Hide()
+	B.SetBD(GuildBankPopupFrame)
+	B.StripTextures(GuildBankPopupEditBox)
+	B.ReskinInput(GuildBankPopupEditBox)
+	GuildBankPopupFrame:SetPoint("TOPLEFT", GuildBankFrame, "TOPRIGHT", 3, -C.mult)
+	GuildBankPopupFrame:SetHeight(525)
+	B.Reskin(GuildBankPopupFrame.OkayButton)
+	B.Reskin(GuildBankPopupFrame.CancelButton)
+	B.ReskinScroll(GuildBankPopupFrame.ScrollFrame.ScrollBar)
+
+	GuildBankPopupFrame:HookScript("OnShow", function()
+		for i = 1, NUM_GUILDBANK_ICONS_PER_ROW * NUM_GUILDBANK_ICON_ROWS do
+			local button = _G["GuildBankPopupButton"..i]
+			local icon = _G["GuildBankPopupButton"..i.."Icon"]
+			if not button.styled then
+				button:SetCheckedTexture(DB.textures.pushed)
+				select(2, button:GetRegions()):Hide()
+				B.ReskinIcon(icon)
+				local hl = button:GetHighlightTexture()
+				hl:SetColorTexture(1, 1, 1, .25)
+				hl:SetAllPoints(icon)
+
+				button.styled = true
+			end
+		end
+	end)
 end
