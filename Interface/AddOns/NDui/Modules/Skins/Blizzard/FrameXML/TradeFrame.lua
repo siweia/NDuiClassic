@@ -21,11 +21,8 @@ tinsert(C.defaultThemes, function()
 
 	B.ReskinInput(TradePlayerInputMoneyFrameGold)
 	B.ReskinInput(TradePlayerInputMoneyFrameSilver)
-	TradePlayerInputMoneyFrameSilver.bg:SetPoint("BOTTOMRIGHT", -10, 0)
 	B.ReskinInput(TradePlayerInputMoneyFrameCopper)
-	TradePlayerInputMoneyFrameCopper.bg:SetPoint("BOTTOMRIGHT", -10, 0)
-	TradePlayerInputMoneyFrameSilver:SetPoint("LEFT", TradePlayerInputMoneyFrameGold, "RIGHT", 18, 0)
-	TradePlayerInputMoneyFrameCopper:SetPoint("LEFT", TradePlayerInputMoneyFrameSilver, "RIGHT", 8, 0)
+	B:UpdateMoneyDisplay(TradePlayerInputMoneyFrameGold, TradePlayerInputMoneyFrameSilver, TradePlayerInputMoneyFrameCopper)
 
 	local function reskinButton(bu)
 		bu:SetNormalTexture("")

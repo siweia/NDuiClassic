@@ -1,6 +1,13 @@
 local _, ns = ...
 local B, C, L, DB = unpack(ns)
 
+function B:UpdateMoneyDisplay(gold, silver, copper)
+	silver.bg:SetPoint("BOTTOMRIGHT", -10, 0)
+	copper.bg:SetPoint("BOTTOMRIGHT", -10, 0)
+	silver:SetPoint("LEFT", gold, "RIGHT", 18, 0)
+	copper:SetPoint("LEFT", silver, "RIGHT", 8, 0)
+end
+
 tinsert(C.defaultThemes, function()
 	local texL, texR, texT, texB = unpack(DB.TexCoord)
 
@@ -33,6 +40,7 @@ tinsert(C.defaultThemes, function()
 	B.ReskinInput(SendMailMoneyGold)
 	B.ReskinInput(SendMailMoneySilver)
 	B.ReskinInput(SendMailMoneyCopper)
+	B:UpdateMoneyDisplay(SendMailMoneyGold, SendMailMoneySilver, SendMailMoneyCopper)
 	B.ReskinScroll(SendMailScrollFrameScrollBar)
 	B.ReskinScroll(OpenMailScrollFrameScrollBar)
 	B.ReskinRadio(SendMailSendMoneyButton)
@@ -47,11 +55,6 @@ tinsert(C.defaultThemes, function()
 	SendMailMailButton:SetPoint("RIGHT", SendMailCancelButton, "LEFT", -1, 0)
 	OpenMailDeleteButton:SetPoint("RIGHT", OpenMailCancelButton, "LEFT", -1, 0)
 	OpenMailReplyButton:SetPoint("RIGHT", OpenMailDeleteButton, "LEFT", -1, 0)
-
-	SendMailMoneySilver.bg:SetPoint("BOTTOMRIGHT", -10, 0)
-	SendMailMoneyCopper.bg:SetPoint("BOTTOMRIGHT", -10, 0)
-	SendMailMoneySilver:SetPoint("LEFT", SendMailMoneyGold, "RIGHT", 18, 0)
-	SendMailMoneyCopper:SetPoint("LEFT", SendMailMoneySilver, "RIGHT", 8, 0)
 
 	SendMailSubjectEditBox:SetPoint("TOPLEFT", SendMailNameEditBox, "BOTTOMLEFT", 0, -1)
 

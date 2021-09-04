@@ -32,9 +32,6 @@ tinsert(C.defaultThemes, function()
 		B.CreateBDFrame(bu)
 		bu.IconBorder:SetAlpha(0)
 
-		silver:SetPoint("LEFT", gold, "RIGHT", 1, 0)
-		copper:SetPoint("LEFT", silver, "RIGHT", 1, 0)
-
 		B.StripTextures(frame)
 		B.SetBD(frame)
 		for j = 1, 4 do
@@ -55,6 +52,7 @@ tinsert(C.defaultThemes, function()
 		B.ReskinInput(gold)
 		B.ReskinInput(silver)
 		B.ReskinInput(copper)
+		B:UpdateMoneyDisplay(gold, silver, copper)
 	end
 
 	hooksecurefunc("StaticPopup_Show", function(which, _, _, data)
