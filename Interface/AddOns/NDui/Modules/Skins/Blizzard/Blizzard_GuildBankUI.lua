@@ -15,6 +15,8 @@ C.themes["Blizzard_GuildBankUI"] = function()
 	B.ReskinScroll(GuildBankTransactionsScrollFrameScrollBar)
 	B.ReskinScroll(GuildBankInfoScrollFrameScrollBar)
 
+	GuildBankFrame.WithdrawButton:SetPoint("RIGHT", GuildBankFrame.DepositButton, "LEFT", -2, 0)
+
 	for i = 1, 4 do
 		local tab = _G["GuildBankFrameTab"..i]
 		B.ReskinTab(tab)
