@@ -49,9 +49,6 @@ tinsert(C.defaultThemes, function()
 		close:HookScript("OnLeave", clearMinimize)
 
 		B.ReskinInput(_G["StaticPopup"..i.."EditBox"], 20)
-		B.ReskinInput(gold)
-		B.ReskinInput(silver)
-		B.ReskinInput(copper)
 		B:UpdateMoneyDisplay(gold, silver, copper)
 	end
 

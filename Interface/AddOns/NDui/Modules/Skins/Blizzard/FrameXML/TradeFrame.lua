@@ -18,10 +18,6 @@ tinsert(C.defaultThemes, function()
 	B.ReskinPortraitFrame(TradeFrame)
 	B.Reskin(TradeFrameTradeButton)
 	B.Reskin(TradeFrameCancelButton)
-
-	B.ReskinInput(TradePlayerInputMoneyFrameGold)
-	B.ReskinInput(TradePlayerInputMoneyFrameSilver)
-	B.ReskinInput(TradePlayerInputMoneyFrameCopper)
 	B:UpdateMoneyDisplay(TradePlayerInputMoneyFrameGold, TradePlayerInputMoneyFrameSilver, TradePlayerInputMoneyFrameCopper)
 
 	local function reskinButton(bu)
