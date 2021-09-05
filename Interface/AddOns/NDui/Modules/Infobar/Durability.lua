@@ -6,10 +6,11 @@ if not C.Infobar.Durability then return end
 local module = B:GetModule("Infobar")
 local info = module:RegisterInfobar("Durability", C.Infobar.DurabilityPos)
 
-local format, gsub, sort, floor, modf, select = string.format, string.gsub, table.sort, math.floor, math.modf, select
+local format, sort, floor, select = string.format, table.sort, math.floor, select
 local GetInventoryItemLink, GetInventoryItemDurability, GetInventoryItemTexture = GetInventoryItemLink, GetInventoryItemDurability, GetInventoryItemTexture
 local GetMoney, GetRepairAllCost, RepairAllItems, CanMerchantRepair = GetMoney, GetRepairAllCost, RepairAllItems, CanMerchantRepair
-local IsShiftKeyDown, CanMerchantRepair = IsShiftKeyDown, CanMerchantRepair
+local IsInGuild, CanGuildBankRepair, GetGuildBankWithdrawMoney = IsInGuild, CanGuildBankRepair, GetGuildBankWithdrawMoney
+local C_Timer_After, IsShiftKeyDown, InCombatLockdown = C_Timer.After, IsShiftKeyDown, InCombatLockdown
 
 local repairCostString = gsub(REPAIR_COST, HEADER_COLON, ":")
 local lowDurabilityCap = .25
