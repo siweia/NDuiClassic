@@ -135,6 +135,7 @@ L["Filter List"] = "Список фильтра"
 L["Minimap Clock"] = "Часы на миникарте"
 L["Map Scale"] = "Масштаб карты мира"
 L["Minimap Scale"] = "Масштаб миникарты"
+L["Minimap Size"] = "Minimap Size" -- need translation
 L["Minimap Pulse"] = "Мигание окантовки миникарты"
 L["Minimap RecycleBin"] = "Корзина иконок"
 L["Show RecycleBin"] = "Корзина иконок на миникарте"
