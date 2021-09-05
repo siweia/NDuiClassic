@@ -41,6 +41,9 @@ C.themes["Blizzard_CraftUI"] = function()
 		bg:SetPoint("TOPLEFT", icon, "TOPRIGHT", 3, C.mult)
 		bg:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", 100, -C.mult)
 	end
+
+	B.ReskinDropDown(CraftFrameFilterDropDown)
+	B.ReskinCheck(CraftFrameAvailableFilterCheckButton)
 end
 
 C.themes["Blizzard_TradeSkillUI"] = function()
