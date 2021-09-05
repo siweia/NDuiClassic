@@ -8,6 +8,7 @@ C.themes["Blizzard_TrainerUI"] = function()
 	B.ReskinDropDown(ClassTrainerFrameFilterDropDown)
 	B.ReskinScroll(ClassTrainerListScrollFrameScrollBar)
 	B.ReskinScroll(ClassTrainerDetailScrollFrameScrollBar)
+	B.CreateBDFrame(ClassTrainerDetailScrollFrame, .25)
 
 	B.ReskinCollapse(ClassTrainerCollapseAllButton)
 	ClassTrainerExpandButtonFrame:DisableDrawLayer("BACKGROUND")
