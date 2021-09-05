@@ -389,6 +389,10 @@ function S:EnhancedCraft()
 	-- Position close box
 	CraftFrameCloseButton:ClearAllPoints()
 	CraftFrameCloseButton:SetPoint("TOPRIGHT", CraftFrame, "TOPRIGHT", -34, -13)
+	CraftFrameFilterDropDown:ClearAllPoints()
+	CraftFrameFilterDropDown:SetPoint("TOPLEFT", CraftFrame, "TOPLEFT", 510, -40)
+	CraftFrameAvailableFilterCheckButton:ClearAllPoints()
+	CraftFrameAvailableFilterCheckButton:SetPoint("RIGHT", CraftFrameFilterDropDown, "LEFT", -130, 2)
 
 	-- Reskin
 	if C.db["Skins"]["BlizzardSkins"] then
