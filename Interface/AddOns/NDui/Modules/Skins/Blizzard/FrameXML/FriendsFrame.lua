@@ -224,6 +224,7 @@ tinsert(C.defaultThemes, function()
 	B.Reskin(GuildInfoCancelButton)
 
 	B.StripTextures(GuildControlPopupFrame)
+	GuildControlPopupFrame:SetPoint("TOPLEFT", GuildFrame, "TOPRIGHT", 3, 0)
 	B.SetBD(GuildControlPopupFrame)
 	B.ReskinDropDown(GuildControlPopupFrameDropDown)
 	B.ReskinArrow(GuildControlPopupFrameAddRankButton, "right")
@@ -233,8 +234,29 @@ tinsert(C.defaultThemes, function()
 	bg:SetPoint("BOTTOMRIGHT", 5, 5)
 	B.Reskin(GuildControlPopupAcceptButton)
 	B.Reskin(GuildControlPopupFrameCancelButton)
+
+	for i = 1, 16 do
+		local checkbox = _G["GuildControlPopupFrameCheckbox"..i]
+		if checkbox then
+			B.ReskinCheck(checkbox)
+		end
+	end
+
+	local function SetGuildInput(frame)
+		B.ReskinInput(frame)
+		frame.bg:SetPoint("TOPLEFT", -2, -7)
+		frame.bg:SetPoint("BOTTOMRIGHT", 2, 7)
+	end
+	SetGuildInput(GuildControlWithdrawGoldEditBox)
+	SetGuildInput(GuildControlWithdrawItemsEditBox)
+
+	B.ReskinCheck(GuildControlTabPermissionsViewTab)
+	B.ReskinCheck(GuildControlTabPermissionsDepositItems)
+	B.ReskinCheck(GuildControlTabPermissionsUpdateText)
+	GuildControlPopupFrameTabPermissions:SetBackdrop(nil)
+
+	-- Font width fix
 	for i = 1, 13 do
-		B.ReskinCheck(_G["GuildControlPopupFrameCheckbox"..i])
 		_G["GuildFrameButton"..i.."Level"]:SetWidth(30)
 	end
 end)
