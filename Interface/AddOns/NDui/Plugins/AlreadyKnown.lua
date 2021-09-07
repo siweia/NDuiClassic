@@ -89,35 +89,6 @@ local function MerchantFrame_UpdateBuybackInfo()
 end
 hooksecurefunc("MerchantFrame_UpdateBuybackInfo", MerchantFrame_UpdateBuybackInfo)
 
--- guild bank frame
-local function GuildBankFrame_Update()
-	if GuildBankFrame.mode ~= "bank" then return end
-
-	local tab = GetCurrentGuildBankTab()
-	for i = 1, MAX_GUILDBANK_SLOTS_PER_TAB do
-		local index = mod(i, NUM_SLOTS_PER_GUILDBANK_GROUP)
-		if index == 0 then index = NUM_SLOTS_PER_GUILDBANK_GROUP end
-
-		local button = _G["GuildBankColumn"..math.ceil((i - .5) / NUM_SLOTS_PER_GUILDBANK_GROUP).."Button"..index]
-		if button and button:IsShown() then
-			local texture, _, locked = GetGuildBankItemInfo(tab, i)
-			if texture and not locked then
-				if IsAlreadyKnown(GetGuildBankItemLink(tab, i), i) then
-					SetItemButtonTextureVertexColor(button, COLOR.r, COLOR.g, COLOR.b)
-				else
-					SetItemButtonTextureVertexColor(button, 1, 1, 1)
-				end
-			end
-		end
-	end
-end
-
-local isBlizzard_GuildBankUILoaded
-if IsAddOnLoaded("Blizzard_GuildBankUI") then
-	isBlizzard_GuildBankUILoaded = true
-	hooksecurefunc("GuildBankFrame_Update", GuildBankFrame_Update)
-end
-
 -- auction frame
 local function AuctionFrameBrowse_Update()
 	local numItems = GetNumAuctionItems("list")
@@ -174,29 +145,44 @@ local function AuctionFrameAuctions_Update()
 	end
 end
 
-local isBlizzard_AuctionUILoaded
-if IsAddOnLoaded("Blizzard_AuctionUI") then
-	isBlizzard_AuctionUILoaded = true
-	hooksecurefunc("AuctionFrameBrowse_Update", AuctionFrameBrowse_Update)
-	hooksecurefunc("AuctionFrameBid_Update", AuctionFrameBid_Update)
-	hooksecurefunc("AuctionFrameAuctions_Update", AuctionFrameAuctions_Update)
-end
+-- guild bank frame
+local function GuildBankFrame_Update(self)
+	if self.mode ~= "bank" then return end
 
--- for LoD addons
-if not (isBlizzard_GuildBankUILoaded and isBlizzard_AuctionUILoaded) then
-	local function OnEvent(event, addonName)
-		if addonName == "Blizzard_GuildBankUI" then
-			isBlizzard_GuildBankUILoaded = true
-			--hooksecurefunc("GuildBankFrame_Update", GuildBankFrame_Update) -- needs review
-		elseif addonName == "Blizzard_AuctionUI" then
-			isBlizzard_AuctionUILoaded = true
-			hooksecurefunc("AuctionFrameBrowse_Update", AuctionFrameBrowse_Update)
-			hooksecurefunc("AuctionFrameBid_Update", AuctionFrameBid_Update)
-			hooksecurefunc("AuctionFrameAuctions_Update", AuctionFrameAuctions_Update)
-		end
-		if isBlizzard_GuildBankUILoaded and isBlizzard_AuctionUILoaded then
-			B:UnregisterEvent(event, OnEvent)
+	local tab = GetCurrentGuildBankTab()
+	for i = 1, MAX_GUILDBANK_SLOTS_PER_TAB do
+		local index = mod(i, NUM_SLOTS_PER_GUILDBANK_GROUP)
+		if index == 0 then index = NUM_SLOTS_PER_GUILDBANK_GROUP end
+
+		local button = _G["GuildBankColumn"..math.ceil((i - .5) / NUM_SLOTS_PER_GUILDBANK_GROUP).."Button"..index]
+		if button and button:IsShown() then
+			local texture, _, locked = GetGuildBankItemInfo(tab, i)
+			if texture and not locked then
+				if IsAlreadyKnown(GetGuildBankItemLink(tab, i), i) then
+					SetItemButtonTextureVertexColor(button, COLOR.r, COLOR.g, COLOR.b)
+				else
+					SetItemButtonTextureVertexColor(button, 1, 1, 1)
+				end
+			end
 		end
 	end
-	B:RegisterEvent("ADDON_LOADED", OnEvent)
 end
+
+local hookCount = 0
+local f = CreateFrame("Frame")
+f:RegisterEvent("ADDON_LOADED")
+f:SetScript("OnEvent", function(_, event, addon)
+	if addon == "Blizzard_AuctionUI" then
+		hooksecurefunc("AuctionFrameBrowse_Update", AuctionFrameBrowse_Update)
+		hooksecurefunc("AuctionFrameBid_Update", AuctionFrameBid_Update)
+		hooksecurefunc("AuctionFrameAuctions_Update", AuctionFrameAuctions_Update)
+		hookCount = hookCount + 1
+	elseif addon == "Blizzard_GuildBankUI" then
+		hooksecurefunc(GuildBankFrame, "Update", GuildBankFrame_Update)
+		hookCount = hookCount + 1
+	end
+
+	if hookCount >= 2 then
+		f:UnregisterEvent(event)
+	end
+end)
