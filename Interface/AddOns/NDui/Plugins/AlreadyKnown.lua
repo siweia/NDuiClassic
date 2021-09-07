@@ -152,7 +152,7 @@ local NUM_SLOTS_PER_GUILDBANK_GROUP = 14
 local function GuildBankFrame_Update(self)
 	if self.mode ~= "bank" then return end
 
-	local button, index, column, texture, locked
+	local button, index, column, texture, locked, quality
 	local tab = GetCurrentGuildBankTab()
 	for i = 1, MAX_GUILDBANK_SLOTS_PER_TAB do
 		index = mod(i, NUM_SLOTS_PER_GUILDBANK_GROUP)
@@ -161,13 +161,18 @@ local function GuildBankFrame_Update(self)
 		column = ceil((i-.5)/NUM_SLOTS_PER_GUILDBANK_GROUP)
 		button = self.Columns[column].Buttons[index]
 		if button and button:IsShown() then
-			texture, _, locked = GetGuildBankItemInfo(tab, i)
+			texture, _, locked, _, quality = GetGuildBankItemInfo(tab, i)
 			if texture and not locked then
 				if IsAlreadyKnown(GetGuildBankItemLink(tab, i), i) then
 					SetItemButtonTextureVertexColor(button, COLOR.r, COLOR.g, COLOR.b)
 				else
 					SetItemButtonTextureVertexColor(button, 1, 1, 1)
 				end
+			end
+
+			if button.bg then
+				local color = DB.QualityColors[quality or 1]
+				button.bg:SetBackdropBorderColor(color.r, color.g, color.b)
 			end
 		end
 	end
