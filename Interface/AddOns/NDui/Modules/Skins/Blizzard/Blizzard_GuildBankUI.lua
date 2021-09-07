@@ -15,6 +15,7 @@ C.themes["Blizzard_GuildBankUI"] = function()
 	B.ReskinScroll(GuildBankTransactionsScrollFrameScrollBar)
 	B.ReskinScroll(GuildBankInfoScrollFrameScrollBar)
 	B.Reskin(GuildBankFrame.BuyInfo.PurchaseButton)
+	B.Reskin(GuildBankFrame.Info.SaveButton)
 
 	GuildBankFrame.WithdrawButton:SetPoint("RIGHT", GuildBankFrame.DepositButton, "LEFT", -2, 0)
 
