@@ -146,17 +146,22 @@ local function AuctionFrameAuctions_Update()
 end
 
 -- guild bank frame
+local MAX_GUILDBANK_SLOTS_PER_TAB = 98
+local NUM_SLOTS_PER_GUILDBANK_GROUP = 14
+
 local function GuildBankFrame_Update(self)
 	if self.mode ~= "bank" then return end
 
+	local button, index, column, texture, locked
 	local tab = GetCurrentGuildBankTab()
 	for i = 1, MAX_GUILDBANK_SLOTS_PER_TAB do
-		local index = mod(i, NUM_SLOTS_PER_GUILDBANK_GROUP)
+		index = mod(i, NUM_SLOTS_PER_GUILDBANK_GROUP)
 		if index == 0 then index = NUM_SLOTS_PER_GUILDBANK_GROUP end
 
-		local button = _G["GuildBankColumn"..math.ceil((i - .5) / NUM_SLOTS_PER_GUILDBANK_GROUP).."Button"..index]
+		column = ceil((i-.5)/NUM_SLOTS_PER_GUILDBANK_GROUP)
+		button = self.Columns[column].Buttons[index]
 		if button and button:IsShown() then
-			local texture, _, locked = GetGuildBankItemInfo(tab, i)
+			texture, _, locked = GetGuildBankItemInfo(tab, i)
 			if texture and not locked then
 				if IsAlreadyKnown(GetGuildBankItemLink(tab, i), i) then
 					SetItemButtonTextureVertexColor(button, COLOR.r, COLOR.g, COLOR.b)
