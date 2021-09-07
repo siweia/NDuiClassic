@@ -27,11 +27,11 @@ C.themes["Blizzard_GuildBankUI"] = function()
 	end
 
 	for i = 1, 7 do
-		local column = GuildBankFrame["Column"..i]
+		local column = GuildBankFrame.Columns[i]
 		column:GetRegions():Hide()
 
 		for j = 1, 14 do
-			local button = column["Button"..j]
+			local button = column.Buttons[j]
 			button:SetNormalTexture("")
 			button:SetPushedTexture("")
 			button:GetHighlightTexture():SetColorTexture(1, 1, 1, .25)
