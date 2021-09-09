@@ -58,6 +58,11 @@ local ClassPowerID, ClassPowerType
 local ClassPowerEnable, ClassPowerDisable
 local RequirePower, RequireSpell
 
+local isAcceptedPowers = {
+	['ENERGY'] = true,
+	['COMBO_POINTS'] = true,
+}
+
 local function UpdateColor(element, powerType)
 	local color = element.__owner.colors.power[powerType]
 	local r, g, b = color[1], color[2], color[3]
@@ -74,7 +79,7 @@ local function UpdateColor(element, powerType)
 end
 
 local function Update(self, event, unit, powerType)
-	if (not (unit and (UnitIsUnit(unit, 'player') and powerType == ClassPowerType))) then
+	if (not (unit and UnitIsUnit(unit, 'player') and isAcceptedPowers[powerType])) then
 		return
 	end
 
