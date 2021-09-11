@@ -58,11 +58,6 @@ local ClassPowerID, ClassPowerType
 local ClassPowerEnable, ClassPowerDisable
 local RequirePower, RequireSpell
 
-local isAcceptedPowers = {
-	['ENERGY'] = true,
-	['COMBO_POINTS'] = true,
-}
-
 local function UpdateColor(element, powerType)
 	local color = element.__owner.colors.power[powerType]
 	local r, g, b = color[1], color[2], color[3]
@@ -79,7 +74,13 @@ local function UpdateColor(element, powerType)
 end
 
 local function Update(self, event, unit, powerType)
-	if (not (unit and UnitIsUnit(unit, 'player') and isAcceptedPowers[powerType])) then
+	if event == "PLAYER_TARGET_CHANGED" then
+		unit, powerType = "player", "COMBO_POINTS"
+	elseif powerType == "ENERGY" then
+		powerType = "COMBO_POINTS" -- sometimes powerType return ENERGY for the first combo point
+	end
+
+	if (not (unit and (UnitIsUnit(unit, 'player') and powerType == ClassPowerType))) then
 		return
 	end
 
@@ -211,6 +212,7 @@ end
 do
 	function ClassPowerEnable(self)
 		self:RegisterEvent('UNIT_POWER_FREQUENT', Path)
+		self:RegisterEvent('PLAYER_TARGET_CHANGED', Path, true)
 		self:RegisterEvent('UNIT_MAXPOWER', Path)
 
 		self.ClassPower.isEnabled = true
@@ -220,6 +222,7 @@ do
 
 	function ClassPowerDisable(self)
 		self:UnregisterEvent('UNIT_POWER_FREQUENT', Path)
+		self:UnregisterEvent('PLAYER_TARGET_CHANGED', Path)
 		self:UnregisterEvent('UNIT_MAXPOWER', Path)
 
 		local element = self.ClassPower
@@ -252,7 +255,6 @@ local function Enable(self, unit)
 		if(RequirePower) then
 			self:RegisterEvent('UNIT_DISPLAYPOWER', VisibilityPath)
 		end
-		self:RegisterEvent('PLAYER_TARGET_CHANGED', VisibilityPath, true)
 
 		element.ClassPowerEnable = ClassPowerEnable
 		element.ClassPowerDisable = ClassPowerDisable
@@ -277,7 +279,6 @@ local function Disable(self)
 		ClassPowerDisable(self)
 
 		self:UnregisterEvent('UNIT_DISPLAYPOWER', VisibilityPath)
-		self:UnregisterEvent('PLAYER_TARGET_CHANGED', VisibilityPath)
 		self:UnregisterEvent('SPELLS_CHANGED', Visibility)
 	end
 end
