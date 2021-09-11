@@ -358,6 +358,7 @@ L["PlayerPlate MPHeight"] = "Высота панели маны"
 L["AuraWatch IconScale"] = "Масштаб иконок AuraWatch"
 L["PlayerPlate PowerText"] = "Показывать значение ресурса"
 L["OnlyCompleteRing"] = "Только звук завершения"
+L["OnlyCompleteRingTip"] = "|nIf checked, no longer announce any messages. Only play sound when quests completed." -- need translation
 L["Stranger"] = "Незнакомец"
 L["Show FullHealth"] = "Показывать значение здоровья"
 L["WheelUp"] = "КолёсикоВверх"
