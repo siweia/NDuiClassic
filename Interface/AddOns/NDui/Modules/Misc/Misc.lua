@@ -88,11 +88,6 @@ function M:OnLogin()
 		if owner:GetID() < 1 then return end
 		_AddonTooltip_Update(owner)
 	end
-
-	-- Fix masterloot error
-	hooksecurefunc(MasterLooterFrame, "Hide", function(self)
-		self:ClearAllPoints()
-	end)
 end
 
 -- Reanchor Vehicle
