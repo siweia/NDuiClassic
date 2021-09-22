@@ -32,10 +32,12 @@ local function Update(self, event, unit)
 
 	local myIncomingHeal = UnitGetIncomingHeals(unit, 'player') or 0
 	local allIncomingHeal = UnitGetIncomingHeals(unit) or 0
-	local allHOT = (HealComm:GetHealAmount(guid, hp.healType) or 0) * (HealComm:GetHealModifier(guid) or 1)
+	local allHot = HealComm:GetHealAmount(guid, hp.healType) or 0
+	local myHot = (HealComm:GetHealAmount(guid, hp.healType, nil, myGUID) or 0) * (HealComm:GetHealModifier(myGUID) or 1)
 	local health, maxHealth = UnitHealth(unit), UnitHealthMax(unit)
 
-	allIncomingHeal = allIncomingHeal + allHOT
+	allIncomingHeal = allIncomingHeal + allHot
+	myIncomingHeal = myIncomingHeal + myHot
 
 	if(health + allIncomingHeal > maxHealth * hp.maxOverflow) then
 		allIncomingHeal = maxHealth * hp.maxOverflow - health
