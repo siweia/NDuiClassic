@@ -32,7 +32,7 @@ local function Update(self, event, unit)
 
 	local myIncomingHeal = UnitGetIncomingHeals(unit, 'player') or 0
 	local allIncomingHeal = UnitGetIncomingHeals(unit) or 0
-	local allHOT = (HealComm:GetHealAmount(guid, element.healType) or 0) * (HealComm:GetHealModifier(guid) or 1)
+	local allHOT = (HealComm:GetHealAmount(guid, hp.healType) or 0) * (HealComm:GetHealModifier(guid) or 1)
 	local health, maxHealth = UnitHealth(unit), UnitHealthMax(unit)
 
 	allIncomingHeal = allIncomingHeal + allHOT
@@ -94,12 +94,12 @@ local function Enable(self)
 			HealCommUpdate(guid)
 		end
 
-		HealComm.RegisterCallback(element, 'HealComm_HealStarted', HealComm_Heal_Update)
-		HealComm.RegisterCallback(element, 'HealComm_HealUpdated', HealComm_Heal_Update)
-		HealComm.RegisterCallback(element, 'HealComm_HealDelayed', HealComm_Heal_Update)
-		HealComm.RegisterCallback(element, 'HealComm_HealStopped', HealComm_Heal_Update)
-		HealComm.RegisterCallback(element, 'HealComm_ModifierChanged', HealComm_Modified)
-		HealComm.RegisterCallback(element, 'HealComm_GUIDDisappeared', HealComm_Modified)
+		HealComm.RegisterCallback(hp, 'HealComm_HealStarted', HealComm_Heal_Update)
+		HealComm.RegisterCallback(hp, 'HealComm_HealUpdated', HealComm_Heal_Update)
+		HealComm.RegisterCallback(hp, 'HealComm_HealDelayed', HealComm_Heal_Update)
+		HealComm.RegisterCallback(hp, 'HealComm_HealStopped', HealComm_Heal_Update)
+		HealComm.RegisterCallback(hp, 'HealComm_ModifierChanged', HealComm_Modified)
+		HealComm.RegisterCallback(hp, 'HealComm_GUIDDisappeared', HealComm_Modified)
 
 		if(not hp.maxOverflow) then
 			hp.maxOverflow = 1.05
@@ -122,12 +122,12 @@ local function Disable(self)
 		hp.myBar:Hide()
 		hp.otherBar:Hide()
 
-		HealComm.UnregisterCallback(element, 'HealComm_HealStarted')
-		HealComm.UnregisterCallback(element, 'HealComm_HealUpdated')
-		HealComm.UnregisterCallback(element, 'HealComm_HealDelayed')
-		HealComm.UnregisterCallback(element, 'HealComm_HealStopped')
-		HealComm.UnregisterCallback(element, 'HealComm_ModifierChanged')
-		HealComm.UnregisterCallback(element, 'HealComm_GUIDDisappeared')
+		HealComm.UnregisterCallback(hp, 'HealComm_HealStarted')
+		HealComm.UnregisterCallback(hp, 'HealComm_HealUpdated')
+		HealComm.UnregisterCallback(hp, 'HealComm_HealDelayed')
+		HealComm.UnregisterCallback(hp, 'HealComm_HealStopped')
+		HealComm.UnregisterCallback(hp, 'HealComm_ModifierChanged')
+		HealComm.UnregisterCallback(hp, 'HealComm_GUIDDisappeared')
 
 		self:UnregisterEvent('UNIT_HEAL_PREDICTION', Path)
 		self:UnregisterEvent('UNIT_MAXHEALTH', Path)
