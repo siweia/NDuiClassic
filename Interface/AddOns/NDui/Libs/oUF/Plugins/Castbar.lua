@@ -274,7 +274,6 @@ function B:PostCastStop()
 		self:SetStatusBarColor(unpack(CastbarCompleteColor))
 		self.fadeOut = true
 	end
-	self:SetValue(self.max or 1)
 	self:Show()
 	ResetSpellTarget(self)
 end
