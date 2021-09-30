@@ -47,6 +47,10 @@ local mt_gen_key = {__index = function(self,k) self[k] = {}; return self[k]; end
 	@param slotID <number>
 	@return button <ItemButton>
 ]]
+local function BankSplitStack(button, split)
+	SplitContainerItem(button:GetParent():GetID(), button:GetID(), split)
+end
+
 function ItemButton:New(bagID, slotID)
 	self.recycled = self.recycled or setmetatable({}, mt_gen_key)
 
@@ -58,6 +62,13 @@ function ItemButton:New(bagID, slotID)
 	button:SetID(slotID)
 	button:Show()
 	button:HookScript("OnEnter", button.OnEnter)
+	if bagID == BANK_CONTAINER then
+		button.GetInventorySlot = ButtonInventorySlot
+		button.UpdateTooltip = BankFrameItemButton_OnEnter
+		button.SplitStack = BankSplitStack
+	else
+		button.UpdateTooltip = ContainerFrameItemButton_OnUpdate
+	end
 
 	return button
 end
@@ -73,7 +84,7 @@ function ItemButton:Create(tpl, parent)
 	impl.numSlots = (impl.numSlots or 0) + 1
 	local name = ("%sSlot%d"):format(impl.name, impl.numSlots)
 
-	local button = setmetatable(CreateFrame("Button", name, parent, tpl), self.__index)
+	local button = setmetatable(CreateFrame("Button", name, parent, tpl..", BackdropTemplate"), self.__index)
 
 	if(button.Scaffold) then button:Scaffold(tpl) end
 	if(button.OnCreate) then button:OnCreate(tpl) end
@@ -83,6 +94,8 @@ function ItemButton:Create(tpl, parent)
 	if btnNT then btnNT:SetTexture("") end
 	if btnNIT then btnNIT:SetTexture("") end
 	if btnBIT then btnBIT:SetTexture("") end
+
+	button:RegisterForDrag("LeftButton") -- fix button drag in 9.0
 
 	return button
 end

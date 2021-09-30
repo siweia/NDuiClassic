@@ -646,3 +646,6 @@ L["CustomTexTip"] = "|nPut your texture under 'Interface' folder, and input the 
 L["Switch Mode"] = "Switch mode"
 L["DispellableOnly"] = "Dispellable spells only"
 L["DispellableOnlyTip"] = "|nOnly show your dispellable debuffs. The icon border would be colored when dispellable.|nIf disabled, all the auras from magic, curse, disease and poison would show on raidframe."
+L["BagSortMode"] = "BagSort Mode"
+L["BagSortDisabled"] = "BagSort has been disabled in GUI."
+L["BagSearchTip"] = "|nClick to search your bag items.|nYou can type in item names or item equip locations.|n'boe' for items that bind on equip and 'quest' for quest items."

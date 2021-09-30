@@ -646,3 +646,6 @@ L["CustomTexTip"] = "|nПоместите текстуру в папку «Inter
 L["Switch Mode"] = "Switch mode" -- need translation
 L["DispellableOnly"] = "Dispellable spells only" -- need translation
 L["DispellableOnlyTip"] = "|nOnly show your dispellable debuffs. The icon border would be colored when dispellable.|nIf disabled, all the auras from magic, curse, disease and poison would show on raidframe." -- need translation
+L["BagSortMode"] = "Тип сортировки сумок"
+L["BagSortDisabled"] = "Сортировка сумок выключена."
+L["BagSearchTip"] = "|nЩелкни чтобы искать предметы в сумках.|nВы можете ввести названия предметов или места их получения.|n'boe' для боешек и 'задание' для квестовых предметов.|n|nНажмите клавишу ESC, чтобы очистить поле редактирования."

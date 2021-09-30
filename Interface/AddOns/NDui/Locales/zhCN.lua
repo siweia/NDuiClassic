@@ -646,3 +646,6 @@ L["CustomTexTip"] = "|n将你的自定义材质放置在Interface目录下，然
 L["Switch Mode"] = "切换模式"
 L["DispellableOnly"] = "只显示可供驱散的负面效果"
 L["DispellableOnlyTip"] = "|n只显示你可以驱散的负面效果。对于你可以驱散的法术，图标边框是带有颜色的。|n如若关闭，将始终显示魔法、诅咒、疾病及中毒效果。"
+L["BagSortMode"] = "背包整理模式"
+L["BagSortDisabled"] = "背包整理已被禁用。"
+L["BagSearchTip"] = "|n点击对背包进行搜索。|n你可以搜索物品的名字或者装备的部位。|n输入boe可以直接搜索装绑，输入任务则搜索任务道具。"
