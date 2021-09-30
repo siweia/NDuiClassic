@@ -6,12 +6,19 @@ local module = B:GetModule("AurasTable")
 local list = {
 	["Player Aura"] = {		-- 玩家光环组
 		{AuraID = 546, UnitID = "player"},		-- 水上行走
+		{AuraID = 25472, UnitID = "player"},	-- 闪电之盾
+		{AuraID = 33736, UnitID = "player"},	-- 水盾
 	},
 	["Target Aura"] = {		-- 目标光环组
-		--{AuraID = 61295, UnitID = "target", Caster = "player"},		-- 激流
+		{AuraID = 974, UnitID = "target", Caster = "player"},		-- 大地之盾
+		{AuraID = 25464, UnitID = "target", Caster = "player"},		-- 冰霜震击
+		{AuraID = 25457, UnitID = "target", Caster = "player"},		-- 烈焰震击
 	},
 	["Special Aura"] = {	-- 玩家重要光环组
-		--{AuraID = 73920, UnitID = "player"},	-- 治疗之雨
+		{AuraID = 974, UnitID = "player"},		-- 大地之盾
+		{AuraID = 16166, UnitID = "player"},	-- 元素掌控
+		{AuraID = 30823, UnitID = "player"},	-- 萨满之怒
+		{AuraID = 16188, UnitID = "player", Flash = true},	-- 自然迅捷
 	},
 	["Focus Aura"] = {		-- 焦点光环组
 	},

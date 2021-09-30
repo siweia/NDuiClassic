@@ -1,7 +1,7 @@
 local _, ns = ...
 local B, C, L, DB = unpack(ns)
 
-local oUF = ns.oUF or oUF
+local oUF = ns.oUF
 local UF = B:GetModule("UnitFrames")
 local format, tostring = string.format, tostring
 
@@ -62,6 +62,23 @@ local function CreateTargetStyle(self)
 	UF:CreateAuras(self)
 end
 
+local function CreateFocusStyle(self)
+	self.mystyle = "focus"
+	SetUnitFrameSize(self, "Focus")
+
+	UF:CreateHeader(self)
+	UF:CreateHealthBar(self)
+	UF:CreateHealthText(self)
+	UF:CreatePowerBar(self)
+	UF:CreatePowerText(self)
+	UF:CreatePortrait(self)
+	UF:CreateCastBar(self)
+	UF:CreateRaidMark(self)
+	UF:CreateIcons(self)
+	UF:CreatePrediction(self)
+	UF:CreateAuras(self)
+end
+
 local function CreateToTStyle(self)
 	self.mystyle = "tot"
 	SetUnitFrameSize(self, "Pet")
@@ -86,6 +103,17 @@ local function CreateToToT(self)
 	UF:CreateRaidMark(self)
 end
 
+local function CreateFocusTargetStyle(self)
+	self.mystyle = "focustarget"
+	SetUnitFrameSize(self, "Pet")
+
+	UF:CreateHeader(self)
+	UF:CreateHealthBar(self)
+	UF:CreateHealthText(self)
+	UF:CreatePowerBar(self)
+	UF:CreateRaidMark(self)
+end
+
 local function CreatePetStyle(self)
 	self.mystyle = "pet"
 	SetUnitFrameSize(self, "Pet")
@@ -95,6 +123,21 @@ local function CreatePetStyle(self)
 	UF:CreateHealthText(self)
 	UF:CreatePowerBar(self)
 	UF:CreateRaidMark(self)
+end
+
+local function CreateArenaStyle(self)
+	self.mystyle = "arena"
+	SetUnitFrameSize(self, "Boss")
+
+	UF:CreateHeader(self)
+	UF:CreateHealthBar(self)
+	UF:CreateHealthText(self)
+	UF:CreatePowerBar(self)
+	UF:CreateCastBar(self)
+	UF:CreateRaidMark(self)
+	UF:CreateBuffs(self)
+	UF:CreateDebuffs(self)
+--	UF:CreatePVPClassify(self)
 end
 
 local function CreateRaidStyle(self)
@@ -116,6 +159,9 @@ local function CreateRaidStyle(self)
 	UF:CreateRaidDebuffs(self)
 	UF:CreateThreatBorder(self)
 	UF:CreateAuras(self)
+	UF:CreateBuffs(self)
+	UF:CreateDebuffs(self)
+	UF:RefreshAurasByCombat(self)
 	UF:CreateBuffIndicator(self)
 end
 
@@ -143,15 +189,54 @@ local function CreatePartyPetStyle(self)
 end
 
 -- Spawns
+local function GetPartyVisibility()
+	local visibility = "[group:party,nogroup:raid] show;hide"
+	if C.db["UFs"]["SmartRaid"] then
+		visibility = "[@raid6,noexists,group] show;hide"
+	end
+	if C.db["UFs"]["ShowSolo"] then
+		visibility = "[nogroup] show;"..visibility
+	end
+	return visibility
+end
+
+local function GetRaidVisibility()
+	local visibility
+	if C.db["UFs"]["PartyFrame"] then
+		if C.db["UFs"]["SmartRaid"] then
+			visibility = "[@raid6,exists] show;hide"
+		else
+			visibility = "[group:raid] show;hide"
+		end
+	else
+		if C.db["UFs"]["ShowSolo"] then
+			visibility = "show"
+		else
+			visibility = "[group] show;hide"
+		end
+	end
+	return visibility
+end
+
+function UF:UpdateAllHeaders()
+	if not UF.headers then return end
+
+	for _, header in pairs(UF.headers) do
+		if header.groupType == "party" then
+			RegisterStateDriver(header, "visibility", GetPartyVisibility())
+		elseif header.groupType == "raid" then
+			RegisterStateDriver(header, "visibility", GetRaidVisibility())
+		end
+	end
+end
+
 function UF:OnLogin()
 	local horizonRaid = C.db["UFs"]["HorizonRaid"]
 	local horizonParty = C.db["UFs"]["HorizonParty"]
 	local numGroups = C.db["UFs"]["NumGroups"]
 	local scale = C.db["UFs"]["SimpleRaidScale"]/10
 	local raidWidth, raidHeight = C.db["UFs"]["RaidWidth"], C.db["UFs"]["RaidHeight"]
-	local showPartyFrame = C.db["UFs"]["PartyFrame"]
 	local partyWidth, partyHeight = C.db["UFs"]["PartyWidth"], C.db["UFs"]["PartyHeight"]
-	local showPartyPetFrame = C.db["UFs"]["PartyPetFrame"]
 	local petWidth, petHeight = C.db["UFs"]["PartyPetWidth"], C.db["UFs"]["PartyPetHeight"]
 	local showTeamIndex = C.db["UFs"]["ShowTeamIndex"]
 
@@ -160,9 +245,9 @@ function UF:OnLogin()
 		UF:BlockAddons()
 		UF:CreateUnitTable()
 		UF:CreatePowerUnitTable()
-		UF:AddInterruptInfo()
 		UF:QuestIconCheck()
 		UF:RefreshPlateOnFactionChanged()
+		UF:RefreshMajorSpells()
 
 		oUF:RegisterStyle("Nameplates", UF.CreatePlates)
 		oUF:SetActiveStyle("Nameplates")
@@ -186,16 +271,20 @@ function UF:OnLogin()
 		oUF:RegisterStyle("Player", CreatePlayerStyle)
 		oUF:RegisterStyle("Target", CreateTargetStyle)
 		oUF:RegisterStyle("ToT", CreateToTStyle)
+		oUF:RegisterStyle("Focus", CreateFocusStyle)
+		oUF:RegisterStyle("FocusTarget", CreateFocusTargetStyle)
 		oUF:RegisterStyle("Pet", CreatePetStyle)
 
 		-- Loader
 		oUF:SetActiveStyle("Player")
 		local player = oUF:Spawn("player", "oUF_Player")
 		B.Mover(player, L["PlayerUF"], "PlayerUF", C.UFs.PlayerPos)
+		UF.ToggleCastBar(player, "Player")
 
 		oUF:SetActiveStyle("Target")
 		local target = oUF:Spawn("target", "oUF_Target")
 		B.Mover(target, L["TargetUF"], "TargetUF", C.UFs.TargetPos)
+		UF.ToggleCastBar(target, "Target")
 
 		oUF:SetActiveStyle("ToT")
 		local targettarget = oUF:Spawn("targettarget", "oUF_ToT")
@@ -205,6 +294,15 @@ function UF:OnLogin()
 		local pet = oUF:Spawn("pet", "oUF_Pet")
 		B.Mover(pet, L["PetUF"], "PetUF", C.UFs.PetPos)
 
+		oUF:SetActiveStyle("Focus")
+		local focus = oUF:Spawn("focus", "oUF_Focus")
+		B.Mover(focus, L["FocusUF"], "FocusUF", C.UFs.FocusPos)
+		UF.ToggleCastBar(focus, "Focus")
+
+		oUF:SetActiveStyle("FocusTarget")
+		local focustarget = oUF:Spawn("focustarget", "oUF_FocusTarget")
+		B.Mover(focustarget, L["FotUF"], "FotUF", {"TOPLEFT", oUF_Focus, "TOPRIGHT", 5, 0})
+
 		if C.db["UFs"]["ToToT"] then
 			oUF:RegisterStyle("ToToT", CreateToToT)
 			oUF:SetActiveStyle("ToToT")
@@ -212,11 +310,29 @@ function UF:OnLogin()
 			B.Mover(targettargettarget, L["TototUF"], "TototUF", C.UFs.ToToTPos)
 		end
 
+		if C.db["UFs"]["Arena"] then
+			oUF:RegisterStyle("Arena", CreateArenaStyle)
+			oUF:SetActiveStyle("Arena")
+			local arena = {}
+			for i = 1, 5 do
+				arena[i] = oUF:Spawn("arena"..i, "oUF_Arena"..i)
+				local moverWidth, moverHeight = arena[i]:GetWidth(), arena[i]:GetHeight()+8
+				if i == 1 then
+					arena[i].mover = B.Mover(arena[i], L["ArenaFrame"]..i, "Arena1", {"RIGHT", UIParent, "RIGHT", -350, -90}, moverWidth, moverHeight)
+				else
+					arena[i].mover = B.Mover(arena[i], L["ArenaFrame"]..i, "Arena"..i, {"BOTTOM", arena[i-1], "TOP", 0, 50}, moverWidth, moverHeight)
+				end
+			end
+		end
+
 		UF:UpdateTextScale()
 	end
 
 	if C.db["UFs"]["RaidFrame"] then
 		UF:AddClickSetsListener()
+		UF:UpdateCornerSpells()
+		UF:BuildNameListFromID()
+		UF.headers = {}
 
 		-- Hide Default RaidFrame
 		if CompactRaidFrameManager_SetSetting then
@@ -227,7 +343,7 @@ function UF:OnLogin()
 		end
 
 		-- Group Styles
-		if showPartyFrame then
+		if C.db["UFs"]["PartyFrame"] then
 			oUF:RegisterStyle("Party", CreatePartyStyle)
 			oUF:SetActiveStyle("Party")
 
@@ -237,11 +353,11 @@ function UF:OnLogin()
 			local moverHeight = horizonParty and partyFrameHeight or (partyFrameHeight*5+yOffset*4)
 			local groupingOrder = horizonParty and "TANK,HEALER,DAMAGER,NONE" or "NONE,DAMAGER,HEALER,TANK"
 
-			local party = oUF:SpawnHeader("oUF_Party", nil, "solo,party",
+			local party = oUF:SpawnHeader("oUF_Party", nil, nil,
 			"showPlayer", true,
-			"showSolo", false,
+			"showSolo", true,
 			"showParty", true,
-			"showRaid", false,
+			"showRaid", true,
 			"xoffset", xOffset,
 			"yOffset", yOffset,
 			"groupingOrder", groupingOrder,
@@ -254,11 +370,15 @@ function UF:OnLogin()
 			self:SetHeight(%d)
 			]]):format(partyWidth, partyFrameHeight))
 
+			party.groupType = "party"
+			tinsert(UF.headers, party)
+			RegisterStateDriver(party, "visibility", GetPartyVisibility())
+
 			local partyMover = B.Mover(party, L["PartyFrame"], "PartyFrame", {"LEFT", UIParent, 350, 0}, moverWidth, moverHeight)
 			party:ClearAllPoints()
 			party:SetPoint("BOTTOMLEFT", partyMover)
 
-			if showPartyPetFrame then
+			if C.db["UFs"]["PartyPetFrame"] then
 				oUF:RegisterStyle("PartyPet", CreatePartyPetStyle)
 				oUF:SetActiveStyle("PartyPet")
 
@@ -266,11 +386,11 @@ function UF:OnLogin()
 				local petMoverWidth = horizonParty and (petWidth*5+xOffset*4) or petWidth
 				local petMoverHeight = horizonParty and petFrameHeight or (petFrameHeight*5+yOffset*4)
 
-				local partyPet = oUF:SpawnHeader("oUF_PartyPet", nil, "solo,party",
+				local partyPet = oUF:SpawnHeader("oUF_PartyPet", nil, nil,
 				"showPlayer", true,
-				"showSolo", false,
+				"showSolo", true,
 				"showParty", true,
-				"showRaid", false,
+				"showRaid", true,
 				"xoffset", xOffset,
 				"yOffset", yOffset,
 				"point", horizonParty and "LEFT" or "BOTTOM",
@@ -280,6 +400,10 @@ function UF:OnLogin()
 				self:SetHeight(%d)
 				self:SetAttribute("unitsuffix", "pet")
 				]]):format(petWidth, petFrameHeight))
+
+				partyPet.groupType = "party"
+				tinsert(UF.headers, partyPet)
+				RegisterStateDriver(partyPet, "visibility", GetPartyVisibility())
 
 				local moverAnchor = horizonParty and {"TOPLEFT", partyMover, "BOTTOMLEFT", 0, -20} or {"BOTTOMRIGHT", partyMover, "BOTTOMLEFT", -10, 0}
 				local petMover = B.Mover(partyPet, L["PartyPetFrame"], "PartyPetFrame", moverAnchor, petMoverWidth, petMoverHeight)
@@ -296,10 +420,10 @@ function UF:OnLogin()
 			local maxColumns = B:Round(numGroups*5 / unitsPerColumn)
 
 			local function CreateGroup(name, i)
-				local group = oUF:SpawnHeader(name, nil, "solo,party,raid",
+				local group = oUF:SpawnHeader(name, nil, nil,
 				"showPlayer", true,
-				"showSolo", false,
-				"showParty", not showPartyFrame,
+				"showSolo", true,
+				"showParty", true,
 				"showRaid", true,
 				"xoffset", 5,
 				"yOffset", -5,
@@ -330,6 +454,10 @@ function UF:OnLogin()
 			end
 
 			local group = CreateGroup("oUF_Raid", groupFilter)
+			group.groupType = "raid"
+			tinsert(UF.headers, group)
+			RegisterStateDriver(group, "visibility", GetRaidVisibility())
+
 			local moverWidth = 100*scale*maxColumns + 5*(maxColumns-1)
 			local moverHeight = 20*scale*unitsPerColumn + 5*(unitsPerColumn-1)
 			B.Mover(group, L["RaidFrame"], "RaidFrame", {"TOPLEFT", UIParent, 35, -50}, moverWidth, moverHeight)
@@ -349,10 +477,10 @@ function UF:OnLogin()
 			local raidFrameHeight = raidHeight + C.db["UFs"]["RaidPowerHeight"] + C.mult
 
 			local function CreateGroup(name, i)
-				local group = oUF:SpawnHeader(name, nil, "solo,party,raid",
+				local group = oUF:SpawnHeader(name, nil, nil,
 				"showPlayer", true,
-				"showSolo", false,
-				"showParty", not showPartyFrame,
+				"showSolo", true,
+				"showParty", true,
 				"showRaid", true,
 				"xoffset", 5,
 				"yOffset", -5,
@@ -375,6 +503,11 @@ function UF:OnLogin()
 			local groups = {}
 			for i = 1, numGroups do
 				groups[i] = CreateGroup("oUF_Raid"..i, i)
+				groups[i].groupType = "raid"
+				tinsert(UF.headers, groups[i])
+				RegisterStateDriver(groups[i], "visibility", "show")
+				RegisterStateDriver(groups[i], "visibility", GetRaidVisibility())
+
 				if i == 1 then
 					if horizonRaid then
 						groups[i].mover = B.Mover(groups[i], L["RaidFrame"]..i, "RaidFrame"..i, {"TOPLEFT", UIParent, 35, -50}, (raidWidth+5)*5, raidFrameHeight)

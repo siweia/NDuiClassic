@@ -8,7 +8,8 @@ DB.Version = GetAddOnMetadata("NDui", "Version")
 DB.Support = GetAddOnMetadata("NDui", "X-Support")
 DB.Client = GetLocale()
 DB.ScreenWidth, DB.ScreenHeight = GetPhysicalScreenSize()
-DB.isClassic = select(4, GetBuildInfo()) < 20000
+DB.isClassic = select(4, GetBuildInfo()) < 90000
+DB.isNewPatch = select(4, GetBuildInfo()) >= 20502 -- 2.5.2
 
 -- Colors
 DB.MyName = UnitName("player")
@@ -45,6 +46,7 @@ DB.QualityColors[LE_ITEM_QUALITY_COMMON] = {r = 0, g = 0, b = 0}
 -- Fonts
 DB.Font = {STANDARD_TEXT_FONT, 12, "OUTLINE"}
 DB.LineString = DB.GreyColor.."---------------"
+DB.NDuiString = "|cff0080ffNDui:|r"
 
 -- Textures
 local Media = "Interface\\Addons\\NDui\\Media\\"
@@ -117,14 +119,27 @@ B:RegisterEvent("CHARACTER_POINTS_CHANGED", CheckRole)]]
 -- Raidbuff Checklist
 DB.BuffList = {
 	[1] = {		-- 合剂
-		--251836,	-- 敏捷238
-		--251837,	-- 智力238
-		--251838,	-- 耐力238
-		--251839,	-- 力量238
-		298836,	-- 敏捷360
-		298837,	-- 智力360
-		298839,	-- 耐力360
-		298841,	-- 力量360
+		17627,	-- 精炼智慧
+		28518,	-- 强固合剂
+		28519,	-- 强效回复合剂
+		28520,	-- 无情突袭合剂
+		28521,	-- 盲目光芒合剂
+		28540,	-- 纯粹死亡合剂
+		42735,	-- 多彩奇迹
+		-- 战斗药剂
+		33726,	-- 掌控药剂
+		11406,	-- 屠魔药剂
+		38954,	-- 魔能力量药剂
+		33721,	-- 魔能药剂
+		17539,	-- 强效奥法药剂
+		28491,	-- 治疗能量
+		-- 守护药剂
+		28502,	-- 特效护甲
+		39625,	-- 特效坚韧药剂
+		39626,	-- 土灵药剂
+		28514,	-- 增效
+		28509,	-- 强效法力回复
+		39627,	-- 德莱尼智慧药剂
 	},
 	[2] = {     -- 进食充分
 		104273, -- 250敏捷，BUFF名一致
@@ -229,3 +244,22 @@ DB.ReminderBuffs = {
 		},
 	},
 }
+
+-- Deprecated
+LE_ITEM_CLASS_CONSUMABLE = LE_ITEM_CLASS_CONSUMABLE or Enum.ItemClass.Consumable
+LE_ITEM_CLASS_CONTAINER = LE_ITEM_CLASS_CONTAINER or Enum.ItemClass.Container
+LE_ITEM_CLASS_WEAPON = LE_ITEM_CLASS_WEAPON or Enum.ItemClass.Weapon
+LE_ITEM_CLASS_GEM = LE_ITEM_CLASS_GEM or Enum.ItemClass.Gem
+LE_ITEM_CLASS_ARMOR = LE_ITEM_CLASS_ARMOR or Enum.ItemClass.Armor
+LE_ITEM_CLASS_REAGENT = LE_ITEM_CLASS_REAGENT or Enum.ItemClass.Reagent
+LE_ITEM_CLASS_PROJECTILE = LE_ITEM_CLASS_PROJECTILE or Enum.ItemClass.Projectile
+LE_ITEM_CLASS_TRADEGOODS = LE_ITEM_CLASS_TRADEGOODS or Enum.ItemClass.Tradegoods
+LE_ITEM_CLASS_ITEM_ENHANCEMENT = LE_ITEM_CLASS_ITEM_ENHANCEMENT or Enum.ItemClass.ItemEnhancement
+LE_ITEM_CLASS_RECIPE = LE_ITEM_CLASS_RECIPE or Enum.ItemClass.Recipe
+LE_ITEM_CLASS_QUIVER = LE_ITEM_CLASS_QUIVER or Enum.ItemClass.Quiver
+LE_ITEM_CLASS_QUESTITEM = LE_ITEM_CLASS_QUESTITEM or Enum.ItemClass.Questitem
+LE_ITEM_CLASS_KEY = LE_ITEM_CLASS_KEY or Enum.ItemClass.Key
+LE_ITEM_CLASS_MISCELLANEOUS = LE_ITEM_CLASS_MISCELLANEOUS or Enum.ItemClass.Miscellaneous
+LE_ITEM_CLASS_GLYPH = LE_ITEM_CLASS_GLYPH or Enum.ItemClass.Glyph
+LE_ITEM_CLASS_BATTLEPET = LE_ITEM_CLASS_BATTLEPET or Enum.ItemClass.Battlepet
+LE_ITEM_CLASS_WOW_TOKEN = LE_ITEM_CLASS_WOW_TOKEN or Enum.ItemClass.WoWToken

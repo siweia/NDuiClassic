@@ -1,8 +1,6 @@
 local _, ns = ...
 local B, C, L, DB = unpack(ns)
-local oUF = ns.oUF or oUF
-
-local LCD = DB.LibClassicDurations
+local oUF = ns.oUF
 
 local debugMode = false
 local class = DB.MyClass
@@ -93,8 +91,8 @@ local function UpdateDebuffFrame(self, name, icon, count, debuffType, duration, 
 		end
 
 		local c = DispellColor[debuffType] or DispellColor.none
-		if rd.ShowDebuffBorder and rd.Shadow then
-			rd.Shadow:SetBackdropBorderColor(c[1], c[2], c[3])
+		if rd.ShowDebuffBorder and rd.__shadow then
+			rd.__shadow:SetBackdropBorderColor(c[1], c[2], c[3])
 		end
 
 		if rd.glowFrame then
@@ -111,14 +109,9 @@ local function UpdateDebuffFrame(self, name, icon, count, debuffType, duration, 
 	end
 end
 
-local instType
+local instID
 local function checkInstance()
-	local _, instanceType = GetInstanceInfo()
-	if instanceType == "raid" then
-		instType = "raid"
-	else
-		instType = "other"
-	end
+	instID = select(8, GetInstanceInfo())
 end
 
 local function Update(self, _, unit)
@@ -135,15 +128,8 @@ local function Update(self, _, unit)
 	local prio
 
 	for i = 1, 32 do
-		local name, icon, count, debuffType, duration, expiration, caster, _, _, spellId = UnitAura(unit, i, rd.filter)
+		local name, icon, count, debuffType, duration, expiration, _, _, _, spellId = UnitAura(unit, i, rd.filter)
 		if not name then break end
-
-		if duration == 0 then
-			local newduration, newexpires = LCD:GetAuraDurationByUnit(unit, spellId, caster, name)
-			if newduration then
-				duration, expiration = newduration, newexpires
-			end
-		end
 
 		if rd.ShowDispellableDebuff and debuffType and (not isCharmed) and (not canAttack) then
 			if C.db["UFs"]["DispellOnly"] then
@@ -154,18 +140,19 @@ local function Update(self, _, unit)
 			end
 
 			if prio and prio > rd.priority then
-				rd.priority, rd.index = prio, i
+				rd.priority, rd.index, rd.spellID = prio, i, spellId
 				_name, _icon, _count, _debuffType, _duration, _expiration = name, icon, count, debuffType, duration, expiration
 			end
 		end
 
 		local instPrio
-		if instType and debuffs[instType] then
-			instPrio = debuffs[instType][spellId]
+		local data = instID and debuffs[instID] or debuffs[0]
+		if data then
+			instPrio = data[spellId]
 		end
 
 		if not RaidDebuffsIgnore[spellId] and instPrio and (instPrio == 6 or instPrio > rd.priority) then
-			rd.priority, rd.index = instPrio, i
+			rd.priority, rd.index, rd.spellID = instPrio, i, spellId
 			_name, _icon, _count, _debuffType, _duration, _expiration = name, icon, count, debuffType, duration, expiration
 		end
 	end
@@ -177,7 +164,7 @@ local function Update(self, _, unit)
 	end
 
 	if rd.priority == invalidPrio then
-		rd.index, _name = nil, nil
+		rd.index, rd.spellID, _name = nil, nil, nil
 	end
 
 	UpdateDebuffFrame(self, _name, _icon, _count, _debuffType, _duration, _expiration)

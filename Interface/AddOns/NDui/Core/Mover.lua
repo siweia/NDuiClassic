@@ -111,6 +111,8 @@ function M:CalculateMoverPoints(mover, trimX, trimY)
 end
 
 function M:UpdateTrimFrame()
+	if not f then return end -- for aurawatch preview
+
 	local x, y = M:CalculateMoverPoints(self)
 	x, y = B:Round(x), B:Round(y)
 	f.__x:SetText(x)
@@ -157,7 +159,7 @@ function M:Mover_OnEnter()
 end
 
 function M:Mover_OnLeave()
-	self.bg:SetBackdropBorderColor(0, 0, 0)
+	B.SetBorderColor(self.bg)
 	self.text:SetTextColor(1, 1, 1)
 end
 

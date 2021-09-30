@@ -14,6 +14,14 @@ local INTERRUPTED = INTERRUPTED
 local _QuestieTooltips, _QuestiePlayer, _QuestieQuest
 
 -- Init
+function UF:ClampTargetPlate()
+	SetCVar("ClampTargetNameplateToScreen", C.db["Nameplate"]["ClampTarget"] and 1 or 0)
+end
+
+function UF:UpdatePlateRange()
+	SetCVar("nameplateMaxDistance", C.db["Nameplate"]["PlateRange"])
+end
+
 function UF:UpdatePlateScale()
 	SetCVar("namePlateMinScale", C.db["Nameplate"]["MinScale"])
 	SetCVar("namePlateMaxScale", C.db["Nameplate"]["MinScale"])
@@ -30,6 +38,8 @@ function UF:UpdatePlateSpacing()
 end
 
 function UF:SetupCVars()
+	UF:ClampTargetPlate()
+	UF:UpdatePlateRange()
 	SetCVar("nameplateOverlapH", .8)
 	UF:UpdatePlateSpacing()
 	UF:UpdatePlateAlpha()
@@ -39,6 +49,8 @@ function UF:SetupCVars()
 	SetCVar("nameplateSelectedScale", 1)
 	SetCVar("nameplateLargerScale", 1)
 	SetCVar("nameplateGlobalScale", 1)
+
+	--B.HideOption(InterfaceOptionsNamesPanelUnitNameplatesNameplateMaxDistanceSlider) -- Use option in GUI
 
 	if IsAddOnLoaded("Questie") then
 		_QuestieQuest = QuestieLoader:ImportModule("QuestieQuest")
@@ -108,6 +120,7 @@ function UF:UpdateColor(_, unit)
 	local executeRatio = C.db["Nameplate"]["ExecuteRatio"]
 	local healthPerc = UnitHealth(unit) / (UnitHealthMax(unit) + .0001) * 100
 	local targetColor = C.db["Nameplate"]["TargetColor"]
+	local focusColor = C.db["Nameplate"]["FocusColor"]
 	local r, g, b
 
 	if not UnitIsConnected(unit) then
@@ -115,6 +128,8 @@ function UF:UpdateColor(_, unit)
 	else
 		if C.db["Nameplate"]["ColoredTarget"] and UnitIsUnit(unit, "target") then
 			r, g, b = targetColor.r, targetColor.g, targetColor.b
+		elseif C.db["Nameplate"]["ColoredFocus"] and UnitIsUnit(unit, "focus") then
+			r, g, b = focusColor.r, focusColor.g, focusColor.b
 		elseif isCustomUnit then
 			r, g, b = customColor.r, customColor.g, customColor.b
 		elseif isPlayer and isFriendly then
@@ -179,6 +194,12 @@ function UF:CreateThreatColor(self)
 
 	self.ThreatIndicator = threatIndicator
 	self.ThreatIndicator.Override = UF.UpdateThreatColor
+end
+
+function UF:UpdateFocusColor()
+	if C.db["Nameplate"]["ColoredFocus"] then
+		UF.UpdateThreatColor(self, _, self.unit)
+	end
 end
 
 -- Target indicator
@@ -370,7 +391,7 @@ function UF:UpdateForQuestie(npcID)
 			if _QuestiePlayer.currentQuestlog[questID] then
 				foundObjective = true
 
-				if tooltip.objective.Needed then
+				if tooltip.objective and tooltip.objective.Needed then
 					progressText = tooltip.objective.Needed - tooltip.objective.Collected
 					if progressText == 0 then
 						foundObjective = nil
@@ -552,24 +573,21 @@ function UF:MouseoverIndicator(self)
 end
 
 -- Interrupt info on castbars
-local guidToPlate = {}
-function UF:UpdateCastbarInterrupt(...)
-	local _, eventType, _, sourceGUID, sourceName, _, _, destGUID = ...
-	if eventType == "SPELL_INTERRUPT" and destGUID and sourceName and sourceName ~= "" then
-		local nameplate = guidToPlate[destGUID]
-		if nameplate and nameplate.Castbar then
-			local _, class = GetPlayerInfoByGUID(sourceGUID)
-			local r, g, b = B.ClassColor(class)
-			local color = B.HexRGB(r, g, b)
-			local sourceName = Ambiguate(sourceName, "short")
-			nameplate.Castbar.Text:SetText(INTERRUPTED.." > "..color..sourceName)
-			nameplate.Castbar.Time:SetText("")
-		end
+function UF:UpdateSpellInterruptor(...)
+	local _, _, sourceGUID, sourceName, _, _, destGUID = ...
+	if destGUID == self.unitGUID and sourceGUID and sourceName and sourceName ~= "" then
+		local _, class = GetPlayerInfoByGUID(sourceGUID)
+		local r, g, b = B.ClassColor(class)
+		local color = B.HexRGB(r, g, b)
+		local sourceName = Ambiguate(sourceName, "short")
+		self.Castbar.Text:SetText(INTERRUPTED.." > "..color..sourceName)
+		self.Castbar.Time:SetText("")
 	end
 end
 
-function UF:AddInterruptInfo()
-	B:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED", self.UpdateCastbarInterrupt)
+function UF:SpellInterruptor(self)
+	if not self.Castbar then return end
+	self:RegisterCombatEvent("SPELL_INTERRUPT", UF.UpdateSpellInterruptor)
 end
 
 -- Create Nameplates
@@ -583,7 +601,7 @@ function UF:CreatePlates()
 	local health = CreateFrame("StatusBar", nil, self)
 	health:SetAllPoints()
 	health:SetStatusBarTexture(DB.normTex)
-	health.backdrop = B.CreateBDFrame(health, nil, true) -- don't mess up with libs
+	health.backdrop = B.SetBD(health) -- don't mess up with libs
 	B:SmoothBar(health)
 
 	self.Health = health
@@ -613,6 +631,9 @@ function UF:CreatePlates()
 	UF:AddTargetIndicator(self)
 	UF:AddCreatureIcon(self)
 	UF:AddQuestIcon(self)
+	UF:SpellInterruptor(self)
+
+	self:RegisterEvent("PLAYER_FOCUS_CHANGED", UF.UpdateFocusColor, true)
 
 	platesList[self] = self:GetName()
 end
@@ -683,6 +704,7 @@ function UF:RefreshNameplats()
 		nameplate.Castbar:SetHeight(plateHeight)
 		nameplate.Castbar.Time:SetFont(DB.Font[1], nameTextSize, DB.Font[3])
 		nameplate.Castbar.Text:SetFont(DB.Font[1], nameTextSize, DB.Font[3])
+		nameplate.Castbar.spellTarget:SetFont(DB.Font[1], nameTextSize+3, DB.Font[3])
 		nameplate.healthValue:SetFont(DB.Font[1], C.db["Nameplate"]["HealthTextSize"], DB.Font[3])
 		nameplate.healthValue:UpdateTag()
 		UF.UpdateNameplateAuras(nameplate)
@@ -781,17 +803,12 @@ function UF:PostUpdatePlates(event, unit)
 	if event == "NAME_PLATE_UNIT_ADDED" then
 		self.unitName = UnitName(unit)
 		self.unitGUID = UnitGUID(unit)
-		if self.unitGUID then
-			guidToPlate[self.unitGUID] = self
-		end
 		self.npcID = B.GetNPCID(self.unitGUID)
 		self.isPlayer = UnitIsPlayer(unit)
 
 		UF.RefreshPlateType(self, unit)
 	elseif event == "NAME_PLATE_UNIT_REMOVED" then
-		if self.unitGUID then
-			guidToPlate[self.unitGUID] = nil
-		end
+		self.npcID = nil
 	end
 
 	if event ~= "NAME_PLATE_UNIT_REMOVED" then
@@ -814,11 +831,13 @@ function UF:PlateVisibility(event)
 		UIFrameFadeIn(self.Health.bg, .3, self.Health.bg:GetAlpha(), 1)
 		UIFrameFadeIn(self.Power, .3, self.Power:GetAlpha(), 1)
 		UIFrameFadeIn(self.Power.bg, .3, self.Power.bg:GetAlpha(), 1)
+		UIFrameFadeIn(self.predicFrame, .3, self:GetAlpha(), 1)
 	else
 		UIFrameFadeOut(self.Health, 2, self.Health:GetAlpha(), alpha)
 		UIFrameFadeOut(self.Health.bg, 2, self.Health.bg:GetAlpha(), alpha)
 		UIFrameFadeOut(self.Power, 2, self.Power:GetAlpha(), alpha)
 		UIFrameFadeOut(self.Power.bg, 2, self.Power.bg:GetAlpha(), alpha)
+		UIFrameFadeOut(self.predicFrame, 2, self:GetAlpha(), alpha)
 	end
 end
 
@@ -866,8 +885,9 @@ function UF:CreatePlayerPlate()
 
 	UF:CreateHealthBar(self)
 	UF:CreatePowerBar(self)
+	UF:CreatePrediction(self)
 	UF:CreateClassPower(self)
-	if C.db["Auras"]["ClassAuras"] and not DB.isClassic then auras:CreateLumos(self) end
+	--if C.db["Auras"]["ClassAuras"] then auras:CreateLumos(self) end
 	if not C.db["Nameplate"]["ClassPowerOnly"] then UF:CreateEneryTicker(self) end
 
 	local textFrame = CreateFrame("Frame", nil, self.Power)
@@ -908,5 +928,26 @@ function UF:TogglePlateVisibility()
 		plate:UnregisterEvent("PLAYER_REGEN_DISABLED", UF.PlateVisibility)
 		plate:UnregisterEvent("PLAYER_ENTERING_WORLD", UF.PlateVisibility)
 		UF.PlateVisibility(plate, "PLAYER_REGEN_DISABLED")
+	end
+end
+
+UF.MajorSpells = {}
+function UF:RefreshMajorSpells()
+	wipe(UF.MajorSpells)
+
+	for spellID in pairs(C.MajorSpells) do
+		local name = GetSpellInfo(spellID)
+		if name then
+			local modValue = NDuiADB["MajorSpells"][spellID]
+			if modValue == nil then
+				UF.MajorSpells[spellID] = true
+			end
+		end
+	end
+
+	for spellID, value in pairs(NDuiADB["MajorSpells"]) do
+		if value then
+			UF.MajorSpells[spellID] = true
+		end
 	end
 end

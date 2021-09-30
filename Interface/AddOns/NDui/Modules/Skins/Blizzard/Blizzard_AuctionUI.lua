@@ -4,7 +4,7 @@ local B, C, L, DB = unpack(ns)
 C.themes["Blizzard_AuctionUI"] = function()
 	local r, g, b = DB.r, DB.g, DB.b
 
-	B.SetBD(AuctionFrame, 2, -10, 0, 10)
+	B.SetBD(AuctionFrame, nil, 2, -10, 0, 10)
 	B.StripTextures(AuctionProgressFrame)
 	B.SetBD(AuctionProgressFrame)
 
@@ -14,7 +14,7 @@ C.themes["Blizzard_AuctionUI"] = function()
 
 	AuctionProgressBar.Text:ClearAllPoints()
 	AuctionProgressBar.Text:SetPoint("CENTER", 0, 1)
-	B.ReskinClose(AuctionProgressFrameCancelButton, "LEFT", AuctionProgressBar, "RIGHT", 4, 0)
+	B.ReskinClose(AuctionProgressFrameCancelButton)
 
 	AuctionFrame:DisableDrawLayer("ARTWORK")
 	AuctionPortraitTexture:Hide()
@@ -63,13 +63,27 @@ C.themes["Blizzard_AuctionUI"] = function()
 		end
 	end)
 
-	local abuttons = {"BrowseBidButton", "BrowseBuyoutButton", "BrowseCloseButton", "BrowseSearchButton", "BidBidButton", "BidBuyoutButton", "BidCloseButton", "AuctionsCloseButton", "AuctionsCancelAuctionButton", "AuctionsCreateAuctionButton", "AuctionsNumStacksMaxButton", "AuctionsStackSizeMaxButton"}
-	for i = 1, #abuttons do
-		local bu = _G[abuttons[i]]
-		if not bu then
-			print(abuttons[i])
+	local abuttons = {
+		"BrowseBidButton",
+		"BrowseBuyoutButton",
+		"BrowseCloseButton",
+		"BrowseSearchButton",
+		"BrowseResetButton",
+		"BidBidButton",
+		"BidBuyoutButton",
+		"BidCloseButton",
+		"AuctionsCloseButton",
+		"AuctionsCancelAuctionButton",
+		"AuctionsCreateAuctionButton",
+		"AuctionsNumStacksMaxButton",
+		"AuctionsStackSizeMaxButton",
+	}
+	for _, name in pairs(abuttons) do
+		local button = _G[name]
+		if not button then
+			if DB.isDeveloper then print(name, "not found.") end
 		else
-			B.Reskin(_G[abuttons[i]])
+			B.Reskin(button)
 		end
 	end
 
@@ -134,14 +148,14 @@ C.themes["Blizzard_AuctionUI"] = function()
 		AuctionsItemButton.IconBorder:SetTexture("")
 	end)
 
-	B.CreateBD(AuctionsItemButton, .25)
+	B.CreateBDFrame(AuctionsItemButton, .25)
 	local _, AuctionsItemButtonNameFrame = AuctionsItemButton:GetRegions()
 	AuctionsItemButtonNameFrame:Hide()
 	local hl = AuctionsItemButton:GetHighlightTexture()
 	hl:SetColorTexture(1, 1, 1, .25)
 	hl:SetInside()
 
-	B.ReskinClose(AuctionFrameCloseButton, "TOPRIGHT", AuctionFrame, "TOPRIGHT", -4, -14)
+	B.ReskinClose(AuctionFrameCloseButton, AuctionFrame, -4, -14)
 	B.ReskinScroll(BrowseScrollFrameScrollBar)
 	B.ReskinScroll(AuctionsScrollFrameScrollBar)
 	B.ReskinScroll(BrowseFilterScrollFrameScrollBar)
@@ -170,12 +184,11 @@ C.themes["Blizzard_AuctionUI"] = function()
 	tex:SetSize(14, 14)
 	tex:SetPoint("CENTER")
 	tex:SetVertexColor(1, 1, 1)
-	BrowseDropDownButton.bgTex = tex
+	BrowseDropDownButton.__texture = tex
 
-	local bg = B.CreateBDFrame(BrowseDropDown, 0)
+	local bg = B.CreateBDFrame(BrowseDropDown, 0, true)
 	bg:SetPoint("TOPLEFT", 16, -5)
 	bg:SetPoint("BOTTOMRIGHT", 109, 11)
-	B.CreateGradient(bg)
 
 	BrowseDropDownButton:HookScript("OnEnter", B.Texture_OnEnter)
 	BrowseDropDownButton:HookScript("OnLeave", B.Texture_OnLeave)

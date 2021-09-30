@@ -7,13 +7,15 @@ local strmatch, strfind, strupper = strmatch, strfind, strupper
 local IsPlayerSpell, GetSpellInfo, GetSpellTexture = IsPlayerSpell, GetSpellInfo, GetSpellTexture
 local CastSpellByID, GetTrackingTexture = CastSpellByID, GetTrackingTexture
 local UIFrameFadeOut, UIFrameFadeIn = UIFrameFadeOut, UIFrameFadeIn
+local GetInstanceInfo, GetDifficultyInfo = GetInstanceInfo, GetDifficultyInfo
 local C_Timer_After = C_Timer.After
 local cr, cg, cb = DB.r, DB.g, DB.b
 
 function module:CreatePulse()
 	if not C.db["Map"]["CombatPulse"] then return end
 
-	local bg = B.CreateBDFrame(Minimap, nil, true)
+	local bg = B.SetBD(Minimap)
+	bg:SetFrameStrata("BACKGROUND")
 	local anim = bg:CreateAnimationGroup()
 	anim:SetLooping("BOUNCE")
 	anim.fader = anim:CreateAnimation("Alpha")
@@ -126,9 +128,8 @@ function module:RecycleBin()
 
 	local width, height, alpha = 220, 40, .5
 	local bin = CreateFrame("Frame", "RecycleBinFrame", UIParent)
-	bin:SetPoint("RIGHT", bu, "LEFT", -3, -6)
+	bin:SetPoint("BOTTOMRIGHT", bu, "BOTTOMLEFT", -3, 10)
 	bin:SetSize(width, height)
-	bin:SetFrameStrata("LOW")
 	bin:Hide()
 
 	local tex = B.SetGradient(bin, "H", 0, 0, 0, 0, alpha, width, height)
@@ -137,7 +138,7 @@ function module:RecycleBin()
 	topLine:SetPoint("BOTTOM", bin, "TOP")
 	local bottomLine = B.SetGradient(bin, "H", cr, cg, cb, 0, alpha, width, C.mult)
 	bottomLine:SetPoint("TOP", bin, "BOTTOM")
-	local rightLine = B.SetGradient(bin, "V", cr, cg, cb, alpha, alpha, C.mult, 40 + C.mult*2)
+	local rightLine = B.SetGradient(bin, "V", cr, cg, cb, alpha, alpha, C.mult, height + C.mult*2)
 	rightLine:SetPoint("LEFT", bin, "RIGHT")
 
 	local function hideBinButton()
@@ -164,6 +165,8 @@ function module:RecycleBin()
 
 	local isGoodLookingIcon = {}
 
+	local iconsPerRow = 10
+	local rowMult = iconsPerRow/2 - 1
 	local currentIndex, pendingTime, timeThreshold = 0, 5, 12
 	local buttons, numMinimapChildren = {}, 0
 	local removedTextures = {
@@ -248,27 +251,41 @@ function module:RecycleBin()
 		end
 	end
 
+	local shownButtons = {}
 	local function SortRubbish()
 		if #buttons == 0 then return end
-		local lastbutton
+
+		wipe(shownButtons)
 		for _, button in pairs(buttons) do
 			if next(button) and button:IsShown() then -- fix for fuxking AHDB
-				button:ClearAllPoints()
-				if not lastbutton then
-					button:SetPoint("RIGHT", bin, -3, 0)
-				else
-					button:SetPoint("RIGHT", lastbutton, "LEFT", -3, 0)
-				end
-				lastbutton = button
+				tinsert(shownButtons, button)
+			end
+		end
+
+		local numShown = #shownButtons
+		local row = numShown == 0 and 1 or B:Round((numShown + rowMult) / iconsPerRow)
+		local newHeight = row*37 + 3
+		bin:SetHeight(newHeight)
+		tex:SetHeight(newHeight)
+		rightLine:SetHeight(newHeight + 2*C.mult)
+
+		for index, button in pairs(shownButtons) do
+			button:ClearAllPoints()
+			if index == 1 then
+				button:SetPoint("BOTTOMRIGHT", bin, -3, 3)
+			elseif row > 1 and mod(index, row) == 1 or row == 1 then
+				button:SetPoint("RIGHT", shownButtons[index - row], "LEFT", -3, 0)
+			else
+				button:SetPoint("BOTTOM", shownButtons[index - 1], "TOP", 0, 3)
 			end
 		end
 	end
 
 	bu:SetScript("OnClick", function()
-		SortRubbish()
 		if bin:IsShown() then
 			clickFunc()
 		else
+			SortRubbish()
 			UIFrameFadeIn(bin, .5, 0, 1)
 		end
 	end)
@@ -308,8 +325,9 @@ function module:WhoPingsMyMap()
 end
 
 function module:UpdateMinimapScale()
-	local size = Minimap:GetWidth()
+	local size = C.db["Map"]["MinimapSize"]
 	local scale = C.db["Map"]["MinimapScale"]
+	Minimap:SetSize(size, size)
 	Minimap:SetScale(scale)
 	Minimap.mover:SetSize(size*scale, size*scale)
 end
@@ -331,84 +349,10 @@ function module:ShowMinimapClock()
 	end
 end
 
-function module:TrackMenu_OnClick(spellID)
-	CastSpellByID(spellID)
-end
-
-function module:TrackMenu_CheckStatus()
-	local texture = GetSpellTexture(self.arg1)
-	if texture == GetTrackingTexture() then
-		return true
-	end
-end
-
 function module:EasyTrackMenu()
-	local trackSpells = {
-		2383,	--Find Herbs
-		2580,	--Find Minerals
-		2481,	--Find Treasure
-		1494,	--Track Beasts
-		19883,	--Track Humanoids
-		19884,	--Track Undead
-		19885,	--Track Hidden
-		19880,	--Track Elementals
-		19878,	--Track Demons
-		19882,	--Track Giants
-		19879,	--Track Dragonkin
-		5225,	--Track Humanoids: Druid
-		5500,	--Sense Demons
-		5502,	--Sense Undead
-	}
-
-	local menuList = {
-		[1] = {text = L["TrackMenu"], isTitle = true, notCheckable = true},
-	}
-
-	local function updateMenuList()
-		for i = 2, #menuList do
-			if menuList[i] then wipe(menuList[i]) end
-		end
-
-		local index = 2
-		for _, spellID in pairs(trackSpells) do
-			if IsPlayerSpell(spellID) then
-				if not menuList[index] then menuList[index] = {} end
-				local spellName, _, texture = GetSpellInfo(spellID)
-				menuList[index].arg1 = spellID
-				menuList[index].text = spellName
-				menuList[index].func = module.TrackMenu_OnClick
-				menuList[index].checked = module.TrackMenu_CheckStatus
-				menuList[index].icon = texture
-				menuList[index].tCoordLeft = .08
-				menuList[index].tCoordRight = .92
-				menuList[index].tCoordTop = .08
-				menuList[index].tCoordBottom = .92
-
-				index = index + 1
-			end
-		end
-
-		return index
-	end
-
-	local function toggleTrackMenu(self)
-		if DropDownList1:IsShown() then
-			DropDownList1:Hide()
-		else
-			local index = updateMenuList()
-			if index > 2 then
-				local offset = self:GetWidth()*self:GetScale()*.5
-				EasyMenu(menuList, B.EasyMenu, self, -offset, offset, "MENU")
-			end
-		end
-	end
-
-	-- Click Func
 	local hasAlaCalendar = IsAddOnLoaded("alaCalendar")
 	Minimap:SetScript("OnMouseUp", function(self, btn)
-		if btn == "RightButton" then
-			toggleTrackMenu(self)
-		elseif btn == "MiddleButton" and hasAlaCalendar then
+		if btn == "MiddleButton" and hasAlaCalendar then
 			B:TogglePanel(ALA_CALENDAR)
 		else
 			Minimap_OnClick(self)
@@ -422,6 +366,46 @@ function module:ShowMinimapHelpInfo()
 			B:ShowHelpTip(MinimapCluster, L["MinimapHelp"], "LEFT", -20, -50, nil, "MinimapInfo")
 		end
 	end)
+end
+
+local function UpdateDifficultyFlag()
+	local frame = _G["NDuiMinimapDifficulty"]
+	local _, instanceType, difficulty, _, _, _, _, _, instanceGroupSize = GetInstanceInfo()
+	local _, _, isHeroic, _, displayHeroic = GetDifficultyInfo(difficulty)
+	if instanceType == "raid" or isHeroic or displayHeroic then
+		if isHeroic or displayHeroic then
+			frame.tex:SetTexCoord(0, .25, .0703125, .4296875)
+		else
+			frame.tex:SetTexCoord(0, .25, .5703125, .9296875)
+		end
+		frame.text:SetText(instanceGroupSize)
+		frame:Show()
+	else
+		frame:Hide()
+	end
+end
+
+function module:MinimapDifficulty()
+	if not C.db["Map"]["DiffFlag"] then return end
+	if _G.MiniMapInstanceDifficulty then return end -- hide flag if blizz makes its own
+
+	local frame = CreateFrame("Frame", "NDuiMinimapDifficulty", Minimap)
+	frame:SetSize(38, 46)
+	frame:SetPoint("TOPRIGHT", Minimap, "TOPRIGHT", 2, 2)
+	frame:SetScale(.6)
+
+	local tex = frame:CreateTexture(nil, "ARTWORK")
+	tex:SetTexture("Interface\\Minimap\\UI-DungeonDifficulty-Button")
+	tex:SetPoint("CENTER")
+	tex:SetSize(64, 46)
+	tex:SetTexCoord(0, .25, .0703125, .4140625)
+	frame.tex = tex
+
+	frame.text = B.CreateFS(frame, 15, "", true, "CENTER", 1, -8)
+
+	B:RegisterEvent("GROUP_ROSTER_UPDATE", UpdateDifficultyFlag)
+	B:RegisterEvent("UPDATE_INSTANCE_INFO", UpdateDifficultyFlag)
+	B:RegisterEvent("INSTANCE_GROUP_SIZE_CHANGED", UpdateDifficultyFlag)
 end
 
 function module:SetupMinimap()
@@ -474,6 +458,7 @@ function module:SetupMinimap()
 	self:WhoPingsMyMap()
 	self:EasyTrackMenu()
 	self:ShowMinimapHelpInfo()
+	self:MinimapDifficulty()
 
 	if LibDBIcon10_TownsfolkTracker then
 		LibDBIcon10_TownsfolkTracker:DisableDrawLayer("OVERLAY")

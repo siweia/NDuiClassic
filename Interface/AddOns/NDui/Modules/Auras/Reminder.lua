@@ -50,15 +50,15 @@ function A:Reminder_Update(cfg)
 	if depends and not cfg.dependsKnown then isPlayerSpell = false end
 	if combat and InCombatLockdown() then isInCombat = true end
 	if instance and inInst and (instType == "scenario" or instType == "party" or instType == "raid") then isInInst = true end
-	if pvp and (instType == "pvp" or GetZonePVPInfo() == "combat") then isInPVP = true end
+	if pvp and (instType == "arena" or instType == "pvp" or GetZonePVPInfo() == "combat") then isInPVP = true end
 	if not combat and not instance and not pvp then isInCombat, isInInst, isInPVP = true, true, true end
 
 	frame:Hide()
 	if isPlayerSpell and (isInCombat or isInInst or isInPVP) and not UnitIsDeadOrGhost("player") then
 		for i = 1, 32 do
-			local name = UnitBuff("player", i)
+			local name, _, _, _, _, _, caster = UnitBuff("player", i)
 			if not name then break end
-			if name and cfg.spells[name] then
+			if name and (cfg.spells[name] or cfg.gemini and cfg.gemini[name] and caster == "player") then
 				frame:Hide()
 				return
 			end

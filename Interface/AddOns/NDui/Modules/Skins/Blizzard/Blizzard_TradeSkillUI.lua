@@ -11,13 +11,15 @@ C.themes["Blizzard_CraftUI"] = function()
 	B.StripTextures(CraftRankFrameBorder)
 	B.StripTextures(CraftRankFrame)
 	CraftRankFrame:SetStatusBarTexture(DB.bdTex)
+	CraftRankFrame.SetStatusBarColor = B.Dummy
+	CraftRankFrame:GetStatusBarTexture():SetGradient("VERTICAL", .1, .3, .9, .2, .4, 1)
 	B.CreateBDFrame(CraftRankFrame, .25)
 	CraftRankFrame:SetWidth(220)
 
 	B.StripTextures(CraftDetailScrollChildFrame)
 	B.StripTextures(CraftIcon)
 	B.CreateBDFrame(CraftIcon)
-	B.ReskinExpandOrCollapse(CraftCollapseAllButton)
+	B.ReskinCollapse(CraftCollapseAllButton)
 	CraftExpandButtonFrame:DisableDrawLayer("BACKGROUND")
 
 	hooksecurefunc("CraftFrame_SetSelection", function(id)
@@ -39,6 +41,9 @@ C.themes["Blizzard_CraftUI"] = function()
 		bg:SetPoint("TOPLEFT", icon, "TOPRIGHT", 3, C.mult)
 		bg:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", 100, -C.mult)
 	end
+
+	B.ReskinDropDown(CraftFrameFilterDropDown)
+	B.ReskinCheck(CraftFrameAvailableFilterCheckButton)
 end
 
 C.themes["Blizzard_TradeSkillUI"] = function()
@@ -55,15 +60,24 @@ C.themes["Blizzard_TradeSkillUI"] = function()
 	B.StripTextures(TradeSkillRankFrameBorder)
 	B.StripTextures(TradeSkillRankFrame)
 	TradeSkillRankFrame:SetStatusBarTexture(DB.bdTex)
+	TradeSkillRankFrame.SetStatusBarColor = B.Dummy
+	TradeSkillRankFrame:GetStatusBarTexture():SetGradient("VERTICAL", .1, .3, .9, .2, .4, 1)
 	B.CreateBDFrame(TradeSkillRankFrame, .25)
 	TradeSkillRankFrame:SetWidth(220)
 
-	B.ReskinExpandOrCollapse(TradeSkillCollapseAllButton)
+	B.ReskinCollapse(TradeSkillCollapseAllButton)
 	TradeSkillExpandButtonFrame:DisableDrawLayer("BACKGROUND")
-	for i = 1, 8 do
-		local bu = _G["TradeSkillSkill"..i]
-		B.ReskinExpandOrCollapse(bu)
-	end
+
+	TradeSkillFrame:HookScript("OnShow", function()
+		for i = 1, 22 do
+			local bu = _G["TradeSkillSkill"..i]
+			if bu and not bu.styled then
+				B.ReskinCollapse(bu)
+				bu.styled = true
+			end
+		end
+	end)
+
 	B.ReskinDropDown(TradeSkillSubClassDropDown)
 	B.ReskinDropDown(TradeSkillInvSlotDropDown)
 

@@ -8,13 +8,14 @@ C.themes["Blizzard_TrainerUI"] = function()
 	B.ReskinDropDown(ClassTrainerFrameFilterDropDown)
 	B.ReskinScroll(ClassTrainerListScrollFrameScrollBar)
 	B.ReskinScroll(ClassTrainerDetailScrollFrameScrollBar)
+	B.CreateBDFrame(ClassTrainerDetailScrollFrame, .25)
 
-	B.ReskinExpandOrCollapse(ClassTrainerCollapseAllButton)
+	B.ReskinCollapse(ClassTrainerCollapseAllButton)
 	ClassTrainerExpandButtonFrame:DisableDrawLayer("BACKGROUND")
 
 	for i = 1, 11 do
 		local bu = _G["ClassTrainerSkill"..i]
-		B.ReskinExpandOrCollapse(bu)
+		B.ReskinCollapse(bu)
 	end
 
 	hooksecurefunc("ClassTrainer_SetSelection", function()

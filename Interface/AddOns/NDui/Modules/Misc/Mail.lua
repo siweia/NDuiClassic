@@ -3,9 +3,10 @@ local B, C, L, DB = unpack(ns)
 local M = B:GetModule("Misc")
 
 local wipe, select, pairs, tonumber = wipe, select, pairs, tonumber
-local strsplit, strfind = strsplit, strfind
+local strsplit, strfind, tinsert = strsplit, strfind, tinsert
 local InboxItemCanDelete, DeleteInboxItem, TakeInboxMoney, TakeInboxItem = InboxItemCanDelete, DeleteInboxItem, TakeInboxMoney, TakeInboxItem
 local GetInboxNumItems, GetInboxHeaderInfo, GetInboxItem, GetItemInfo = GetInboxNumItems, GetInboxHeaderInfo, GetInboxItem, GetItemInfo
+local GetSendMailPrice, GetMoney = GetSendMailPrice, GetMoney
 local C_Timer_After = C_Timer.After
 local C_Mail_HasInboxMoney = C_Mail.HasInboxMoney
 local C_Mail_IsCommandPending = C_Mail.IsCommandPending
@@ -62,10 +63,12 @@ function M:InboxItem_OnEnter()
 end
 
 local contactList = {}
+local contactListByRealm = {}
 
 function M:ContactButton_OnClick()
 	local text = self.name:GetText() or ""
 	SendMailNameEditBox:SetText(text)
+	SendMailNameEditBox:SetCursorPosition(0)
 end
 
 function M:ContactButton_Delete()
@@ -96,18 +99,31 @@ function M:ContactButton_Create(parent, index)
 	return button
 end
 
+local function GenerateDataByRealm(realm)
+	if contactListByRealm[realm] then
+		for name, color in pairs(contactListByRealm[realm]) do
+			local r, g, b = strsplit(":", color)
+			tinsert(contactList, {name = name.."-"..realm, r = r, g = g, b = b})
+		end
+	end
+end
+
 function M:ContactList_Refresh()
 	wipe(contactList)
+	wipe(contactListByRealm)
 
-	local count = 0
-	for name, color in pairs(NDuiADB["ContactList"]) do
-		count = count + 1
-		local r, g, b = strsplit(":", color)
-		if not contactList[count] then contactList[count] = {} end
-		contactList[count].name = name
-		contactList[count].r = r
-		contactList[count].g = g
-		contactList[count].b = b
+	for fullname, color in pairs(NDuiADB["ContactList"]) do
+		local name, realm = strsplit("-", fullname)
+		if not contactListByRealm[realm] then contactListByRealm[realm] = {} end
+		contactListByRealm[realm][name] = color
+	end
+
+	GenerateDataByRealm(DB.MyRealm)
+
+	for realm in pairs(contactListByRealm) do
+		if realm ~= DB.MyRealm then
+			GenerateDataByRealm(realm)
+		end
 	end
 
 	M:ContactList_Update()
@@ -158,7 +174,7 @@ end
 
 function M:MailBox_ContactList()
 	local bu = B.CreateGear(SendMailFrame)
-	bu:SetPoint("LEFT", SendMailNameEditBox, "RIGHT", 3, 0)
+	bu:SetPoint("LEFT", SendMailNameEditBox, "RIGHT", 20, 0)
 
 	local list = CreateFrame("Frame", nil, bu)
 	list:SetSize(200, 424)
@@ -330,6 +346,64 @@ function M:CollectCurrentButton()
 	button:SetScript("OnClick", M.MailBox_CollectCurrent)
 end
 
+function M:LastMailSaver()
+	local mailSaver = CreateFrame("CheckButton", nil, SendMailFrame, "OptionsCheckButtonTemplate")
+	mailSaver:SetHitRectInsets(0, 0, 0, 0)
+	mailSaver:SetPoint("LEFT", SendMailNameEditBox, "RIGHT", 0, 0)
+	mailSaver:SetSize(24, 24)
+	B.ReskinCheck(mailSaver)
+	mailSaver.bg:SetBackdropBorderColor(1, .8, 0, .5)
+
+	mailSaver:SetChecked(C.db["Misc"]["MailSaver"])
+	mailSaver:SetScript("OnClick", function(self)
+		C.db["Misc"]["MailSaver"] = self:GetChecked()
+	end)
+	B.AddTooltip(mailSaver, "ANCHOR_TOP", L["SaveMailTarget"])
+
+	local resetPending
+	hooksecurefunc("SendMailFrame_SendMail", function()
+		if C.db["Misc"]["MailSaver"] then
+			C.db["Misc"]["MailTarget"] = SendMailNameEditBox:GetText()
+			resetPending = true
+		else
+			resetPending = nil
+		end
+	end)
+
+	hooksecurefunc(SendMailNameEditBox, "SetText", function(self, text)
+		if resetPending and text == "" then
+			resetPending = nil
+			self:SetText(C.db["Misc"]["MailTarget"])
+		end
+	end)
+
+	SendMailFrame:HookScript("OnShow", function()
+		if C.db["Misc"]["MailSaver"] then
+			SendMailNameEditBox:SetText(C.db["Misc"]["MailTarget"])
+		end
+	end)
+end
+
+function M:ArrangeDefaultElements()
+	InboxTooMuchMail:ClearAllPoints()
+	InboxTooMuchMail:SetPoint("BOTTOM", MailFrame, "TOP", 0, 5)
+
+	SendMailNameEditBox:SetWidth(155)
+	SendMailNameEditBoxMiddle:SetWidth(146)
+	SendMailCostMoneyFrame:SetAlpha(0)
+
+	SendMailMailButton:HookScript("OnEnter", function(self)
+		GameTooltip:SetOwner(self, "ANCHOR_TOP")
+		GameTooltip:ClearLines()
+		local sendPrice = GetSendMailPrice()
+		local colorStr = "|cffffffff"
+		if sendPrice > GetMoney() then colorStr = "|cffff0000" end
+		GameTooltip:AddLine(SEND_MAIL_COST..colorStr..M:GetMoneyString(sendPrice, true))
+		GameTooltip:Show()
+	end)
+	SendMailMailButton:HookScript("OnLeave", B.HideTooltip)
+end
+
 function M:MailBox()
 	if not C.db["Misc"]["Mail"] then return end
 	if IsAddOnLoaded("Postal") then return end
@@ -346,14 +420,11 @@ function M:MailBox()
 	-- Custom contact list
 	M:MailBox_ContactList()
 
-	-- Replace the alert frame
-	if InboxTooMuchMail then
-		InboxTooMuchMail:ClearAllPoints()
-		InboxTooMuchMail:SetPoint("BOTTOM", MailFrame, "TOP", 0, 5)
-	end
-
+	-- Elements
+	M:ArrangeDefaultElements()
 	M.GetMoneyString = B:GetModule("Infobar").GetMoneyString
 	M:CollectGoldButton()
 	M:CollectCurrentButton()
+	M:LastMailSaver()
 end
 M:RegisterMisc("MailBox", M.MailBox)

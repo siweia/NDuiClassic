@@ -13,6 +13,7 @@ local DUNGEONS, RAID_INFO, DUNGEON_DIFFICULTY3 = DUNGEONS, RAID_INFO, DUNGEON_DI
 local RequestRaidInfo = RequestRaidInfo
 local GetCVarBool, GetGameTime, GameTime_GetLocalTime, GameTime_GetGameTime, SecondsToTime = GetCVarBool, GetGameTime, GameTime_GetLocalTime, GameTime_GetGameTime, SecondsToTime
 local GetNumSavedInstances, GetSavedInstanceInfo = GetNumSavedInstances, GetSavedInstanceInfo
+local C_DateAndTime_GetCurrentCalendarTime = C_DateAndTime.GetCurrentCalendarTime
 
 local function updateTimerFormat(color, hour, minute)
 	if GetCVarBool("timeMgrUseMilitaryTime") then
@@ -57,8 +58,8 @@ info.onEnter = function(self)
 	GameTooltip:SetOwner(self, "ANCHOR_NONE")
 	GameTooltip:SetPoint("BOTTOMRIGHT", UIParent, -15, 30)
 	GameTooltip:ClearLines()
-	local today = C_DateAndTime.GetTodaysDate()
-	local w, m, d, y = today.weekDay, today.month, today.day, today.year
+	local today = C_DateAndTime_GetCurrentCalendarTime()
+	local w, m, d, y = today.weekday, today.month, today.monthDay, today.year
 	GameTooltip:AddLine(format(FULLDATE, CALENDAR_WEEKDAY_NAMES[w], CALENDAR_FULLDATE_MONTH_NAMES[m], d, y), 0,.6,1)
 	GameTooltip:AddLine(" ")
 	GameTooltip:AddDoubleLine(L["Local Time"], GameTime_GetLocalTime(true), .6,.8,1 ,1,1,1)
@@ -96,6 +97,9 @@ info.onLeave = B.HideTooltip
 
 info.onMouseUp = function(_, btn)
 	if btn == "RightButton" then
-		ToggleFrame(TimeManagerFrame)
+		TimeManager_LoadUI()
+		if TimeManager_Toggle then
+			TimeManager_Toggle()
+		end
 	end
 end

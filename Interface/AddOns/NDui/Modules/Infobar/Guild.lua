@@ -18,6 +18,7 @@ local ChatEdit_ChooseBoxForSend, ChatEdit_ActivateChat, ChatFrame_OpenChat, Chat
 local GetNumGuildMembers, GetGuildInfo, GetGuildRosterInfo, IsInGuild = GetNumGuildMembers, GetGuildInfo, GetGuildRosterInfo, IsInGuild
 local GetQuestDifficultyColor, GetRealZoneText, UnitInRaid, UnitInParty = GetQuestDifficultyColor, GetRealZoneText, UnitInRaid, UnitInParty
 local HybridScrollFrame_GetOffset, HybridScrollFrame_Update = HybridScrollFrame_GetOffset, HybridScrollFrame_Update
+local C_GuildInfo_GuildRoster = C_GuildInfo.GuildRoster
 
 local function rosterButtonOnClick(self, btn)
 	local name = info.guildTable[self.index][3]
@@ -84,7 +85,7 @@ function info:GuildPanel_UpdateButton(button)
 
 	local zonecolor = DB.GreyColor
 	if UnitInRaid(name) or UnitInParty(name) then
-		zonecolor = "|cff4c4cff"
+		zonecolor = DB.InfoColor
 	elseif GetRealZoneText() == zone then
 		zonecolor = "|cff4cff4c"
 	end
@@ -237,11 +238,11 @@ function info:GuildPanel_Init()
 end
 
 C_Timer_After(5, function()
-	if IsInGuild() then GuildRoster() end
+	if IsInGuild() then C_GuildInfo_GuildRoster() end
 end)
 
 function info:GuildPanel_Refresh()
-	GuildRoster()
+	C_GuildInfo_GuildRoster()
 
 	wipe(info.guildTable)
 	local count = 0
@@ -302,7 +303,7 @@ info.onEvent = function(self, event, arg1)
 	end
 
 	if event == "GUILD_ROSTER_UPDATE" then
-		if arg1 then GuildRoster() end
+		if arg1 then C_GuildInfo_GuildRoster() end
 	end
 
 	local online = select(3, GetNumGuildMembers())
@@ -336,6 +337,8 @@ info.onLeave = function()
 end
 
 info.onMouseUp = function()
+	--if InCombatLockdown() then UIErrorsFrame:AddMessage(DB.InfoColor..ERR_NOT_IN_COMBAT) return end -- fix by LibShowUIPanel
+
 	if not IsInGuild() then return end
 	infoFrame:Hide()
 	ToggleFrame(FriendsFrame)

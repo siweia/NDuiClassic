@@ -3,10 +3,13 @@
 	<Script file="private.lua"/>
 	<Script file="ouf.lua"/>
 	<Script file="events.lua"/>
+	<Script file="combatevents.lua"/>
 	<Script file="factory.lua"/>
 	<Script file="blizzard.lua"/>
 	<Script file="units.lua"/>
 	<Script file="colors.lua"/>
+
+	<Script file='Plugins\RaidDebuffs.lua' />
 
 	<Script file="elements\additionalpower.lua"/>
 	<Script file="elements\assistantindicator.lua"/>
@@ -14,8 +17,8 @@
 	<Script file="elements\castbar.lua"/>
 	<Script file="elements\classpower.lua"/>
 	<Script file="elements\combatindicator.lua"/>
+	<Script file="elements\healprediction.lua"/>
 	<Script file="elements\health.lua"/>
-	<Script file="elements\healthprediction.lua"/>
 	<Script file="elements\leaderindicator.lua"/>
 	<Script file="elements\masterlooterindicator.lua"/>
 	<Script file="elements\phaseindicator.lua"/>
@@ -32,7 +35,6 @@
 
 	<Script file='Plugins\Castbar.lua' />
 	<Script file='Plugins\FloatingCombatFeedback.lua' />
-	<Script file='Plugins\RaidDebuffs.lua' />
 	<Script file='Plugins\Swing.lua' />
 	<Script file='Plugins\EnergyManaRegen.lua' />
 

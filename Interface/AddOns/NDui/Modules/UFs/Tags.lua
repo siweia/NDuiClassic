@@ -1,7 +1,7 @@
 ﻿local _, ns = ...
 local B, C, L, DB = unpack(ns)
 
-local oUF = ns.oUF or oUF
+local oUF = ns.oUF
 local format, floor = string.format, math.floor
 local AFK, DND, DEAD, PLAYER_OFFLINE, LEVEL = AFK, DND, DEAD, PLAYER_OFFLINE, LEVEL
 local ALTERNATE_POWER_INDEX = ALTERNATE_POWER_INDEX or 10
@@ -57,7 +57,7 @@ oUF.Tags.Methods["hp"] = function(unit)
 	else
 		local per = GetUnitHealthPerc(unit) or 0
 		local cur = UnitHealth(unit)
-		if unit == "player" or unit == "target" then
+		if unit == "player" or unit == "target" or unit == "focus" then
 			return ValueAndPercent(cur, per)
 		else
 			return ColorPercent(per)
@@ -69,7 +69,7 @@ oUF.Tags.Events["hp"] = "UNIT_HEALTH_FREQUENT UNIT_MAXHEALTH UNIT_NAME_UPDATE UN
 oUF.Tags.Methods["power"] = function(unit)
 	local cur = UnitPower(unit)
 	local per = oUF.Tags.Methods["perpp"](unit) or 0
-	if unit == "player" or unit == "target" then
+	if unit == "player" or unit == "target" or unit == "focus" then
 		if per < 100 and UnitPowerType(unit) == 0 then
 			return B.Numb(cur).." | "..per
 		else

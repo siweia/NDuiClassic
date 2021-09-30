@@ -91,8 +91,8 @@ function M:FindQuestComplete()
 	initComplete = true
 end
 
-function M:QuestNotifier()
-	if C.db["Misc"]["QuestNotifier"] then
+function M:QuestNotification()
+	if C.db["Misc"]["QuestNotification"] then
 		M:FindQuestComplete()
 		B:RegisterEvent("QUEST_ACCEPTED", M.FindQuestAccept)
 		B:RegisterEvent("QUEST_LOG_UPDATE", M.FindQuestComplete)
@@ -104,4 +104,4 @@ function M:QuestNotifier()
 		B:UnregisterEvent("UI_INFO_MESSAGE", M.FindQuestProgress)
 	end
 end
-M:RegisterMisc("QuestNotifier", M.QuestNotifier)
+M:RegisterMisc("QuestNotification", M.QuestNotification)

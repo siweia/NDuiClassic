@@ -14,5 +14,5 @@ tinsert(C.defaultThemes, function()
 	if select(14, TutorialFrameOkayButton:GetRegions()) then
 		select(14, TutorialFrameOkayButton:GetRegions()):Hide()
 	end
-	TutorialFrameOkayButton:SetBackdropColor(0, 0, 0, .25)
+	TutorialFrameOkayButton.__bg:SetBackdropColor(0, 0, 0, .25)
 end)

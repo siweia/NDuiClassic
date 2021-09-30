@@ -1,6 +1,51 @@
 local _, ns = ...
 local B, C, L, DB = unpack(ns)
 
+local function UpdateProgressItemQuality(self)
+	local button = self.__owner
+	local index = button:GetID()
+	local buttonType = button.type
+	local objectType = button.objectType
+
+	local quality
+	if objectType == "item" then
+		quality = select(4, GetQuestItemInfo(buttonType, index))
+	elseif objectType == "currency" then
+		quality = select(4, GetQuestCurrencyInfo(buttonType, index))
+	end
+
+	local color = DB.QualityColors[quality or 1]
+	button.bg:SetBackdropBorderColor(color.r, color.g, color.b)
+end
+
+local function UpdateQuestItemQuality(self)
+	local button = self.__owner
+	local index = button:GetID()
+	local itemName, _, _, quality = GetQuestLogRewardInfo(index)
+	if not itemName then
+		itemName, _, _, quality = GetQuestLogChoiceInfo(index)
+	end
+	if not itemName then
+		itemName = GetQuestLogRewardSpell(index)
+		quality = 1
+	end
+	if itemName and quality then
+		local color = DB.QualityColors[quality]
+		button.bg:SetBackdropBorderColor(color.r, color.g, color.b)
+	end
+end
+
+local function ReskinQuestItem(button)
+	button.NameFrame:Hide()
+	local icon = button.Icon
+	icon.__owner = button
+	button.bg = B.ReskinIcon(icon)
+
+	local bg = B.CreateBDFrame(button, .25)
+	bg:SetPoint("TOPLEFT", button.bg, "TOPRIGHT", 2, 0)
+	bg:SetPoint("BOTTOMRIGHT", button.bg, 100, 0)
+end
+
 tinsert(C.defaultThemes, function()
 	B.ReskinPortraitFrame(QuestFrame, 15, -15, -30, 65)
 
@@ -27,21 +72,9 @@ tinsert(C.defaultThemes, function()
 	end)
 
 	for i = 1, MAX_REQUIRED_ITEMS do
-		local bu = _G["QuestProgressItem"..i]
-		local ic = _G["QuestProgressItem"..i.."IconTexture"]
-		local na = _G["QuestProgressItem"..i.."NameFrame"]
-		local co = _G["QuestProgressItem"..i.."Count"]
-		ic:SetSize(40, 40)
-		ic:SetTexCoord(.08, .92, .08, .92)
-		ic:SetDrawLayer("OVERLAY")
-		B.CreateBD(bu, .25)
-		na:Hide()
-		co:SetDrawLayer("OVERLAY")
-
-		local line = CreateFrame("Frame", nil, bu)
-		line:SetSize(1, 40)
-		line:SetPoint("RIGHT", ic, 1, 0)
-		B.CreateBD(line)
+		local button = _G["QuestProgressItem"..i]
+		ReskinQuestItem(button)
+		hooksecurefunc(button.Icon, "SetTexture", UpdateProgressItemQuality)
 	end
 
 	QuestDetailScrollFrame:SetWidth(302) -- else these buttons get cut off
@@ -54,18 +87,14 @@ tinsert(C.defaultThemes, function()
 		end
 	end)
 
-	local buttons = {
-		"QuestFrameAcceptButton",
-		"QuestFrameDeclineButton",
-		"QuestFrameCompleteQuestButton",
-		"QuestFrameCompleteButton",
-		"QuestFrameGoodbyeButton",
-		"QuestFrameGreetingGoodbyeButton",
-		"QuestFrameCancelButton"
-	}
-	for _, questButton in next, buttons do
-		B.Reskin(_G[questButton])
-	end
+	B.Reskin(QuestFrameAcceptButton)
+	B.Reskin(QuestFrameDeclineButton)
+	B.Reskin(QuestFrameCompleteQuestButton)
+	B.Reskin(QuestFrameCancelButton)
+	B.Reskin(QuestFrameCompleteButton)
+	B.Reskin(QuestFrameGoodbyeButton)
+	B.Reskin(QuestFrameGreetingGoodbyeButton)
+
 	B.ReskinScroll(QuestProgressScrollFrameScrollBar)
 	B.ReskinScroll(QuestRewardScrollFrameScrollBar)
 	B.ReskinScroll(QuestDetailScrollFrameScrollBar)
@@ -82,33 +111,22 @@ tinsert(C.defaultThemes, function()
 	QuestProgressText.SetTextColor = B.Dummy
 	GreetingText:SetTextColor(1, 1, 1)
 	GreetingText.SetTextColor = B.Dummy
-	AvailableQuestsText:SetTextColor(1, 1, 1)
+	AvailableQuestsText:SetTextColor(1, .8, 0)
 	AvailableQuestsText.SetTextColor = B.Dummy
 	AvailableQuestsText:SetShadowColor(0, 0, 0)
 	CurrentQuestsText:SetTextColor(1, 1, 1)
 	CurrentQuestsText.SetTextColor = B.Dummy
 	CurrentQuestsText:SetShadowColor(0, 0, 0)
 
-	-- [[ Quest NPC model ]]
+	-- Quest NPC model
+
 	B.StripTextures(QuestNPCModel)
+	B.SetBD(QuestNPCModel)
 	B.StripTextures(QuestNPCModelTextFrame)
-
-	local npcbd = B.SetBD(QuestNPCModel)
-	npcbd:ClearAllPoints()
-	npcbd:SetPoint("TOPLEFT", -1, 1)
-	npcbd:SetPoint("RIGHT", 2, 0)
-	npcbd:SetPoint("BOTTOM", QuestNPCModelTextScrollFrame)
-	npcbd:SetFrameLevel(0)
-
-	local npcLine = CreateFrame("Frame", nil, QuestNPCModel)
-	npcLine:SetPoint("BOTTOMLEFT", 0, -1)
-	npcLine:SetPoint("BOTTOMRIGHT", 1, -1)
-	npcLine:SetHeight(C.mult)
-	npcLine:SetFrameLevel(0)
-	B.CreateBD(npcLine, 0)
+	B.SetBD(QuestNPCModelTextFrame)
 
 	hooksecurefunc("QuestFrame_ShowQuestPortrait", function(parentFrame, _, _, _, _, x, y)
-		x = x + 5
+		x = x + 6
 		QuestNPCModel:SetPoint("TOPLEFT", parentFrame, "TOPRIGHT", x, y)
 	end)
 
@@ -139,7 +157,7 @@ tinsert(C.defaultThemes, function()
 	B.ReskinScroll(QuestLogDetailScrollFrameScrollBar)
 	B.ReskinScroll(QuestLogListScrollFrameScrollBar)
 
-	B.ReskinExpandOrCollapse(QuestLogCollapseAllButton)
+	B.ReskinCollapse(QuestLogCollapseAllButton)
 	QuestLogCollapseAllButton:DisableDrawLayer("BACKGROUND")
 
 	B.StripTextures(QuestLogTrack)
@@ -151,22 +169,17 @@ tinsert(C.defaultThemes, function()
 	hooksecurefunc("QuestLog_Update", function()
 		for i = 1, QUESTS_DISPLAYED, 1 do
 			local bu = _G["QuestLogTitle"..i]
-			if bu.isHeader and not bu.styled then
-				B.ReskinExpandOrCollapse(bu)
+			if bu and not bu.styled then
+				B.ReskinCollapse(bu)
 				bu.styled = true
 			end
 		end
 	end)
 
 	for i = 1, 10 do
-		local icon = _G["QuestLogItem"..i.."IconTexture"]
-		icon:SetTexCoord(.08, .92, .08, .92)
-		B.CreateBDFrame(icon)
-		local nameFrame = _G["QuestLogItem"..i.."NameFrame"]
-		nameFrame:Hide()
-		local bg = B.CreateBDFrame(nameFrame, .25)
-		bg:SetPoint("TOPLEFT", icon, "TOPRIGHT", 3, C.mult)
-		bg:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", 100, -C.mult)
+		local button = _G["QuestLogItem"..i]
+		ReskinQuestItem(button)
+		hooksecurefunc(button.Icon, "SetTexture", UpdateQuestItemQuality)
 	end
 
 	C_Timer.After(3, function()

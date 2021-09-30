@@ -54,7 +54,7 @@ local function ForceDBMOptions()
 				["ExpandUpwards"] = true,
 				["ExpandUpwardsLarge"] = true,
 				["BarXOffset"] = 0,
-				["BarYOffset"] = 15,
+				["BarYOffset"] = 8,
 				["TimerPoint"] = "LEFT",
 				["TimerX"] = 118,
 				["TimerY"] = -105,
@@ -62,7 +62,7 @@ local function ForceDBMOptions()
 				["Heigh"] = 20,
 				["HugeWidth"] = 210,
 				["HugeBarXOffset"] = 0,
-				["HugeBarYOffset"] = 15,
+				["HugeBarYOffset"] = 8,
 				["HugeTimerPoint"] = "CENTER",
 				["HugeTimerX"] = 330,
 				["HugeTimerY"] = -42,
@@ -156,8 +156,8 @@ end
 -- BigWigs
 local function ForceBigwigs()
 	if not IsAddOnLoaded("BigWigs") then return end
-	if BigWigs3DB then wipe(BigWigs3DB) end
-	BigWigs3DB = {
+	if BigWigsClassicDB then wipe(BigWigsClassicDB) end
+	BigWigsClassicDB = {
 		["namespaces"] = {
 			["BigWigs_Plugins_Bars"] = {
 				["profiles"] = {

@@ -33,8 +33,8 @@ function TT:GetUnit()
 end
 
 function TT:HideLines()
-	for i = 3, self:NumLines() do
-		local tiptext = _G["GameTooltipTextLeft"..i]
+    for i = 3, self:NumLines() do
+        local tiptext = _G["GameTooltipTextLeft"..i]
 		local linetext = tiptext:GetText()
 		if linetext then
 			if linetext == PVP then
@@ -56,7 +56,7 @@ function TT:HideLines()
 				end
 			end
 		end
-	end
+    end
 end
 
 function TT:GetLevelLine()

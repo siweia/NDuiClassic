@@ -28,6 +28,7 @@ local channelingTicks = { -- ElvUI data
 	[8288] = 5, -- Drain Soul(Rank 2)
 	[8289] = 5, -- Drain Soul(Rank 3)
 	[11675] = 5, -- Drain Soul(Rank 4)
+	[27217] = 5, -- Drain Soul(Rank 5)
 	[755] = 10, -- Health Funnel(Rank 1)
 	[3698] = 10, -- Health Funnel(Rank 2)
 	[3699] = 10, -- Health Funnel(Rank 3)
@@ -35,23 +36,30 @@ local channelingTicks = { -- ElvUI data
 	[11693] = 10, -- Health Funnel(Rank 5)
 	[11694] = 10, -- Health Funnel(Rank 6)
 	[11695] = 10, -- Health Funnel(Rank 7)
+	[27259] = 10, -- Health Funnel(Rank 8)
 	[689] = 5, -- Drain Life(Rank 1)
 	[699] = 5, -- Drain Life(Rank 2)
 	[709] = 5, -- Drain Life(Rank 3)
 	[7651] = 5, -- Drain Life(Rank 4)
 	[11699] = 5, -- Drain Life(Rank 5)
 	[11700] = 5, -- Drain Life(Rank 6)
+	[27219] = 5, -- Drain Life(Rank 7)
+	[27220] = 5, -- Drain Life(Rank 8)
 	[5740] =  4, --Rain of Fire(Rank 1)
 	[6219] =  4, --Rain of Fire(Rank 2)
 	[11677] =  4, --Rain of Fire(Rank 3)
 	[11678] =  4, --Rain of Fire(Rank 4)
+	[27212] =  4, --Rain of Fire(Rank 5)
 	[1949] = 15, --Hellfire(Rank 1)
 	[11683] = 15, --Hellfire(Rank 2)
 	[11684] = 15, --Hellfire(Rank 3)
+	[27213] = 15, --Hellfire(Rank 4)
 	[5138] = 5, --Drain Mana(Rank 1)
 	[6226] = 5, --Drain Mana(Rank 2)
 	[11703] = 5, --Drain Mana(Rank 3)
 	[11704] = 5, --Drain Mana(Rank 4)
+	[27221] = 5, --Drain Mana(Rank 5)
+	[30908] = 5, --Drain Mana(Rank 6)
 	-- Priest
 	[15407] = 3, -- Mind Flay(Rank 1)
 	[17311] = 3, -- Mind Flay(Rank 2)
@@ -59,6 +67,7 @@ local channelingTicks = { -- ElvUI data
 	[17313] = 3, -- Mind Flay(Rank 4)
 	[17314] = 3, -- Mind Flay(Rank 5)
 	[18807] = 3, -- Mind Flay(Rank 6)
+	[25387] = 3, -- Mind Flay(Rank 7)
 	-- Mage
 	[10] = 8, --Blizzard(Rank 1)
 	[6141] = 8, --Blizzard(Rank 2)
@@ -66,6 +75,7 @@ local channelingTicks = { -- ElvUI data
 	[10185] = 8, --Blizzard(Rank 4)
 	[10186] = 8, --Blizzard(Rank 5)
 	[10187] = 8, --Blizzard(Rank 6)
+	[27085] = 8, --Blizzard(Rank 7)
 	[5143] = 3, -- Arcane Missiles(Rank 1)
 	[5144] = 4, -- Arcane Missiles(Rank 2)
 	[5145] = 5, -- Arcane Missiles(Rank 3)
@@ -73,26 +83,25 @@ local channelingTicks = { -- ElvUI data
 	[8417] = 5, -- Arcane Missiles(Rank 5)
 	[10211] = 5, -- Arcane Missiles(Rank 6)
 	[10212] = 5, -- Arcane Missiles(Rank 7)
+	[25345] = 5, -- Arcane Missiles(Rank 8)
+	[27075] = 5, -- Arcane Missiles(Rank 9)
+	[38699] = 5, -- Arcane Missiles(Rank 10)
 	[12051] = 4, -- Evocation
 	--Druid
 	[740] = 5, -- Tranquility(Rank 1)
 	[8918] = 5, --Tranquility(Rank 2)
 	[9862] = 5, --Tranquility(Rank 3)
 	[9863] = 5, --Tranquility(Rank 4)
+	[26983] = 5, --Tranquility(Rank 5)
 	[16914] = 10, --Hurricane(Rank 1)
 	[17401] = 10, --Hurricane(Rank 2)
 	[17402] = 10, --Hurricane(Rank 3)
+	[27012] = 10, --Hurricane(Rank 4)
 	--Hunter
 	[1510] = 6, --Volley(Rank 1)
 	[14294] = 6, --Volley(Rank 2)
 	[14295] = 6, --Volley(Rank 3)
-	[136] = 5, --Mend Pet(Rank 1)
-	[3111] = 5, --Mend Pet(Rank 2)
-	[3661] = 5, --Mend Pet(Rank 3)
-	[3662] = 5, --Mend Pet(Rank 4)
-	[13542] = 5, --Mend Pet(Rank 5)
-	[13543] = 5, --Mend Pet(Rank 6)
-	[13544] = 5, --Mend Pet(Rank 7)
+	[27022] = 6, --Volley(Rank 4)
 }
 
 local ticks = {}
@@ -118,30 +127,11 @@ local function updateCastBarTicks(bar, numTicks)
 	end
 end
 
-local function isPlayerCasting()
-	local bar = oUF_Castbarplayer
-	if not bar then return end
-	if bar.casting or bar.channeling then
-		return true
-	end
-end
-
-function B:FixTargetCastbarUpdate()
-	if UnitIsUnit("target", "player") and not isPlayerCasting() then
-		self.casting = nil
-		self.channeling = nil
-		self.Text:SetText(INTERRUPTED)
-		self.holdTime = 0
-	end
-end
-
 function B:OnCastbarUpdate(elapsed)
 	if self.casting or self.channeling then
-		B.FixTargetCastbarUpdate(self)
-
 		local decimal = self.decimal
 
-		local duration = self.casting and self.duration + elapsed or self.duration - elapsed
+		local duration = self.casting and (self.duration + elapsed) or (self.duration - elapsed)
 		if (self.casting and duration >= self.max) or (self.channeling and duration <= 0) then
 			self.casting = nil
 			self.channeling = nil
@@ -188,6 +178,30 @@ function B:OnCastSent()
 	element.SafeZone.castSent = true
 end
 
+local function ResetSpellTarget(self)
+	if self.spellTarget then
+		self.spellTarget:SetText("")
+	end
+end
+
+local function UpdateSpellTarget(self, unit)
+	if not C.db["Nameplate"]["CastTarget"] then return end
+	if not self.spellTarget then return end
+
+	local unitTarget = unit and unit.."target"
+	if unitTarget and UnitExists(unitTarget) then
+		local nameString
+		if UnitIsUnit(unitTarget, "player") then
+			nameString = format("|cffff0000%s|r", ">"..strupper(YOU).."<")
+		else
+			nameString = B.HexRGB(B.UnitColor(unitTarget))..UnitName(unitTarget)
+		end
+		self.spellTarget:SetText(nameString)
+	else
+		ResetSpellTarget(self) -- when unit loses target
+	end
+end
+
 function B:PostCastStart(unit)
 	self:SetAlpha(1)
 	self.Spark:Show()
@@ -199,15 +213,15 @@ function B:PostCastStart(unit)
 		if self.Lag then self.Lag:Hide() end
 	elseif unit == "player" then
 		local safeZone = self.SafeZone
-		if not safeZone then return end
-
-		safeZone.timeDiff = 0
-		if safeZone.castSent then
-			safeZone.timeDiff = GetTime() - safeZone.sendTime
-			safeZone.timeDiff = safeZone.timeDiff > self.max and self.max or safeZone.timeDiff
-			safeZone:SetWidth(self:GetWidth() * (safeZone.timeDiff + .001) / self.max)
-			safeZone:Show()
-			safeZone.castSent = false
+		if safeZone then
+			safeZone.timeDiff = 0
+			if safeZone.castSent then
+				safeZone.timeDiff = GetTime() - safeZone.sendTime
+				safeZone.timeDiff = safeZone.timeDiff > self.max and self.max or safeZone.timeDiff
+				safeZone:SetWidth(self:GetWidth() * (safeZone.timeDiff + .001) / self.max)
+				safeZone:Show()
+				safeZone.castSent = nil
+			end
 		end
 
 		local numTicks = 0
@@ -216,6 +230,7 @@ function B:PostCastStart(unit)
 		end
 		updateCastBarTicks(self, numTicks)
 	elseif not UnitIsUnit(unit, "player") and self.notInterruptible then
+		--color = C.db["UFs"]["NotInterruptColor"]
 		color = NotInterruptColor
 		self:SetStatusBarColor(color.r, color.g, color.b)
 	end
@@ -227,11 +242,28 @@ function B:PostCastStart(unit)
 			self.Icon:SetTexture(136243)
 		end
 	end
+
+	if self.__owner.mystyle == "nameplate" then
+		-- Major spells
+		if C.db["Nameplate"]["CastbarGlow"] and B:GetModule("UnitFrames").MajorSpells[self.spellID] then
+			B.ShowOverlayGlow(self.glowFrame)
+		else
+			B.HideOverlayGlow(self.glowFrame)
+		end
+
+		-- Spell target
+		UpdateSpellTarget(self, unit)
+	end
+end
+
+function B:PostCastUpdate(unit)
+	UpdateSpellTarget(self, unit)
 end
 
 function B:PostUpdateInterruptible(unit)
 	local color = C.db["UFs"]["CastingColor"]
 	if not UnitIsUnit(unit, "player") and self.notInterruptible then
+		--color = C.db["UFs"]["NotInterruptColor"]
 		color = NotInterruptColor
 	end
 	self:SetStatusBarColor(color.r, color.g, color.b)
@@ -242,14 +274,15 @@ function B:PostCastStop()
 		self:SetStatusBarColor(unpack(CastbarCompleteColor))
 		self.fadeOut = true
 	end
-	self:SetValue(self.max or 1)
 	self:Show()
+	ResetSpellTarget(self)
 end
 
 function B:PostChannelStop()
 	self.fadeOut = true
 	self:SetValue(0)
 	self:Show()
+	ResetSpellTarget(self)
 end
 
 function B:PostCastFailed()
@@ -257,4 +290,5 @@ function B:PostCastFailed()
 	self:SetValue(self.max or 1)
 	self.fadeOut = true
 	self:Show()
+	ResetSpellTarget(self)
 end

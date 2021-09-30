@@ -1,9 +1,7 @@
 local _, ns = ...
 local B, C, L, DB = unpack(ns)
-local oUF = ns.oUF or oUF
+local oUF = ns.oUF
 local UF = B:GetModule("UnitFrames")
-
-local LCD = DB.LibClassicDurations
 
 local strmatch, format, wipe, tinsert = string.match, string.format, table.wipe, table.insert
 local pairs, ipairs, next, tonumber, unpack, gsub = pairs, ipairs, next, tonumber, unpack, gsub
@@ -45,7 +43,7 @@ function UF:CreateTargetBorder(self)
 	border:SetOutside(self.Health.backdrop, C.mult+4, C.mult+4, self.Power.backdrop)
 	border:SetBackdropBorderColor(1, 1, 1)
 	border:Hide()
-	self.Shadow = nil
+	self.__shadow = nil
 
 	self.TargetBorder = border
 	self:RegisterEvent("PLAYER_TARGET_CHANGED", UF.UpdateTargetBorder, true)
@@ -72,7 +70,7 @@ function UF:CreateThreatBorder(self)
 	threatIndicator:SetOutside(self.Health.backdrop, C.mult+3, C.mult+3, self.Power.backdrop)
 	threatIndicator:SetBackdropBorderColor(.7, .7, .7)
 	threatIndicator:SetFrameLevel(0)
-	self.Shadow = nil
+	self.__shadow = nil
 
 	self.ThreatIndicator = threatIndicator
 	self.ThreatIndicator.Override = UF.UpdateThreatBorder
@@ -81,19 +79,19 @@ end
 local debuffList = {}
 function UF:UpdateRaidDebuffs()
 	wipe(debuffList)
-	for instType, value in pairs(C.RaidDebuffs) do
+	for instID, value in pairs(C.RaidDebuffs) do
 		for spellID, priority in pairs(value) do
-			if not (NDuiADB["RaidDebuffs"][instType] and NDuiADB["RaidDebuffs"][instType][spellID]) then
-				if not debuffList[instType] then debuffList[instType] = {} end
-				debuffList[instType][spellID] = priority
+			if not (NDuiADB["RaidDebuffs"][instID] and NDuiADB["RaidDebuffs"][instID][spellID]) then
+				if not debuffList[instID] then debuffList[instID] = {} end
+				debuffList[instID][spellID] = priority
 			end
 		end
 	end
-	for instType, value in pairs(NDuiADB["RaidDebuffs"]) do
+	for instID, value in pairs(NDuiADB["RaidDebuffs"]) do
 		for spellID, priority in pairs(value) do
 			if priority > 0 then
-				if not debuffList[instType] then debuffList[instType] = {} end
-				debuffList[instType][spellID] = priority
+				if not debuffList[instID] then debuffList[instID] = {} end
+				debuffList[instID][spellID] = priority
 			end
 		end
 	end
@@ -116,7 +114,7 @@ function UF:CreateRaidDebuffs(self)
 	bu:SetPoint("RIGHT", -15, 0)
 	bu:SetFrameLevel(self:GetFrameLevel() + 3)
 	B.CreateSD(bu, 3, true)
-	bu.Shadow:SetFrameLevel(self:GetFrameLevel() + 2)
+	bu.__shadow:SetFrameLevel(self:GetFrameLevel() + 2)
 	bu:SetScale(scale)
 	bu:Hide()
 
@@ -266,14 +264,18 @@ local function setupClickSets(self)
 
 	for _, data in pairs(NDuiADB["RaidClickSets"][DB.MyClass]) do
 		local key, modKey, value = unpack(data)
+		if key == KEY_BUTTON1 and modKey == "SHIFT" then self.focuser = true end
+
 		for _, v in ipairs(keyList) do
 			if v[1] == key and v[2] == modKey then
 				if tonumber(value) then
 					local name = GetSpellInfo(value)
 					self:SetAttribute(format(v[3], "type"), "spell")
-					self:SetAttribute(format(v[3], "spell"), name)
+					self:SetAttribute(format(v[3], "spell"), value)
 				elseif value == "target" then
 					self:SetAttribute(format(v[3], "type"), "target")
+				elseif value == "focus" then
+					self:SetAttribute(format(v[3], "type"), "focus")
 				elseif value == "follow" then
 					self:SetAttribute(format(v[3], "type"), "macro")
 					self:SetAttribute(format(v[3], "macrotext"), "/follow mouseover")
@@ -334,13 +336,45 @@ function UF:BuffIndicatorOnUpdate(elapsed)
 	B.CooldownOnUpdate(self, elapsed, true)
 end
 
+UF.CornerSpells = {}
+function UF:UpdateCornerSpells()
+	wipe(UF.CornerSpells)
+
+	for spellID, value in pairs(C.CornerBuffs[DB.MyClass]) do
+		local modData = NDuiADB["CornerSpells"][DB.MyClass]
+		if not (modData and modData[spellID]) then
+			local r, g, b = unpack(value[2])
+			UF.CornerSpells[spellID] = {value[1], {r, g, b}, value[3]}
+		end
+	end
+
+	for spellID, value in pairs(NDuiADB["CornerSpells"][DB.MyClass]) do
+		if next(value) then
+			local r, g, b = unpack(value[2])
+			UF.CornerSpells[spellID] = {value[1], {r, g, b}, value[3]}
+		end
+	end
+end
+
+UF.CornerSpellsByName = {}
+function UF:BuildNameListFromID()
+	wipe(UF.CornerSpellsByName)
+
+	for spellID, value in pairs(UF.CornerSpells) do
+		local name = GetSpellInfo(spellID)
+		if name then
+			UF.CornerSpellsByName[name] = value
+		end
+	end
+end
+
 local found = {}
 local auraFilter = {"HELPFUL", "HARMFUL"}
 
 function UF:UpdateBuffIndicator(event, unit)
 	if event == "UNIT_AURA" and self.unit ~= unit then return end
 
-	local spellList = NDuiADB["CornerBuffs"][DB.MyClass]
+	local spellList = UF.CornerSpells
 	local buttons = self.BuffIndicator
 	unit = self.unit
 
@@ -349,43 +383,35 @@ function UF:UpdateBuffIndicator(event, unit)
 		for i = 1, 32 do
 			local name, texture, count, _, duration, expiration, caster, _, _, spellID = UnitAura(unit, i, filter)
 			if not name then break end
-			local value = spellList[spellID] or C.CornerBuffsByName[name]
+			local value = spellList[spellID] or UF.CornerSpellsByName[name]
 			if value and (value[3] or caster == "player" or caster == "pet") then
-				if duration == 0 then
-					local newduration, newexpires = LCD:GetAuraDurationByUnit(unit, spellID, caster, name)
-					if newduration then
-						duration, expiration = newduration, newexpires
-					end
-				end
-
-				for _, bu in pairs(buttons) do
-					if bu.anchor == value[1] then
-						if C.db["UFs"]["BuffIndicatorType"] == 3 then
-							if duration and duration > 0 then
-								bu.expiration = expiration
-								bu:SetScript("OnUpdate", UF.BuffIndicatorOnUpdate)
-							else
-								bu:SetScript("OnUpdate", nil)
-							end
-							bu.timer:SetTextColor(unpack(value[2]))
+				local bu = buttons[value[1]]
+				if bu then
+					if C.db["UFs"]["BuffIndicatorType"] == 3 then
+						if duration and duration > 0 then
+							bu.expiration = expiration
+							bu:SetScript("OnUpdate", UF.BuffIndicatorOnUpdate)
 						else
-							if duration and duration > 0 then
-								bu.cd:SetCooldown(expiration - duration, duration)
-								bu.cd:Show()
-							else
-								bu.cd:Hide()
-							end
-							if C.db["UFs"]["BuffIndicatorType"] == 1 then
-								bu.icon:SetVertexColor(unpack(value[2]))
-							else
-								bu.icon:SetTexture(texture)
-							end
+							bu:SetScript("OnUpdate", nil)
 						end
-						if count > 1 then bu.count:SetText(count) end
-						bu:Show()
-						found[bu.anchor] = true
-						break
+						bu.timer:SetTextColor(unpack(value[2]))
+					else
+						if duration and duration > 0 then
+							bu.cd:SetCooldown(expiration - duration, duration)
+							bu.cd:Show()
+						else
+							bu.cd:Hide()
+						end
+						if C.db["UFs"]["BuffIndicatorType"] == 1 then
+							bu.icon:SetVertexColor(unpack(value[2]))
+						else
+							bu.icon:SetTexture(texture)
+						end
 					end
+
+					bu.count:SetText(count > 1 and count)
+					bu:Show()
+					found[bu.anchor] = true
 				end
 			end
 		end
@@ -449,7 +475,7 @@ function UF:CreateBuffIndicator(self)
 		bu.count = B.CreateFS(bu, 12, "")
 
 		bu.anchor = anchor
-		tinsert(buttons, bu)
+		buttons[anchor] = bu
 
 		UF:RefreshBuffIndicator(bu)
 	end

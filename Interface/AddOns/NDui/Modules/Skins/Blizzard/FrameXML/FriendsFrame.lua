@@ -105,7 +105,7 @@ tinsert(C.defaultThemes, function()
 	FriendsFrameBattlenetFrame.UnavailableInfoFrame:SetPoint("TOPLEFT", FriendsFrame, "TOPRIGHT", 1, -18)
 
 	FriendsFrameBattlenetFrame:GetRegions():Hide()
-	B.CreateBD(FriendsFrameBattlenetFrame, .25)
+	B.CreateBDFrame(FriendsFrameBattlenetFrame, .25)
 
 	FriendsFrameBattlenetFrame.Tag:SetParent(FriendsListFrame)
 	FriendsFrameBattlenetFrame.Tag:SetPoint("TOP", FriendsFrame, "TOP", 0, -8)
@@ -131,10 +131,9 @@ tinsert(C.defaultThemes, function()
 		end
 	end)
 
-	local whoBg = B.CreateBDFrame(WhoFrameEditBox, .25)
+	local whoBg = B.CreateBDFrame(WhoFrameEditBox, 0, true)
 	whoBg:SetPoint("TOPLEFT", WhoFrameEditBoxInset)
 	whoBg:SetPoint("BOTTOMRIGHT", WhoFrameEditBoxInset, -1, 1)
-	B.CreateGradient(whoBg)
 
 	B.ReskinPortraitFrame(FriendsFrame)
 	B.Reskin(FriendsFrameAddFriendButton)
@@ -151,7 +150,7 @@ tinsert(C.defaultThemes, function()
 	B.Reskin(FriendsListFrameContinueButton)
 	B.CreateBD(FriendsFriendsList, .25)
 	B.StripTextures(AddFriendNoteFrame)
-	B.CreateBD(AddFriendNoteFrame, .25)
+	B.CreateBDFrame(AddFriendNoteFrame, .25)
 	B.ReskinInput(AddFriendNameEditBox)
 	B.ReskinInput(FriendsFrameBroadcastInput)
 	B.StripTextures(AddFriendFrame)
@@ -203,6 +202,7 @@ tinsert(C.defaultThemes, function()
 
 	B.StripTextures(GuildMemberDetailFrame)
 	B.SetBD(GuildMemberDetailFrame)
+	GuildMemberDetailFrame:SetPoint("TOPLEFT", GuildFrame, "TOPRIGHT", 4, -15)
 	B.ReskinClose(GuildMemberDetailCloseButton)
 	B.CreateBD(GuildMemberNoteBackground, .25)
 	B.CreateBD(GuildMemberOfficerNoteBackground, .25)
@@ -224,18 +224,26 @@ tinsert(C.defaultThemes, function()
 	B.Reskin(GuildInfoCancelButton)
 
 	B.StripTextures(GuildControlPopupFrame)
+	GuildControlPopupFrame:SetPoint("TOPLEFT", GuildFrame, "TOPRIGHT", 3, 0)
 	B.SetBD(GuildControlPopupFrame)
 	B.ReskinDropDown(GuildControlPopupFrameDropDown)
 	B.ReskinArrow(GuildControlPopupFrameAddRankButton, "right")
 	B.StripTextures(GuildControlPopupFrameEditBox)
-	local bg = B.CreateBDFrame(GuildControlPopupFrameEditBox, .0)
+	local bg = B.CreateBDFrame(GuildControlPopupFrameEditBox, 0, true)
 	bg:SetPoint("TOPLEFT", -5, -5)
 	bg:SetPoint("BOTTOMRIGHT", 5, 5)
-	B.CreateGradient(bg)
 	B.Reskin(GuildControlPopupAcceptButton)
 	B.Reskin(GuildControlPopupFrameCancelButton)
+
+	for i = 1, 16 do
+		local checkbox = _G["GuildControlPopupFrameCheckbox"..i]
+		if checkbox then
+			B.ReskinCheck(checkbox)
+		end
+	end
+
+	-- Font width fix
 	for i = 1, 13 do
-		B.ReskinCheck(_G["GuildControlPopupFrameCheckbox"..i])
 		_G["GuildFrameButton"..i.."Level"]:SetWidth(30)
 	end
 end)

@@ -181,6 +181,14 @@ local followerAssignees = {
 	[135614] = true, -- 马迪亚斯·肖尔大师
 }
 
+local autoGossipTypes = {
+	["taxi"] = true,
+	["gossip"] = true,
+	["banker"] = true,
+	["vendor"] = true,
+	["trainer"] = true,
+}
+
 QuickQuest:Register("GOSSIP_SHOW", function()
 	local npcID = GetNPCID()
 	if(ignoreQuestNPC[npcID]) then
@@ -231,7 +239,7 @@ QuickQuest:Register("GOSSIP_SHOW", function()
 			local _, instance, _, _, _, _, _, mapID = GetInstanceInfo()
 			if(instance ~= "raid" and not ignoreGossipNPC[npcID] and not (instance == "scenario" and mapID == 1626)) then
 				local _, type = GetGossipOptions()
-				if(type == "gossip") then
+				if autoGossipTypes[type] then
 					SelectGossipOption(1)
 					return
 				end

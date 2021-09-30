@@ -268,14 +268,14 @@ function G:UpdateCurrentProfile()
 			UpdateButtonStatus(bar.apply, false)
 			UpdateButtonStatus(bar.reset, true)
 			bar:SetBackdropColor(cr, cg, cb, .25)
-			bar.apply:SetBackdropBorderColor(1, .8, 0)
+			bar.apply.bg:SetBackdropBorderColor(1, .8, 0)
 		else
 			UpdateButtonStatus(bar.upload, true)
 			UpdateButtonStatus(bar.download, true)
 			UpdateButtonStatus(bar.apply, true)
 			UpdateButtonStatus(bar.reset, false)
 			bar:SetBackdropColor(0, 0, 0, .25)
-			bar.apply:SetBackdropBorderColor(0, 0, 0)
+			B.SetBorderColor(bar.apply.bg)
 		end
 	end
 end
@@ -390,6 +390,8 @@ function G:ExportGUIData()
 							for k, v in pairs(value) do
 								text = text..";"..KEY..":"..key..":"..k..":"..tostring(v)
 							end
+						elseif key == "IgnoreSpells" then
+							-- do nothing
 						else
 							for spellID, k in pairs(value) do
 								text = text..";"..KEY..":"..key..":"..spellID
@@ -438,11 +440,13 @@ function G:ExportGUIData()
 					text = text..":"..spellID
 				end
 			end
-		elseif KEY == "CornerBuffs" then
+		elseif KEY == "CornerSpells" then
 			for class, value in pairs(VALUE) do
 				for spellID, data in pairs(value) do
 					if not bloodlustFilter[spellID] and class == DB.MyClass then
 						local anchor, color, filter = unpack(data)
+						anchor = anchor or ""
+						color = color or {"", "", ""}
 						text = text..";ACCOUNT:"..KEY..":"..class..":"..spellID..":"..anchor..":"..color[1]..":"..color[2]..":"..color[3]..":"..tostring(filter or false)
 					end
 				end
@@ -517,6 +521,8 @@ function G:ImportGUIData()
 			if value == "Switcher" then
 				local index, state = select(3, strsplit(":", option))
 				C.db[key][value][tonumber(index)] = toBoolean(state)
+			elseif value == "IgnoreSpells" then
+				-- do nothing
 			else
 				local idType, spellID, unit, caster, stack, amount, timeless, combat, text, flash = select(4, strsplit(":", option))
 				value = tonumber(value)
@@ -566,7 +572,7 @@ function G:ImportGUIData()
 				for _, spellID in next, spells do
 					NDuiADB[value][tonumber(arg1)][tonumber(spellID)] = true
 				end
-			elseif value == "CornerBuffs" then
+			elseif value == "CornerSpells" then
 				local class, spellID, anchor, r, g, b, filter = select(3, strsplit(":", option))
 				spellID = tonumber(spellID)
 				r = tonumber(r)
@@ -574,7 +580,11 @@ function G:ImportGUIData()
 				b = tonumber(b)
 				filter = toBoolean(filter)
 				if not NDuiADB[value][class] then NDuiADB[value][class] = {} end
-				NDuiADB[value][class][spellID] = {anchor, {r, g, b}, filter}
+				if anchor == "" then
+					NDuiADB[value][class][spellID] = {}
+				else
+					NDuiADB[value][class][spellID] = {anchor, {r, g, b}, filter}
+				end
 			elseif value == "ContactList" then
 				local name, r, g, b = select(3, strsplit(":", option))
 				NDuiADB[value][name] = r..":"..g..":"..b
@@ -586,7 +596,7 @@ function G:ImportGUIData()
 				NDuiADB[value][tonumber(index)] = name
 			end
 		elseif tonumber(arg1) then
-			if value == "DBMCount" then
+			if value == "DBMCount" or value == "StatOrder" then
 				C.db[key][value] = arg1
 			else
 				C.db[key][value] = tonumber(arg1)

@@ -15,54 +15,70 @@ local tradeList = {
 		[3102] = true,
 		[3413] = true,
 		[18260] = true,
+		[33359] = true,
 	},
 	["FistAid"] = {
 		[3273] = true,
 		[3274] = true,
 		[7924] = true,
 		[10846] = true,
+		[27028] = true,
 	},
 	["Alchemy"] = {
 		[2259] = true,
 		[3101] = true,
 		[3464] = true,
 		[11611] = true,
+		[28596] = true,
 	},
 	["Blacksmithing"] = {
 		[2018] = true,
 		[3100] = true,
 		[3538] = true,
 		[9785] = true,
+		[29844] = true,
 	},
 	["Enchanting"] = {
 		[7411] = true,
 		[7412] = true,
 		[7413] = true,
 		[13920] = true,
+		[28029] = true,
 	},
 	["Engineering"] = {
 		[4036] = true,
 		[4037] = true,
 		[4038] = true,
 		[12656] = true,
+		[30350] = true,
 	},
 	["Leatherworking"] = {
 		[2108] = true,
 		[3104] = true,
 		[3811] = true,
 		[10662] = true,
+		[32549] = true,
 	},
 	["Mining"] = {
 		[2575] = true,
 		[2576] = true,
 		[3564] = true,
 		[10248] = true,
+		[29354] = true,
 	},
 	["Tailoring"] = {
 		[3908] = true,
 		[3909] = true,
 		[3910] = true,
 		[12180] = true,
+		[26790] = true,
+	},
+	["Jewelcrafting"] = {
+		[25229] = true,
+		[25230] = true,
+		[28894] = true,
+		[28895] = true,
+		[28897] = true,
 	},
 	["Poisons"] = {
 		[2842] = true,
@@ -114,7 +130,7 @@ function M:TradeTabs_Reskin()
 end
 
 local index = 1
-function M:TradeTabs_Create(spellID)
+function M:TradeTabs_Create(spellID, tradeName)
 	local name, _, texture = GetSpellInfo(spellID)
 
 	local tab = CreateFrame("CheckButton", nil, TradeSkillFrame, "SpellBookSkillLineTabTemplate, SecureActionButtonTemplate")
@@ -131,7 +147,7 @@ function M:TradeTabs_Create(spellID)
 
 	local cover = CreateFrame("Frame", nil, tab)
 	cover:SetAllPoints()
-	cover:EnableMouse(true)
+	if tradeName ~= "Enchanting" then cover:EnableMouse(true) end -- clickthru on enchant
 	tab.cover = cover
 
 	tab:SetPoint("TOPLEFT", TradeSkillFrame, "TOPRIGHT", C.db["Skins"]["BlizzardSkins"] and -30 or -33, -70 - (index-1)*45)
@@ -153,7 +169,7 @@ function M:TradeTabs_OnLoad()
 			hasCooking = true
 		end
 
-		self:TradeTabs_Create(spellID)
+		self:TradeTabs_Create(spellID, tradeName)
 	end
 
 	if hasCooking then
@@ -164,6 +180,8 @@ function M:TradeTabs_OnLoad()
 	M:TradeTabs_Update()
 	B:RegisterEvent("TRADE_SKILL_SHOW", M.TradeTabs_Update)
 	B:RegisterEvent("TRADE_SKILL_CLOSE", M.TradeTabs_Update)
+	B:RegisterEvent("CRAFT_SHOW", M.TradeTabs_Update)
+	B:RegisterEvent("CRAFT_CLOSE", M.TradeTabs_Update)
 	B:RegisterEvent("CURRENT_SPELL_CAST_CHANGED", M.TradeTabs_Update)
 end
 

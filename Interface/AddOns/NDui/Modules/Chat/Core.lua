@@ -6,7 +6,7 @@ local cr, cg, cb = DB.r, DB.g, DB.b
 local _G = _G
 local tostring, pairs, ipairs, strsub, strlower = tostring, pairs, ipairs, string.sub, string.lower
 local IsInGroup, IsInRaid, IsInGuild, IsShiftKeyDown, IsControlKeyDown, PlaySound = IsInGroup, IsInRaid, IsInGuild, IsShiftKeyDown, IsControlKeyDown, PlaySound
-local ChatEdit_UpdateHeader, GetChannelList, GetCVar, SetCVar, Ambiguate, GetTime = ChatEdit_UpdateHeader, GetChannelList, GetCVar, SetCVar, Ambiguate, GetTime
+local ChatEdit_UpdateHeader, GetCVar, SetCVar, Ambiguate, GetTime = ChatEdit_UpdateHeader, GetCVar, SetCVar, Ambiguate, GetTime
 local GetNumGuildMembers, GetGuildRosterInfo, IsGuildMember, UnitIsGroupLeader, UnitIsGroupAssistant, InviteToGroup = GetNumGuildMembers, GetGuildRosterInfo, IsGuildMember, UnitIsGroupLeader, UnitIsGroupAssistant, InviteToGroup
 local BNGetFriendInfoByID, BNGetGameAccountInfo, CanCooperateWithGameAccount, BNInviteFriend, BNFeaturesEnabledAndConnected = BNGetFriendInfoByID, BNGetGameAccountInfo, CanCooperateWithGameAccount, BNInviteFriend, BNFeaturesEnabledAndConnected
 local GeneralDockManager = GeneralDockManager
@@ -14,6 +14,7 @@ local messageSoundID = SOUNDKIT.TELL_MESSAGE
 
 local maxLines = 1024
 local fontOutline
+module.MuteCache = {}
 
 function module:TabSetAlpha(alpha)
 	if self.glow:IsShown() and alpha ~= 1 then
@@ -58,7 +59,7 @@ local function GradientBackground(self)
 	frame:SetFrameLevel(0)
 	frame:SetShown(C.db["Chat"]["ChatBGType"] == 3)
 
-	local tex = B.SetGradient(frame, "H", 0, 0, 0, .5, 0)
+	local tex = B.SetGradient(frame, "H", 0, 0, 0, .7, 0)
 	tex:SetOutside()
 	local line = B.SetGradient(frame, "H", cr, cg, cb, .5, 0, nil, C.mult)
 	line:SetPoint("BOTTOMLEFT", frame, "TOPLEFT")
@@ -90,7 +91,7 @@ function module:SkinChat()
 	eb:ClearAllPoints()
 	eb:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 4, 26)
 	eb:SetPoint("TOPRIGHT", self, "TOPRIGHT", -17, 50)
-	B.StripTextures(eb)
+	B.StripTextures(eb, 2)
 	B.SetBD(eb)
 
 	local lang = _G[name.."EditBoxLanguage"]
@@ -109,10 +110,21 @@ function module:SkinChat()
 	B.HideObject(self.buttonFrame)
 	--B.HideObject(self.ScrollBar)
 	B.HideObject(self.ScrollToBottomButton)
+	module:ToggleChatFrameTextures(self)
 
 	self.oldAlpha = self.oldAlpha or 0 -- fix blizz error, need reviewed
 
 	self.styled = true
+end
+
+function module:ToggleChatFrameTextures(frame)
+	if C.db["Chat"]["ChatBGType"] == 1 then
+		frame:EnableDrawLayer("BORDER")
+		frame:EnableDrawLayer("BACKGROUND")
+	else
+		frame:DisableDrawLayer("BORDER")
+		frame:DisableDrawLayer("BACKGROUND")
+	end
 end
 
 function module:ToggleChatBackground()
@@ -124,6 +136,7 @@ function module:ToggleChatBackground()
 		if frame.__gradient then
 			frame.__gradient:SetShown(C.db["Chat"]["ChatBGType"] == 3)
 		end
+		module:ToggleChatFrameTextures(frame)
 	end
 end
 
@@ -134,17 +147,8 @@ local cycles = {
     { chatType = "RAID", use = function() return IsInRaid() end },
     { chatType = "GUILD", use = function() return IsInGuild() end },
 	{ chatType = "CHANNEL", use = function(_, editbox)
-		if GetCVar("portal") ~= "CN" then return false end
-		local channels, inWorldChannel, number = {GetChannelList()}
-		for i = 1, #channels do
-			if channels[i] == "大脚世界频道" then
-				inWorldChannel = true
-				number = channels[i-1]
-				break
-			end
-		end
-		if inWorldChannel then
-			editbox:SetAttribute("channelTarget", number)
+		if module.InWorldChannel and module.WorldChannelID then
+			editbox:SetAttribute("channelTarget", module.WorldChannelID)
 			return true
 		else
 			return false
@@ -287,9 +291,14 @@ local whisperEvents = {
 	["CHAT_MSG_WHISPER"] = true,
 	["CHAT_MSG_BN_WHISPER"] = true,
 }
-function module:PlayWhisperSound(event)
+function module:PlayWhisperSound(event, _, author)
+	if not C.db["Chat"]["WhisperSound"] then return end
+
 	if whisperEvents[event] then
+		local name = Ambiguate(author, "none")
 		local currentTime = GetTime()
+		if module.MuteCache[name] == currentTime then return end
+
 		if not self.soundTimer or currentTime > self.soundTimer then
 			PlaySound(messageSoundID, "master")
 		end
@@ -317,7 +326,7 @@ function module:OnLogin()
 
 	hooksecurefunc("FCFTab_UpdateColors", module.UpdateTabColors)
 	hooksecurefunc("FloatingChatFrame_OnEvent", module.UpdateTabEventColors)
-	hooksecurefunc("ChatFrame_ConfigEventHandler", module.PlayWhisperSound)
+	hooksecurefunc("ChatFrame_MessageEventHandler", module.PlayWhisperSound)
 
 	-- Font size
 	for i = 1, 15 do
@@ -353,6 +362,10 @@ function module:OnLogin()
 	if C.db["Chat"]["Freedom"] then
 		if GetCVar("portal") == "CN" then
 			ConsoleExec("portal TW")
+
+			HelpFrame:HookScript("OnShow", function()
+				UIErrorsFrame:AddMessage(DB.InfoColor..L["LanguageFilterTip"])
+			end)
 		end
 		SetCVar("profanityFilter", 0)
 	else

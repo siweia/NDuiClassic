@@ -16,9 +16,10 @@ local BNGetNumFriends, BNGetFriendInfo, BNGetGameAccountInfo, BNGetNumFriendGame
 local HybridScrollFrame_GetOffset, HybridScrollFrame_Update = HybridScrollFrame_GetOffset, HybridScrollFrame_Update
 local BNET_CLIENT_WOW, UNKNOWN, GUILD_ONLINE_LABEL, CHARACTER_FRIEND = BNET_CLIENT_WOW, UNKNOWN, GUILD_ONLINE_LABEL, CHARACTER_FRIEND
 local FRIENDS_TEXTURE_ONLINE, FRIENDS_TEXTURE_AFK, FRIENDS_TEXTURE_DND = FRIENDS_TEXTURE_ONLINE, FRIENDS_TEXTURE_AFK, FRIENDS_TEXTURE_DND
-local WOW_PROJECT_ID = WOW_PROJECT_ID or 2
+local EXPANSION_NAME0 = EXPANSION_NAME0
+local WOW_PROJECT_ID = WOW_PROJECT_ID or 5
+local WOW_PROJECT_60 = WOW_PROJECT_CLASSIC or 2
 local WOW_PROJECT_MAINLINE = WOW_PROJECT_MAINLINE or 1
-local WOW_PROJECT_TBC = WOW_PROJECT_BURNING_CRUSADE_CLASSIC or 5
 local CLIENT_WOW_DIFF = "WoV"
 
 local r, g, b = DB.r, DB.g, DB.b
@@ -92,8 +93,8 @@ local function buildBNetTable(num)
 			else
 				if wowProjectID == WOW_PROJECT_MAINLINE then
 					infoText = CHARACTER_FRIEND
-				elseif wowProjectID == WOW_PROJECT_TBC then
-					infoText = gsub(gameText, "%s%-.+", "")
+				elseif wowProjectID == WOW_PROJECT_60 then
+					infoText = EXPANSION_NAME0
 				else
 					infoText = gameText
 				end
@@ -252,12 +253,8 @@ local function buttonOnEnter(self)
 					if realm then
 						gameText, realmName = zone, "-"..realm
 					end
-				elseif wowProjectID == WOW_PROJECT_TBC then
-					local realm, count = gsub(gameText, "^.-%-%s", "")
-					if count > 0 then
-						realmName = "-"..realm
-						gameText = zoneName
-					end
+				elseif wowProjectID == WOW_PROJECT_60 then
+					gameText = zoneName
 				end
 
 				class = DB.ClassList[class]
@@ -497,6 +494,8 @@ info.onLeave = function()
 end
 
 info.onMouseUp = function(_, btn)
+	--if InCombatLockdown() then UIErrorsFrame:AddMessage(DB.InfoColor..ERR_NOT_IN_COMBAT) return end -- fix by LibShowUIPanel
+
 	if btn ~= "LeftButton" then return end
 	if infoFrame then infoFrame:Hide() end
 	ToggleFrame(FriendsFrame)

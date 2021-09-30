@@ -6,7 +6,7 @@ local next, pairs, mod, select = next, pairs, mod, select
 local tinsert, strsplit, format = table.insert, string.split, string.format
 local IsInGroup, IsInRaid, IsInInstance = IsInGroup, IsInRaid, IsInInstance
 local UnitIsGroupLeader, UnitIsGroupAssistant = UnitIsGroupLeader, UnitIsGroupAssistant
-local GetInstanceInfo, GetNumGroupMembers, GetRaidRosterInfo, GetRaidTargetIndex = GetInstanceInfo, GetNumGroupMembers, GetRaidRosterInfo, GetRaidTargetIndex
+local GetInstanceInfo, GetNumGroupMembers, GetRaidRosterInfo, GetRaidTargetIndex, SetRaidTarget = GetInstanceInfo, GetNumGroupMembers, GetRaidRosterInfo, GetRaidTargetIndex, SetRaidTarget
 local GetSpellCharges, GetSpellInfo, UnitAura = GetSpellCharges, GetSpellInfo, UnitAura
 local GetTime, SendChatMessage, IsAddOnLoaded = GetTime, SendChatMessage, IsAddOnLoaded
 local IsAltKeyDown, IsControlKeyDown, InCombatLockdown = IsAltKeyDown, IsControlKeyDown, InCombatLockdown
@@ -372,7 +372,7 @@ function M:RaidTool_BuffChecker(parent)
 		end
 	end
 
-	local potionCheck = IsAddOnLoaded("ExRT")
+	local potionCheck = IsAddOnLoaded("MRT")
 
 	frame:HookScript("OnEnter", function(self)
 		GameTooltip:SetOwner(self, "ANCHOR_BOTTOMLEFT")
@@ -384,7 +384,7 @@ function M:RaidTool_BuffChecker(parent)
 		if not DB.isClassic then
 			GameTooltip:AddDoubleLine(DB.RightButton.."(Ctrl) "..DB.InfoColor..L["Check Status"])
 			if potionCheck then
-				GameTooltip:AddDoubleLine(DB.RightButton.."(Alt) "..DB.InfoColor..L["ExRT Potioncheck"])
+				GameTooltip:AddDoubleLine(DB.RightButton.."(Alt) "..DB.InfoColor..L["MRT Potioncheck"])
 			end
 		end
 		GameTooltip:Show()
@@ -397,7 +397,7 @@ function M:RaidTool_BuffChecker(parent)
 	frame:HookScript("OnMouseDown", function(_, btn)
 		if btn == "RightButton" and not DB.isClassic then
 			if IsAltKeyDown() and potionCheck then
-				SlashCmdList["exrtSlash"]("potionchat")
+				SlashCmdList["mrtSlash"]("potionchat")
 			elseif IsControlKeyDown() then
 				scanBuff()
 			end
@@ -516,29 +516,54 @@ function M:RaidTool_CreateMenu(parent)
 end
 
 function M:RaidTool_EasyMarker()
-	local menuList = {
-		{text = RAID_TARGET_NONE, func = function() SetRaidTarget("target", 0) end},
-		{text = B.HexRGB(1, .92, 0)..RAID_TARGET_1.." "..ICON_LIST[1].."12|t", func = function() SetRaidTarget("target", 1) end},
-		{text = B.HexRGB(.98, .57, 0)..RAID_TARGET_2.." "..ICON_LIST[2].."12|t", func = function() SetRaidTarget("target", 2) end},
-		{text = B.HexRGB(.83, .22, .9)..RAID_TARGET_3.." "..ICON_LIST[3].."12|t", func = function() SetRaidTarget("target", 3) end},
-		{text = B.HexRGB(.04, .95, 0)..RAID_TARGET_4.." "..ICON_LIST[4].."12|t", func = function() SetRaidTarget("target", 4) end},
-		{text = B.HexRGB(.7, .82, .875)..RAID_TARGET_5.." "..ICON_LIST[5].."12|t", func = function() SetRaidTarget("target", 5) end},
-		{text = B.HexRGB(0, .71, 1)..RAID_TARGET_6.." "..ICON_LIST[6].."12|t", func = function() SetRaidTarget("target", 6) end},
-		{text = B.HexRGB(1, .24, .168)..RAID_TARGET_7.." "..ICON_LIST[7].."12|t", func = function() SetRaidTarget("target", 7) end},
-		{text = B.HexRGB(.98, .98, .98)..RAID_TARGET_8.." "..ICON_LIST[8].."12|t", func = function() SetRaidTarget("target", 8) end},
-	}
+	local order = {"8", "7", "6", "5", "4", "3", "2", "1", "NONE"}
+	local menuList = {}
+
+	local function GetMenuTitle(color, text)
+		return (color and B.HexRGB(color) or "")..text
+	end
+
+	local function SetRaidTargetByIndex(_, arg1)
+		SetRaidTarget("target", arg1)
+	end
+
+	for index, value in pairs(order) do
+		local blizz = _G.UnitPopupButtons["RAID_TARGET_"..value]
+		menuList[index] = {
+			text = GetMenuTitle(blizz.color, blizz.text),
+			icon = blizz.icon,
+			tCoordLeft = blizz.tCoordLeft,
+			tCoordRight = blizz.tCoordRight,
+			tCoordTop = blizz.tCoordTop,
+			tCoordBottom = blizz.tCoordBottom,
+			arg1 = 9 - index,
+			func = SetRaidTargetByIndex,
+		}
+	end
+
+	local function GetModifiedState()
+		local index = C.db["Misc"]["EasyMarkKey"]
+		if index == 1 then
+			return IsControlKeyDown()
+		elseif index == 2 then
+			return IsAltKeyDown()
+		elseif index == 3 then
+			return IsShiftKeyDown()
+		elseif index == 4 then
+			return false
+		end
+	end
 
 	WorldFrame:HookScript("OnMouseDown", function(_, btn)
-		if not C.db["Misc"]["EasyMarking"] then return end
-
-		if btn == "LeftButton" and IsControlKeyDown() and UnitExists("mouseover") then
+		if btn == "LeftButton" and GetModifiedState() and UnitExists("mouseover") then
 			if not IsInGroup() or (IsInGroup() and not IsInRaid()) or UnitIsGroupLeader("player") or UnitIsGroupAssistant("player") then
-				local ricon = GetRaidTargetIndex("mouseover")
+				local index = GetRaidTargetIndex("mouseover")
 				for i = 1, 8 do
-					if ricon == i then
-						menuList[i+1].checked = true
+					local menu = menuList[i]
+					if menu.arg1 == index then
+						menu.checked = true
 					else
-						menuList[i+1].checked = false
+						menu.checked = false
 					end
 				end
 				EasyMenu(menuList, B.EasyMenu, "cursor", 0, 0, "MENU", 1)

@@ -48,13 +48,16 @@ local chatLines, prevLineID, filterResult = {}, 0, false
 function module:GetFilterResult(event, msg, name, flag, guid)
 	if name == DB.MyName or (event == "CHAT_MSG_WHISPER" and flag == "GM") or flag == "DEV" then
 		return
-	elseif guid and C.db["Chat"]["AllowFriends"] and (IsGuildMember(guid) or BNGetGameAccountInfoByGUID(guid) or C_FriendList_IsFriend(guid) or IsGUIDInGroup(guid)) then
+	elseif guid and (IsGuildMember(guid) or BNGetGameAccountInfoByGUID(guid) or C_FriendList_IsFriend(guid) or IsGUIDInGroup(guid)) then
 		return
 	end
 
-	if C.db["Chat"]["BlockStranger"] and event == "CHAT_MSG_WHISPER" then return true end -- Block strangers
+	if C.db["Chat"]["BlockStranger"] and event == "CHAT_MSG_WHISPER" then -- Block strangers
+		module.MuteCache[name] = GetTime()
+		return true
+	end
 
-	if C.BadBoys[name] and C.BadBoys[name] >= 5 then return true end
+	if C.db["Chat"]["BlockSpammer"] and C.BadBoys[name] and C.BadBoys[name] >= 5 then return true end
 
 	local filterMsg = gsub(msg, "|H.-|h(.-)|h", "%1")
 	filterMsg = gsub(filterMsg, "|c%x%x%x%x%x%x%x%x", "")
@@ -106,7 +109,7 @@ function module:GetFilterResult(event, msg, name, flag, guid)
 	chatLines[chatLinesSize+1] = msgTable
 	for i = 1, chatLinesSize do
 		local line = chatLines[i]
-		if line[1] == msgTable[1] and ((msgTable[3] - line[3] < .6) or module:CompareStrDiff(line[2], msgTable[2]) <= .1) then
+		if line[1] == msgTable[1] and ((event == "CHAT_MSG_CHANNEL" and msgTable[3] - line[3] < .6) or module:CompareStrDiff(line[2], msgTable[2]) <= .1) then
 			tremove(chatLines, i)
 			return true
 		end
@@ -115,7 +118,7 @@ function module:GetFilterResult(event, msg, name, flag, guid)
 end
 
 function module:UpdateChatFilter(event, msg, author, _, _, _, flag, _, _, _, _, lineID, guid)
-	if lineID == 0 or lineID ~= prevLineID then
+	if lineID ~= prevLineID then
 		prevLineID = lineID
 
 		local name = Ambiguate(author, "none")
@@ -158,6 +161,8 @@ function module:UpdateAddOnBlocker(event, msg, author)
 				module:ToggleChatBubble()
 			elseif event == "CHAT_MSG_PARTY" or event == "CHAT_MSG_PARTY_LEADER" then
 				module:ToggleChatBubble(true)
+			elseif event == "CHAT_MSG_WHISPER" then
+				module.MuteCache[name] = GetTime()
 			end
 			return true
 		end
@@ -172,6 +177,32 @@ local function isItemHasLevel(link)
 	end
 end
 
+local socketWatchList = {
+	["BLUE"] = true,
+	["RED"] = true,
+	["YELLOW"] = true,
+	["COGWHEEL"] = true,
+	["HYDRAULIC"] = true,
+	["META"] = true,
+	["PRISMATIC"] = true,
+}
+
+local function GetSocketTexture(socket, count)
+	return strrep("|TInterface\\ItemSocketingFrame\\UI-EmptySocket-"..socket..":0|t", count)
+end
+
+local function isItemHasGem(link)
+	local text = ""
+	local stats = GetItemStats(link)
+	for stat, count in pairs(stats) do
+		local socket = strmatch(stat, "EMPTY_SOCKET_(%S+)")
+		if socket and socketWatchList[socket] then
+			text = text..GetSocketTexture(socket, count)
+		end
+	end
+	return text
+end
+
 local itemCache = {}
 local function convertItemLevel(link)
 	if itemCache[link] then return itemCache[link] end
@@ -180,7 +211,7 @@ local function convertItemLevel(link)
 	if itemLink then
 		local name, itemLevel = isItemHasLevel(itemLink)
 		if name and itemLevel then
-			link = gsub(link, "|h%[(.-)%]|h", "|h["..name.."("..itemLevel..")]|h")
+			link = gsub(link, "|h%[(.-)%]|h", "|h["..name.."("..itemLevel..")]|h"..isItemHasGem(itemLink))
 			itemCache[link] = link
 		end
 	end

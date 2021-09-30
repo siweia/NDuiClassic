@@ -32,9 +32,6 @@ tinsert(C.defaultThemes, function()
 		B.CreateBDFrame(bu)
 		bu.IconBorder:SetAlpha(0)
 
-		silver:SetPoint("LEFT", gold, "RIGHT", 1, 0)
-		copper:SetPoint("LEFT", silver, "RIGHT", 1, 0)
-
 		B.StripTextures(frame)
 		B.SetBD(frame)
 		for j = 1, 4 do
@@ -52,9 +49,7 @@ tinsert(C.defaultThemes, function()
 		close:HookScript("OnLeave", clearMinimize)
 
 		B.ReskinInput(_G["StaticPopup"..i.."EditBox"], 20)
-		B.ReskinInput(gold)
-		B.ReskinInput(silver)
-		B.ReskinInput(copper)
+		B:UpdateMoneyDisplay(gold, silver, copper)
 	end
 
 	hooksecurefunc("StaticPopup_Show", function(which, _, _, data)
@@ -124,4 +119,12 @@ tinsert(C.defaultThemes, function()
 			self.styled = true
 		end
 	end)
+
+	-- PVP ready dialog
+	local PVPReadyDialog = PVPReadyDialog
+
+	B.StripTextures(PVPReadyDialog)
+	B.SetBD(PVPReadyDialog)
+	B.Reskin(PVPReadyDialog.enterButton)
+	B.Reskin(PVPReadyDialog.hideButton)
 end)

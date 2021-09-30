@@ -74,6 +74,12 @@ local function UpdateColor(element, powerType)
 end
 
 local function Update(self, event, unit, powerType)
+	if event == "PLAYER_TARGET_CHANGED" then
+		unit, powerType = "player", "COMBO_POINTS"
+	elseif powerType == "ENERGY" then
+		powerType = "COMBO_POINTS" -- sometimes powerType return ENERGY for the first combo point
+	end
+
 	if (not (unit and (UnitIsUnit(unit, 'player') and powerType == ClassPowerType))) then
 		return
 	end
@@ -92,7 +98,8 @@ local function Update(self, event, unit, powerType)
 	local cur, max, mod, oldMax
 	if(event ~= 'ClassPowerDisable') then
 		local powerID = ClassPowerID
-		cur = UnitPower(unit, powerID, true)
+		--cur = UnitPower(unit, powerID, true)
+		cur = GetComboPoints(unit, "target")	-- has to use GetComboPoints in classic
 		max = UnitPowerMax(unit, powerID)
 		mod = UnitPowerDisplayMod(powerID)
 
@@ -205,6 +212,7 @@ end
 do
 	function ClassPowerEnable(self)
 		self:RegisterEvent('UNIT_POWER_FREQUENT', Path)
+		self:RegisterEvent('PLAYER_TARGET_CHANGED', Path, true)
 		self:RegisterEvent('UNIT_MAXPOWER', Path)
 
 		self.ClassPower.isEnabled = true
@@ -214,6 +222,7 @@ do
 
 	function ClassPowerDisable(self)
 		self:UnregisterEvent('UNIT_POWER_FREQUENT', Path)
+		self:UnregisterEvent('PLAYER_TARGET_CHANGED', Path)
 		self:UnregisterEvent('UNIT_MAXPOWER', Path)
 
 		local element = self.ClassPower

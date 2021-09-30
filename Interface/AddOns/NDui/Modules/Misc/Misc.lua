@@ -15,6 +15,9 @@ local GetTime, GetCVarBool, SetCVar = GetTime, GetCVarBool, SetCVar
 local GetNumLootItems, LootSlot = GetNumLootItems, LootSlot
 local GetInstanceInfo = GetInstanceInfo
 local IsGuildMember, BNGetGameAccountInfoByGUID, C_FriendList_IsFriend = IsGuildMember, BNGetGameAccountInfoByGUID, C_FriendList.IsFriend
+local UnitName, GetPetHappiness = UnitName, GetPetHappiness
+local UnitIsPlayer, GuildInvite, C_FriendList_AddFriend = UnitIsPlayer, GuildInvite, C_FriendList.AddFriend
+local TakeTaxiNode, IsMounted, Dismount, C_Timer_After = TakeTaxiNode, IsMounted, Dismount, C_Timer.After
 
 --[[
 	Miscellaneous 各种有用没用的小玩意儿
@@ -41,10 +44,11 @@ function M:OnLogin()
 	self:UpdateFasterLoot()
 	self:UpdateErrorBlocker()
 	self:TradeTargetInfo()
-	self:MenuButton_Add()
-	self:AutoDismount()
+	self:ToggleTaxiDismount()
 	self:BidPriceHighlight()
 	self:BlockStrangerInvite()
+	self:TogglePetHappiness()
+	self:QuickMenuButton()
 
 	-- Auto chatBubbles
 	if NDuiADB["AutoBubbles"] then
@@ -358,85 +362,87 @@ do
 	B:RegisterEvent("ADDON_LOADED", setupMisc)
 end
 
--- Add friend and guild invite on target menu
-function M:MenuButton_OnClick(info)
-	local name, server = UnitName(info.unit)
-	if server and server ~= "" then name = name.."-"..server end
-
-	if info.value == "name" then
-		if MailFrame:IsShown() then
-			MailFrameTab_OnClick(nil, 2)
-			SendMailNameEditBox:SetText(name)
-			SendMailNameEditBox:HighlightText()
-		else
-			local editBox = ChatEdit_ChooseBoxForSend()
-			local hasText = (editBox:GetText() ~= "")
-			ChatEdit_ActivateChat(editBox)
-			editBox:Insert(name)
-			if not hasText then editBox:HighlightText() end
-		end
-	elseif info.value == "guild" then
-		GuildInvite(name)
-	end
+-- Buttons to enhance popup menu
+function M:MenuButton_AddFriend()
+	C_FriendList_AddFriend(M.MenuButtonName)
 end
 
-function M:MenuButton_Show(_, unit)
-	if UIDROPDOWNMENU_MENU_LEVEL > 1 then return end
-
-	if unit and (unit == "target" or string.find(unit, "party") or string.find(unit, "raid")) then
-		local info = UIDropDownMenu_CreateInfo()
-		info.text = M.MenuButtonList["name"]
-		info.arg1 = {value = "name", unit = unit}
-		info.func = M.MenuButton_OnClick
-		info.notCheckable = true
-		UIDropDownMenu_AddButton(info)
-
-		if IsInGuild() and UnitIsPlayer(unit) and not UnitCanAttack("player", unit) and not UnitIsUnit("player", unit) then
-			info = UIDropDownMenu_CreateInfo()
-			info.text = M.MenuButtonList["guild"]
-			info.arg1 = {value = "guild", unit = unit}
-			info.func = M.MenuButton_OnClick
-			info.notCheckable = true
-			UIDropDownMenu_AddButton(info)
-		end
-	end
+function M:MenuButton_CopyName()
+	local editBox = ChatEdit_ChooseBoxForSend()
+	local hasText = (editBox:GetText() ~= "")
+	ChatEdit_ActivateChat(editBox)
+	editBox:Insert(M.MenuButtonName)
+	if not hasText then editBox:HighlightText() end
 end
 
-function M:MenuButton_Add()
-	if not C.db["Misc"]["EnhancedMenu"] then return end
-
-	M.MenuButtonList = {
-		["name"] = COPY_NAME,
-		["guild"] = gsub(CHAT_GUILD_INVITE_SEND, HEADER_COLON, ""),
-	}
-	hooksecurefunc("UnitPopup_ShowMenu", M.MenuButton_Show)
+function M:MenuButton_GuildInvite()
+	GuildInvite(M.MenuButtonName)
 end
 
--- Auto dismount and auto stand
-function M:AutoDismount()
-	if not C.db["Misc"]["AutoDismount"] then return end
+function M:QuickMenuButton()
+	if not C.db["Misc"]["MenuButton"] then return end
 
-	local standString = {
-		[ERR_LOOT_NOTSTANDING] = true,
-		[SPELL_FAILED_NOT_STANDING] = true,
+	local menuList = {
+		{text = ADD_FRIEND, func = M.MenuButton_AddFriend, color = {0, .6, 1}},
+		{text = gsub(CHAT_GUILD_INVITE_SEND, HEADER_COLON, ""), func = M.MenuButton_GuildInvite, color = {0, .8, 0}},
+		{text = COPY_NAME, func = M.MenuButton_CopyName, color = {1, 0, 0}},
 	}
 
-	local dismountString = {
-		[ERR_ATTACK_MOUNTED] = true,
-		[ERR_NOT_WHILE_MOUNTED] = true,
-		[ERR_TAXIPLAYERALREADYMOUNTED] = true,
-		[SPELL_FAILED_NOT_MOUNTED] = true,
-	}
+	local frame = CreateFrame("Frame", "NDuiMenuButtonFrame", DropDownList1)
+	frame:SetSize(10, 10)
+	frame:SetPoint("TOPLEFT")
+	frame:Hide()
+	for i = 1, 3 do
+		local button = CreateFrame("Button", nil, frame)
+		button:SetSize(25, 10)
+		button:SetPoint("TOPLEFT", frame, (i-1)*28 + 2, -2)
+		B.PixelIcon(button, nil, true)
+		button.Icon:SetColorTexture(unpack(menuList[i].color))
+		button:SetScript("OnClick", menuList[i].func)
+		B.AddTooltip(button, "ANCHOR_TOP", menuList[i].text)
+	end
 
-	local function updateEvent(event, ...)
-		local _, msg = ...
-		if standString[msg] then
-			DoEmote("STAND")
-		elseif dismountString[msg] then
-			Dismount()
+	hooksecurefunc("ToggleDropDownMenu", function(level, _, dropdownMenu)
+		if level and level > 1 then return end
+
+		local name = dropdownMenu.name
+		local unit = dropdownMenu.unit
+		local isPlayer = unit and UnitIsPlayer(unit)
+		local isFriendMenu = dropdownMenu == FriendsDropDown -- menus on FriendsFrame
+		if not name or (not isPlayer and not dropdownMenu.chatType and not isFriendMenu) then
+			frame:Hide()
+			return
+		end
+
+		local server = dropdownMenu.server
+		if not server then
+			server = DB.MyRealm
+		end
+		M.MenuButtonName = name.."-"..server
+		frame:Show()
+	end)
+end
+
+-- Auto dismount on Taxi
+function M:ToggleTaxiDismount()
+	local lastTaxiIndex
+
+	local function retryTaxi()
+		if InCombatLockdown() then return end
+		if lastTaxiIndex then
+			TakeTaxiNode(lastTaxiIndex)
+			lastTaxiIndex = nil
 		end
 	end
-	B:RegisterEvent("UI_ERROR_MESSAGE", updateEvent)
+
+	hooksecurefunc("TakeTaxiNode", function(index)
+		if not C.db["Misc"]["AutoDismount"] then return end
+		if not IsMounted() then return end
+
+		Dismount()
+		lastTaxiIndex = index
+		C_Timer_After(.5, retryTaxi)
+	end)
 end
 
 -- Block invite from strangers
@@ -447,4 +453,37 @@ function M:BlockStrangerInvite()
 			StaticPopup_Hide("PARTY_INVITE")
 		end
 	end)
+end
+
+-- Hunter pet happiness
+local petHappinessStr, lastHappiness = {
+	[1] = L["PetUnhappy"],
+	[2] = L["PetBadMood"],
+	[3] = L["PetHappy"],
+}
+
+local function CheckPetHappiness(_, unit)
+	if unit ~= "pet" then return end
+
+	local happiness = GetPetHappiness()
+	if not lastHappiness or lastHappiness ~= happiness then
+		local str = petHappinessStr[happiness]
+		if str then
+			local petName = UnitName(unit)
+			UIErrorsFrame:AddMessage(format(str, DB.InfoColor, petName))
+			print(DB.NDuiString, format(str, DB.InfoColor, petName))
+		end
+
+		lastHappiness = happiness
+	end
+end
+
+function M:TogglePetHappiness()
+	if DB.MyClass ~= "HUNTER" then return end
+
+	if C.db["Misc"]["PetHappiness"] then
+		B:RegisterEvent("UNIT_HAPPINESS", CheckPetHappiness)
+	else
+		B:UnregisterEvent("UNIT_HAPPINESS", CheckPetHappiness)
+	end
 end

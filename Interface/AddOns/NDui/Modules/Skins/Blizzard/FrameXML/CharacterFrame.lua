@@ -1,6 +1,12 @@
 local _, ns = ...
 local B, C, L, DB = unpack(ns)
 
+local function replaceBlueColor(bar, r, g, b)
+	if r == 0 and g == 0 and b > .99 then
+		bar:SetStatusBarColor(0, .6, 1, .5)
+	end
+end
+
 tinsert(C.defaultThemes, function()
 	B.ReskinPortraitFrame(CharacterFrame, 15, -15, -35, 73)
 	B.ReskinRotationButtons(CharacterModelFrame)
@@ -61,40 +67,94 @@ tinsert(C.defaultThemes, function()
 		if icon then icon:SetShown(button.hasItem) end
 	end)
 
+	local newResIcons = {136116, 135826, 136074, 135843, 135945}
 	for i = 1, 5 do
 		local bu = _G["MagicResFrame"..i]
 		bu:SetSize(25, 25)
 		local icon = bu:GetRegions()
-		local a, b, _, _, _, _, c, d = icon:GetTexCoord()
-		icon:SetTexCoord(a+.2, c-.2, b+.018, d-.018)
+		B.ReskinIcon(icon)
+		icon:SetTexture(newResIcons[i])
+		icon:SetAlpha(.5)
 	end
+
+	-- Reputation
+	ReputationDetailCorner:Hide()
+	ReputationDetailDivider:Hide()
+	ReputationListScrollFrame:GetRegions():Hide()
+	select(2, ReputationListScrollFrame:GetRegions()):Hide()
+
+	ReputationDetailFrame:SetPoint("TOPLEFT", ReputationFrame, "TOPRIGHT", -32, -16)
+
+	local function UpdateFactionSkins()
+		for i = 1, GetNumFactions() do
+			local bar = _G["ReputationBar"..i]
+			local check = _G["ReputationBar"..i.."AtWarCheck"]
+			if bar and not bar.styled then
+				B.StripTextures(bar)
+				bar:SetStatusBarTexture(DB.bdTex)
+				B.CreateBDFrame(bar, .25)
+
+				local icon = check:GetRegions()
+				icon:SetTexture("Interface\\Buttons\\UI-CheckBox-SwordCheck")
+				icon:SetTexCoord(0, 1, 0, 1)
+				icon:ClearAllPoints()
+				icon:SetPoint("LEFT", check, 0, -3)
+
+				bar.styled = true
+			end
+		end
+	end
+
+	ReputationFrame:HookScript("OnShow", UpdateFactionSkins)
+	ReputationFrame:HookScript("OnEvent", UpdateFactionSkins)
+
+	for i = 1, NUM_FACTIONS_DISPLAYED do
+		B.ReskinCollapse(_G["ReputationHeader"..i])
+	end
+
+	B.StripTextures(ReputationFrame)
+	B.StripTextures(ReputationDetailFrame)
+	B.SetBD(ReputationDetailFrame)
+	B.ReskinClose(ReputationDetailCloseButton)
+	B.ReskinCheck(ReputationDetailAtWarCheckBox)
+	B.ReskinCheck(ReputationDetailInactiveCheckBox)
+	B.ReskinCheck(ReputationDetailMainScreenCheckBox)
+	B.ReskinScroll(ReputationListScrollFrameScrollBar)
+	select(3, ReputationDetailFrame:GetRegions()):Hide()
 
 	-- SkillFrame
 	B.StripTextures(SkillFrame)
 	B.ReskinScroll(SkillListScrollFrameScrollBar)
 	B.Reskin(SkillFrameCancelButton)
-	B.ReskinExpandOrCollapse(SkillFrameCollapseAllButton)
+	B.ReskinCollapse(SkillFrameCollapseAllButton)
 	B.StripTextures(SkillFrameExpandButtonFrame)
+
 	B.ReskinScroll(SkillDetailScrollFrame.ScrollBar)
 	B.CreateBDFrame(SkillDetailScrollFrame, .25)
 	SkillDetailStatusBarBorder:SetAlpha(0)
 	SkillDetailStatusBar:SetStatusBarTexture(DB.bdTex)
 	B.CreateBDFrame(SkillDetailStatusBar, .25)
+	hooksecurefunc(SkillDetailStatusBar, "SetStatusBarColor", replaceBlueColor)
+
+	local button = SkillDetailStatusBarUnlearnButton
+	B.Reskin(button)
+	button.__bg:SetInside(nil, 7, 7)
+	button:SetPoint("LEFT", SkillDetailStatusBar, "RIGHT", 2, 0)
+	local tex = button:CreateTexture()
+	tex:SetTexture(DB.closeTex)
+	tex:SetVertexColor(1, 0, 0)
+	tex:SetAllPoints(button.__bg)
 
 	for i = 1, 12 do
-		B.ReskinExpandOrCollapse(_G["SkillTypeLabel"..i])
-		B.CreateBDFrame(_G["SkillRankFrame"..i], .25)
-		_G["SkillRankFrame"..i.."Border"]:SetAlpha(0)
-		_G["SkillRankFrame"..i.."Bar"]:SetTexture(DB.bdTex)
+		B.ReskinCollapse(_G["SkillTypeLabel"..i])
+		local name = "SkillRankFrame"..i
+		local bar = _G[name]
+		local border = _G[name.."Border"]
+		bar:SetStatusBarTexture(DB.bdTex)
+		B.CreateBDFrame(bar, .25)
+		hooksecurefunc(bar, "SetStatusBarColor", replaceBlueColor)
+		border:SetAlpha(0)
 	end
-
-	hooksecurefunc("SkillFrame_SetStatusBar", function(statusBarID, skillIndex)
-		local _, _, _, _, numTempPoints, _, _, _, stepCost, rankCost = GetSkillLineInfo(skillIndex)
-		local statusBar = _G["SkillRankFrame"..statusBarID]
-		if not stepCost and not (rankCost or (numTempPoints > 0)) then
-			statusBar:SetStatusBarColor(0, .6, 1, .5)
-		end
-	end)
 
 	-- PetFrame
 	B.StripTextures(PetPaperDollFrame)

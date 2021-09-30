@@ -98,7 +98,7 @@ tinsert(C.defaultThemes, function()
 				frame.bg:SetPoint("TOPLEFT", 8, -8)
 				frame.bg:SetPoint("BOTTOMRIGHT", -8, 8)
 
-				B.ReskinClose(frame.PassButton, "TOPRIGHT", frame.bg, "TOPRIGHT", -5, -5)
+				B.ReskinClose(frame.PassButton, frame.bg, -5, -5)
 
 				B.StripTextures(frame.Timer)
 				frame.Timer.Bar:SetTexture(DB.bdTex)

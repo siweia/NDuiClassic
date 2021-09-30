@@ -1,6 +1,19 @@
 local _, ns = ...
 local B, C, L, DB = unpack(ns)
 
+local function updateCommunitiesSelection(texture, show)
+	local button = texture:GetParent()
+	if show then
+		if texture:GetTexCoord() == 0 then
+			button.bg:SetBackdropColor(0, 1, 0, .25)
+		else
+			button.bg:SetBackdropColor(.51, .773, 1, .25)
+		end
+	else
+		button.bg:SetBackdropColor(0, 0, 0, 0)
+	end
+end
+
 C.themes["Blizzard_Communities"] = function()
 	local r, g, b = DB.r, DB.g, DB.b
 	local CommunitiesFrame = CommunitiesFrame
@@ -20,7 +33,7 @@ C.themes["Blizzard_Communities"] = function()
 	for _, name in next, {"InvitationFrame", "TicketFrame"} do
 		local frame = CommunitiesFrame[name]
 		B.StripTextures(frame)
-		B.CreateBD(frame, .25)
+		B.CreateBDFrame(frame, .25)
 		frame.InsetFrame:Hide()
 		if frame.CircleMask then
 			frame.CircleMask:Hide()
@@ -58,20 +71,20 @@ C.themes["Blizzard_Communities"] = function()
 		for i = 1, #buttons do
 			local button = buttons[i]
 			if not button.bg then
-				button:GetRegions():Hide()
-				button.Selection:SetAlpha(0)
-				button:SetHighlightTexture("")
-				button.bg = B.CreateBDFrame(button, 0)
+				button.bg = B.CreateBDFrame(button, 0, true)
 				button.bg:SetPoint("TOPLEFT", 5, -5)
 				button.bg:SetPoint("BOTTOMRIGHT", -10, 5)
-				B.CreateGradient(button.bg)
+
+				button:SetHighlightTexture("")
+				button.IconRing:SetAlpha(0)
+				button.__iconBorder = B.ReskinIcon(button.Icon)
+				button.Background:Hide()
+				button.Selection:SetAlpha(0)
+				hooksecurefunc(button.Selection, "SetShown", updateCommunitiesSelection)
 			end
 
-			if button.Selection:IsShown() then
-				button.bg:SetBackdropColor(r, g, b, .25)
-			else
-				button.bg:SetBackdropColor(0, 0, 0, 0)
-			end
+			button.CircleMask:Hide()
+			button.__iconBorder:SetShown(button.IconRing:IsShown())
 		end
 	end)
 
@@ -93,8 +106,7 @@ C.themes["Blizzard_Communities"] = function()
 	local bg1 = B.CreateBDFrame(CommunitiesFrame.Chat.InsetFrame, .25)
 	bg1:SetPoint("TOPLEFT", 1, -3)
 	bg1:SetPoint("BOTTOMRIGHT", -3, 22)
-	local bg2 = B.CreateBDFrame(CommunitiesFrame.ChatEditBox, 0)
-	B.CreateGradient(bg2)
+	local bg2 = B.CreateBDFrame(CommunitiesFrame.ChatEditBox, 0, true)
 	bg2:SetPoint("TOPLEFT", -5, -5)
 	bg2:SetPoint("BOTTOMRIGHT", 4, 5)
 
