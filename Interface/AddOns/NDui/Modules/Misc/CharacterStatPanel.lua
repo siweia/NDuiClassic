@@ -6,47 +6,39 @@ local wipe, gmatch, tinsert, ipairs, pairs = wipe, gmatch, tinsert, ipairs, pair
 local tonumber, tostring, max = tonumber, tostring, max
 local cr, cg, cb = DB.r, DB.g, DB.b
 
-local hasOtherAddon
+local leftDropDown, rightDropDown
 
 local function SetCharacterStats(statsTable, category)
-	if category == "PLAYERSTAT_BASE_STATS" then
-		PaperDollFrame_SetStat(statsTable[1], 1)
-		PaperDollFrame_SetStat(statsTable[2], 2)
-		PaperDollFrame_SetStat(statsTable[3], 3)
-		PaperDollFrame_SetStat(statsTable[4], 4)
-		PaperDollFrame_SetStat(statsTable[5], 5)
-		PaperDollFrame_SetArmor(statsTable[6])
-	elseif category == "PLAYERSTAT_DEFENSES" then
-		PaperDollFrame_SetArmor(statsTable[1])
-		PaperDollFrame_SetDefense(statsTable[2])
-		PaperDollFrame_SetDodge(statsTable[3])
-		PaperDollFrame_SetParry(statsTable[4])
-		PaperDollFrame_SetBlock(statsTable[5])
-		PaperDollFrame_SetResilience(statsTable[6])
-	elseif category == "PLAYERSTAT_MELEE_COMBAT" then
-		PaperDollFrame_SetDamage(statsTable[1])
-		statsTable[1]:SetScript("OnEnter", CharacterDamageFrame_OnEnter)
-		PaperDollFrame_SetAttackSpeed(statsTable[2])
-		PaperDollFrame_SetAttackPower(statsTable[3])
-		PaperDollFrame_SetRating(statsTable[4], CR_HIT_MELEE)
-		PaperDollFrame_SetMeleeCritChance(statsTable[5])
-		PaperDollFrame_SetExpertise(statsTable[6])
-	elseif category == "PLAYERSTAT_SPELL_COMBAT" then
-		PaperDollFrame_SetSpellBonusDamage(statsTable[1])
-		statsTable[1]:SetScript("OnEnter", CharacterSpellBonusDamage_OnEnter)
-		PaperDollFrame_SetSpellBonusHealing(statsTable[2])
-		PaperDollFrame_SetRating(statsTable[3], CR_HIT_SPELL)
-		PaperDollFrame_SetSpellCritChance(statsTable[4])
-		statsTable[4]:SetScript("OnEnter", CharacterSpellCritChance_OnEnter)
-		PaperDollFrame_SetSpellHaste(statsTable[5])
-		PaperDollFrame_SetManaRegen(statsTable[6])
-	elseif category == "PLAYERSTAT_RANGED_COMBAT" then
-		PaperDollFrame_SetRangedDamage(statsTable[1])
-		statsTable[1]:SetScript("OnEnter", CharacterRangedDamageFrame_OnEnter)
-		PaperDollFrame_SetRangedAttackSpeed(statsTable[2])
-		PaperDollFrame_SetRangedAttackPower(statsTable[3])
-		PaperDollFrame_SetRating(statsTable[4], CR_HIT_RANGED)
-		PaperDollFrame_SetRangedCritChance(statsTable[5])
+	if category == PLAYERSTAT_BASE_STATS then
+		-- str, agility, stamina, intelect, spirit
+		CSC_PaperDollFrame_SetPrimaryStats(statsTable, "player")
+	elseif category == PLAYERSTAT_DEFENSES then
+		-- armor, defense, dodge, parry, block
+		CSC_PaperDollFrame_SetArmor(statsTable[1], "player")
+		CSC_PaperDollFrame_SetDefense(statsTable[2], "player")
+		CSC_PaperDollFrame_SetDodge(statsTable[3], "player")
+		CSC_PaperDollFrame_SetParry(statsTable[4], "player")
+		CSC_PaperDollFrame_SetBlock(statsTable[5], "player")
+	elseif category == PLAYERSTAT_MELEE_COMBAT then
+		-- damage, Att Power, speed, hit raiting, crit chance
+		CSC_PaperDollFrame_SetDamage(statsTable[1], "player", category)
+		CSC_PaperDollFrame_SetMeleeAttackPower(statsTable[2], "player")
+		CSC_PaperDollFrame_SetAttackSpeed(statsTable[3], "player")
+		CSC_PaperDollFrame_SetCritChance(statsTable[4], "player", category)
+		CSC_PaperDollFrame_SetHitChance(statsTable[5], "player")
+	elseif category == PLAYERSTAT_RANGED_COMBAT then
+		CSC_PaperDollFrame_SetDamage(statsTable[1], "player", category)
+		CSC_PaperDollFrame_SetRangedAttackPower(statsTable[2], "player")
+		CSC_PaperDollFrame_SetRangedAttackSpeed(statsTable[3], "player")
+		CSC_PaperDollFrame_SetCritChance(statsTable[4], "player", category)
+		CSC_PaperDollFrame_SetRangedHitChance(statsTable[5], "player")
+	elseif category == PLAYERSTAT_SPELL_COMBAT then
+		-- bonus dmg, bonus healing, crit chance, mana regen, hit
+		CSC_PaperDollFrame_SetSpellPower(statsTable[1], "player")
+		CSC_PaperDollFrame_SetHealing(statsTable[2], "player")
+		CSC_PaperDollFrame_SetManaRegen(statsTable[3], "player")
+		CSC_PaperDollFrame_SetSpellCritChance(statsTable[4], "player")
+		CSC_PaperDollFrame_SetSpellHitChance(statsTable[5], "player")
 	end
 end
 
@@ -132,15 +124,10 @@ local function Arrow_GoDown(bu)
 end
 
 local function CreateStatRow(parent, index)
-	local frame = CreateFrame("Frame", "$parentRow"..index, parent, "StatFrameTemplate")
+	local frame = CreateFrame("Frame", "$parentRow"..index, parent, "CharacterStatFrameTemplate")
 	frame:SetWidth(180)
 	frame:SetPoint("TOP", parent.header, "BOTTOM", 0, -2 - (index-1)*16)
-	local background = frame:CreateTexture(nil, "BACKGROUND")
-	background:SetAtlas("UI-Character-Info-Line-Bounce", true)
-	background:SetAlpha(.3)
-	background:SetPoint("CENTER")
-	background:SetShown(index%2 == 0)
-	frame.background = background
+	frame.Background:SetShown(index%2 == 0)
 
 	return frame
 end
@@ -184,8 +171,8 @@ local function CreatePlayerILvl(parent, category)
 
 	local iLvlFrame = CreateStatRow(frame, 1)
 	iLvlFrame:SetHeight(30)
-	iLvlFrame.background:Show()
-	iLvlFrame.background:SetAtlas("UI-Character-Info-ItemLevel-Bounce", true)
+	iLvlFrame.Background:Show()
+	iLvlFrame.Background:SetAtlas("UI-Character-Info-ItemLevel-Bounce", true)
 
 	M.PlayerILvl = B.CreateFS(iLvlFrame, 20)
 end
@@ -252,7 +239,7 @@ function M:UpdatePlayerILvl()
 end
 
 local function CreateStatHeader(parent, index, category)
-	local maxLines = index == 5 and 5 or 6
+	local maxLines = 5
 	local frame = CreateFrame("Frame", "NDuiStatCategory"..index, parent)
 	frame:SetWidth(200)
 	frame:SetHeight(42 + maxLines*16)
@@ -262,7 +249,7 @@ local function CreateStatHeader(parent, index, category)
 	local header = CreateFrame("Frame", "$parentHeader", frame, "CharacterStatFrameCategoryTemplate")
 	header:SetPoint("TOP")
 	header.Background:Hide()
-	header.Title:SetText(_G[category])
+	header.Title:SetText(category)
 	header.Title:SetTextColor(cr, cg, cb)
 	frame.header = header
 
@@ -290,7 +277,7 @@ local function ToggleMagicRes()
 		CharacterResistanceFrame:ClearAllPoints()
 		CharacterResistanceFrame:SetPoint("TOPLEFT", M.StatPanel2, 28, -25)
 		CharacterResistanceFrame:SetParent(M.StatPanel2)
-		if not hasOtherAddon then CharacterModelFrame:SetSize(231, 320) end -- size in retail
+		CharacterModelFrame:SetSize(231, 320) -- size in retail
 
 		for i = 1, 5 do
 			local bu = _G["MagicResFrame"..i]
@@ -326,11 +313,13 @@ end
 local function ToggleStatPanel(texture)
 	if C.db["Misc"]["StatExpand"] then
 		B.SetupArrow(texture, "left")
-		CharacterAttributesFrame:Hide()
+		leftDropDown:Hide()
+		rightDropDown:Hide()
 		M.StatPanel2:Show()
 	else
 		B.SetupArrow(texture, "right")
-		CharacterAttributesFrame:SetShown(not hasOtherAddon)
+		leftDropDown:Show()
+		rightDropDown:Show()
 		M.StatPanel2:Hide()
 	end
 	ToggleMagicRes()
@@ -341,9 +330,20 @@ local function ExpandCharacterFrame(expand)
 end
 
 function M:CharacterStatePanel()
+	if not IsAddOnLoaded("CharacterStatsClassic") then return end
 	if not C.db["Skins"]["BlizzardSkins"] then return end   -- disable if skins off, needs review
 
-	hasOtherAddon = IsAddOnLoaded("CharacterStatsTBC")
+	for i = 1, CharacterFrame:GetNumChildren() do
+		local child = select(i, CharacterFrame:GetChildren())
+		if child and child.leftStatsDropDown then
+			B.ReskinDropDown(child.leftStatsDropDown)
+			leftDropDown = child.leftStatsDropDown
+		end
+		if child and child.rightStatsDropDown then
+			B.ReskinDropDown(child.rightStatsDropDown)
+			rightDropDown = child.rightStatsDropDown
+		end
+	end
 
 	local statPanel = CreateFrame("Frame", "NDuiStatPanel", PaperDollFrame)
 	statPanel:SetSize(200, 422)
@@ -374,11 +374,11 @@ function M:CharacterStatePanel()
 
 	-- Player stats
 	local categories = {
-		"PLAYERSTAT_BASE_STATS",
-		"PLAYERSTAT_DEFENSES",
-		"PLAYERSTAT_MELEE_COMBAT",
-		"PLAYERSTAT_SPELL_COMBAT",
-		"PLAYERSTAT_RANGED_COMBAT",
+		PLAYERSTAT_BASE_STATS,
+		PLAYERSTAT_DEFENSES,
+		PLAYERSTAT_MELEE_COMBAT,
+		PLAYERSTAT_SPELL_COMBAT,
+		PLAYERSTAT_RANGED_COMBAT,
 	}
 	for index, category in pairs(categories) do
 		CreateStatHeader(stat, index, category)
@@ -416,4 +416,4 @@ function M:CharacterStatePanel()
 	end)
 end
 
---M:RegisterMisc("StatPanel", M.CharacterStatePanel)
+M:RegisterMisc("StatPanel", M.CharacterStatePanel)
