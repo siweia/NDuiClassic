@@ -4,7 +4,6 @@ local Bar = B:RegisterModule("Actionbar")
 
 local _G = _G
 local tinsert, next = tinsert, next
-local GetActionTexture = GetActionTexture
 local cfg = C.Bars.bar1
 local margin, padding = C.Bars.margin, C.Bars.padding
 
@@ -34,19 +33,6 @@ function Bar:UpdateAllScale()
 	UpdateActionbarScale("BarExit")
 	UpdateActionbarScale("BarPet")
 	UpdateActionbarScale("BarStance")
-end
-
-function Bar:FixActionCount()
-	local text = self.Count
-	local action = self.action
-	local count = GetActionCount(action)
-	if not IsItemAction(action) and count > 0 then
-		if count > (self.maxDisplayCount or 999) then
-			self.Count:SetText("*")
-		else
-			self.Count:SetText(count)
-		end
-	end
 end
 
 local function SetFrameSize(frame, size, num)
@@ -123,14 +109,10 @@ function Bar:CreateBar1()
 		end
 	]])
 	RegisterStateDriver(frame, "page", actionPage)
-
-	-- FrameXML/ActionButton.lua
-	hooksecurefunc("ActionButton_UpdateCount", self.FixActionCount)
 end
 
 function Bar:OnLogin()
 	Bar.buttons = {}
-	Bar:MicroMenu()
 
 	if not C.db["Actionbar"]["Enable"] then return end
 
@@ -146,4 +128,6 @@ function Bar:OnLogin()
 	Bar:HideBlizz()
 	Bar:ReskinBars()
 	Bar:UpdateAllScale()
+	Bar:MicroMenu()
+	Bar:HunterAspectBar()
 end

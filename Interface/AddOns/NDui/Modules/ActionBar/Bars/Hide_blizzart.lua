@@ -78,4 +78,5 @@ function Bar:HideBlizz()
 	hooksecurefunc("MultiActionBar_UpdateGridVisibility", ToggleButtonGrid)
 	hooksecurefunc("MultiActionBar_HideAllGrids", ToggleButtonGrid)
 	B:RegisterEvent("ACTIONBAR_HIDEGRID", ToggleButtonGrid)
+	ToggleButtonGrid()
 end

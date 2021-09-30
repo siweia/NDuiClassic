@@ -33,8 +33,8 @@ function TT:GetUnit()
 end
 
 function TT:HideLines()
-    for i = 3, self:NumLines() do
-        local tiptext = _G["GameTooltipTextLeft"..i]
+	for i = 3, self:NumLines() do
+		local tiptext = _G["GameTooltipTextLeft"..i]
 		local linetext = tiptext:GetText()
 		if linetext then
 			if linetext == PVP then
@@ -56,7 +56,7 @@ function TT:HideLines()
 				end
 			end
 		end
-    end
+	end
 end
 
 function TT:GetLevelLine()
@@ -242,7 +242,7 @@ function TT:ReskinStatusBar()
 	self.StatusBar:SetPoint("BOTTOMRIGHT", self.bg, "TOPRIGHT", -C.mult, 3)
 	self.StatusBar:SetStatusBarTexture(DB.normTex)
 	self.StatusBar:SetHeight(5)
-	B.CreateBDFrame(self.StatusBar, nil, true)
+	B.SetBD(self.StatusBar)
 end
 
 function TT:GameTooltip_ShowStatusBar()
@@ -318,12 +318,11 @@ function TT:GameTooltip_ComparisonFix(anchorFrame, shoppingTooltip1, shoppingToo
 end
 
 -- Tooltip skin
-local fakeBg = CreateFrame("Frame", nil, UIParent)
+local fakeBg = CreateFrame("Frame", nil, UIParent, "BackdropTemplate")
 fakeBg:SetBackdrop({ bgFile = DB.bdTex, edgeFile = DB.bdTex, edgeSize = 1 })
-
-local function getBackdrop() return fakeBg:GetBackdrop() end
-local function getBackdropColor() return 0, 0, 0, .7 end
-local function getBackdropBorderColor() return 0, 0, 0 end
+local function __GetBackdrop() return fakeBg:GetBackdrop() end
+local function __GetBackdropColor() return 0, 0, 0, .7 end
+local function __GetBackdropBorderColor() return 0, 0, 0 end
 
 function TT:ReskinTooltip()
 	if not self then
@@ -334,26 +333,26 @@ function TT:ReskinTooltip()
 	self:SetScale(C.db["Tooltip"]["Scale"])
 
 	if not self.tipStyled then
-		self:SetBackdrop(nil)
+		if self.SetBackdrop then self:SetBackdrop(nil) end
 		self:DisableDrawLayer("BACKGROUND")
-		self.bg = B.CreateBDFrame(self, .7, true)
+		self.bg = B.SetBD(self, .7)
 		self.bg:SetInside(self)
 		self.bg:SetFrameLevel(self:GetFrameLevel())
-		B.CreateTex(self.bg)
-
-		-- other gametooltip-like support
-		self.GetBackdrop = getBackdrop
-		self.GetBackdropColor = getBackdropColor
-		self.GetBackdropBorderColor = getBackdropBorderColor
 
 		if self.StatusBar then
 			TT.ReskinStatusBar(self)
 		end
 
+		if self.GetBackdrop then
+			self.GetBackdrop = __GetBackdrop
+			self.GetBackdropColor = __GetBackdropColor
+			self.GetBackdropBorderColor = __GetBackdropBorderColor
+		end
+
 		self.tipStyled = true
 	end
 
-	self.bg:SetBackdropBorderColor(0, 0, 0)
+	B.SetBorderColor(self.bg)
 	if C.db["Tooltip"]["ClassColor"] and self.GetItem then
 		local _, item = self:GetItem()
 		if item then
@@ -366,7 +365,7 @@ function TT:ReskinTooltip()
 	end
 end
 
-function TT:GameTooltip_SetBackdropStyle()
+function TT:SharedTooltip_SetBackdropStyle()
 	if not self.tipStyled then return end
 	self:SetBackdrop(nil)
 end
@@ -384,13 +383,15 @@ function TT:SetupTooltipFonts()
 	TooltipSetFont(GameTooltipText, textSize)
 	TooltipSetFont(GameTooltipTextSmall, textSize)
 
+	if not GameTooltip.hasMoney then
+		SetTooltipMoney(GameTooltip, 1, nil, "", "")
+		SetTooltipMoney(GameTooltip, 1, nil, "", "")
+		GameTooltip_ClearMoney(GameTooltip)
+	end
 	if GameTooltip.hasMoney then
 		for i = 1, GameTooltip.numMoneyFrames do
 			TooltipSetFont(_G["GameTooltipMoneyFrame"..i.."PrefixText"], textSize)
 			TooltipSetFont(_G["GameTooltipMoneyFrame"..i.."SuffixText"], textSize)
-			TooltipSetFont(_G["GameTooltipMoneyFrame"..i.."GoldButtonText"], textSize)
-			TooltipSetFont(_G["GameTooltipMoneyFrame"..i.."SilverButtonText"], textSize)
-			TooltipSetFont(_G["GameTooltipMoneyFrame"..i.."CopperButtonText"], textSize)
 		end
 	end
 
@@ -404,22 +405,32 @@ function TT:SetupTooltipFonts()
 	end
 end
 
+function TT:FixRecipeItemNameWidth()
+	for i = 1, self:NumLines() do
+		local line = _G["GameTooltipTextLeft"..i]
+		if line:GetHeight() > 40 then
+			line:SetWidth(line:GetWidth() + 1)
+		end
+	end
+end
+
 function TT:OnLogin()
 	GameTooltip.StatusBar = GameTooltipStatusBar
-	GameTooltip:HookScript("OnTooltipCleared", self.OnTooltipCleared)
-	GameTooltip:HookScript("OnTooltipSetUnit", self.OnTooltipSetUnit)
-	GameTooltip.StatusBar:SetScript("OnValueChanged", self.StatusBar_OnValueChanged)
-	hooksecurefunc("GameTooltip_ShowStatusBar", self.GameTooltip_ShowStatusBar)
-	hooksecurefunc("GameTooltip_ShowProgressBar", self.GameTooltip_ShowProgressBar)
-	hooksecurefunc("GameTooltip_SetDefaultAnchor", self.GameTooltip_SetDefaultAnchor)
-	hooksecurefunc("GameTooltip_SetBackdropStyle", self.GameTooltip_SetBackdropStyle)
-	hooksecurefunc("GameTooltip_AnchorComparisonTooltips", self.GameTooltip_ComparisonFix)
+	GameTooltip:HookScript("OnTooltipCleared", TT.OnTooltipCleared)
+	GameTooltip:HookScript("OnTooltipSetUnit", TT.OnTooltipSetUnit)
+	GameTooltip.StatusBar:SetScript("OnValueChanged", TT.StatusBar_OnValueChanged)
+	hooksecurefunc("GameTooltip_ShowStatusBar", TT.GameTooltip_ShowStatusBar)
+	hooksecurefunc("GameTooltip_ShowProgressBar", TT.GameTooltip_ShowProgressBar)
+	hooksecurefunc("GameTooltip_SetDefaultAnchor", TT.GameTooltip_SetDefaultAnchor)
+	hooksecurefunc("GameTooltip_SetBackdropStyle", TT.SharedTooltip_SetBackdropStyle)
+	hooksecurefunc("GameTooltip_AnchorComparisonTooltips", TT.GameTooltip_ComparisonFix)
+	TT:SetupTooltipFonts()
+	GameTooltip:HookScript("OnTooltipSetItem", TT.FixRecipeItemNameWidth)
 
 	-- Elements
-	self:SetupTooltipFonts()
-	self:ReskinTooltipIcons()
-	self:SetupTooltipID()
-	self:TargetedInfo()
+	TT:ReskinTooltipIcons()
+	TT:SetupTooltipID()
+	TT:TargetedInfo()
 end
 
 -- Tooltip Skin Registration
@@ -496,12 +507,18 @@ TT:RegisterTooltips("NDui", function()
 		if LootBarToolTip then
 			TT.ReskinTooltip(LootBarToolTip)
 		end
+		-- Altoholic
+		if AltoTooltip then
+			TT.ReskinTooltip(AltoTooltip)
+		end
 	end)
 end)
 
 TT:RegisterTooltips("Blizzard_DebugTools", function()
 	TT.ReskinTooltip(FrameStackTooltip)
 	FrameStackTooltip:SetScale(UIParent:GetScale())
+end)
+
+TT:RegisterTooltips("Blizzard_EventTrace", function()
 	TT.ReskinTooltip(EventTraceTooltip)
-	EventTraceTooltip:SetScale(UIParent:GetScale())
 end)
