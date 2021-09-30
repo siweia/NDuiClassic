@@ -2,6 +2,9 @@
 	<Script file="ClassSpells.lua"/>
 	<Script file="RaidDebuffs.lua"/>
 
+	<Script file="Classic\Party-Classic.lua"/>
+	<Script file="Classic\Raid.lua"/>
+
 	<Script file="TBC\Party-TBC.lua"/>
 	<Script file="TBC\BlackTemple.lua"/>
 	<Script file="TBC\GruulsLair.lua"/>

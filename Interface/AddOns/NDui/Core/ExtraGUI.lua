@@ -109,7 +109,7 @@ function G:SetupRaidDebuffs(parent)
 		end)
 	end
 
-	local dungeonIDs = {540,558,556,555,542,546,545,547,553,554,552,557,269,560,543,585}
+	local dungeonIDs = {48, 230, 36, 349, 389, 129, 47, 189, 33, 329, 109, 70, 43, 209}
 	local dungeons = {}
 	for _, id in pairs(dungeonIDs) do
 		local name = GetNameFromID(id)
@@ -118,7 +118,7 @@ function G:SetupRaidDebuffs(parent)
 			tinsert(dungeons, name)
 		end
 	end
-	local raidIDs = {564,565,534,532,544,548,580,550,0}
+	local raidIDs = {409, 249, 309, 469, 509, 531, 533, 0}
 	local raids = {}
 	for _, id in pairs(raidIDs) do
 		local name = GetNameFromID(id)
