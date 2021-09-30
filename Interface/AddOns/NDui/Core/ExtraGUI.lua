@@ -764,14 +764,14 @@ function G:SetupUnitFrame(parent)
 		end
 	end
 	createOptionGroup(scroll.child, L["Player&Target"], -10, "Player", updatePlayerSize)
-
+--[[
 	local function updateFocusSize()
 		local frame = _G.oUF_Focus
 		if frame then
 			SetUnitFrameSize(frame, "Focus")
 		end
 	end
-	createOptionGroup(scroll.child, L["FocusUF"], -340, "Focus", updateFocusSize)
+	createOptionGroup(scroll.child, L["FocusUF"], -340, "Focus", updateFocusSize)]]
 
 	local subFrames = {_G.oUF_Pet, _G.oUF_ToT, _G.oUF_ToToT, _G.oUF_FocusTarget}
 	local function updatePetSize()
@@ -779,8 +779,8 @@ function G:SetupUnitFrame(parent)
 			SetUnitFrameSize(frame, "Pet")
 		end
 	end
-	createOptionGroup(scroll.child, L["Pet&*Target"], -670, "Pet", updatePetSize)
-
+	createOptionGroup(scroll.child, L["Pet&*Target"], -340, "Pet", updatePetSize)
+--[[
 	local function updateBossSize()
 		for _, frame in pairs(ns.oUF.objects) do
 			if frame.mystyle == "boss" or frame.mystyle == "arena" then
@@ -788,7 +788,7 @@ function G:SetupUnitFrame(parent)
 			end
 		end
 	end
-	createOptionGroup(scroll.child, L["ArenaFrame"], -930, "Boss", updateBossSize)
+	createOptionGroup(scroll.child, L["ArenaFrame"], -930, "Boss", updateBossSize)]]
 end
 
 function G:SetupRaidFrame(parent)

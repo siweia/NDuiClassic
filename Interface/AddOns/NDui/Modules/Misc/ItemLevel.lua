@@ -133,7 +133,7 @@ function M:RefreshButtonInfo()
 						slotFrame.iLvlText:SetText(level)
 						slotFrame.iLvlText:SetTextColor(color.r, color.g, color.b)
 					end
-					M:ItemLevel_UpdateGemInfo(link, unit, index, slotFrame)
+				--	M:ItemLevel_UpdateGemInfo(link, unit, index, slotFrame)
 					M:UpdateInspectILvl()
 
 					pending[index] = nil
@@ -180,7 +180,7 @@ function M:ItemLevel_SetupLevel(frame, strType, unit)
 							slotFrame.iLvlText:SetTextColor(color.r, color.g, color.b)
 						end
 
-						M:ItemLevel_UpdateGemInfo(link, unit, index, slotFrame)
+					--	M:ItemLevel_UpdateGemInfo(link, unit, index, slotFrame)
 					else
 						pending[index] = slotFrame
 						M.QualityUpdater:Show()
