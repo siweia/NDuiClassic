@@ -415,7 +415,7 @@ function M:QuickMenuButton()
 		end
 
 		local server = dropdownMenu.server
-		if not server then
+		if not server or server == "" then
 			server = DB.MyRealm
 		end
 		M.MenuButtonName = name.."-"..server
