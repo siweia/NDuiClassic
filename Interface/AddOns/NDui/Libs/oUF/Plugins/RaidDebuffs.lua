@@ -2,6 +2,10 @@ local _, ns = ...
 local B, C, L, DB = unpack(ns)
 local oUF = ns.oUF
 
+-- Libs
+DB.LibClassicDurations = LibStub("LibClassicDurations")
+DB.LibClassicDurations:RegisterFrame("NDui")
+
 local LCD = DB.LibClassicDurations
 
 local debugMode = false
