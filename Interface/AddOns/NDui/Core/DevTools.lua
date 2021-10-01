@@ -19,6 +19,7 @@ local floor, ceil = math.floor, math.ceil
 
 DB.Devs = {
 	["箭灵-法尔班克斯"] = true, -- classic
+	["Waro-法尔班克斯"] = true, -- classic
 	["Huniverster-BadgeofJustice"] = true, -- classic beta
 	["Huniverster-ClassicPTRRealm2"] = true, -- classic ptr
 }

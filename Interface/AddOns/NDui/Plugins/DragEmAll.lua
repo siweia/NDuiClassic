@@ -13,7 +13,6 @@ local frames = {
 
 	-- Blizz Frames
 	["AddonList"] = false,
-	["ArenaFrame"] = false,
 	["AudioOptionsFrame"] = false,
 	["BattlefieldFrame"] = false,
 	["ChannelFrame"] = false,
@@ -24,9 +23,9 @@ local frames = {
 	["GossipFrame"] = false,
 	["GuildRegistrarFrame"] = false,
 	["HelpFrame"] = false,
+	["HonorFrame"] = true,
 	["InterfaceOptionsFrame"] = false,
 	["ItemTextFrame"] = false,
-	["LFGParentFrame"] = false,
 	["LootFrame"] = false,
 	["MailFrame"] = false,
 	["MerchantFrame"] = false,
@@ -36,7 +35,6 @@ local frames = {
 	["PetitionFrame"] = false,
 	["PetPaperDollFrame"] = true,
 	["PetStableFrame"] = false,
-	["PVPFrame"] = true,
 	["QuestFrame"] = false,
 	["QuestLogFrame"] = false,
 	["RaidParentFrame"] = false,

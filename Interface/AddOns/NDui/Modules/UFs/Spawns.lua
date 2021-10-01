@@ -271,7 +271,7 @@ function UF:OnLogin()
 		oUF:RegisterStyle("Player", CreatePlayerStyle)
 		oUF:RegisterStyle("Target", CreateTargetStyle)
 		oUF:RegisterStyle("ToT", CreateToTStyle)
-		oUF:RegisterStyle("Focus", CreateFocusStyle)
+		--oUF:RegisterStyle("Focus", CreateFocusStyle)
 		oUF:RegisterStyle("FocusTarget", CreateFocusTargetStyle)
 		oUF:RegisterStyle("Pet", CreatePetStyle)
 
@@ -293,7 +293,7 @@ function UF:OnLogin()
 		oUF:SetActiveStyle("Pet")
 		local pet = oUF:Spawn("pet", "oUF_Pet")
 		B.Mover(pet, L["PetUF"], "PetUF", C.UFs.PetPos)
-
+--[[
 		oUF:SetActiveStyle("Focus")
 		local focus = oUF:Spawn("focus", "oUF_Focus")
 		B.Mover(focus, L["FocusUF"], "FocusUF", C.UFs.FocusPos)
@@ -301,7 +301,7 @@ function UF:OnLogin()
 
 		oUF:SetActiveStyle("FocusTarget")
 		local focustarget = oUF:Spawn("focustarget", "oUF_FocusTarget")
-		B.Mover(focustarget, L["FotUF"], "FotUF", {"TOPLEFT", oUF_Focus, "TOPRIGHT", 5, 0})
+		B.Mover(focustarget, L["FotUF"], "FotUF", {"TOPLEFT", oUF_Focus, "TOPRIGHT", 5, 0})]]
 
 		if C.db["UFs"]["ToToT"] then
 			oUF:RegisterStyle("ToToT", CreateToToT)
@@ -309,7 +309,7 @@ function UF:OnLogin()
 			local targettargettarget = oUF:Spawn("targettargettarget", "oUF_ToToT")
 			B.Mover(targettargettarget, L["TototUF"], "TototUF", C.UFs.ToToTPos)
 		end
-
+--[[
 		if C.db["UFs"]["Arena"] then
 			oUF:RegisterStyle("Arena", CreateArenaStyle)
 			oUF:SetActiveStyle("Arena")
@@ -323,7 +323,7 @@ function UF:OnLogin()
 					arena[i].mover = B.Mover(arena[i], L["ArenaFrame"]..i, "Arena"..i, {"BOTTOM", arena[i-1], "TOP", 0, 50}, moverWidth, moverHeight)
 				end
 			end
-		end
+		end]]
 
 		UF:UpdateTextScale()
 	end
