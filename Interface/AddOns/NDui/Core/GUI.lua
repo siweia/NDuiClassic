@@ -733,19 +733,19 @@ local HeaderTag = "|cff00cc4c"
 local NewTag = "|TInterface\\OptionsFrame\\UI-OptionsFrame-NewFeatureIcon:0|t"
 
 G.TabList = {
-	L["Actionbar"],
+	NewTag..L["Actionbar"],
 	NewTag..L["Bags"],
 	L["Unitframes"],
-	L["RaidFrame"],
+	NewTag..L["RaidFrame"],
 	NewTag..L["Nameplate"],
 	L["PlayerPlate"],
 	L["Auras"],
-	L["Raid Tools"],
-	L["ChatFrame"],
+	NewTag..L["Raid Tools"],
+	NewTag..L["ChatFrame"],
 	NewTag..L["Maps"],
-	L["Skins"],
+	NewTag..L["Skins"],
 	L["Tooltip"],
-	L["Misc"],
+	NewTag..L["Misc"],
 	L["UI Settings"],
 	L["Profile"],
 }
@@ -776,9 +776,9 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Actionbar", "Macro", L["Actionbar Macro"], true},
 		{1, "Actionbar", "Count", L["Actionbar Item Counts"]},
 		{1, "Actionbar", "Classcolor", L["ClassColor BG"], true},
-		{1, "Actionbar", "EquipColor", L["EquipColor"].."*", nil, nil, updateEquipColor},
+		{1, "Actionbar", "EquipColor", NewTag..L["EquipColor"].."*", nil, nil, updateEquipColor},
 		{},--blank
-		{1, "Actionbar", "AspectBar", HeaderTag..L["AspectBar"].."*", nil, nil, toggleAspectBar},
+		{1, "Actionbar", "AspectBar", NewTag..HeaderTag..L["AspectBar"].."*", nil, nil, toggleAspectBar},
 		{1, "Actionbar", "VerticleAspect", L["VerticleAspect"].."*", nil, nil, updateAspectStatus},
 		{3, "Actionbar", "AspectSize", L["AspectSize"].."*", true, {24, 60, 1}, updateAspectStatus},
 	},
@@ -833,8 +833,8 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "UFs", "HorizonParty", L["Horizon PartyFrame"], true},
 		{1, "UFs", "PartyPetFrame", HeaderTag..L["UFs PartyPetFrame"]},	
 		{},--blank
-		{1, "UFs", "ShowRaidDebuff", L["ShowRaidDebuff"].."*", nil, nil, updateRaidAuras, L["ShowRaidDebuffTip"]},
-		{1, "UFs", "ShowRaidBuff", L["ShowRaidBuff"].."*", true, nil, updateRaidAuras, L["ShowRaidBuffTip"]},
+		{1, "UFs", "ShowRaidDebuff", NewTag..L["ShowRaidDebuff"].."*", nil, nil, updateRaidAuras, L["ShowRaidDebuffTip"]},
+		{1, "UFs", "ShowRaidBuff", NewTag..L["ShowRaidBuff"].."*", true, nil, updateRaidAuras, L["ShowRaidBuffTip"]},
 		{3, "UFs", "RaidDebuffSize", L["RaidDebuffSize"].."*", nil, {5, 30, 1}, updateRaidAuras},
 		{3, "UFs", "RaidBuffSize", L["RaidBuffSize"].."*", true, {5, 30, 1}, updateRaidAuras},
 		{},--blank
@@ -848,7 +848,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{3, "UFs", "RaidDebuffScale", L["RaidDebuffScale"].."*", true, {.8, 2, .1}, refreshRaidFrameIcons},
 		{},--blank
 		{1, "UFs", "RaidClickSets", HeaderTag..L["Enable ClickSets"], nil, setupClickCast},
-		{1, "UFs", "ShowSolo", L["ShowSolo"].."*", nil, nil, updateAllHeaders, L["ShowSoloTip"]},
+		{1, "UFs", "ShowSolo", NewTag..L["ShowSolo"].."*", nil, nil, updateAllHeaders, L["ShowSoloTip"]},
 		{1, "UFs", "ShowTeamIndex", L["RaidFrame TeamIndex"], true},
 		{1, "UFs", "SmartRaid", NewTag..L["SmartRaid"].."*", nil, nil, updateAllHeaders, L["SmartRaidTip"]},
 		{1, "UFs", "HorizonRaid", L["Horizon RaidFrame"], true},
@@ -876,8 +876,8 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Nameplate", "FullHealth", L["Show FullHealth"].."*", nil, nil, refreshNameplates},
 		{1, "Nameplate", "ColorBorder", L["ColorBorder"].."*", true, nil, refreshNameplates},
 		{1, "Nameplate", "QuestIndicator", L["QuestIndicator"], nil, nil, nil, L["QuestIndicatorAddOns"]},
-		{1, "Nameplate", "CastTarget", L["PlateCastTarget"].."*", true, nil, nil, L["PlateCastTargetTip"]},
-		{1, "Nameplate", "CastbarGlow", L["PlateCastbarGlow"].."*", nil, setupPlateCastbarGlow, nil, L["PlateCastbarGlowTip"]},
+		{1, "Nameplate", "CastTarget", NewTag..L["PlateCastTarget"].."*", true, nil, nil, L["PlateCastTargetTip"]},
+		{1, "Nameplate", "CastbarGlow", NewTag..L["PlateCastbarGlow"].."*", nil, setupPlateCastbarGlow, nil, L["PlateCastbarGlowTip"]},
 		{1, "Nameplate", "ClampTarget", NewTag..L["ClampTargetPlate"].."*", true, nil, clampTargetPlate, L["ClampTargetPlateTip"]},
 		{},--blank
 		{1, "Nameplate", "ColoredTarget", HeaderTag..L["ColoredTarget"].."*", nil, nil, nil, L["ColoredTargetTip"]},
@@ -949,12 +949,12 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Misc", "QuestProgress", L["QuestProgress"].."*"},
 		{1, "Misc", "OnlyCompleteRing", L["OnlyCompleteRing"].."*", true, nil, nil, L["OnlyCompleteRingTip"]},
 		{},--blank
-		{1, "Misc", "InterruptAlert", HeaderTag..L["InterruptAlert"].."*", nil, nil, updateInterruptAlert},
+		{1, "Misc", "InterruptAlert", NewTag..HeaderTag..L["InterruptAlert"].."*", nil, nil, updateInterruptAlert},
 		{1, "Misc", "OwnInterrupt", L["OwnInterrupt"].."*", true},
-		{1, "Misc", "DispellAlert", HeaderTag..L["DispellAlert"].."*", nil, nil, updateInterruptAlert},
+		{1, "Misc", "DispellAlert", NewTag..HeaderTag..L["DispellAlert"].."*", nil, nil, updateInterruptAlert},
 		{1, "Misc", "OwnDispell", L["OwnDispell"].."*", true},
-		{1, "Misc", "BrokenAlert", HeaderTag..L["BrokenAlert"].."*", nil, nil, updateInterruptAlert, L["BrokenAlertTip"]},
-		{1, "Misc", "LoCAlert", HeaderTag..L["LoCAlert"].."*", true, nil, updateInterruptAlert, L["LoCAlertTip"]},
+		{1, "Misc", "BrokenAlert", NewTag..HeaderTag..L["BrokenAlert"].."*", nil, nil, updateInterruptAlert, L["BrokenAlertTip"]},
+		{1, "Misc", "LoCAlert", NewTag..HeaderTag..L["LoCAlert"].."*", true, nil, updateInterruptAlert, L["LoCAlertTip"]},
 		{1, "Misc", "InstAlertOnly", L["InstAlertOnly"].."*", nil, nil, updateInterruptAlert, L["InstAlertOnlyTip"]},
 		--{},--blank
 		--{1, "Misc", "PlacedItemAlert", L["Placed Item Alert"].."*"}, -- fix me: need more data
@@ -970,13 +970,13 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Chat", "WhisperColor", L["Differ WhisperColor"].."*", true},
 		{1, "Chat", "ChatItemLevel", L["ShowChatItemLevel"]},
 		{1, "Chat", "Freedom", L["Language Filter"], true},
-		{1, "Chat", "WhisperSound", L["WhisperSound"].."*", nil, nil, nil, L["WhisperSoundTip"]},
+		{1, "Chat", "WhisperSound", NewTag..L["WhisperSound"].."*", nil, nil, nil, L["WhisperSoundTip"]},
 		{4, "ACCOUNT", "TimestampFormat", L["TimestampFormat"].."*", nil, {DISABLE, "03:27 PM", "03:27:32 PM", "15:27", "15:27:32"}},
 		{4, "Chat", "ChatBGType", L["ChatBGType"].."*", true, {DISABLE, L["Default Dark"], L["Gradient"]}, toggleChatBackground},
 		{},--blank
 		{1, "Chat", "EnableFilter", HeaderTag..L["Enable Chatfilter"]},
 		{1, "Chat", "BlockAddonAlert", L["Block Addon Alert"], true},
-		{1, "Chat", "BlockSpammer", L["BlockSpammer"].."*", nil, nil, nil, L["BlockSpammerTip"]},
+		{1, "Chat", "BlockSpammer", NewTag..L["BlockSpammer"].."*", nil, nil, nil, L["BlockSpammerTip"]},
 		{1, "Chat", "BlockStranger", "|cffff0000"..L["BlockStranger"].."*", nil, nil, nil, L["BlockStrangerTip"]},
 		{2, "ACCOUNT", "ChatFilterWhiteList", HeaderTag..L["ChatFilterWhiteList"].."*", true, nil, updateFilterWhiteList, L["ChatFilterWhiteListTip"]},
 		{3, "Chat", "Matches", L["Keyword Match"].."*", nil, {1, 3, 1}},
@@ -993,7 +993,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{3, "Map", "MapScale", L["Map Scale"], true, {.5, 1, .1}},
 		{},--blank
 		{1, "Map", "Clock", L["Minimap Clock"].."*", nil, nil, showMinimapClock},
-		{1, "Map", "DiffFlag", L["Minimap DiffFlag"], true, nil, nil, L["DiffFlagTip"]},
+		{1, "Map", "DiffFlag", NewTag..L["Minimap DiffFlag"], true, nil, nil, L["DiffFlagTip"]},
 		{1, "Map", "CombatPulse", L["Minimap Pulse"]},
 		{1, "Map", "WhoPings", L["Show WhoPings"], true},
 		{1, "Map", "ShowRecycleBin", L["Show RecycleBin"]},
@@ -1008,7 +1008,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Skins", "Loot", L["Loot"], true},
 		{1, "Skins", "Shadow", L["Shadow"]},
 		{1, "Skins", "FontOutline", L["FontOutline"], true},
-		{1, "Skins", "GreyBD", L["GreyBackdrop"], nil, nil, nil, L["GreyBackdropTip"]},
+		{1, "Skins", "GreyBD", NewTag..L["GreyBackdrop"], nil, nil, nil, L["GreyBackdropTip"]},
 		{3, "Skins", "SkinAlpha", L["SkinAlpha"].."*", nil, {0, 1, .05}, updateSkinAlpha},
 		{3, "Skins", "FontScale", L["GlobalFontScale"], true, {.5, 1.5, .05}},
 		{},--blank
@@ -1058,8 +1058,8 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Misc", "InstantDelete", L["InstantDelete"].."*", true},
 		{1, "Misc", "AutoDismount", L["AutoDismount"].."*", nil, nil, nil, L["AutoDismountTip"]},
 	--	{1, "Misc", "Focuser", L["Easy Focus"]},
-		{1, "Misc", "PetHappiness", L["PetHappiness"].."*", true, nil, togglePetHappiness},
-		{1, "Misc", "MenuButton", L["MenuButton"], nil, nil, nil, L["MenuButtonTip"]},
+		{1, "Misc", "PetHappiness", NewTag..L["PetHappiness"].."*", true, nil, togglePetHappiness},
+		{1, "Misc", "MenuButton", NewTag..L["MenuButton"], nil, nil, nil, L["MenuButtonTip"]},
 		{1, "Misc", "BlockInvite", "|cffff0000"..L["BlockInvite"].."*", true, nil, nil, L["BlockInviteTip"]},
 	},
 	[14] = {
