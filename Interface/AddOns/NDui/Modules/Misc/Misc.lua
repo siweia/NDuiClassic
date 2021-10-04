@@ -81,6 +81,10 @@ function M:OnLogin()
 	-- Fix blizz error
 	MAIN_MENU_MICRO_ALERT_PRIORITY = MAIN_MENU_MICRO_ALERT_PRIORITY or {}
 
+	if not InspectTalentFrameSpentPoints then
+		InspectTalentFrameSpentPoints = CreateFrame("Frame")
+	end
+
 	-- Fix blizz bug in addon list
 	local _AddonTooltip_Update = AddonTooltip_Update
 	function AddonTooltip_Update(owner)
