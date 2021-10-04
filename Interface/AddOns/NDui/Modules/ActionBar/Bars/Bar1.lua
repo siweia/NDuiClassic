@@ -35,6 +35,19 @@ function Bar:UpdateAllScale()
 	UpdateActionbarScale("BarStance")
 end
 
+function Bar:FixActionCount()
+	local text = self.Count
+	local action = self.action
+	local count = GetActionCount(action)
+	if not IsItemAction(action) and count > 0 then
+		if count > (self.maxDisplayCount or 999) then
+			self.Count:SetText("*")
+		else
+			self.Count:SetText(count)
+		end
+	end
+end
+
 local function SetFrameSize(frame, size, num)
 	size = size or frame.buttonSize
 	num = num or frame.numButtons
@@ -109,6 +122,9 @@ function Bar:CreateBar1()
 		end
 	]])
 	RegisterStateDriver(frame, "page", actionPage)
+
+	-- FrameXML/ActionButton.lua
+	hooksecurefunc("ActionButton_UpdateCount", self.FixActionCount)
 end
 
 function Bar:OnLogin()
