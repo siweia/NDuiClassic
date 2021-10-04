@@ -29,6 +29,7 @@ C.themes["Blizzard_InspectUI"] = function()
 
 	B.ReskinPortraitFrame(InspectFrame, 15, -15, -35, 73)
 	B.StripTextures(InspectPaperDollFrame)
+	B.StripTextures(InspectHonorFrame)
 
 	for i = 1, 2 do
 		B.ReskinTab(_G["InspectFrameTab"..i])
