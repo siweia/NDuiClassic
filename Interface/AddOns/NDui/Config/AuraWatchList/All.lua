@@ -59,11 +59,11 @@ local list = {
 		{AuraID = 28506, UnitID = "player"},	-- 英雄药水
 		{AuraID = 28507, UnitID = "player"},	-- 加速药水
 		{AuraID = 28508, UnitID = "player"},	-- 毁灭药水
-		{AuraID = 28511, UnitID = "player"},	-- 防护火焰药水
-		{AuraID = 28512, UnitID = "player"},	-- 防护冰霜药水
-		{AuraID = 28513, UnitID = "player"},	-- 防护自然药水
-		{AuraID = 28537, UnitID = "player"},	-- 防护暗影药水
-		{AuraID = 28538, UnitID = "player"},	-- 防护神圣药水
+		--{AuraID = 28511, UnitID = "player"},	-- 防护火焰药水
+		--{AuraID = 28512, UnitID = "player"},	-- 防护冰霜药水
+		--{AuraID = 28513, UnitID = "player"},	-- 防护自然药水
+		--{AuraID = 28537, UnitID = "player"},	-- 防护暗影药水
+		--{AuraID = 28538, UnitID = "player"},	-- 防护神圣药水
 		-- 饰品
 	},
 	["Raid Buff"] = {		-- 团队增益组
