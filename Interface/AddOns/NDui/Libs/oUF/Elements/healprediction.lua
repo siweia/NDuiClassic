@@ -4,7 +4,7 @@ local oUF = ns.oUF
 local myGUID = UnitGUID('player')
 local HealComm = LibStub("LibHealComm-4.0")
 
-local function UpdateFillBar(frame, previousTexture, bar, amount)
+local function UpdateFillBar(frame, previousTexture, bar, amount, maxHealth)
 	if amount == 0 then
 		bar:Hide()
 		return previousTexture
@@ -14,9 +14,7 @@ local function UpdateFillBar(frame, previousTexture, bar, amount)
 	bar:SetPoint("BOTTOMLEFT", previousTexture, "BOTTOMRIGHT", 0, 0)
 
 	local totalWidth, totalHeight = frame.Health:GetSize()
-	local totalMax = UnitHealthMax(frame.unit)
-
-	local barSize = (amount / totalMax) * totalWidth
+	local barSize = (amount / maxHealth) * totalWidth
 	bar:SetWidth(barSize)
 	bar:Show()
 	return bar
@@ -51,8 +49,8 @@ local function Update(self, event, unit)
 	end
 
 	local previousTexture = self.Health:GetStatusBarTexture()
-	previousTexture = UpdateFillBar(self, previousTexture, hp.myBar, myIncomingHeal)
-	previousTexture = UpdateFillBar(self, previousTexture, hp.otherBar, allIncomingHeal)
+	previousTexture = UpdateFillBar(self, previousTexture, hp.myBar, myIncomingHeal, maxHealth)
+	previousTexture = UpdateFillBar(self, previousTexture, hp.otherBar, allIncomingHeal, maxHealth)
 
 	if(hp.PostUpdate) then
 		return hp:PostUpdate(unit)
@@ -74,9 +72,9 @@ local function Enable(self)
 		hp.ForceUpdate = ForceUpdate
 		hp.healType = hp.healType or HealComm.OVERTIME_AND_BOMB_HEALS
 
-		self:RegisterEvent('UNIT_HEAL_PREDICTION', Path)
 		self:RegisterEvent('UNIT_MAXHEALTH', Path)
-		self:RegisterEvent('UNIT_HEALTH', Path)
+		self:RegisterEvent('UNIT_HEALTH_FREQUENT', Path)
+		self:RegisterEvent('UNIT_HEAL_PREDICTION', Path)
 
 		local function HealCommUpdate(...)
 			if self.HealPredictionAndAbsorb and self:IsVisible() then
@@ -131,9 +129,9 @@ local function Disable(self)
 		HealComm.UnregisterCallback(hp, 'HealComm_ModifierChanged')
 		HealComm.UnregisterCallback(hp, 'HealComm_GUIDDisappeared')
 
-		self:UnregisterEvent('UNIT_HEAL_PREDICTION', Path)
 		self:UnregisterEvent('UNIT_MAXHEALTH', Path)
-		self:UnregisterEvent('UNIT_HEALTH', Path)
+		self:UnregisterEvent('UNIT_HEALTH_FREQUENT', Path)
+		self:UnregisterEvent('UNIT_HEAL_PREDICTION', Path)
 	end
 end
 
