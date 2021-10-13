@@ -320,6 +320,7 @@ G.DefaultSettings = {
 		LoCAlert = false,
 		FasterLoot = true,
 		AutoQuest = false,
+		IgnoreQuestNPC = {},
 		QuestNotification = false,
 		QuestProgress = false,
 		OnlyCompleteRing = false,
