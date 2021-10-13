@@ -14,6 +14,7 @@ local InCombatLockdown, IsShiftKeyDown, GetMouseFocus, GetItemInfo = InCombatLoc
 local GetCreatureDifficultyColor, UnitCreatureType, UnitClassification = GetCreatureDifficultyColor, UnitCreatureType, UnitClassification
 local UnitIsPlayer, UnitName, UnitPVPName, UnitClass, UnitRace, UnitLevel = UnitIsPlayer, UnitName, UnitPVPName, UnitClass, UnitRace, UnitLevel
 local GetRaidTargetIndex, GetGuildInfo, IsInGuild = GetRaidTargetIndex, GetGuildInfo, IsInGuild
+local GameTooltip_ClearMoney, GameTooltip_ClearStatusBars, GameTooltip_ClearProgressBars, GameTooltip_ClearWidgetSet = GameTooltip_ClearMoney, GameTooltip_ClearStatusBars, GameTooltip_ClearProgressBars, GameTooltip_ClearWidgetSet
 
 local classification = {
 	elite = " |cffcc8800"..ELITE.."|r",
@@ -33,8 +34,8 @@ function TT:GetUnit()
 end
 
 function TT:HideLines()
-    for i = 3, self:NumLines() do
-        local tiptext = _G["GameTooltipTextLeft"..i]
+	for i = 3, self:NumLines() do
+		local tiptext = _G["GameTooltipTextLeft"..i]
 		local linetext = tiptext:GetText()
 		if linetext then
 			if linetext == PVP then
@@ -56,7 +57,7 @@ function TT:HideLines()
 				end
 			end
 		end
-    end
+	end
 end
 
 function TT:GetLevelLine()
@@ -90,9 +91,16 @@ function TT:InsertFactionFrame(faction)
 end
 
 function TT:OnTooltipCleared()
+	if self:IsForbidden() then return end
+
 	if self.factionFrame and self.factionFrame:GetAlpha() ~= 0 then
 		self.factionFrame:SetAlpha(0)
 	end
+
+	GameTooltip_ClearMoney(self)
+	GameTooltip_ClearStatusBars(self)
+	GameTooltip_ClearProgressBars(self)
+	GameTooltip_ClearWidgetSet(self)
 end
 
 function TT:OnTooltipSetUnit()
@@ -205,16 +213,7 @@ function TT:OnTooltipSetUnit()
 			end
 		end
 
-		if alive then
-			self.StatusBar:SetStatusBarColor(r, g, b)
-
-			if GameTooltipStatusBar.text then
-				local value, max = UnitHealth(unit), UnitHealthMax(unit)
-				GameTooltipStatusBar.text:SetText(B.Numb(value).." | "..B.Numb(max))
-			end
-		else
-			self.StatusBar:Hide()
-		end
+		self.StatusBar:SetStatusBarColor(r, g, b)
 	else
 		self.StatusBar:SetStatusBarColor(0, .9, 0)
 	end
