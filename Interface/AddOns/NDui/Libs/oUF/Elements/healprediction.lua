@@ -79,7 +79,7 @@ local function Enable(self)
 		self:RegisterEvent('UNIT_HEALTH', Path)
 
 		local function HealCommUpdate(...)
-			if self.HealPrediction and self:IsVisible() then
+			if self.HealPredictionAndAbsorb and self:IsVisible() then
 				for i = 1, select('#', ...) do
 					if self.unit and UnitGUID(self.unit) == select(i, ...) then
 						Path(self, nil, self.unit)
