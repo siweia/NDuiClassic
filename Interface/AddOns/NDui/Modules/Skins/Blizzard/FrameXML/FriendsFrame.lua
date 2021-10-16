@@ -148,7 +148,12 @@ tinsert(C.defaultThemes, function()
 	B.ReskinDropDown(WhoFrameDropDown)
 	B.ReskinDropDown(FriendsFriendsFrameDropDown)
 	B.Reskin(FriendsListFrameContinueButton)
-	B.CreateBD(FriendsFriendsList, .25)
+	if DB.isNewPatch then
+		B.StripTextures(FriendsFriendsList)
+		B.CreateBDFrame(FriendsFriendsList, .25)
+	else
+		B.CreateBD(FriendsFriendsList, .25)
+	end
 	B.StripTextures(AddFriendNoteFrame)
 	B.CreateBDFrame(AddFriendNoteFrame, .25)
 	B.ReskinInput(AddFriendNameEditBox)
@@ -204,8 +209,15 @@ tinsert(C.defaultThemes, function()
 	B.SetBD(GuildMemberDetailFrame)
 	GuildMemberDetailFrame:SetPoint("TOPLEFT", GuildFrame, "TOPRIGHT", 4, -15)
 	B.ReskinClose(GuildMemberDetailCloseButton)
-	B.CreateBD(GuildMemberNoteBackground, .25)
-	B.CreateBD(GuildMemberOfficerNoteBackground, .25)
+	if DB.isNewPatch then
+		B.StripTextures(GuildMemberNoteBackground)
+		B.CreateBDFrame(GuildMemberNoteBackground, .25)
+		B.StripTextures(GuildMemberOfficerNoteBackground)
+		B.CreateBDFrame(GuildMemberOfficerNoteBackground, .25)
+	else
+		B.CreateBD(GuildMemberNoteBackground, .25)
+		B.CreateBD(GuildMemberOfficerNoteBackground, .25)
+	end
 	B.ReskinArrow(GuildFramePromoteButton, "up")
 	B.ReskinArrow(GuildFrameDemoteButton, "down")
 	GuildFramePromoteButton:SetHitRectInsets(0, 0, 0, 0)
