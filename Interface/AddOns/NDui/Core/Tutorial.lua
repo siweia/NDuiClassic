@@ -346,8 +346,10 @@ local function HelloWorld()
 		c1.." /bb "..c2..L["Cmd bb intro"],
 		c1.." /mm /mmm "..c2..L["Cmd mm intro"],
 		c1.." /rl "..c2..L["Cmd rl intro"],
-		c1.." /ncl "..c2..L["Cmd ncl intro"],
 	}
+	if GetLocale() == "zhCN" then
+		tinsert(lines, c1.." /ncl "..c2..L["Cmd ncl intro"])
+	end
 	local text = L["Help Intro"].."|n|n"
 	for _, line in pairs(lines) do
 		text = text.."|n|n"..line
