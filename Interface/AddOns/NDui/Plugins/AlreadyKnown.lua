@@ -188,11 +188,11 @@ f:SetScript("OnEvent", function(_, event, addon)
 		hooksecurefunc("AuctionFrameAuctions_Update", AuctionFrameAuctions_Update)
 		hookCount = hookCount + 1
 	elseif addon == "Blizzard_GuildBankUI" then
-		hooksecurefunc(GuildBankFrame, "Update", GuildBankFrame_Update)
-		hookCount = hookCount + 1
+	--	hooksecurefunc(GuildBankFrame, "Update", GuildBankFrame_Update)
+	--	hookCount = hookCount + 1
 	end
 
-	if hookCount >= 2 then
+	if hookCount >= 1 then
 		f:UnregisterEvent(event)
 	end
 end)
