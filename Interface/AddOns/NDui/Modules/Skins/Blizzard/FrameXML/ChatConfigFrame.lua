@@ -52,7 +52,7 @@ tinsert(C.defaultThemes, function()
 			local boxName = nameString..index
 			local box = _G[boxName]
 			if box and not box.styled then
-				box:SetBackdrop(nil)
+				B.HideBackdrop(box) -- isNewPatch
 				local bg = B.CreateBDFrame(box, .25)
 				bg:SetInside()
 				B.Reskin(_G[boxName.."Button"])
