@@ -48,6 +48,10 @@ local function Update(self, event, unit)
 		allIncomingHeal = allIncomingHeal - myIncomingHeal
 	end
 
+	if UnitIsDeadOrGhost(unit) then
+		myIncomingHeal, allIncomingHeal = 0, 0
+	end
+
 	local previousTexture = self.Health:GetStatusBarTexture()
 	previousTexture = UpdateFillBar(self, previousTexture, hp.myBar, myIncomingHeal, maxHealth)
 	previousTexture = UpdateFillBar(self, previousTexture, hp.otherBar, allIncomingHeal, maxHealth)
