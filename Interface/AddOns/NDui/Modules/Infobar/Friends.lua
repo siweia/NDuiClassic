@@ -3,7 +3,7 @@ local B, C, L, DB = unpack(ns)
 if not C.Infobar.Friends then return end
 
 local module = B:GetModule("Infobar")
-local info = module:RegisterInfobar("Friends", C.Infobar.FriendsPos)
+local info = module:RegisterInfobar("Friend", C.Infobar.FriendsPos)
 
 local format, sort, wipe, unpack, tinsert = string.format, table.sort, table.wipe, unpack, table.insert
 local C_Timer_After = C_Timer.After
@@ -120,12 +120,22 @@ local function isPanelCanHide(self, elapsed)
 	end
 end
 
+local function updateInfoFrameAnchor(frame)
+	local relFrom, relTo, offset = module:GetTooltipAnchor(info)
+	frame:ClearAllPoints()
+	frame:SetPoint(relFrom, info, relTo, 0, offset)
+end
+
 function info:FriendsPanel_Init()
-	if infoFrame then infoFrame:Show() return end
+	if infoFrame then
+		infoFrame:Show()
+		updateInfoFrameAnchor(infoFrame)
+		return
+	end
 
 	infoFrame = CreateFrame("Frame", "NDuiFriendsFrame", info)
 	infoFrame:SetSize(400, 495)
-	infoFrame:SetPoint("TOPLEFT", UIParent, 15, -30)
+	updateInfoFrameAnchor(infoFrame)
 	infoFrame:SetClampedToScreen(true)
 	infoFrame:SetFrameStrata("DIALOG")
 	local bg = B.SetBD(infoFrame)

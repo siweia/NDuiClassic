@@ -4,7 +4,7 @@ local oUF = ns.oUF
 if not C.Infobar.System then return end
 
 local module = B:GetModule("Infobar")
-local info = module:RegisterInfobar("System", C.Infobar.SystemPos)
+local info = module:RegisterInfobar("Fps", C.Infobar.SystemPos)
 
 local ipairs, tinsert, wipe, sort = ipairs, tinsert, wipe, sort
 local format, floor, min, max = format, floor, min, max
@@ -15,7 +15,6 @@ local UpdateAddOnMemoryUsage, GetAddOnMemoryUsage = UpdateAddOnMemoryUsage, GetA
 local IsShiftKeyDown, IsAddOnLoaded = IsShiftKeyDown, IsAddOnLoaded
 local ResetCPUUsage, collectgarbage, gcinfo = ResetCPUUsage, collectgarbage, gcinfo
 
-local maxAddOns = C.Infobar.MaxAddOns
 local showMoreString = "%d %s (%s)"
 local usageString = "%.3f ms"
 local enableString = "|cff55ff55"..VIDEO_OPTIONS_ENABLED
@@ -125,9 +124,11 @@ info.onEnter = function(self)
 
 	if not next(infoTable) then BuildAddonList() end
 	local isShiftKeyDown = IsShiftKeyDown()
+	local maxAddOns = C.db["Misc"]["MaxAddOns"]
 	local maxShown = isShiftKeyDown and #infoTable or min(maxAddOns, #infoTable)
 
-	GameTooltip:SetOwner(self, "ANCHOR_BOTTOM", 0, -15)
+	local _, anchor, offset = module:GetTooltipAnchor(info)
+	GameTooltip:SetOwner(self, "ANCHOR_"..anchor, 0, offset)
 	GameTooltip:ClearLines()
 
 	if self.showMemory or not scriptProfileStatus then

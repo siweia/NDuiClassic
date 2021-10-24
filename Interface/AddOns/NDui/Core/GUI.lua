@@ -348,6 +348,10 @@ G.DefaultSettings = {
 		StatOrder = "12345",
 		StatExpand = true,
 		PetHappiness = true,
+		InfoStrLeft = "[guild][friend][ping][fps][zone]",
+		InfoStrRight = "[spec][dura][gold][time]",
+		InfoSize = 13,
+		MaxAddOns = 12,
 	},
 	Tutorial = {
 		Complete = false,
