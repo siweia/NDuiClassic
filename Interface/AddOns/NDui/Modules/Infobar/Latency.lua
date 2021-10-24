@@ -3,7 +3,7 @@ local B, C, L, DB = unpack(ns)
 if not C.Infobar.Latency then return end
 
 local module = B:GetModule("Infobar")
-local info = module:RegisterInfobar("Latency", C.Infobar.LatencyPos)
+local info = module:RegisterInfobar("Ping", C.Infobar.LatencyPos)
 
 local max, format = max, format
 local GetNetStats, GetNetIpTypes, GetCVarBool = GetNetStats, GetNetIpTypes, GetCVarBool
@@ -42,7 +42,8 @@ local ipTypes = {"IPv4", "IPv6"}
 info.onEnter = function(self)
 	entered = true
 
-	GameTooltip:SetOwner(self, "ANCHOR_BOTTOM", 0, -15)
+	local _, anchor, offset = module:GetTooltipAnchor(info)
+	GameTooltip:SetOwner(self, "ANCHOR_"..anchor, 0, offset)
 	GameTooltip:ClearLines()
 	GameTooltip:AddLine(L["Latency"], 0,.6,1)
 	GameTooltip:AddLine(" ")
