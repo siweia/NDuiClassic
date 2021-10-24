@@ -723,6 +723,21 @@ local function togglePetHappiness()
 	B:GetModule("Misc"):TogglePetHappiness()
 end
 
+local function updateInfobarAnchor(self)
+	if self:GetText() == "" then
+		self:SetText(self.__default)
+		C.db[self.__key][self.__value] = self:GetText()
+	end
+
+	if not NDuiADB["DisableInfobars"] then
+		B:GetModule("Infobar"):Infobar_UpdateAnchor()
+	end
+end
+
+local function updateInfobarSize()
+	B:GetModule("Infobar"):UpdateInfobarSize()
+end
+
 local function updateSkinAlpha()
 	for _, frame in pairs(C.frames) do
 		frame:SetBackdropColor(0, 0, 0, C.db["Skins"]["SkinAlpha"])
@@ -767,8 +782,8 @@ G.TabList = {
 	L["Maps"],
 	L["Skins"],
 	L["Tooltip"],
-	NewTag..L["Misc"],
-	L["UI Settings"],
+	L["Misc"],
+	NewTag..L["UI Settings"],
 	L["Profile"],
 }
 
@@ -1083,7 +1098,12 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 	},
 	[14] = {
 		{1, "ACCOUNT", "VersionCheck", L["Version Check"]},
-		{1, "ACCOUNT", "DisableInfobars", L["DisableInfobars"], true},
+		{},--blank
+		{1, "ACCOUNT", "DisableInfobars", HeaderTag..L["DisableInfobars"]},
+		{3, "Misc", "MaxAddOns", L["SysMaxAddOns"].."*", nil,  {1, 50, 1}, nil, L["SysMaxAddOnsTip"]},
+		{3, "Misc", "InfoSize", L["InfobarFontSize"].."*", true,  {10, 50, 1}, updateInfobarSize},
+		{2, "Misc", "InfoStrLeft", L["LeftInfobar"].."*", nil, nil, updateInfobarAnchor, L["InfobarStrTip"]},
+		{2, "Misc", "InfoStrRight", L["RightInfobar"].."*", true, nil, updateInfobarAnchor, L["InfobarStrTip"]},
 		{},--blank
 		{3, "ACCOUNT", "UIScale", L["Setup UIScale"], false, {.4, 1.15, .01}, nil, L["UIScaleTip"]},
 		{1, "ACCOUNT", "LockUIScale", HeaderTag..L["Lock UIScale"], true},
@@ -1188,6 +1208,9 @@ local function CreateOption(i)
 		elseif optType == 2 then
 			local eb = B.CreateEditBox(parent, 200, 28)
 			eb:SetMaxLetters(999)
+			eb.__key = key
+			eb.__value = value
+			eb.__default = (key == "ACCOUNT" and G.AccountSettings[value]) or G.DefaultSettings[key][value]
 			if horizon then
 				eb:SetPoint("TOPLEFT", 345, -offset + 45)
 			else
@@ -1198,9 +1221,9 @@ local function CreateOption(i)
 			eb:HookScript("OnEscapePressed", function()
 				eb:SetText(NDUI_VARIABLE(key, value))
 			end)
-			eb:HookScript("OnEnterPressed", function()
+			eb:HookScript("OnEnterPressed", function(self)
 				NDUI_VARIABLE(key, value, eb:GetText())
-				if callback then callback() end
+				if callback then callback(self) end
 			end)
 
 			B.CreateFS(eb, 14, name, "system", "CENTER", 0, 25)
