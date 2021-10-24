@@ -474,6 +474,7 @@ function module:MinimapDifficulty()
 	frame:SetSize(38, 46)
 	frame:SetPoint("TOPRIGHT", Minimap, "TOPRIGHT", 2, 2)
 	frame:SetScale(.6)
+	frame:Hide()
 
 	local tex = frame:CreateTexture(nil, "ARTWORK")
 	tex:SetTexture("Interface\\Minimap\\UI-DungeonDifficulty-Button")
