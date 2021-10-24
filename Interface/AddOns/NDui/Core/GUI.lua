@@ -2,6 +2,7 @@ local _, ns = ...
 local B, C, L, DB = unpack(ns)
 local G = B:RegisterModule("GUI")
 
+local unpack, strfind = unpack, strfind
 local tonumber, pairs, ipairs, next, type, tinsert = tonumber, pairs, ipairs, next, type, tinsert
 local cr, cg, cb = DB.r, DB.g, DB.b
 local guiTab, guiPage, f = {}, {}
@@ -44,8 +45,8 @@ G.DefaultSettings = {
 	},
 	Bags = {
 		Enable = true,
-		BagsScale = 1,
 		IconSize = 34,
+		FontSize = 12,
 		BagsWidth = 12,
 		BankWidth = 14,
 		BagsiLvl = true,
@@ -525,6 +526,10 @@ local function updateBagAnchor()
 	B:GetModule("Bags"):UpdateAllAnchors()
 end
 
+local function updateBagSize()
+	B:GetModule("Bags"):UpdateBagSize()
+end
+
 local function updateActionbarScale()
 	B:GetModule("Actionbar"):UpdateAllScale()
 end
@@ -811,10 +816,10 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{3, "Bags", "iLvlToShow", L["iLvlToShow"].."*", nil, {1, 500, 1}, nil, L["iLvlToShowTip"]},
 		{4, "Bags", "BagSortMode", L["BagSortMode"].."*", true, {L["Forward"], L["Backward"], DISABLE}, updateBagSortOrder},
 		{},--blank
-		{3, "Bags", "BagsScale", L["Bags Scale"], false, {.5, 1.5, .1}},
-		{3, "Bags", "IconSize", L["Bags IconSize"], true, {30, 42, 1}},
-		{3, "Bags", "BagsWidth", L["Bags Width"], false, {10, 40, 1}},
-		{3, "Bags", "BankWidth", L["Bank Width"], true, {10, 40, 1}},
+		{3, "Bags", "IconSize", L["Bags IconSize"].."*", nil, {20, 50, 1}, updateBagSize},
+		{3, "Bags", "FontSize", NewTag..L["Bags FontSize"].."*", true, {10, 50, 1}, updateBagSize},
+		{3, "Bags", "BagsWidth", L["Bags Width"].."*", false, {10, 40, 1}, updateBagSize},
+		{3, "Bags", "BankWidth", L["Bank Width"].."*", true, {10, 40, 1}, updateBagSize},
 	},
 	[3] = {
 		{1, "UFs", "Enable", HeaderTag..L["Enable UFs"], nil, setupUnitFrame, nil, L["HideUFWarning"]},
