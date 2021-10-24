@@ -96,6 +96,13 @@ function module:ReskinRegions()
 			end
 		end
 	end)
+
+	-- LFG Icon
+	if MiniMapLFGFrame then
+		MiniMapLFGFrame:ClearAllPoints()
+		MiniMapLFGFrame:SetPoint("BOTTOMRIGHT", Minimap, 5, 15)
+		MiniMapLFGBorder:Hide()
+	end
 end
 
 function module:RecycleBin()
