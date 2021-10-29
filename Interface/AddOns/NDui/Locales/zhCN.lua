@@ -724,7 +724,6 @@ L["MultiRowsTip"] = "|n启用后，当你开启背包分类存放时，将以4�
 L["BagSearchTip"] = "|n点击对背包进行搜索。|n你可以搜索物品的名字或者装备的部位。|n输入boe可以直接搜索装绑，输入任务则搜索任务道具。"
 L["ClampTargetPlate"] = "锁定目标姓名板"
 L["ClampTargetPlateTip"] = "|n勾选后，当前选中的目标姓名板将始终停留在屏幕范围内。"
-L["FriendPlate"] = "友方姓名板独立尺寸"
 L["FriendPlateTip"] = "|n点击右侧齿轮，可对姓名板进行尺寸调节。|n|n启用后，你可以为友方姓名板设置单独的尺寸，以区分敌方姓名板。|n不启用，则全部使用敌方姓名板设置。|n|n你必须关闭友方名字模式才能生效友方独立尺寸。"
 L["NameplateSize"] = "姓名板尺寸设置"
 L["HostileNameplate"] = "敌方姓名板"
