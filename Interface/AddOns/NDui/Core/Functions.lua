@@ -165,7 +165,7 @@ end
 -- Itemlevel
 do
 	local iLvlDB = {}
-	local itemLevelString = gsub(ITEM_LEVEL, "%%d", "")
+	local itemLevelString = "^"..gsub(ITEM_LEVEL, "%%d", "")
 	local enchantString = gsub(ENCHANTED_TOOLTIP_LINE, "%%s", "(.+)")
 	local RETRIEVING_ITEM_INFO = RETRIEVING_ITEM_INFO
 
@@ -221,14 +221,14 @@ do
 
 			for i = 2, 5 do
 				local line = _G[tip:GetName().."TextLeft"..i]
-				if line then
-					local text = line:GetText() or ""
-					local found = strfind(text, itemLevelString)
-					if found then
-						local level = strmatch(text, "(%d+)%)?$")
-						iLvlDB[link] = tonumber(level)
-						break
-					end
+				if not line then break end
+
+				local text = line:GetText()
+				local found = text and strfind(text, itemLevelString)
+				if found then
+					local level = strmatch(text, "(%d+)%)?$")
+					iLvlDB[link] = tonumber(level)
+					break
 				end
 			end
 
