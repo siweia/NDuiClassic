@@ -488,7 +488,7 @@ function UF:AddQuestIcon(self)
 end
 
 -- Unit classification
-local classify = {
+local NPClassifies = {
 	rare = {1, 1, 1, true},
 	elite = {1, 1, 1},
 	rareelite = {1, .1, .1},
@@ -496,13 +496,9 @@ local classify = {
 }
 
 function UF:AddCreatureIcon(self)
-	local iconFrame = CreateFrame("Frame", nil, self)
-	iconFrame:SetAllPoints()
-	iconFrame:SetFrameLevel(self:GetFrameLevel() + 2)
-
-	local icon = iconFrame:CreateTexture(nil, "ARTWORK")
+	local icon = self:CreateTexture(nil, "ARTWORK")
 	icon:SetAtlas("VignetteKill")
-	icon:SetPoint("CENTER", self, "TOPLEFT", 2, -2)
+	icon:SetPoint("RIGHT", self.nameText, "LEFT", 15, 0)
 	icon:SetSize(24, 24)
 	icon:Hide()
 
@@ -513,8 +509,9 @@ function UF:UpdateUnitClassify(unit)
 	if not self.ClassifyIndicator then return end
 
 	local class = UnitClassification(unit)
-	if (self.plateType ~= "NameOnly") and class and classify[class] then
-		local r, g, b, desature = unpack(classify[class])
+	local classify = class and NPClassifies[class]
+	if classify then
+		local r, g, b, desature = unpack(classify)
 		self.ClassifyIndicator:SetVertexColor(r, g, b)
 		self.ClassifyIndicator:SetDesaturated(desature)
 		self.ClassifyIndicator:Show()
@@ -748,7 +745,6 @@ function UF:UpdatePlateByType()
 	local hpval = self.healthValue
 	local title = self.npcTitle
 	local raidtarget = self.RaidTargetIndicator
-	local classify = self.ClassifyIndicator
 	local questIcon = self.questIcon
 
 	name:ClearAllPoints()
@@ -769,7 +765,6 @@ function UF:UpdatePlateByType()
 		title:Show()
 
 		raidtarget:SetPoint("TOP", title, "BOTTOM", 0, -5)
-		classify:Hide()
 		if questIcon then questIcon:SetPoint("LEFT", name, "RIGHT", -1, 0) end
 	else
 		for _, element in pairs(DisabledElements) do
@@ -787,7 +782,6 @@ function UF:UpdatePlateByType()
 		title:Hide()
 
 		raidtarget:SetPoint("BOTTOMRIGHT", self, "TOPLEFT", 0, 3)
-		classify:Show()
 		if questIcon then questIcon:SetPoint("LEFT", self, "RIGHT", -1, 0) end
 
 		UF.UpdateNameplateSize(self)
