@@ -9,7 +9,7 @@ local LE_ITEM_QUALITY_POOR, LE_ITEM_QUALITY_RARE = LE_ITEM_QUALITY_POOR, LE_ITEM
 local LE_ITEM_CLASS_QUIVER, LE_ITEM_CLASS_CONTAINER = LE_ITEM_CLASS_QUIVER, LE_ITEM_CLASS_CONTAINER
 local GetContainerNumSlots, GetContainerItemInfo, PickupContainerItem = GetContainerNumSlots, GetContainerItemInfo, PickupContainerItem
 local C_NewItems_IsNewItem, C_NewItems_RemoveNewItem = C_NewItems.IsNewItem, C_NewItems.RemoveNewItem
-local IsControlKeyDown, IsAltKeyDown, DeleteCursorItem = IsControlKeyDown, IsAltKeyDown, DeleteCursorItem
+local IsControlKeyDown, IsAltKeyDown, IsShiftKeyDown, DeleteCursorItem = IsControlKeyDown, IsAltKeyDown, IsShiftKeyDown, DeleteCursorItem
 local SortBankBags, SortBags, InCombatLockdown, ClearCursor = SortBankBags, SortBags, InCombatLockdown, ClearCursor
 local GetContainerItemID, SplitContainerItem = GetContainerItemID, SplitContainerItem
 local NUM_BAG_SLOTS = NUM_BAG_SLOTS or 4
@@ -17,12 +17,13 @@ local NUM_BANKBAGSLOTS = NUM_BANKBAGSLOTS or 7
 local ITEM_STARTS_QUEST = ITEM_STARTS_QUEST
 
 local anchorCache = {}
-function module:UpdateAnchors(parent, bags)
+function module:UpdateAnchors(parent, bags, isBank)
 	if not parent:IsShown() then return end
 
 	wipe(anchorCache)
 
 	local index = 1
+	local perRow = C.db["Bags"]["BagsPerRow"]
 	anchorCache[index] = parent
 
 	for _, bag in ipairs(bags) do
@@ -31,10 +32,18 @@ function module:UpdateAnchors(parent, bags)
 			index = index + 1
 
 			bag:ClearAllPoints()
-			if C.db["Bags"]["MultiRows"] and (index-1) % 4 == 0 then
-				bag:SetPoint("BOTTOMRIGHT", anchorCache[index-4], "BOTTOMLEFT", -5, 0)
+			if (index-1) % perRow == 0 then
+				if isBank then
+					bag:SetPoint("TOPLEFT", anchorCache[index-perRow], "TOPRIGHT", 5, 0)
+				else
+					bag:SetPoint("BOTTOMRIGHT", anchorCache[index-perRow], "BOTTOMLEFT", -5, 0)
+				end
 			else
-				bag:SetPoint("BOTTOMLEFT", anchorCache[index-1], "TOPLEFT", 0, 5)
+				if isBank then
+					bag:SetPoint("TOPLEFT", anchorCache[index-1], "BOTTOMLEFT", 0, -5)
+				else
+					bag:SetPoint("BOTTOMLEFT", anchorCache[index-1], "TOPLEFT", 0, 5)
+				end
 			end
 			anchorCache[index] = bag
 		else
@@ -166,9 +175,9 @@ local function CloseOrRestoreBags(self, btn)
 		C.db["TempAnchor"][bag:GetName()] = nil
 		C.db["TempAnchor"][bank:GetName()] = nil
 		bag:ClearAllPoints()
-		bag:SetPoint("BOTTOMRIGHT", -50, 320)
+		bag:SetPoint("BOTTOMRIGHT", -50, 100)
 		bank:ClearAllPoints()
-		bank:SetPoint("BOTTOMRIGHT", bag, "BOTTOMLEFT", -10, 0)
+		bank:SetPoint("TOPLEFT", 20, -50)
 		PlaySound(SOUNDKIT.IG_MINIMAP_OPEN)
 	else
 		CloseAllBags()
@@ -639,7 +648,7 @@ function module:OnLogin()
 		AddNewContainer("Bag", 6, "BagQuest", filters.bagQuest)
 
 		f.main = MyContainer:New("Bag", {Bags = "bags", BagType = "Bag"})
-		f.main:SetPoint("BOTTOMRIGHT", -50, 320)
+		f.main:SetPoint("BOTTOMRIGHT", -50, 100)
 		f.main:SetFilter(filters.onlyBags, true)
 
 		local keyring = MyContainer:New("Keyring", {BagType = "Bag", Parent = f.main})
@@ -657,7 +666,7 @@ function module:OnLogin()
 		AddNewContainer("Bank", 7, "BankQuest", filters.bankQuest)
 
 		f.bank = MyContainer:New("Bank", {Bags = "bank", BagType = "Bank"})
-		f.bank:SetPoint("BOTTOMRIGHT", f.main, "BOTTOMLEFT", -10, 0)
+		f.bank:SetPoint("TOPLEFT", 20, -50)
 		f.bank:SetFilter(filters.onlyBank, true)
 		f.bank:Hide()
 
@@ -831,7 +840,7 @@ function module:OnLogin()
 
 	function module:UpdateAllAnchors()
 		module:UpdateAnchors(f.main, ContainerGroups["Bag"])
-		module:UpdateAnchors(f.bank, ContainerGroups["Bank"])
+		module:UpdateAnchors(f.bank, ContainerGroups["Bank"], true)
 	end
 
 	function module:GetContainerColumns(bagType)
