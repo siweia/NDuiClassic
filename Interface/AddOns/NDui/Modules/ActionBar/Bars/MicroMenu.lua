@@ -107,17 +107,13 @@ function Bar:MicroMenu()
 	Bar:MicroMenu_Lines(menubar)
 
 	-- Generate Buttons
-	local name, tooltip = "WorldMapMicroButton", MicroButtonTooltipText(WORLDMAP_BUTTON, "TOGGLEWORLDMAP")
-	if DB.isNewPatch then
-		name, tooltip = "LFGMicroButton", MicroButtonTooltipText(LFG_BUTTON, "TOGGLELFG")
-	end
 	local buttonInfo = {
 		{"player", "CharacterMicroButton", MicroButtonTooltipText(CHARACTER_BUTTON, "TOGGLECHARACTER0")},
 		{"spellbook", "SpellbookMicroButton", MicroButtonTooltipText(SPELLBOOK_ABILITIES_BUTTON, "TOGGLESPELLBOOK")},
 		{"talents", "TalentMicroButton", MicroButtonTooltipText(TALENTS, "TOGGLETALENTS")},
 		{"quests", "QuestLogMicroButton", MicroButtonTooltipText(QUESTLOG_BUTTON, "TOGGLEQUESTLOG")},
 		{"guild", "SocialsMicroButton", MicroButtonTooltipText(SOCIAL_BUTTON, "TOGGLESOCIAL")},
-		{"LFG", name, tooltip},
+		{"LFG", "LFGMicroButton", MicroButtonTooltipText(LFG_BUTTON, "TOGGLELFG")},
 		{"store", function() ToggleStoreUI() end, BLIZZARD_STORE},
 		{"collections", "HelpMicroButton", MicroButtonTooltipText(HELP_BUTTON, "TOGGLEHELP")},
 		{"help", "MainMenuMicroButton", MicroButtonTooltipText(MAINMENU_BUTTON, "TOGGLEGAMEMENU")},

@@ -14,7 +14,7 @@ tinsert(C.defaultThemes, function()
 			local checkBoxName = nameString..index
 			local checkbox = _G[checkBoxName]
 			if checkbox and not checkbox.styled then
-				B.HideBackdrop(checkbox) -- isNewPatch
+				checkbox:HideBackdrop()
 				local bg = B.CreateBDFrame(checkbox, .25)
 				bg:SetInside()
 				B.ReskinCheck(_G[checkBoxName.."Check"])
@@ -52,7 +52,7 @@ tinsert(C.defaultThemes, function()
 			local boxName = nameString..index
 			local box = _G[boxName]
 			if box and not box.styled then
-				B.HideBackdrop(box) -- isNewPatch
+				box:HideBackdrop()
 				local bg = B.CreateBDFrame(box, .25)
 				bg:SetInside()
 				B.Reskin(_G[boxName.."Button"])
