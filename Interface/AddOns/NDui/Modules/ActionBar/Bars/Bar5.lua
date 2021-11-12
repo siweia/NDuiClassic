@@ -60,7 +60,8 @@ function Bar:CreateBar5()
 	frame.frameVisibility = "[petbattle][overridebar][vehicleui][possessbar,@vehicle,exists][shapeshift] hide; show"
 	RegisterStateDriver(frame, "visibility", frame.frameVisibility)
 
-	if C.db["Actionbar"]["Bar5Fade"] and cfg.fader then
+	if cfg.fader then
+		frame.isDisable = not C.db["Actionbar"]["Bar5Fader"]
 		Bar.CreateButtonFrameFader(frame, buttonList, cfg.fader)
 	end
 end

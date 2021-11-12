@@ -11,9 +11,9 @@ local prevPage = 8
 local function ChangeActionPageForDruid()
 	local page = IsPlayerSpell(33891) and 10 or 8
 	if prevPage ~= page then
-		RegisterStateDriver(_G["NDui_CustomBar"], "page", page)
+		RegisterStateDriver(_G["NDui_ActionBarX"], "page", page)
 		for i = 1, 12 do
-			local button = _G["NDui_CustomBarButton"..i]
+			local button = _G["NDui_ActionBarXButton"..i]
 			button.id = (page-1)*12 + i
 			button:SetAttribute("action", button.id)
 		end
@@ -34,7 +34,7 @@ end
 function Bar:CreateCustomBar(anchor)
 	local size = C.db["Actionbar"]["CustomBarButtonSize"]
 	local num = 12
-	local name = "NDui_CustomBar"
+	local name = "NDui_ActionBarX"
 	local page = DB.MyClass == "WARRIOR" and 10 or 8
 
 	local frame = CreateFrame("Frame", name, UIParent, "SecureHandlerStateTemplate")
@@ -59,7 +59,8 @@ function Bar:CreateCustomBar(anchor)
 		tinsert(Bar.buttons, button)
 	end
 
-	if C.db["Actionbar"]["CustomBarFader"] and cfg.fader then
+	if cfg.fader then
+		frame.isDisable = not C.db["Actionbar"]["BarXFader"]
 		Bar.CreateButtonFrameFader(frame, buttonList, cfg.fader)
 	end
 
@@ -67,7 +68,7 @@ function Bar:CreateCustomBar(anchor)
 end
 
 function Bar:UpdateCustomBar()
-	local frame = _G.NDui_CustomBar
+	local frame = _G.NDui_ActionBarX
 	if not frame then return end
 
 	local size = C.db["Actionbar"]["CustomBarButtonSize"]
