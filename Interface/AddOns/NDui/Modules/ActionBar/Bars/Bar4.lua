@@ -39,6 +39,18 @@ local function SetFrameSize(frame, size, num)
 	end
 end
 
+function Bar:ToggleBarFader(name)
+	local frame = _G["NDui_Action"..name]
+	if not frame then return end
+
+	frame.isDisable = not C.db["Actionbar"][name.."Fader"]
+	if frame.isDisable then
+		Bar:StartFadeIn(frame)
+	else
+		Bar:StartFadeOut(frame)
+	end
+end
+
 function Bar:CreateBar4()
 	local num = NUM_ACTIONBAR_BUTTONS
 	local buttonList = {}
@@ -102,7 +114,8 @@ function Bar:CreateBar4()
 	frame.frameVisibility = "[petbattle][overridebar][vehicleui][possessbar,@vehicle,exists][shapeshift] hide; show"
 	RegisterStateDriver(frame, "visibility", frame.frameVisibility)
 
-	if C.db["Actionbar"]["Bar4Fade"] and cfg.fader then
+	if cfg.fader then
+		frame.isDisable = not C.db["Actionbar"]["Bar4Fader"]
 		Bar.CreateButtonFrameFader(frame, buttonList, cfg.fader)
 	end
 end

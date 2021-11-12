@@ -68,7 +68,7 @@ function Bar:HideBlizz()
 			buttonShowGrid("MultiBarBottomRightButton", showgrid)
 			buttonShowGrid("MultiBarRightButton", showgrid)
 			buttonShowGrid("MultiBarLeftButton", showgrid)
-			buttonShowGrid("NDui_CustomBarButton", showgrid)
+			buttonShowGrid("NDui_ActionBarXButton", showgrid)
 			if updateAfterCombat then
 				B:UnregisterEvent("PLAYER_REGEN_ENABLED", ToggleButtonGrid)
 				updateAfterCombat = false

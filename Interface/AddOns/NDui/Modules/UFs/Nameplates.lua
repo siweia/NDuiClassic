@@ -673,7 +673,23 @@ function UF:UpdateTargetClassPower()
 	end
 end
 
+function UF:ToggleNameplateAuras()
+	if C.db["Nameplate"]["PlateAuras"] then
+		if not self:IsElementEnabled("Auras") then
+			self:EnableElement("Auras")
+		end
+	else
+		if self:IsElementEnabled("Auras") then
+			self:DisableElement("Auras")
+		end
+	end
+end
+
 function UF:UpdateNameplateAuras()
+	UF.ToggleNameplateAuras(self)
+
+	if not C.db["Nameplate"]["PlateAuras"] then return end
+
 	local element = self.Auras
 	if C.db["Nameplate"]["ShowPlayerPlate"] and C.db["Nameplate"]["NameplateClassPower"] then
 		element:SetPoint("BOTTOMLEFT", self.nameText, "TOPLEFT", 0, 10 + _G.oUF_ClassPowerBar:GetHeight())
@@ -788,6 +804,7 @@ function UF:UpdatePlateByType()
 	end
 
 	UF.UpdateTargetIndicator(self)
+	UF.ToggleNameplateAuras(self)
 end
 
 function UF:RefreshPlateType(unit)
