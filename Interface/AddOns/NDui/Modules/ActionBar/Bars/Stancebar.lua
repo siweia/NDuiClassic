@@ -3,38 +3,51 @@ local B, C, L, DB = unpack(ns)
 local Bar = B:GetModule("Actionbar")
 
 local _G = _G
-local tinsert = tinsert
+local tinsert, mod, min, ceil = tinsert, mod, min, ceil
 local cfg = C.Bars.stancebar
 local margin, padding = C.Bars.margin, C.Bars.padding
 
-local function SetFrameSize(frame, size, num)
-	size = size or frame.buttonSize
-	num = num or frame.numButtons
+local num = NUM_STANCE_SLOTS
+--local NUM_POSSESS_SLOTS = NUM_POSSESS_SLOTS
 
-	frame:SetWidth(num*size + (num-1)*margin + 2*padding)
-	frame:SetHeight(size + 2*padding)
-	if not frame.mover then
-		frame.mover = B.Mover(frame, L["StanceBar"], "StanceBar", frame.Pos)
-	else
-		frame.mover:SetSize(frame:GetSize())
+function Bar:UpdateStanceBar()
+	local frame = _G["NDui_ActionBarStance"]
+	if not frame then return end
+
+	local size = C.db["Actionbar"]["BarStanceSize"]
+	local fontSize = C.db["Actionbar"]["BarStanceFont"]
+	local perRow = C.db["Actionbar"]["BarStancePerRow"]
+
+	for i = 1, num do
+		local button = frame.buttons[i]
+		button:SetSize(size, size)
+		if i < 11 then
+			button:ClearAllPoints()
+			if i == 1 then
+				button:SetPoint("TOPLEFT", frame, padding, -padding)
+			elseif mod(i-1, perRow) ==  0 then
+				button:SetPoint("TOP", frame.buttons[i-perRow], "BOTTOM", 0, -margin)
+			else
+				button:SetPoint("LEFT", frame.buttons[i-1], "RIGHT", margin, 0)
+			end
+		end
+		Bar:UpdateFontSize(button, fontSize)
 	end
 
-	if not frame.SetFrameSize then
-		frame.buttonSize = size
-		frame.numButtons = num
-		frame.SetFrameSize = SetFrameSize
-	end
+	local column = min(num, perRow)
+	local rows = ceil(num/perRow)
+	frame:SetWidth(column*size + (column-1)*margin + 2*padding)
+	frame:SetHeight(size*rows + (rows-1)*margin + 2*padding)
+	frame.mover:SetSize(size, size)
 end
 
 function Bar:CreateStancebar()
 	if not C.db["Actionbar"]["ShowStance"] then return end
 
-	local num = NUM_STANCE_SLOTS
 	local buttonList = {}
-
 	local frame = CreateFrame("Frame", "NDui_ActionBarStance", UIParent, "SecureHandlerStateTemplate")
-	local anchor = C.db["Actionbar"]["Style"] == 4 and _G.NDui_ActionBar3 or _G.NDui_ActionBar2
-	frame.Pos = {"BOTTOMLEFT", anchor, "TOPLEFT", 0, margin}
+	frame.mover = B.Mover(frame, L["StanceBar"], "StanceBar", {"BOTTOMLEFT", _G.NDui_ActionBar2, "TOPLEFT", 0, margin})
+	Bar.movers[8] = frame.mover
 
 	-- StanceBar
 	StanceBarFrame:SetParent(frame)
@@ -47,17 +60,22 @@ function Bar:CreateStancebar()
 		local button = _G["StanceButton"..i]
 		tinsert(buttonList, button)
 		tinsert(Bar.buttons, button)
-		button:ClearAllPoints()
-		if i == 1 then
-			button:SetPoint("BOTTOMLEFT", frame, padding, padding)
-		else
-			local previous = _G["StanceButton"..i-1]
-			button:SetPoint("LEFT", previous, "RIGHT", margin, 0)
-		end
 	end
 
-	frame.buttonList = buttonList
-	SetFrameSize(frame, cfg.size, num)
+	-- PossessBar
+--[[	PossessBarFrame:SetParent(frame)
+	PossessBarFrame:EnableMouse(false)
+	PossessBackground1:SetTexture(nil)
+	PossessBackground2:SetTexture(nil)
+
+	for i = 1, NUM_POSSESS_SLOTS do
+		local button = _G["PossessButton"..i]
+		tinsert(buttonList, button)
+		button:ClearAllPoints()
+		button:SetPoint("CENTER", buttonList[i])
+	end]]
+
+	frame.buttons = buttonList
 
 	frame.frameVisibility = "[petbattle][overridebar][vehicleui][possessbar,@vehicle,exists][shapeshift] hide; show"
 	RegisterStateDriver(frame, "visibility", frame.frameVisibility)

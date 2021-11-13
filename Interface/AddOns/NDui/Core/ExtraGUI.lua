@@ -1110,3 +1110,58 @@ function G:SetupNameplateSize(parent)
 	createOptionGroup(scroll.child, L["HostileNameplate"], -10, "enemy", UF.RefreshAllPlates)
 	createOptionGroup(scroll.child, L["FriendlyNameplate"], -420, "friend", UF.RefreshAllPlates)
 end
+
+function G:SetupActionBar(parent)
+	local guiName = "NDuiGUI_ActionBarSetup"
+	toggleExtraGUI(guiName)
+	if extraGUIs[guiName] then return end
+
+	local panel = createExtraGUI(parent, guiName, L["ActionbarSetup"].."*")
+	local scroll = G:CreateScroll(panel, 260, 540)
+
+	local Bar = B:GetModule("Actionbar")
+	local defaultValues = {
+		-- defaultSize, minButtons, maxButtons, defaultButtons, defaultPerRow 
+		["Bar1"] = {34, 6, 12, 12, 12},
+		["Bar2"] = {34, 1, 12, 12, 12},
+		["Bar3"] = {32, 0, 12, 0, 12},
+		["Bar4"] = {32, 1, 12, 12, 1},
+		["Bar5"] = {32, 1, 12, 12, 1},
+		["BarPet"] = {26, 1, 10, 10, 10},
+	}
+	local function createOptionGroup(parent, title, offset, value, color)
+		color = color or ""
+		local data = defaultValues[value]
+		local function updateBarScale()
+			Bar:UpdateActionSize(value)
+		end
+		createOptionTitle(parent, title, offset)
+		createOptionSlider(parent, L["ButtonSize"], 20, 80, data[1], 30, offset-60, value.."Size", updateBarScale, "Actionbar")
+		createOptionSlider(parent, color..L["MaxButtons"], data[2], data[3], data[4], 30, offset-130, value.."Num", updateBarScale, "Actionbar")
+		createOptionSlider(parent, L["ButtonsPerRow"], 1, data[3], data[5], 30, offset-200, value.."PerRow", updateBarScale, "Actionbar")
+		createOptionSlider(parent, L["ButtonFontSize"], 8, 20, 12, 30, offset-270, value.."Font", updateBarScale, "Actionbar")
+	end
+
+	createOptionGroup(scroll.child, L["Actionbar"].."1", -10, "Bar1")
+	createOptionGroup(scroll.child, L["Actionbar"].."2", -340, "Bar2")
+	createOptionGroup(scroll.child, L["Actionbar"].."3", -670, "Bar3", "|cffff0000")
+	createOptionGroup(scroll.child, L["Actionbar"].."4", -1000, "Bar4")
+	createOptionGroup(scroll.child, L["Actionbar"].."5", -1330, "Bar5")
+	createOptionGroup(scroll.child, L["Pet Actionbar"], -1660, "BarPet")
+end
+
+function G:SetupStanceBar(parent)
+	local guiName = "NDuiGUI_StanceBarSetup"
+	toggleExtraGUI(guiName)
+	if extraGUIs[guiName] then return end
+
+	local panel = createExtraGUI(parent, guiName, L["ActionbarSetup"].."*")
+	local scroll = G:CreateScroll(panel, 260, 540)
+
+	local Bar = B:GetModule("Actionbar")
+	local parent, offset = scroll.child, -10
+	createOptionTitle(parent, L["StanceBar"], offset)
+	createOptionSlider(parent, L["ButtonSize"], 20, 80, 30, 30, offset-60, "BarStanceSize", Bar.UpdateStanceBar, "Actionbar")
+	createOptionSlider(parent, L["ButtonsPerRow"], 1, 10, 10, 30, offset-130, "BarStancePerRow", Bar.UpdateStanceBar, "Actionbar")
+	createOptionSlider(parent, L["ButtonFontSize"], 8, 20, 12, 30, offset-200, "BarStanceFont", Bar.UpdateStanceBar, "Actionbar")
+end
