@@ -728,3 +728,4 @@ L["BankPerRow"] = "Bank bags Per Row" -- need translation
 L["BankPerRowTip"] = "|nIf Bags ItemFilter enabled, change the bank bags per row for anchoring." -- need translation
 L["PlateAuras"] = "Nameplate Auras" -- need translation
 L["ActionbarSetup"] = "Actionbar Setup" -- need translation
+L["BaudErrorTip"] = "UI errors popup out, click the number below to check and report." -- need translation

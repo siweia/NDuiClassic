@@ -4,6 +4,7 @@ local Bar = B:GetModule("Actionbar")
 
 local _G = _G
 local tinsert = tinsert
+local InCombatLockdown = InCombatLockdown
 local cfg = C.Bars.bar4
 
 function Bar:ToggleBarFader(name)
@@ -16,6 +17,25 @@ function Bar:ToggleBarFader(name)
 	else
 		Bar:StartFadeOut(frame)
 	end
+end
+
+function Bar:UpdateFrameClickThru()
+	local showBar4, showBar5
+
+	local function updateClickThru()
+		_G.NDui_ActionBar4:EnableMouse(showBar4)
+		_G.NDui_ActionBar5:EnableMouse((not showBar4 and showBar4) or (showBar4 and showBar5))
+	end
+
+	hooksecurefunc("SetActionBarToggles", function(_, _, bar3, bar4)
+		showBar4 = not not bar3
+		showBar5 = not not bar4
+		if InCombatLockdown() then
+			B:RegisterEvent("PLAYER_REGEN_ENABLED", updateClickThru)
+		else
+			updateClickThru()
+		end
+	end)
 end
 
 function Bar:CreateBar4()
@@ -42,4 +62,6 @@ function Bar:CreateBar4()
 		frame.isDisable = not C.db["Actionbar"]["Bar4Fader"]
 		Bar.CreateButtonFrameFader(frame, buttonList, cfg.fader)
 	end
+
+	Bar:UpdateFrameClickThru()
 end
