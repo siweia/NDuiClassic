@@ -25,6 +25,19 @@ function Bar:UpdateFontSize(button, fontSize)
 	button.HotKey:SetFont(font, fontSize, fontFlag)
 end
 
+function Bar:FixActionCount()
+	local text = self.Count
+	local action = self.action
+	local count = GetActionCount(action)
+	if not IsItemAction(action) and count > 0 then
+		if count > (self.maxDisplayCount or 999) then
+			self.Count:SetText("*")
+		else
+			self.Count:SetText(count)
+		end
+	end
+end
+
 function Bar:UpdateActionSize(name)
 	local frame = _G["NDui_Action"..name]
 	if not frame then return end
