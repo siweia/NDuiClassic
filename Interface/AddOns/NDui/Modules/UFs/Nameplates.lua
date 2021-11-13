@@ -734,10 +734,6 @@ function UF:UpdateNameplateSize()
 end
 
 function UF:RefreshNameplats()
-	local plateHeight = C.db["Nameplate"]["PlateHeight"]
-	local nameTextSize = C.db["Nameplate"]["NameTextSize"]
-	local iconSize = plateHeight*2 + 5
-
 	for nameplate in pairs(platesList) do
 		UF.UpdateNameplateSize(nameplate)
 		UF.UpdateNameplateAuras(nameplate)

@@ -7,81 +7,107 @@ local tinsert, next = tinsert, next
 local cfg = C.Bars.bar1
 local margin, padding = C.Bars.margin, C.Bars.padding
 
-local function UpdateActionbarScale(bar)
-	local frame = _G["NDui_Action"..bar]
-	if not frame then return end
-
-	local size = frame.buttonSize * C.db["Actionbar"]["Scale"]
-	frame:SetFrameSize(size)
-	for _, button in pairs(frame.buttonList) do
-		button:SetSize(size, size)
-		button.Name:SetScale(C.db["Actionbar"]["Scale"])
-		button.Count:SetScale(C.db["Actionbar"]["Scale"])
-		button.HotKey:SetScale(C.db["Actionbar"]["Scale"])
-	end
-end
-
 function Bar:UpdateAllScale()
 	if not C.db["Actionbar"]["Enable"] then return end
-
-	UpdateActionbarScale("Bar1")
-	UpdateActionbarScale("Bar2")
-	UpdateActionbarScale("Bar3")
-	UpdateActionbarScale("Bar4")
-	UpdateActionbarScale("Bar5")
-
-	UpdateActionbarScale("BarExit")
-	UpdateActionbarScale("BarPet")
-	UpdateActionbarScale("BarStance")
+	Bar:UpdateActionSize("Bar1")
+	Bar:UpdateActionSize("Bar2")
+	Bar:UpdateActionSize("Bar3")
+	Bar:UpdateActionSize("Bar4")
+	Bar:UpdateActionSize("Bar5")
+	Bar:UpdateActionSize("BarPet")
+	Bar:UpdateStanceBar()
 end
 
-local function SetFrameSize(frame, size, num)
-	size = size or frame.buttonSize
-	num = num or frame.numButtons
+function Bar:UpdateFontSize(button, fontSize)
+	local font, fontFlag = DB.Font[1], DB.Font[3]
+	button.Name:SetFont(font, fontSize, fontFlag)
+	button.Count:SetFont(font, fontSize, fontFlag)
+	button.HotKey:SetFont(font, fontSize, fontFlag)
+end
 
-	frame:SetWidth(num*size + (num-1)*margin + 2*padding)
-	frame:SetHeight(size + 2*padding)
-	if not frame.mover then
-		frame.mover = B.Mover(frame, L["Main Actionbar"], "Bar1", frame.Pos)
-	else
+function Bar:UpdateActionSize(name)
+	local frame = _G["NDui_Action"..name]
+	if not frame then return end
+
+	local size = C.db["Actionbar"][name.."Size"]
+	local fontSize = C.db["Actionbar"][name.."Font"]
+	local num = C.db["Actionbar"][name.."Num"]
+	local perRow = C.db["Actionbar"][name.."PerRow"]
+
+	if num == 0 then
+		local column = 3
+		local rows = 2
+		frame:SetWidth(3*size + (column-1)*margin + 2*padding)
+		frame:SetHeight(size*rows + (rows-1)*margin + 2*padding)
 		frame.mover:SetSize(frame:GetSize())
-	end
+		frame.child:SetSize(frame:GetSize())
+		frame.child.mover:SetSize(frame:GetSize())
+		frame.child.mover.isDisable = false
+		for i = 1, 12 do
+			local button = frame.buttons[i]
+			button:SetSize(size, size)
+			button:ClearAllPoints()
+			if i == 1 then
+				button:SetPoint("TOPLEFT", frame, padding, -padding)
+			elseif i == 7 then
+				button:SetPoint("TOPLEFT", frame.child, padding, -padding)
+			elseif mod(i-1, 3) ==  0 then
+				button:SetPoint("TOP", frame.buttons[i-3], "BOTTOM", 0, -margin)
+			else
+				button:SetPoint("LEFT", frame.buttons[i-1], "RIGHT", margin, 0)
+			end
+			button:SetAttribute("statehidden", false)
+			button:Show()
+			Bar:UpdateFontSize(button, fontSize)
+		end
+	else
+		for i = 1, num do
+			local button = frame.buttons[i]
+			button:SetSize(size, size)
+			button:ClearAllPoints()
+			if i == 1 then
+				button:SetPoint("TOPLEFT", frame, padding, -padding)
+			elseif mod(i-1, perRow) ==  0 then
+				button:SetPoint("TOP", frame.buttons[i-perRow], "BOTTOM", 0, -margin)
+			else
+				button:SetPoint("LEFT", frame.buttons[i-1], "RIGHT", margin, 0)
+			end
+			button:SetAttribute("statehidden", false)
+			button:Show()
+			Bar:UpdateFontSize(button, fontSize)
+		end
 
-	if not frame.SetFrameSize then
-		frame.buttonSize = size
-		frame.numButtons = num
-		frame.SetFrameSize = SetFrameSize
+		for i = num+1, 12 do
+			local button = frame.buttons[i]
+			if not button then break end
+			button:SetAttribute("statehidden", true)
+			button:Hide()
+		end
+
+		local column = min(num, perRow)
+		local rows = ceil(num/perRow)
+		frame:SetWidth(column*size + (column-1)*margin + 2*padding)
+		frame:SetHeight(size*rows + (rows-1)*margin + 2*padding)
+		frame.mover:SetSize(frame:GetSize())
+		if frame.child then frame.child.mover.isDisable = true end
 	end
 end
 
 function Bar:CreateBar1()
 	local num = NUM_ACTIONBAR_BUTTONS
 	local buttonList = {}
-	local layout = C.db["Actionbar"]["Style"]
 
 	local frame = CreateFrame("Frame", "NDui_ActionBar1", UIParent, "SecureHandlerStateTemplate")
-	if layout == 5 then
-		frame.Pos = {"BOTTOM", UIParent, "BOTTOM", -108, 24}
-	else
-		frame.Pos = {"BOTTOM", UIParent, "BOTTOM", 0, 24}
-	end
+	frame.mover = B.Mover(frame, L["Actionbar"].."1", "Bar1", {"BOTTOM", UIParent, "BOTTOM", 0, 24})
+	Bar.movers[1] = frame.mover
 
 	for i = 1, num do
 		local button = _G["ActionButton"..i]
 		tinsert(buttonList, button)
 		tinsert(Bar.buttons, button)
 		button:SetParent(frame)
-		button:ClearAllPoints()
-		if i == 1 then
-			button:SetPoint("BOTTOMLEFT", frame, padding, padding)
-		else
-			local previous = _G["ActionButton"..i-1]
-			button:SetPoint("LEFT", previous, "RIGHT", margin, 0)
-		end
 	end
-
-	frame.buttonList = buttonList
-	SetFrameSize(frame, cfg.size, num)
+	frame.buttons = buttonList
 
 	frame.frameVisibility = "[petbattle] hide; show"
 	RegisterStateDriver(frame, "visibility", frame.frameVisibility)
@@ -116,6 +142,7 @@ function Bar:OnLogin()
 
 	if not C.db["Actionbar"]["Enable"] then return end
 
+	Bar.movers = {}
 	Bar:CreateBar1()
 	Bar:CreateBar2()
 	Bar:CreateBar3()

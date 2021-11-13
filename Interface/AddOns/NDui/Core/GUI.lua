@@ -25,10 +25,8 @@ G.DefaultSettings = {
 		Classcolor = false,
 		Cooldown = true,
 		DecimalCD = true,
-		Style = 1,
 		Bar4Fader = false,
 		Bar5Fader = true,
-		Scale = 1,
 		BindType = 1,
 		OverrideWA = false,
 		MicroMenu = true,
@@ -42,6 +40,34 @@ G.DefaultSettings = {
 		AspectBar = true,
 		AspectSize = 25,
 		VerticleAspect = true,
+
+		Bar1Size = 34,
+		Bar1Font = 12,
+		Bar1Num = 12,
+		Bar1PerRow = 12,
+		Bar2Size = 34,
+		Bar2Font = 12,
+		Bar2Num = 12,
+		Bar2PerRow = 12,
+		Bar3Size = 32,
+		Bar3Font = 12,
+		Bar3Num = 0,
+		Bar3PerRow = 12,
+		Bar4Size = 32,
+		Bar4Font = 12,
+		Bar4Num = 12,
+		Bar4PerRow = 1,
+		Bar5Size = 32,
+		Bar5Font = 12,
+		Bar5Num = 12,
+		Bar5PerRow = 1,
+		BarPetSize = 26,
+		BarPetFont = 12,
+		BarPetNum = 10,
+		BarPetPerRow = 10,
+		BarStanceSize = 30,
+		BarStanceFont = 12,
+		BarStancePerRow = 10,
 	},
 	Bags = {
 		Enable = true,
@@ -59,6 +85,7 @@ G.DefaultSettings = {
 		SpecialBagsColor = false,
 		iLvlToShow = 1,
 		BagsPerRow = 6,
+		BankPerRow = 10,
 		HideWidgets = true,
 
 		FilterJunk = true,
@@ -534,8 +561,12 @@ local function updateBagSize()
 	B:GetModule("Bags"):UpdateBagSize()
 end
 
-local function updateActionbarScale()
-	B:GetModule("Actionbar"):UpdateAllScale()
+local function setupActionBar()
+	G:SetupActionBar(guiPage[1])
+end
+
+local function setupStanceBar()
+	G:SetupStanceBar(guiPage[1])
 end
 
 local function updateCustomBar()
@@ -784,7 +815,7 @@ local HeaderTag = "|cff00cc4c"
 local NewTag = "|TInterface\\OptionsFrame\\UI-OptionsFrame-NewFeatureIcon:0|t"
 
 G.TabList = {
-	L["Actionbar"],
+	NewTag..L["Actionbar"],
 	NewTag..L["Bags"],
 	L["Unitframes"],
 	L["RaidFrame"],
@@ -803,20 +834,18 @@ G.TabList = {
 
 G.OptionList = { -- type, key, value, name, horizon, doubleline
 	[1] = {
-		{1, "Actionbar", "Enable", HeaderTag..L["Enable Actionbar"], nil, nil, nil, L["ActionBarTip"]},
+		{1, "Actionbar", "Enable", NewTag..HeaderTag..L["Enable Actionbar"], nil, setupActionBar},
 		{},--blank
 		{1, "Actionbar", "MicroMenu", L["Micromenu"]},
-		{1, "Actionbar", "ShowStance", L["ShowStanceBar"], true},
+		{1, "Actionbar", "ShowStance", NewTag..L["ShowStanceBar"], true, setupStanceBar},
 		{1, "Actionbar", "Bar4Fader", L["Bar4 Fade"].."*", nil, nil, toggleBarFader},
 		{1, "Actionbar", "Bar5Fader", L["Bar5 Fade"].."*", true, nil, toggleBarFader},
-		{4, "Actionbar", "Style", L["Actionbar Style"], false, {L["BarStyle1"], L["BarStyle2"], L["BarStyle3"], L["BarStyle4"], L["BarStyle5"]}},
-		{3, "Actionbar", "Scale", L["Actionbar Scale"].."*", true, {.5, 1.5, .01}, updateActionbarScale},
 		{},--blank
 		{1, "Actionbar", "CustomBar", HeaderTag..L["Enable CustomBar"], nil, nil, nil, L["CustomBarTip"]},
 		{1, "Actionbar", "BarXFader", L["CustomBarFader"].."*", nil, nil, toggleBarFader},
-		{3, "Actionbar", "CustomBarButtonSize", L["CustomBarButtonSize"].."*", true, {24, 60, 1}, updateCustomBar},
-		{3, "Actionbar", "CustomBarNumButtons", L["CustomBarNumButtons"].."*", nil, {1, 12, 1}, updateCustomBar},
-		{3, "Actionbar", "CustomBarNumPerRow", L["CustomBarNumPerRow"].."*", true, {1, 12, 1}, updateCustomBar},
+		{3, "Actionbar", "CustomBarButtonSize", L["ButtonSize"].."*", true, {24, 60, 1}, updateCustomBar},
+		{3, "Actionbar", "CustomBarNumButtons", L["MaxButtons"].."*", nil, {1, 12, 1}, updateCustomBar},
+		{3, "Actionbar", "CustomBarNumPerRow", L["ButtonsPerRow"].."*", true, {1, 12, 1}, updateCustomBar},
 		{},--blank
 		{1, "Actionbar", "Cooldown", HeaderTag..L["Show Cooldown"]},
 		{1, "Actionbar", "OverrideWA", L["HideCooldownOnWA"].."*", true},
@@ -839,12 +868,13 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Bags", "GatherEmpty", L["Bags GatherEmpty"].."*", nil, nil, updateBagStatus},
 		{1, "Bags", "ItemFilter", L["Bags ItemFilter"].."*", true, setupBagFilter, updateBagStatus},
 		{1, "Bags", "SpecialBagsColor", L["SpecialBagsColor"].."*", nil, nil, updateBagStatus, L["SpecialBagsColorTip"]},
-		{1, "Bags", "ShowNewItem", L["Bags ShowNewItem"]},
-		{3, "Bags", "BagsPerRow", NewTag..L["BagsPerRow"].."*", true, {1, 20, 1}, updateBagAnchor, L["BagsPerRowTip"]},
+		{1, "Bags", "ShowNewItem", L["Bags ShowNewItem"], true},
 		{1, "Bags", "BagsiLvl", L["Bags Itemlevel"].."*", nil, nil, updateBagStatus},
 		{3, "Bags", "iLvlToShow", L["iLvlToShow"].."*", nil, {1, 500, 1}, nil, L["iLvlToShowTip"]},
-		{4, "Bags", "BagSortMode", L["BagSortMode"].."*", true, {L["Forward"], L["Backward"], DISABLE}, updateBagSortOrder},
+		{4, "Bags", "BagSortMode", L["BagSortMode"].."*", true, {L["Forward"], L["Backward"], DISABLE}, updateBagSortOrder, L["BagSortTip"]},
 		{},--blank
+		{3, "Bags", "BagsPerRow", NewTag..L["BagsPerRow"].."*", nil, {1, 20, 1}, updateBagAnchor, L["BagsPerRowTip"]},
+		{3, "Bags", "BankPerRow", NewTag..L["BankPerRow"].."*", true, {1, 20, 1}, updateBagAnchor, L["BankPerRowTip"]},
 		{3, "Bags", "IconSize", L["Bags IconSize"].."*", nil, {20, 50, 1}, updateBagSize},
 		{3, "Bags", "FontSize", NewTag..L["Bags FontSize"].."*", true, {10, 50, 1}, updateBagSize},
 		{3, "Bags", "BagsWidth", L["Bags Width"].."*", false, {10, 40, 1}, updateBagSize},
