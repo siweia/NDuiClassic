@@ -66,7 +66,7 @@ function M:ExpBar_UpdateTooltip()
 			barMax = barMin + 1e3
 			value = barMax - 1
 		end]]
-		local standingtext = GetText("FACTION_STANDING_LABEL"..standing, UnitSex("player"))
+		local standingtext = _G["FACTION_STANDING_LABEL"..standing] or UNKNOWN
 		GameTooltip:AddLine(" ")
 		GameTooltip:AddLine(name, 0,.6,1)
 		GameTooltip:AddDoubleLine(standingtext, value - barMin.." / "..barMax - barMin.." ("..floor((value - barMin)/(barMax - barMin)*100).."%)", .6,.8,1, 1,1,1)
