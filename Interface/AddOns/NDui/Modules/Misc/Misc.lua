@@ -38,17 +38,18 @@ function M:OnLogin()
 	end
 
 	-- Init
-	self:UIWidgetFrameMover()
-	self:MoveDurabilityFrame()
-	self:MoveTicketStatusFrame()
-	self:UpdateFasterLoot()
-	self:UpdateErrorBlocker()
-	self:TradeTargetInfo()
-	self:ToggleTaxiDismount()
-	self:BidPriceHighlight()
-	self:BlockStrangerInvite()
-	self:TogglePetHappiness()
-	self:QuickMenuButton()
+	M:UIWidgetFrameMover()
+	M:MoveDurabilityFrame()
+	M:MoveTicketStatusFrame()
+	M:UpdateFasterLoot()
+	M:UpdateErrorBlocker()
+	M:TradeTargetInfo()
+	M:ToggleTaxiDismount()
+	M:BidPriceHighlight()
+	M:BlockStrangerInvite()
+	M:TogglePetHappiness()
+	M:QuickMenuButton()
+	M:BaudErrorFrameHelpTip()
 
 	-- Auto chatBubbles
 	if NDuiADB["AutoBubbles"] then
@@ -486,4 +487,46 @@ function M:TogglePetHappiness()
 	else
 		B:UnregisterEvent("UNIT_HAPPINESS", CheckPetHappiness)
 	end
+end
+
+function M:BaudErrorFrameHelpTip()
+	if not IsAddOnLoaded("!BaudErrorFrame") then return end
+	local button, count = _G.BaudErrorFrameMinimapButton, _G.BaudErrorFrameMinimapCount
+	if not button then return end
+
+	-- RGB on error text
+	local r, g, b, mult = 10, 0, 0, 1
+	local updater = CreateFrame("Frame")
+	updater:Hide()
+	updater:SetScript("OnUpdate", function(self, elapsed)
+		self.elapsed = (self.elapsed or 0) + elapsed
+		if self.elapsed > .08 then
+			if r == 0 and g > b then b = b + mult
+			elseif g == 0 and b > r then r = r + mult
+			elseif b == 0 and r > g then g = g + mult
+			elseif r == 0 and g <= b then g = g - mult
+			elseif g == 0 and b <= r then b = b - mult
+			elseif b == 0 and r <= g then r = r - mult
+			end
+			count:SetTextColor(r/10, g/10, b/10)
+
+			self.elapsed = 0
+		end
+	end)
+	hooksecurefunc(button, "Show", function()
+		updater:Show()
+	end)
+	hooksecurefunc(button, "Hide", function()
+		updater:Hide()
+	end)
+
+	-- Helptip
+	hooksecurefunc(count, "SetText", function(_, text)
+		if not NDuiADB["Help"]["BaudError"] then
+			text = tonumber(text)
+			if text and text > 0 then
+				B:ShowHelpTip(button, L["BaudErrorTip"], "TOP", -90, 15, nil, "BaudError", 80)
+			end
+		end
+	end)
 end

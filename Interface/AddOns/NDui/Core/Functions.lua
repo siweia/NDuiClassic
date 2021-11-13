@@ -306,9 +306,11 @@ do
 							region:SetAlpha(0)
 						elseif i ~= kill then
 							region:SetTexture("")
+							region:SetAtlas("")
 						end
 					else
 						region:SetTexture("")
+						region:SetAtlas("")
 					end
 				end
 			end
@@ -333,7 +335,7 @@ do
 		["RIGHT"] = {relF = "LEFT", degree = 270, arrowX = -5, arrowY = 0, glowX = -4, glowY = 0},
 	}
 
-	function B:ShowHelpTip(parent, text, targetPoint, offsetX, offsetY, callback, callbackArg)
+	function B:ShowHelpTip(parent, text, targetPoint, offsetX, offsetY, callback, callbackArg, arrowX, arrowY)
 		local info = helpTipTable[callbackArg]
 		if not info then
 			local anchorInfo = pointInfo[targetPoint]
@@ -349,7 +351,7 @@ do
 			info.okay:SetScript("OnClick", B.HelpInfoAcknowledge)
 
 			info.Arrow:ClearAllPoints()
-			info.Arrow:SetPoint("CENTER", info, anchorInfo.relF, anchorInfo.arrowX, anchorInfo.arrowY)
+			info.Arrow:SetPoint("CENTER", info, anchorInfo.relF, arrowX or anchorInfo.arrowX, arrowY or anchorInfo.arrowY)
 
 			info.Arrow.Glow:ClearAllPoints()
 			info.Arrow.Glow:SetPoint("CENTER", info.Arrow.Arrow, "CENTER", anchorInfo.glowX, anchorInfo.glowY)
@@ -762,6 +764,7 @@ do
 			region = buttonName and _G[buttonName..region] or self[region]
 			if region then
 				region:SetAlpha(0)
+				region:Hide()
 			end
 		end
 
