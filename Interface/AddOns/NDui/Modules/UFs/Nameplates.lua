@@ -10,6 +10,8 @@ local UnitClassification, UnitExists, InCombatLockdown = UnitClassification, Uni
 local UnitGUID, GetPlayerInfoByGUID, Ambiguate, UnitName, UnitHealth, UnitHealthMax = UnitGUID, GetPlayerInfoByGUID, Ambiguate, UnitName, UnitHealth, UnitHealthMax
 local SetCVar, UIFrameFadeIn, UIFrameFadeOut = SetCVar, UIFrameFadeIn, UIFrameFadeOut
 local C_NamePlate_GetNamePlateForUnit = C_NamePlate.GetNamePlateForUnit
+local C_NamePlate_SetNamePlateEnemyClickThrough = C_NamePlate.SetNamePlateEnemyClickThrough
+local C_NamePlate_SetNamePlateFriendlyClickThrough = C_NamePlate.SetNamePlateFriendlyClickThrough
 local INTERRUPTED = INTERRUPTED
 local _QuestieTooltips, _QuestiePlayer, _QuestieQuest
 
@@ -37,6 +39,13 @@ function UF:UpdatePlateSpacing()
 	SetCVar("nameplateOverlapV", C.db["Nameplate"]["VerticalSpacing"])
 end
 
+function UF:UpdatePlateClickThru()
+	if InCombatLockdown() then return end
+
+	C_NamePlate_SetNamePlateEnemyClickThrough(C.db["Nameplate"]["EnemyThru"])
+	C_NamePlate_SetNamePlateFriendlyClickThrough(C.db["Nameplate"]["FriendlyThru"])
+end
+
 function UF:SetupCVars()
 	UF:ClampTargetPlate()
 	UF:UpdatePlateRange()
@@ -44,6 +53,7 @@ function UF:SetupCVars()
 	UF:UpdatePlateSpacing()
 	UF:UpdatePlateAlpha()
 	SetCVar("nameplateSelectedAlpha", 1)
+	UF:UpdatePlateClickThru()
 
 	UF:UpdatePlateScale()
 	SetCVar("nameplateSelectedScale", 1)
