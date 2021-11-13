@@ -2,6 +2,13 @@ local _, ns = ...
 local B, C, L, DB = unpack(ns)
 local G = B:GetModule("GUI")
 
+local _G = _G
+local unpack, pairs, ipairs, tinsert = unpack, pairs, ipairs, tinsert
+local min, max, strmatch, strfind, tonumber = min, max, strmatch, strfind, tonumber
+local GetSpellInfo, GetSpellTexture = GetSpellInfo, GetSpellTexture
+local GetInstanceInfo = GetInstanceInfo
+local IsControlKeyDown = IsControlKeyDown
+
 local function sortBars(barTable)
 	local num = 1
 	for _, bar in pairs(barTable) do
@@ -1094,8 +1101,8 @@ function G:SetupNameplateSize(parent)
 	local scroll = G:CreateScroll(panel, 260, 540)
 
 	local optionValues = {
-		["enemy"] = {"PlateWidth", "PlateHeight", "NameTextSize", "HealthTextSize", "HealthTextOffset"},
-		["friend"] = {"FriendPlateWidth", "FriendPlateHeight", "FriendNameSize", "FriendHealthSize", "FriendHealthOffset"},
+		["enemy"] = {"PlateWidth", "PlateHeight", "NameTextSize", "HealthTextSize", "HealthTextOffset", "PlateCBHeight", "CBTextSize", "PlateCBOffset"},
+		["friend"] = {"FriendPlateWidth", "FriendPlateHeight", "FriendNameSize", "FriendHealthSize", "FriendHealthOffset", "FriendPlateCBHeight", "FriendCBTextSize", "FriendPlateCBOffset"},
 	}
 	local function createOptionGroup(parent, title, offset, value, func)
 		createOptionTitle(parent, title, offset)
@@ -1104,11 +1111,14 @@ function G:SetupNameplateSize(parent)
 		createOptionSlider(parent, L["NameTextSize"], 10, 50, 14, 30, offset-200, optionValues[value][3], func, "Nameplate")
 		createOptionSlider(parent, L["HealthTextSize"], 10, 50, 16, 30, offset-270, optionValues[value][4], func, "Nameplate")
 		createOptionSlider(parent, L["Health Offset"], -50, 50, 5, 30, offset-340, optionValues[value][5], func, "Nameplate")
+		createOptionSlider(parent, L["Castbar Height"], 5, 50, 8, 30, offset-410, optionValues[value][6], func, "Nameplate")
+		createOptionSlider(parent, L["CastbarTextSize"], 10, 50, 14, 30, offset-480, optionValues[value][7], func, "Nameplate")
+		createOptionSlider(parent, L["CastbarTextOffset"], -50, 50, -1, 30, offset-550, optionValues[value][8], func, "Nameplate")
 	end
 
 	local UF = B:GetModule("UnitFrames")
 	createOptionGroup(scroll.child, L["HostileNameplate"], -10, "enemy", UF.RefreshAllPlates)
-	createOptionGroup(scroll.child, L["FriendlyNameplate"], -420, "friend", UF.RefreshAllPlates)
+	createOptionGroup(scroll.child, L["FriendlyNameplate"], -630, "friend", UF.RefreshAllPlates)
 end
 
 function G:SetupActionBar(parent)
@@ -1167,9 +1177,11 @@ function G:SetupStanceBar(parent)
 end
 
 function G:SetupActionbarStyle(parent)
+	local size, padding = 30, 3
+
 	local frame = CreateFrame("Frame", "NDuiActionbarStyleFrame", parent.child)
-	frame:SetSize(150, 34)
-	frame:SetPoint("TOPRIGHT", -130, -15)
+	frame:SetSize((size+padding)*5 + padding, size + 2*padding)
+	frame:SetPoint("TOPRIGHT", -100, -15)
 	B.CreateBDFrame(frame, .25)
 
 	local Bar = B:GetModule("Actionbar")
@@ -1179,20 +1191,116 @@ function G:SetupActionbarStyle(parent)
 		[2] = "NAB:34:12:12:12:34:12:12:12:34:12:12:12:32:12:12:1:32:12:12:1:26:12:10:10:30:12:10:0B24:0B60:0B96:271B26:-1BR336:-35BR336:0B134:-200B138",
 		[3] = "NAB:34:12:12:12:34:12:12:12:34:12:12:6:32:12:12:1:32:12:12:1:26:12:10:10:30:12:10:-108B24:-108B60:216B24:271B26:-1TR-336:-35TR-336:0B98:-200B138",
 	}
+	local styleName = {
+		[1] = _G.DEFAULT,
+		[2] = "3X12",
+		[3] = "2X18",
+		[4] = L["Export"],
+		[5] = L["Import"],
+	}
+	local tooltips = {
+		[4] = L["ExportActionbarStyle"],
+		[5] = L["ImportActionbarStyle"],
+	}
+
 	local function applyBarStyle(self)
+		if not IsControlKeyDown() then return end
 		local str = styleString[self.index]
 		if not str then return end
 		Bar:ImportActionbarStyle(str)
 	end
 
-	for i = 1, 5 do
-		local bu = B.CreateButton(frame, 24, 24, i)
-		bu:SetPoint("LEFT", (i-1)*29 + 5, 0)
-		bu.index = i
-		bu:SetScript("OnClick", applyBarStyle)
-		if i > 3 then
-			bu:Disable()
-			bu:SetAlpha(.5)
+	StaticPopupDialogs["NDUI_BARSTYLE_EXPORT"] = {
+		text = L["Export"],
+		button1 = OKAY,
+		OnShow = function(self)
+			self.editBox:SetText(Bar:ExportActionbarStyle())
+			self.editBox:HighlightText()
+		end,
+		EditBoxOnEscapePressed = function(self)
+			self:GetParent():Hide()
+		end,
+		whileDead = 1,
+		hasEditBox = 1,
+		editBoxWidth = 250,
+	}
+
+	StaticPopupDialogs["NDUI_BARSTYLE_IMPORT"] = {
+		text = L["Import"],
+		button1 = OKAY,
+		button2 = CANCEL,
+		OnShow = function(self)
+			self.button1:Disable()
+		end,
+		OnAccept = function(self)
+			Bar:ImportActionbarStyle(self.editBox:GetText())
+		end,
+		EditBoxOnTextChanged = function(self)
+			local button1 = self:GetParent().button1
+			local text = self:GetText()
+			local found = text and strfind(text, "^NAB:")
+			if found then
+				button1:Enable()
+			else
+				button1:Disable()
+			end
+		end,
+		EditBoxOnEscapePressed = function(self)
+			self:GetParent():Hide()
+		end,
+		whileDead = 1,
+		showAlert = 1,
+		hasEditBox = 1,
+		editBoxWidth = 250,
+	}
+
+	local function exportBarStyle()
+		StaticPopup_Hide("NDUI_BARSTYLE_IMPORT")
+		StaticPopup_Show("NDUI_BARSTYLE_EXPORT")
+	end
+
+	local function importBarStyle()
+		StaticPopup_Hide("NDUI_BARSTYLE_EXPORT")
+		StaticPopup_Show("NDUI_BARSTYLE_IMPORT")
+	end
+
+	B:RegisterEvent("PLAYER_REGEN_DISABLED", function()
+		StaticPopup_Hide("NDUI_BARSTYLE_EXPORT")
+		StaticPopup_Hide("NDUI_BARSTYLE_IMPORT")
+	end)
+
+	local function styleOnEnter(self)
+		GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT")
+		GameTooltip:ClearLines()
+		GameTooltip:AddLine(self.title)
+		GameTooltip:AddLine(self.tip, .6,.8,1,1)
+		GameTooltip:Show()
+	end
+
+	local function GetButtonText(i)
+		if i == 4 then
+			return "|T"..DB.ArrowUp..":16|t"
+		elseif i == 5 then
+			return "|T"..DB.ArrowUp..":16:16:0:0:1:1:0:1:1:0|t"
+		else
+			return i
 		end
+	end
+
+	for i = 1, 5 do
+		local bu = B.CreateButton(frame, size, size, GetButtonText(i))
+		bu:SetPoint("LEFT", (i-1)*(size + padding) + padding, 0)
+		bu.index = i
+		bu.title = styleName[i]
+		bu.tip = tooltips[i] or L["ApplyBarStyle"]
+		if i == 4 then
+			bu:SetScript("OnClick", exportBarStyle)
+		elseif i == 5 then
+			bu:SetScript("OnClick", importBarStyle)
+		else
+			bu:SetScript("OnClick", applyBarStyle)
+		end
+		bu:HookScript("OnEnter", styleOnEnter)
+		bu:HookScript("OnLeave", B.HideTooltip)
 	end
 end
