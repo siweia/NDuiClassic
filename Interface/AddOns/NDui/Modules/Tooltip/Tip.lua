@@ -9,7 +9,7 @@ local YOU, TARGET, AFK, DND, DEAD, PLAYER_OFFLINE = YOU, TARGET, AFK, DND, DEAD,
 local FOREIGN_SERVER_LABEL, INTERACTIVE_SERVER_LABEL = FOREIGN_SERVER_LABEL, INTERACTIVE_SERVER_LABEL
 local LE_REALM_RELATION_COALESCED, LE_REALM_RELATION_VIRTUAL = LE_REALM_RELATION_COALESCED, LE_REALM_RELATION_VIRTUAL
 local UnitIsPVP, UnitFactionGroup, UnitRealmRelationship, UnitGUID = UnitIsPVP, UnitFactionGroup, UnitRealmRelationship, UnitGUID
-local UnitIsConnected, UnitIsDeadOrGhost, UnitIsAFK, UnitIsDND = UnitIsConnected, UnitIsDeadOrGhost, UnitIsAFK, UnitIsDND
+local UnitIsConnected, UnitIsDeadOrGhost, UnitIsAFK, UnitIsDND, UnitReaction = UnitIsConnected, UnitIsDeadOrGhost, UnitIsAFK, UnitIsDND, UnitReaction
 local InCombatLockdown, IsShiftKeyDown, GetMouseFocus, GetItemInfo = InCombatLockdown, IsShiftKeyDown, GetMouseFocus, GetItemInfo
 local GetCreatureDifficultyColor, UnitCreatureType, UnitClassification = GetCreatureDifficultyColor, UnitCreatureType, UnitClassification
 local UnitIsPlayer, UnitName, UnitPVPName, UnitClass, UnitRace, UnitLevel = UnitIsPlayer, UnitName, UnitPVPName, UnitClass, UnitRace, UnitLevel
@@ -22,7 +22,7 @@ local classification = {
 	rareelite = " |cffff99cc"..L["Rare"].."|r ".."|cffcc8800"..ELITE.."|r",
 	worldboss = " |cffff0000"..BOSS.."|r",
 }
-local npcIDstring = "ID: "..DB.InfoColor.."%s"
+local npcIDstring = "%s "..DB.InfoColor.."%s"
 
 function TT:GetUnit()
 	local _, unit = self and self:GetUnit()
@@ -207,9 +207,11 @@ function TT:OnTooltipSetUnit()
 
 		if not isPlayer and isShiftKeyDown then
 			local guid = UnitGUID(unit)
-			local npcID = B.GetNPCID(guid)
+			local npcID = guid and B.GetNPCID(guid)
 			if npcID then
-				self:AddLine(format(npcIDstring, npcID))
+				local reaction = UnitReaction(unit, "player")
+				local standingText = reaction and hexColor.._G["FACTION_STANDING_LABEL"..reaction]
+				self:AddLine(format(npcIDstring, standingText or "", npcID))
 			end
 		end
 
