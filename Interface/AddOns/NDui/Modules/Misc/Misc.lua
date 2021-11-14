@@ -413,7 +413,7 @@ function M:QuickMenuButton()
 		local name = dropdownMenu.name
 		local unit = dropdownMenu.unit
 		local isPlayer = unit and UnitIsPlayer(unit)
-		local isFriendMenu = dropdownMenu == FriendsDropDown -- menus on FriendsFrame
+		local isFriendMenu = dropdownMenu == FriendsDropDown and not dropdownMenu.bnetIDAccount -- menus on FriendsFrame
 		if not name or (not isPlayer and not dropdownMenu.chatType and not isFriendMenu) then
 			frame:Hide()
 			return
