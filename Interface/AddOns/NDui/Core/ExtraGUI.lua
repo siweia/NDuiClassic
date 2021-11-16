@@ -1176,6 +1176,9 @@ function G:SetupStanceBar(parent)
 	createOptionSlider(parent, L["ButtonSize"], 20, 80, 30, 30, offset-60, "BarStanceSize", Bar.UpdateStanceBar, "Actionbar")
 	createOptionSlider(parent, L["ButtonsPerRow"], 1, 10, 10, 30, offset-130, "BarStancePerRow", Bar.UpdateStanceBar, "Actionbar")
 	createOptionSlider(parent, L["ButtonFontSize"], 8, 20, 12, 30, offset-200, "BarStanceFont", Bar.UpdateStanceBar, "Actionbar")
+
+	createOptionTitle(scroll.child, L["LeaveVehicle"], -1990)
+	createOptionSlider(scroll.child, L["ButtonSize"], 20, 80, 34, 30, -2050, "VehButtonSize", Bar.UpdateVehicleButton, "Actionbar")
 end
 
 function G:SetupActionbarStyle(parent)
