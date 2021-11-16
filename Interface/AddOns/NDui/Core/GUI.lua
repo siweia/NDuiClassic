@@ -40,6 +40,7 @@ G.DefaultSettings = {
 		AspectBar = true,
 		AspectSize = 25,
 		VerticleAspect = true,
+		VehButtonSize = 34,
 
 		Bar1Size = 34,
 		Bar1Font = 12,
