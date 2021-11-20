@@ -49,15 +49,19 @@ function module:CreatePulse()
 	end)
 end
 
+local function ResetTrackingFrameAnchor()
+	MiniMapTrackingFrame:ClearAllPoints()
+	MiniMapTrackingFrame:SetPoint("BOTTOMRIGHT", Minimap, -5, 5)
+end
+
 function module:ReskinRegions()
 	-- Tracking icon
 	MiniMapTrackingFrame:SetScale(.7)
-	MiniMapTrackingFrame:ClearAllPoints()
-	MiniMapTrackingFrame:SetPoint("BOTTOMRIGHT", Minimap, -5, 5)
 	MiniMapTrackingBorder:Hide()
-	MiniMapTrackingIcon:SetTexCoord(unpack(DB.TexCoord))
-	local bg = B.CreateBDFrame(MiniMapTrackingIcon)
+	local bg = B.ReskinIcon(MiniMapTrackingIcon)
 	bg:SetBackdropBorderColor(cr, cg, cb)
+	ResetTrackingFrameAnchor()
+	hooksecurefunc("SetLookingForGroupUIAvailable", ResetTrackingFrameAnchor)
 
 	-- Mail icon
 	MiniMapMailFrame:ClearAllPoints()
