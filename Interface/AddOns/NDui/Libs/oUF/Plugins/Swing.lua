@@ -336,6 +336,14 @@ local function Melee(self, event, _, sourceGUID)
 	lasthit = now
 end
 
+local function GetHasteMult(speed, now, percentage)
+	if percentage == 1 then
+		return 0
+	else
+		return (speed - now) * percentage / (1 - percentage)
+	end
+end
+
 local function ParryHaste(self, ...)
 	local destGUID, _, _, _, missType = select(7, ...)
 
@@ -357,11 +365,11 @@ local function ParryHaste(self, ...)
 
 		if percentage > .6 then
 			swingMH.max = now + swingMH.speed * .6
-			swingMH.min = now - (swingMH.max - now) * percentage / (1 - percentage)
+			swingMH.min = now - GetHasteMult(swingMH.max, now, percentage)
 			UpdateBarMinMaxValues(swingMH)
 		elseif percentage > .2 then
 			swingMH.max = now + swingMH.speed * .2
-			swingMH.min = now - (swingMH.max - now) * percentage / (1 - percentage)
+			swingMH.min = now - GetHasteMult(swingMH.max, now, percentage)
 			UpdateBarMinMaxValues(swingMH)
 		end
 
@@ -369,11 +377,11 @@ local function ParryHaste(self, ...)
 
 		if percentage > .6 then
 			swingOH.max = now + swingOH.speed * .6
-			swingOH.min = now - (swingOH.max - now) * percentage / (1 - percentage)
+			swingOH.min = now - GetHasteMult(swingOH.max, now, percentage)
 			UpdateBarMinMaxValues(swingOH)
 		elseif percentage > .2 then
 			swingOH.max = now + swingOH.speed * .2
-			swingOH.min = now - (swingOH.max - now) * percentage / (1 - percentage)
+			swingOH.min = now - GetHasteMult(swingOH.max, now, percentage)
 			UpdateBarMinMaxValues(swingOH)
 		end
 	else
@@ -381,11 +389,11 @@ local function ParryHaste(self, ...)
 
 		if percentage > .6 then
 			swing.max = now + swing.speed * .6
-			swing.min = now - (swing.max - now) * percentage / (1 - percentage)
+			swing.min = now - GetHasteMult(swing.max, now, percentage)
 			UpdateBarMinMaxValues(swing)
 		elseif percentage > .2 then
 			swing.max = now + swing.speed * .2
-			swing.min = now - (swing.max - now) * percentage / (1 - percentage)
+			swing.min = now - GetHasteMult(swing.max, now, percentage)
 			UpdateBarMinMaxValues(swing)
 		end
 	end
