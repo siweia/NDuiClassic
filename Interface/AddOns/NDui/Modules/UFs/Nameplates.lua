@@ -925,6 +925,7 @@ function UF:TogglePlayerPlateElements()
 	if plate then
 		plate:DisableElement("Health")
 		plate:DisableElement("Power")
+		plate.isDisbale = true
 	end
 end
 
@@ -967,9 +968,10 @@ end
 
 function UF:TogglePlateVisibility()
 	local plate = _G.oUF_PlayerPlate
-	if not plate then return end
+	if not plate or plate.isDisbale then return end
+	if C.db["Nameplate"]["ClassPowerOnly"] then return end
 
-	if C.db["Nameplate"]["PPFadeout"] and not C.db["Nameplate"]["ClassPowerOnly"] then
+	if C.db["Nameplate"]["PPFadeout"] then
 		plate:RegisterEvent("PLAYER_REGEN_ENABLED", UF.PlateVisibility, true)
 		plate:RegisterEvent("PLAYER_REGEN_DISABLED", UF.PlateVisibility, true)
 		plate:RegisterEvent("PLAYER_ENTERING_WORLD", UF.PlateVisibility, true)
