@@ -109,7 +109,12 @@ function module:StartTimer(start, duration)
 	elseif self.timer then
 		module.StopTimer(self.timer)
 	end
-
+	
+	-- check parent exists
+	if self:GetParent() == null then 
+		return
+	end
+	
 	-- hide cooldown flash if barFader enabled
 	if self:GetParent().__faderParent then
 		if self:GetEffectiveAlpha() > 0 then
