@@ -89,6 +89,7 @@ local lodFrames = {
 	Blizzard_IslandsQueueUI		= { ["IslandsQueueFrame"] = false },
 	Blizzard_ItemSocketingUI	= { ["ItemSocketingFrame"] = false },
 	Blizzard_ItemUpgradeUI		= { ["ItemUpgradeFrame"] = false },
+	Blizzard_LookingForGroupUI	= { ["LFGParentFrame"] = false },
 	Blizzard_LookingForGuildUI	= { ["LookingForGuildFrame"] = false },
 	Blizzard_MacroUI			= { ["MacroFrame"] = false },
 	Blizzard_ObliterumUI		= { ["ObliterumForgeFrame"] = false },
