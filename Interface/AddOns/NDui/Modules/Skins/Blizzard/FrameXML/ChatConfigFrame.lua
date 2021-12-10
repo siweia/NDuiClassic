@@ -145,7 +145,7 @@ tinsert(C.defaultThemes, function()
 	B.Reskin(ChatConfigFrameOkayButton)
 	B.Reskin(ChatConfigFrameDefaultButton)
 	B.Reskin(ChatConfigFrameRedockButton)
-	if ChatConfigFrame.ToggleChatButton then
+	if DB.isNewPatch then
 		B.Reskin(ChatConfigFrame.ToggleChatButton)
 	end
 	B.ReskinArrow(ChatConfigMoveFilterUpButton, "up")
