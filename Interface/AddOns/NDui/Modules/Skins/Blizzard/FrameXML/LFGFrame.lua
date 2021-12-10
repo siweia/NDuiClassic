@@ -1,6 +1,8 @@
 local _, ns = ...
 local B, C, L, DB = unpack(ns)
 
+if DB.isNewPatch then return end
+
 tinsert(C.defaultThemes, function()
 	local closeButton = select(3, LFGParentFrame:GetChildren())
 	if not LFGParentFrame.CloseButton then
