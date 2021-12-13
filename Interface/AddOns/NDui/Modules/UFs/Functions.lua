@@ -1200,9 +1200,10 @@ function UF:UpdateUFClassPower()
 	local xOffset, yOffset = C.db["UFs"]["CPxOffset"], C.db["UFs"]["CPyOffset"]
 	local bars = playerFrame.ClassPower
 	if bars then
-		playerFrame.ClassPowerBar:SetSize(barWidth, barHeight)
-		playerFrame.ClassPowerBar:SetPoint("BOTTOMLEFT", playerFrame, "TOPLEFT", xOffset, yOffset)
-		playerFrame.ClassPowerBar.bg:Show()
+		local bar = playerFrame.ClassPowerBar
+		bar:SetSize(barWidth, barHeight)
+		bar:SetPoint("BOTTOMLEFT", playerFrame, "TOPLEFT", xOffset, yOffset)
+		if bar.bg then bar.bg:Show() end
 		local max = bars.__max
 		for i = 1, max do
 			bars[i]:SetHeight(barHeight)
