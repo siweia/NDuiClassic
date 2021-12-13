@@ -29,10 +29,8 @@ local function CreatePlayerStyle(self)
 	UF:CreateFCT(self)
 	UF:CreateAddPower(self)
 	UF:CreateClassPower(self)
+	UF:CreateEneryTicker(self)
 
-	if not C.db["Nameplate"]["ShowPlayerPlate"] or C.db["Nameplate"]["ClassPowerOnly"] then
-		UF:CreateEneryTicker(self)
-	end
 	if C.db["UFs"]["Castbars"] then
 		UF:ReskinMirrorBars()
 		--UF:ReskinTimerTrakcer(self)

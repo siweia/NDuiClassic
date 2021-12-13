@@ -291,7 +291,6 @@ G.DefaultSettings = {
 		MinAlpha = 1,
 		ColorBorder = false,
 		QuestIndicator = true,
-		ClassPowerOnly = false,
 		NameOnlyMode = false,
 		ExecuteRatio = 0,
 		ColoredTarget = false,
@@ -1045,7 +1044,6 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{},--blank
 		--{1, "Auras", "ClassAuras", L["Enable ClassAuras"], true},
 		{1, "Nameplate", "PPFadeout", L["PlayerPlate Fadeout"].."*", nil, nil, togglePlateVisibility},
-	--	{1, "Nameplate", "ClassPowerOnly", L["Nameplate ClassPowerOnly"], nil},
 		{1, "Nameplate", "PPPowerText", L["PlayerPlate PowerText"].."*", nil, nil, togglePlatePower},
 		{3, "Nameplate", "PPFadeoutAlpha", L["PlayerPlate FadeoutAlpha"].."*", true, {0, .5, .05}, togglePlateVisibility},
 		{},--blank
