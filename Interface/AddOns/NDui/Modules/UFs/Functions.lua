@@ -171,6 +171,32 @@ function UF:UpdateFrameHealthTag()
 	self.healthValue:UpdateTag()
 end
 
+function UF:UpdateFrameNameTag()
+	local name = self.nameText
+	if not name then return end
+
+	local mystyle = self.mystyle
+	if mystyle == "nameplate" then return end
+
+	local value = mystyle == "raid" and "RCCName" or "CCName"
+	local colorTag = C.db["UFs"][value] and "[color]" or ""
+
+	if mystyle == "player" then
+		self:Tag(name, " "..colorTag.."[name]")
+	elseif mystyle == "target" then
+		self:Tag(name, "[fulllevel] "..colorTag.."[name][afkdnd]")
+	elseif mystyle == "focus" then
+		self:Tag(name, colorTag.."[name][afkdnd]")
+	elseif mystyle == "arena" then
+		self:Tag(name, colorTag.."[name]")
+	elseif mystyle == "raid" and C.db["UFs"]["SimpleMode"] and C.db["UFs"]["ShowTeamIndex"] and not self.isPartyPet and not self.isPartyFrame then
+		self:Tag(name, "[group]."..colorTag.."[name]")
+	else
+		self:Tag(name, colorTag.."[name]")
+	end
+	name:UpdateTag()
+end
+
 function UF:CreateHealthText(self)
 	local mystyle = self.mystyle
 	local textFrame = CreateFrame("Frame", nil, self)
@@ -200,25 +226,12 @@ function UF:CreateHealthText(self)
 		name:ClearAllPoints()
 		name:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 0, 5)
 		name:SetPoint("BOTTOMRIGHT", self, "TOPRIGHT", 0, 5)
+		self:Tag(name, "[nplevel][name]")
 	else
 		name:SetWidth(self:GetWidth()*.55)
 	end
 
-	if mystyle == "player" then
-		self:Tag(name, " [color][name]")
-	elseif mystyle == "target" then
-		self:Tag(name, "[fulllevel] [color][name][afkdnd]")
-	elseif mystyle == "focus" then
-		self:Tag(name, "[color][name][afkdnd]")
-	elseif mystyle == "nameplate" then
-		self:Tag(name, "[nplevel][name]")
-	elseif mystyle == "arena" then
-		self:Tag(name, " [color][name]")
-	elseif mystyle == "raid" and C.db["UFs"]["SimpleMode"] and C.db["UFs"]["ShowTeamIndex"] and not self.isPartyPet and not self.isPartyFrame then
-		self:Tag(name, "[group].[nplevel][color][name]")
-	else
-		self:Tag(name, "[nplevel][color][name]")
-	end
+	UF.UpdateFrameNameTag(self)
 
 	local hpval = B.CreateFS(textFrame, retVal(self, 14, 13, 13, 13, C.db["Nameplate"]["HealthTextSize"]), "", false, "RIGHT", -3, 0)
 	self.healthValue = hpval
@@ -403,6 +416,8 @@ function UF:UpdateTextScale()
 			UF:UpdateHealthBarColor(frame, true)
 			UF:UpdatePowerBarColor(frame, true)
 		end
+
+		UF.UpdateFrameNameTag(frame)
 	end
 end
 
@@ -712,7 +727,7 @@ function UF.PostUpdateIcon(element, _, button, _, _, duration, expiration, debuf
 	local fontSize = element.fontSize or element.size*.6
 	button.count:SetFont(DB.Font[1], fontSize, DB.Font[3])
 
-	if C.db["UFs"]["DesaturateIcon"] and button.isDebuff and filteredStyle[style] and not button.isPlayer then
+	if element.desaturateDebuff and button.isDebuff and filteredStyle[style] and not button.isPlayer then
 		button.icon:SetDesaturated(true)
 	else
 		button.icon:SetDesaturated(false)
@@ -755,6 +770,11 @@ function UF.PostUpdateGapIcon(_, _, icon)
 	end
 end
 
+local isCasterPlayer = {
+	["player"] = true,
+	["pet"] = true,
+	["vehicle"] = true,
+}
 function UF.CustomFilter(element, unit, button, name, _, _, _, _, _, caster, isStealable, _, spellID, _, _, _, nameplateShowAll)
 	local style = element.__owner.mystyle
 	if name and spellID == 209859 then
@@ -781,12 +801,27 @@ function UF.CustomFilter(element, unit, button, name, _, _, _, _, _, caster, isS
 			return true
 		else
 			local auraFilter = C.db["Nameplate"]["AuraFilter"]
-			return (auraFilter == 3 and nameplateShowAll) or (auraFilter ~= 1 and (caster == "player" or caster == "pet" or caster == "vehicle"))
+			return (auraFilter == 3 and nameplateShowAll) or (auraFilter ~= 1 and isCasterPlayer[caster])
 		end
-	elseif style == "focus" then
-		return (not button.isDebuff and isStealable) or (button.isDebuff and name)
 	else
 		return (element.onlyShowPlayer and button.isPlayer) or (not element.onlyShowPlayer and name)
+	end
+end
+
+function UF.UnitCustomFilter(element, _, button, name, _, _, _, _, _, _, isStealable)
+	local value = element.__value
+	if button.isDebuff then
+		if C.db["UFs"][value.."DebuffType"] == 2 then
+			return name
+		elseif C.db["UFs"][value.."DebuffType"] == 3 then
+			return button.isPlayer
+		end
+	else
+		if C.db["UFs"][value.."BuffType"] == 2 then
+			return name
+		elseif C.db["UFs"][value.."BuffType"] == 3 then
+			return isStealable
+		end
 	end
 end
 
@@ -837,15 +872,52 @@ function UF:UpdateAuraContainer(parent, element, maxAuras)
 	element:SetHeight((element.size + element.spacing) * maxLines)
 end
 
-function UF:UpdateTargetAuras()
-	local frame = _G.oUF_Target
+function UF:ConfigureAuras(element)
+	local value = element.__value
+	element.numBuffs = C.db["UFs"][value.."BuffType"] ~= 1 and 20 or 0
+	element.numDebuffs = C.db["UFs"][value.."DebuffType"] ~= 1 and 16 or 0
+	element.iconsPerRow = C.db["UFs"][value.."AurasPerRow"]
+	element.showDebuffType = C.db["UFs"]["DebuffColor"]
+	element.desaturateDebuff = C.db["UFs"]["Desaturate"]
+end
+
+function UF:RefreshUFAuras(frame)
 	if not frame then return end
-
 	local element = frame.Auras
-	element.iconsPerRow = C.db["UFs"]["TargetAurasPerRow"]
+	if not element then return end
 
+	UF:ConfigureAuras(element)
 	UF:UpdateAuraContainer(frame, element, element.numBuffs + element.numDebuffs)
 	element:ForceUpdate()
+end
+
+function UF:UpdateUFAuras()
+	UF:RefreshUFAuras(_G.oUF_Player)
+	UF:RefreshUFAuras(_G.oUF_Target)
+	UF:RefreshUFAuras(_G.oUF_Focus)
+	UF:RefreshUFAuras(_G.oUF_ToT)
+end
+
+function UF:ToggleUFAuras(frame, enable)
+	if not frame then return end
+	if enable then
+		if not frame:IsElementEnabled("Auras") then
+			frame:EnableElement("Auras")
+		end
+	else
+		if frame:IsElementEnabled("Auras") then
+			frame:DisableElement("Auras")
+			frame.Auras:ForceUpdate()
+		end
+	end
+end
+
+function UF:ToggleAllAuras()
+	local enable = C.db["UFs"]["ShowAuras"]
+	UF:ToggleUFAuras(_G.oUF_Player, enable)
+	UF:ToggleUFAuras(_G.oUF_Target, enable)
+	UF:ToggleUFAuras(_G.oUF_Focus, enable)
+	UF:ToggleUFAuras(_G.oUF_ToT, enable)
 end
 
 function UF:CreateAuras(self)
@@ -857,20 +929,33 @@ function UF:CreateAuras(self)
 	bu["growth-y"] = "DOWN"
 	bu.spacing = 3
 	bu.tooltipAnchor = "ANCHOR_BOTTOMLEFT"
-	if mystyle == "target" then
+	if mystyle == "player" then
+		bu.initialAnchor = "TOPRIGHT"
+		bu["growth-x"] = "LEFT"
+		bu:SetPoint("TOPRIGHT", self.Power, "BOTTOMRIGHT", 0, -10)
+		bu.__value = "Player"
+		UF:ConfigureAuras(bu)
+		bu.CustomFilter = UF.UnitCustomFilter
+	elseif mystyle == "target" then
 		bu:SetPoint("TOPLEFT", self.Power, "BOTTOMLEFT", 0, -10)
-		bu.numBuffs = 20
-		bu.numDebuffs = 15
-		bu.iconsPerRow = C.db["UFs"]["TargetAurasPerRow"]
+		bu.__value = "Target"
+		UF:ConfigureAuras(bu)
+		bu.CustomFilter = UF.UnitCustomFilter
 	elseif mystyle == "tot" then
 		bu:SetPoint("TOPLEFT", self.Power, "BOTTOMLEFT", 0, -5)
 		bu.numBuffs = 0
 		bu.numDebuffs = 10
 		bu.iconsPerRow = 5
+		bu.__value = "ToT"
+		UF:ConfigureAuras(bu)
+		bu.CustomFilter = UF.UnitCustomFilter
 	elseif mystyle == "focus" then
 		bu:SetPoint("TOPLEFT", self.Power, "BOTTOMLEFT", 0, -10)
 		bu.numTotal = 23
 		bu.iconsPerRow = 8
+		bu.__value = "Focus"
+		UF:ConfigureAuras(bu)
+		bu.CustomFilter = UF.UnitCustomFilter
 	elseif mystyle == "raid" then
 		bu.initialAnchor = "LEFT"
 		bu:SetPoint("LEFT", self, 15, 0)
@@ -879,6 +964,8 @@ function UF:CreateAuras(self)
 		bu.disableCooldown = true
 		bu.gap = false
 		bu.disableMouse = true
+		bu.showDebuffType = nil
+		bu.CustomFilter = UF.CustomFilter
 	elseif mystyle == "nameplate" then
 		bu.initialAnchor = "BOTTOMLEFT"
 		bu["growth-y"] = "UP"
@@ -889,14 +976,15 @@ function UF:CreateAuras(self)
 		end
 		bu.numTotal = C.db["Nameplate"]["maxAuras"]
 		bu.size = C.db["Nameplate"]["AuraSize"]
-		bu.showDebuffType = C.db["Nameplate"]["ColorBorder"]
+		bu.showDebuffType = C.db["Nameplate"]["DebuffColor"]
+		bu.desaturateDebuff = C.db["Nameplate"]["Desaturate"]
 		bu.gap = false
 		bu.disableMouse = true
+		bu.CustomFilter = UF.CustomFilter
 	end
 
 	UF:UpdateAuraContainer(self, bu, bu.numTotal or bu.numBuffs + bu.numDebuffs)
 	bu.showStealableBuffs = true
-	bu.CustomFilter = UF.CustomFilter
 	bu.PostCreateIcon = UF.PostCreateIcon
 	bu.PostUpdateIcon = UF.PostUpdateIcon
 	bu.PostUpdateGapIcon = UF.PostUpdateGapIcon
@@ -946,12 +1034,8 @@ function UF:CreateDebuffs(self)
 	bu["growth-x"] = "LEFT"
 	bu["growth-y"] = "DOWN"
 	bu.tooltipAnchor = "ANCHOR_BOTTOMLEFT"
-	if mystyle == "player" then
-		bu:SetPoint("TOPRIGHT", self.Power, "BOTTOMRIGHT", 0, -10)
-		bu.num = 14
-		bu.iconsPerRow = 7
-		bu.showDebuffType = true
-	elseif mystyle == "boss" or mystyle == "arena" then
+	bu.showDebuffType = true
+	if mystyle == "boss" or mystyle == "arena" then
 		bu:SetPoint("TOPRIGHT", self, "TOPLEFT", -5, 0)
 		bu.num = 10
 		bu.iconsPerRow = 5
@@ -964,7 +1048,6 @@ function UF:CreateDebuffs(self)
 		bu.size = C.db["UFs"]["RaidDebuffSize"]
 		bu.CustomFilter = UF.RaidDebuffFilter
 		bu.disableMouse = true
-		bu.showDebuffType = true
 		bu.fontSize = C.db["UFs"]["RaidDebuffSize"]-2
 	end
 

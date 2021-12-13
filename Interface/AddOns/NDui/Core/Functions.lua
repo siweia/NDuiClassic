@@ -418,10 +418,11 @@ do
 		end
 		GameTooltip:Show()
 	end
-	function B:AddTooltip(anchor, text, color)
+	function B:AddTooltip(anchor, text, color, showTips)
 		self.anchor = anchor
 		self.text = text
 		self.color = color
+		if showTips then self.title = L["Tips"] end
 		self:SetScript("OnEnter", Tooltip_OnEnter)
 		self:SetScript("OnLeave", B.HideTooltip)
 	end
@@ -623,8 +624,7 @@ do
 		bu.Icon:SetTexture(616343)
 		bu:SetHighlightTexture(616343)
 		if tooltip then
-			bu.title = L["Tips"]
-			B.AddTooltip(bu, "ANCHOR_BOTTOMLEFT", tooltip, "info")
+			B.AddTooltip(bu, "ANCHOR_BOTTOMLEFT", tooltip, "info", true)
 		end
 
 		return bu

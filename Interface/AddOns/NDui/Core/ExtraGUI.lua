@@ -268,8 +268,7 @@ function G:SetupRaidDebuffs(parent)
 			NDuiADB["RaidDebuffs"][instID][bar.spellID] = prio
 			self:SetText(prio)
 		end)
-		prioBox.title = L["Tips"]
-		B.AddTooltip(prioBox, "ANCHOR_TOPRIGHT", L["Prio Editbox"], "info")
+		B.AddTooltip(prioBox, "ANCHOR_TOPRIGHT", L["Prio Editbox"], "info", true)
 		bar.prioBox = prioBox
 
 		return bar
@@ -512,8 +511,7 @@ function G:SetupNameplateFilter(parent)
 		local scroll = G:CreateScroll(frame, 240, 200)
 		scroll.box = B.CreateEditBox(frame, 185, 25)
 		scroll.box:SetPoint("TOPLEFT", 10, -10)
-		scroll.box.title = L["Tips"]
-		B.AddTooltip(scroll.box, "ANCHOR_TOPRIGHT", L["ID Intro"], "info")
+		B.AddTooltip(scroll.box, "ANCHOR_TOPRIGHT", L["ID Intro"], "info", true)
 		scroll.add = B.CreateButton(frame, 70, 25, ADD)
 		scroll.add:SetPoint("TOPRIGHT", -8, -10)
 		scroll.add:SetScript("OnClick", function()
@@ -649,8 +647,7 @@ function G:SetupBuffIndicator(parent)
 		scroll.box = B.CreateEditBox(frame, value.width, 25)
 		scroll.box:SetPoint("TOPLEFT", 10, -10)
 		scroll.box:SetMaxLetters(6)
-		scroll.box.title = L["Tips"]
-		B.AddTooltip(scroll.box, "ANCHOR_TOPRIGHT", L["ID Intro"], "info")
+		B.AddTooltip(scroll.box, "ANCHOR_TOPRIGHT", L["ID Intro"], "info", true)
 
 		scroll.add = B.CreateButton(frame, 45, 25, ADD)
 		scroll.add:SetPoint("TOPRIGHT", -8, -10)
@@ -687,8 +684,7 @@ function G:SetupBuffIndicator(parent)
 			showAll:SetPoint("LEFT", swatch, "RIGHT", 2, 0)
 			showAll:SetHitRectInsets(0, 0, 0, 0)
 			showAll.bg:SetBackdropBorderColor(1, .8, 0, .5)
-			showAll.title = L["Tips"]
-			B.AddTooltip(showAll, "ANCHOR_TOPRIGHT", L["ShowAllTip"], "info")
+			B.AddTooltip(showAll, "ANCHOR_TOPRIGHT", L["ShowAllTip"], "info", true)
 			scroll.showAll = showAll
 
 			for spellID, value in pairs(UF.CornerSpells) do
@@ -801,7 +797,7 @@ function G:SetupUnitFrame(parent)
 		createOptionDropdown(parent, L["HealthValueType"], offset-50, G.HealthValues, nil, "UFs", value.."HPTag", defaultValue[value][4], func)
 		local mult = 0
 		if value ~= "Pet" then
-			mult = 55
+			mult = 60
 			createOptionDropdown(parent, L["PowerValueType"], offset-50-mult, G.HealthValues, nil, "UFs", value.."MPTag", defaultValue[value][4], func)
 		end
 		createOptionSlider(parent, L["Width"], sliderRange[value][1], sliderRange[value][2], defaultValue[value][1], offset-110-mult, value.."Width", func)
@@ -820,7 +816,7 @@ function G:SetupUnitFrame(parent)
 			UF.UpdateFrameHealthTag(frame)
 			UF.UpdateFramePowerTag(frame)
 		end
-		UF:UpdateTargetAuras()
+		UF:UpdateUFAuras()
 	end
 	createOptionGroup(scroll.child, L["Player&Target"], -10, "Player", updatePlayerSize)
 
@@ -962,8 +958,7 @@ function G:SetupCastbar(parent)
 		box:SetChecked(C.db["UFs"][value.."CB"])
 		box.__value = value
 		box:SetScript("OnClick", toggleCastbar)
-		box.title = L["Tips"]
-		B.AddTooltip(box, "ANCHOR_RIGHT", L["ToggleCastbarTip"], "info")
+		B.AddTooltip(box, "ANCHOR_RIGHT", L["ToggleCastbarTip"], "info", true)
 
 		createOptionTitle(parent, title, offset)
 		createOptionSlider(parent, L["Width"], 100, 800, defaultValue[value][1], offset-60, value.."CBWidth", func)
@@ -1013,10 +1008,27 @@ function G:SetupCastbar(parent)
 	end)
 end
 
-local function createOptionCheck(parent, offset, text)
+local function toggleOptionCheck(self)
+	local value = C.db[self.__key][self.__value]
+	value = not value
+	self:SetChecked(value)
+	C.db[self.__key][self.__value] = value
+	if self.__callback then self:__callback() end
+end
+
+local function createOptionCheck(parent, offset, text, key, value, callback, tooltip)
 	local box = B.CreateCheckBox(parent)
 	box:SetPoint("TOPLEFT", 10, offset)
-	B.CreateFS(box, 14, text, false, "LEFT", 30, 0)
+	box:SetChecked(C.db[key][value])
+	box.__key = key
+	box.__value = value
+	box.__callback = callback
+	B.CreateFS(box, 14, text, "system", "LEFT", 30, 0)
+	box:SetScript("OnClick", toggleOptionCheck)
+	if tooltip then
+		B.AddTooltip(box, "ANCHOR_RIGHT", tooltip, "info", true)
+	end
+
 	return box
 end
 
@@ -1039,21 +1051,14 @@ function G:SetupBagFilter(parent)
 		[8] = "FilterQuest",
 	}
 
-	local Bags = B:GetModule("Bags")
-	local function filterOnClick(self)
-		local value = self.__value
-		C.db["Bags"][value] = not C.db["Bags"][value]
-		self:SetChecked(C.db["Bags"][value])
-		Bags:UpdateAllBags()
+	local BAG = B:GetModule("Bags")
+	local function updateAllBags()
+		BAG:UpdateAllBags()
 	end
 
 	local offset = 10
 	for _, value in ipairs(filterOptions) do
-		local box = createOptionCheck(scroll, -offset, L[value])
-		box:SetChecked(C.db["Bags"][value])
-		box.__value = value
-		box:SetScript("OnClick", filterOnClick)
-
+		createOptionCheck(scroll, -offset, L[value], "Bags", value, updateAllBags)
 		offset = offset + 35
 	end
 end
@@ -1242,10 +1247,47 @@ function G:SetupUFClassPower(parent)
 	local UF = B:GetModule("UnitFrames")
 	local parent, offset = scroll.child, -10
 
-	createOptionSlider(parent, L["Width"], 100, 400, 150, offset, "CPWidth", UF.UpdateUFClassPower)
-	createOptionSlider(parent, L["Height"], 2, 30, 5, offset-70, "CPHeight", UF.UpdateUFClassPower)
-	createOptionSlider(parent, L["xOffset"], -20, 200, 12, offset-140, "CPxOffset", UF.UpdateUFClassPower)
-	createOptionSlider(parent, L["yOffset"], -200, 20, -2, offset-210, "CPyOffset", UF.UpdateUFClassPower)
+	createOptionSlider(parent, L["Width"], 100, 400, 150, offset-30, "CPWidth", UF.UpdateUFClassPower)
+	createOptionSlider(parent, L["Height"], 2, 30, 5, offset-100, "CPHeight", UF.UpdateUFClassPower)
+	createOptionSlider(parent, L["xOffset"], -20, 200, 12, offset-170, "CPxOffset", UF.UpdateUFClassPower)
+	createOptionSlider(parent, L["yOffset"], -200, 20, -2, offset-240, "CPyOffset", UF.UpdateUFClassPower)
+end
+
+function G:SetupUFAuras(parent)
+	local guiName = "NDuiGUI_UnitFrameAurasSetup"
+	toggleExtraGUI(guiName)
+	if extraGUIs[guiName] then return end
+
+	local panel = createExtraGUI(parent, guiName, L["ShowAuras"].."*")
+	local scroll = G:CreateScroll(panel, 260, 540)
+
+	local UF = B:GetModule("UnitFrames")
+	local parent, offset = scroll.child, -10
+
+	local defaultData = {
+		["Player"] = {1, 1, 9},
+		["Target"] = {2, 2, 9},
+		["Focus"] = {3, 2, 9},
+		["ToT"] = {1, 1, 5},
+	}
+	local buffOptions = {DISABLE, L["ShowAll"], L["ShowDispell"]}
+	local debuffOptions = {DISABLE, L["ShowAll"], L["BlockOthers"]}
+
+	local function createOptionGroup(parent, title, offset, value, func)
+		local default = defaultData[value]
+		createOptionTitle(parent, title, offset)
+		createOptionDropdown(parent, L["BuffType"], offset-50, buffOptions, nil, "UFs", value.."BuffType", default[1], func)
+		createOptionDropdown(parent, L["DebuffType"], offset-110, debuffOptions, nil, "UFs", value.."DebuffType", default[2], func)
+		createOptionSlider(parent, L["IconsPerRow"], 5, 20, default[3], offset-180, value.."AurasPerRow", func)
+	end
+
+	createOptionTitle(parent, GENERAL, offset)
+	createOptionCheck(parent, offset-35, L["DesaturateIcon"], "UFs", "Desaturate", UF.UpdateUFAuras, L["DesaturateIconTip"])
+	createOptionCheck(parent, offset-70, L["DebuffColor"], "UFs", "DebuffColor", UF.UpdateUFAuras, L["DebuffColorTip"])
+	createOptionGroup(parent, L["PlayerUF"], offset-110, "Player", UF.UpdateUFAuras)
+	createOptionGroup(parent, L["TargetUF"], offset-350, "Target", UF.UpdateUFAuras)
+	createOptionGroup(parent, L["TotUF"], offset-580, "ToT", UF.UpdateUFAuras)
+	createOptionGroup(parent, L["FocusUF"], offset-830, "Focus", UF.UpdateUFAuras)
 end
 
 function G:SetupActionbarStyle(parent)
