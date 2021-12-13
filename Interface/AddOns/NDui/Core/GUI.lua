@@ -104,6 +104,8 @@ G.DefaultSettings = {
 		VerticalTotems = true,
 		TotemSize = 32,
 		ClassAuras = false,
+		BuffFrame = true,
+		HideBlizBuff = false,
 		ReverseBuffs = false,
 		BuffSize = 30,
 		BuffsPerRow = 16,
@@ -220,15 +222,23 @@ G.DefaultSettings = {
 		FocusCBWidth = 320,
 		FocusCBHeight = 20,
 
+		PlayerNumBuff = 20,
+		PlayerNumDebuff = 20,
 		PlayerBuffType = 1,
 		PlayerDebuffType = 1,
 		PlayerAurasPerRow = 9,
+		TargetNumBuff = 20,
+		TargetNumDebuff = 20,
 		TargetBuffType = 2,
 		TargetDebuffType = 2,
 		TargetAurasPerRow = 9,
+		FocusNumBuff = 20,
+		FocusNumDebuff = 20,
 		FocusBuffType = 3,
 		FocusDebuffType = 2,
 		FocusAurasPerRow = 8,
+		ToTNumBuff = 6,
+		ToTNumDebuff = 6,
 		ToTBuffType = 1,
 		ToTDebuffType = 1,
 		ToTAurasPerRow = 5,
@@ -561,6 +571,10 @@ local function setupRaidFrame()
 	G:SetupRaidFrame(guiPage[4])
 end
 
+local function setupSimpleRaidFrame()
+	G:SetupSimpleRaidFrame(guiPage[4])
+end
+
 local function setupRaidDebuffs()
 	G:SetupRaidDebuffs(guiPage[4])
 end
@@ -649,6 +663,7 @@ end
 
 local function updateBuffFrame()
 	local A = B:GetModule("Auras")
+	if not A.settings then return end
 	A:UpdateOptions()
 	A:UpdateHeader(A.BuffFrame)
 	A.BuffFrame.mover:SetSize(A.BuffFrame:GetSize())
@@ -656,6 +671,7 @@ end
 
 local function updateDebuffFrame()
 	local A = B:GetModule("Auras")
+	if not A.settings then return end
 	A:UpdateOptions()
 	A:UpdateHeader(A.DebuffFrame)
 	A.DebuffFrame.mover:SetSize(A.DebuffFrame:GetSize())
@@ -776,13 +792,6 @@ local function refreshRaidFrameIcons()
 	B:GetModule("UnitFrames"):RefreshRaidFrameIcons()
 end
 
-local function updateSimpleModeGroupBy()
-	local UF = B:GetModule("UnitFrames")
-	if UF.UpdateSimpleModeHeader then
-		UF:UpdateSimpleModeHeader()
-	end
-end
-
 local function updateRaidAuras()
 	B:GetModule("UnitFrames"):UpdateRaidAuras()
 end
@@ -882,7 +891,7 @@ G.TabList = {
 	L["Actionbar"],
 	L["Bags"],
 	NewTag..L["Unitframes"],
-	L["RaidFrame"],
+	NewTag..L["RaidFrame"],
 	NewTag..L["Nameplate"],
 	NewTag..L["PlayerPlate"],
 	L["Auras"],
@@ -971,10 +980,11 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 	},
 	[4] = {
 		{1, "UFs", "RaidFrame", HeaderTag..L["UFs RaidFrame"], nil, setupRaidFrame, nil, L["RaidFrameTip"]},
+		{1, "UFs", "SimpleMode", NewTag..L["SimpleRaidFrame"], true, setupSimpleRaidFrame, nil, L["SimpleRaidFrameTip"]},
 		{},--blank
-		{1, "UFs", "PartyFrame", HeaderTag..L["UFs PartyFrame"]},
-		{1, "UFs", "HorizonParty", L["Horizon PartyFrame"], true},
-		{1, "UFs", "PartyPetFrame", HeaderTag..L["UFs PartyPetFrame"]},	
+		{1, "UFs", "PartyFrame", HeaderTag..L["PartyFrame"], nil, nil, nil, L["PartyFrameTip"]},
+		{1, "UFs", "PartyPetFrame", HeaderTag..L["PartyPetFrame"], true},
+		{1, "UFs", "HorizonParty", L["Horizon PartyFrame"]},
 		{},--blank
 		{1, "UFs", "ShowRaidDebuff", L["ShowRaidDebuff"].."*", nil, nil, updateRaidAuras, L["ShowRaidDebuffTip"]},
 		{1, "UFs", "ShowRaidBuff", L["ShowRaidBuff"].."*", true, nil, updateRaidAuras, L["ShowRaidBuffTip"]},
@@ -991,21 +1001,17 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{3, "UFs", "RaidDebuffScale", L["RaidDebuffScale"].."*", true, {.8, 2, .1}, refreshRaidFrameIcons},
 		{},--blank
 		{1, "UFs", "RaidClickSets", HeaderTag..L["Enable ClickSets"], nil, setupClickCast},
-		{1, "UFs", "RCCName", NewTag..L["ClassColor Name"].."*", true, nil, updateUFTextScale},
+		{1, "UFs", "RCCName", NewTag..L["ClassColor Name"].."*", true, nil, updateRaidTextScale},
 		{1, "UFs", "ShowSolo", L["ShowSolo"].."*", nil, nil, updateAllHeaders, L["ShowSoloTip"]},
-		{1, "UFs", "ShowTeamIndex", L["RaidFrame TeamIndex"], true},
+		{1, "UFs", "ShowTeamIndex", L["RaidFrame TeamIndex"], true, nil, updateRaidTextScale},
 		{1, "UFs", "SmartRaid", NewTag..L["SmartRaid"].."*", nil, nil, updateAllHeaders, L["SmartRaidTip"]},
 		{1, "UFs", "HorizonRaid", L["Horizon RaidFrame"], true},
 		{4, "UFs", "RaidHealthColor", L["HealthColor"].."*", nil, {L["Default Dark"], L["ClassColorHP"], L["GradientHP"]}, updateRaidTextScale},
-		{4, "UFs", "RaidHPMode", L["HealthValueType"].."*", true, {DISABLE, L["ShowHealthPercent"], L["ShowHealthCurrent"], L["ShowHealthLoss"]}, updateRaidNameText},
+		{4, "UFs", "RaidHPMode", L["HealthValueType"].."*", true, {DISABLE, L["ShowHealthPercent"], L["ShowHealthCurrent"], L["ShowHealthLoss"], L["ShowHealthLossPercent"]}, updateRaidNameText},
 		{3, "UFs", "NumGroups", L["Num Groups"], nil, {4, 8, 1}},
 		{1, "UFs", "FrequentHealth", HeaderTag..L["FrequentHealth"].."*", true, nil, updateRaidHealthMethod, L["FrequentHealthTip"]},
 		{3, "UFs", "RaidTextScale", L["UFTextScale"].."*", nil, {.8, 1.5, .05}, updateRaidTextScale},
 		{3, "UFs", "HealthFrequency", L["HealthFrequency"].."*", true, {.1, .5, .05}, updateRaidHealthMethod, L["HealthFrequencyTip"]},
-		{},--blank
-		{1, "UFs", "SimpleMode", HeaderTag..L["SimpleRaidFrame"], nil, nil, nil, L["SimpleRaidFrameTip"]},
-		{3, "UFs", "SMUnitsPerColumn", L["SimpleMode Column"], nil, {10, 40, 1}},
-		{4, "UFs", "SMGroupByIndex", L["SimpleMode GroupBy"].."*", true, {GROUP, CLASS}, updateSimpleModeGroupBy},
 		{nil, true},-- FIXME: dirty fix for now
 		{nil, true},
 	},
@@ -1082,12 +1088,14 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{},--blank
 		{1, "Auras", "Reminder", L["Enable Reminder"].."*", nil, nil, updateReminder, L["ReminderTip"]},
 		{},--blank
+		{1, "Auras", "BuffFrame", NewTag..HeaderTag..L["BuffFrame"], nil, nil, nil, L["BuffFrameTip"]},
+		{1, "Auras", "HideBlizBuff", NewTag..L["HideBlizUI"], true, nil, nil, L["HideBlizBuffTip"]},
 		{1, "Auras", "ReverseBuffs", L["ReverseBuffs"].."*", nil, nil, updateBuffFrame},
 		{1, "Auras", "ReverseDebuffs", L["ReverseDebuffs"].."*", true, nil, updateDebuffFrame},
 		{3, "Auras", "BuffSize", L["BuffSize"].."*", nil, {24, 50, 1}, updateBuffFrame},
 		{3, "Auras", "DebuffSize", L["DebuffSize"].."*", true, {24, 50, 1}, updateDebuffFrame},
 		{3, "Auras", "BuffsPerRow", L["BuffsPerRow"].."*", nil, {10, 20, 1}, updateBuffFrame},
-		{3, "Auras", "DebuffsPerRow", L["DebuffsPerRow"].."*", true, {10, 16, 1}, updateDebuffFrame},
+		{3, "Auras", "DebuffsPerRow", L["DebuffsPerRow"].."*", true, {10, 20, 1}, updateDebuffFrame},
 	},
 	[8] = {
 		{1, "Misc", "RaidTool", HeaderTag..L["Raid Manger"]},
@@ -1226,7 +1234,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{4, "ACCOUNT", "TexStyle", L["Texture Style"], false, {}},
 		{4, "ACCOUNT", "NumberFormat", L["Numberize"], true, {L["Number Type1"], L["Number Type2"], L["Number Type3"]}},
 		{2, "ACCOUNT", "CustomTex", L["CustomTex"], nil, nil, nil, L["CustomTexTip"]},
-		{3, "ACCOUNT", "SmoothAmount", NewTag..L["SmoothAmount"].."*", true, {.15, .6, .05}, updateSmoothingAmount, L["SmoothAmountTip"]},
+		{3, "ACCOUNT", "SmoothAmount", NewTag..L["SmoothAmount"].."*", true, {.15, .6, .01}, updateSmoothingAmount, L["SmoothAmountTip"]},
 	},
 	[15] = {
 	},

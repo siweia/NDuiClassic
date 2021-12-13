@@ -161,6 +161,11 @@ local function CreateRaidStyle(self)
 	UF:CreateBuffIndicator(self)
 end
 
+local function CreateSimpleRaidStyle(self)
+	self.isSimpleMode = true
+	CreateRaidStyle(self)
+end
+
 local function CreatePartyStyle(self)
 	self.isPartyFrame = true
 	CreateRaidStyle(self)
@@ -370,8 +375,8 @@ function UF:OnLogin()
 			"point", horizonParty and "LEFT" or "BOTTOM",
 			"columnAnchorPoint", "LEFT",
 			"oUF-initialConfigFunction", ([[
-			self:SetWidth(%d)
-			self:SetHeight(%d)
+				self:SetWidth(%d)
+				self:SetHeight(%d)
 			]]):format(partyWidth, partyFrameHeight))
 
 			party.groupType = "party"
@@ -400,9 +405,9 @@ function UF:OnLogin()
 				"point", horizonParty and "LEFT" or "BOTTOM",
 				"columnAnchorPoint", "LEFT",
 				"oUF-initialConfigFunction", ([[
-				self:SetWidth(%d)
-				self:SetHeight(%d)
-				self:SetAttribute("unitsuffix", "pet")
+					self:SetWidth(%d)
+					self:SetHeight(%d)
+					self:SetAttribute("unitsuffix", "pet")
 				]]):format(petWidth, petFrameHeight))
 
 				partyPet.groupType = "party"
@@ -416,10 +421,10 @@ function UF:OnLogin()
 			end
 		end
 
-		oUF:RegisterStyle("Raid", CreateRaidStyle)
-		oUF:SetActiveStyle("Raid")
-
 		if C.db["UFs"]["SimpleMode"] then
+			oUF:RegisterStyle("Raid", CreateSimpleRaidStyle)
+			oUF:SetActiveStyle("Raid")
+
 			local unitsPerColumn = C.db["UFs"]["SMUnitsPerColumn"]
 			local maxColumns = B:Round(numGroups*5 / unitsPerColumn)
 
@@ -438,8 +443,8 @@ function UF:OnLogin()
 				"point", "TOP",
 				"columnAnchorPoint", "LEFT",
 				"oUF-initialConfigFunction", ([[
-				self:SetWidth(%d)
-				self:SetHeight(%d)
+					self:SetWidth(%d)
+					self:SetHeight(%d)
 				]]):format(100*scale, 20*scale))
 				return group
 			end
@@ -478,6 +483,9 @@ function UF:OnLogin()
 			end
 			UF:UpdateSimpleModeHeader()
 		else
+			oUF:RegisterStyle("Raid", CreateRaidStyle)
+			oUF:SetActiveStyle("Raid")
+
 			local raidFrameHeight = raidHeight + C.db["UFs"]["RaidPowerHeight"] + C.mult
 
 			local function CreateGroup(name, i)
@@ -498,8 +506,8 @@ function UF:OnLogin()
 				"point", horizonRaid and "LEFT" or "TOP",
 				"columnAnchorPoint", "LEFT",
 				"oUF-initialConfigFunction", ([[
-				self:SetWidth(%d)
-				self:SetHeight(%d)
+					self:SetWidth(%d)
+					self:SetHeight(%d)
 				]]):format(raidWidth, raidFrameHeight))
 				return group
 			end

@@ -8,6 +8,9 @@ tinsert(C.defaultThemes, function()
 	B.HideBackdrop(BNToastFrame.TooltipFrame) -- isNewPatch
 	B.SetBD(BNToastFrame.TooltipFrame)
 
+	TimeAlertFrame:SetBackdrop(nil)
+	B.SetBD(TimeAlertFrame)
+
 	-- Battletag invite frame
 	BattleTagInviteFrame:SetBackdrop(nil)
 	B.SetBD(BattleTagInviteFrame)
