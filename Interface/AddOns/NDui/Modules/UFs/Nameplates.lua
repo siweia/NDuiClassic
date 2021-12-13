@@ -902,10 +902,10 @@ function UF:CreatePlayerPlate()
 	UF:CreatePowerBar(self)
 	UF:CreatePrediction(self)
 	UF:CreateClassPower(self)
+	--UF:CreateEneryTicker(self)
 	--if C.db["Auras"]["ClassAuras"] then
 	--	B:GetModule("Auras"):CreateLumos(self)
 	--end
-	if not C.db["Nameplate"]["ClassPowerOnly"] then UF:CreateEneryTicker(self) end
 
 	local textFrame = CreateFrame("Frame", nil, self.Power)
 	textFrame:SetAllPoints()
@@ -915,12 +915,6 @@ function UF:CreatePlayerPlate()
 	UF:TogglePlatePower()
 
 	UF:TogglePlateVisibility()
-
-	if C.db["Nameplate"]["PPFadeout"] and not C.db["Nameplate"]["ClassPowerOnly"] then
-		self:RegisterEvent("PLAYER_REGEN_ENABLED", UF.PlateVisibility, true)
-		self:RegisterEvent("PLAYER_REGEN_DISABLED", UF.PlateVisibility, true)
-		self:RegisterEvent("PLAYER_ENTERING_WORLD", UF.PlateVisibility, true)
-	end
 end
 
 function UF:TogglePlayerPlate()
