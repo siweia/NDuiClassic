@@ -16,14 +16,14 @@ local diceSpells = {
 function A:PostCreateLumos(self)
 	local iconSize = (self:GetWidth() - 10)/6
 	local buttons = {}
-	local offset = C.db["Nameplate"]["NameplateClassPower"] and C.margin or (C.margin*2 + C.db["Nameplate"]["PPBarHeight"])
+	local parent = C.db["Nameplate"]["TargetPower"] and self.Health or self.ClassPowerBar
 	for i = 1, 6 do
 		local bu = CreateFrame("Frame", nil, self.Health)
 		bu:SetSize(iconSize, iconSize)
 		bu.Text = B.CreateFS(bu, 12, diceSpells[i].text, false, "TOP", 1, 12)
 		B.AuraIcon(bu)
 		if i == 1 then
-			bu:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", 0, offset)
+			bu:SetPoint("BOTTOMLEFT", parent, "TOPLEFT", 0, C.margin)
 		else
 			bu:SetPoint("LEFT", buttons[i-1], "RIGHT", 2, 0)
 		end

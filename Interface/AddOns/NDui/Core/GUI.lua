@@ -150,6 +150,10 @@ G.DefaultSettings = {
 		RaidClickSets = false,
 		ShowTeamIndex = false,
 		ClassPower = true,
+		CPWidth = 150,
+		CPHeight = 5,
+		CPxOffset = 12,
+		CPyOffset = -2,
 		LagString = true,
 		RaidBuffIndicator = true,
 		PartyFrame = true,
@@ -270,6 +274,7 @@ G.DefaultSettings = {
 		PPHealthHeight = 5,
 		PPPowerHeight = 5,
 		PPPowerText = false,
+		NameType = 5,
 		HealthType = 2,
 		SecureColor = {r=1, g=0, b=1},
 		TransColor = {r=1, g=.8, b=0},
@@ -278,7 +283,7 @@ G.DefaultSettings = {
 		--DPSRevertThreat = false,
 		PPFadeout = true,
 		PPFadeoutAlpha = 0,
-		NameplateClassPower = false,
+		TargetPower = false,
 		MinScale = 1,
 		MinAlpha = 1,
 		ColorBorder = false,
@@ -527,6 +532,10 @@ local function setupCastbar()
 	G:SetupCastbar(guiPage[3])
 end
 
+local function setupClassPower()
+	G:SetupUFClassPower(guiPage[3])
+end
+
 local function setupRaidFrame()
 	G:SetupRaidFrame(guiPage[4])
 end
@@ -699,6 +708,16 @@ local function togglePlateVisibility()
 	B:GetModule("UnitFrames"):TogglePlateVisibility()
 end
 
+local function togglePlayerPlate()
+	refreshNameplates()
+	B:GetModule("UnitFrames"):TogglePlayerPlate()
+end
+
+local function toggleTargetClassPower()
+	refreshNameplates()
+	B:GetModule("UnitFrames"):ToggleTargetClassPower()
+end
+
 local function updatePlateScale()
 	B:GetModule("UnitFrames"):UpdatePlateScale()
 end
@@ -713,6 +732,10 @@ end
 
 local function updateUFTextScale()
 	B:GetModule("UnitFrames"):UpdateTextScale()
+end
+
+local function toggleUFClassPower()
+	B:GetModule("UnitFrames"):ToggleUFClassPower()
 end
 
 local function updateRaidTextScale()
@@ -832,8 +855,8 @@ G.HealthValues = {DISABLE, L["ShowHealthDefault"], L["ShowHealthCurMax"], L["Sho
 G.TabList = {
 	L["Actionbar"],
 	L["Bags"],
-	L["Unitframes"],
-	NewTag..L["RaidFrame"],
+	NewTag..L["Unitframes"],
+	L["RaidFrame"],
 	NewTag..L["Nameplate"],
 	L["PlayerPlate"],
 	L["Auras"],
@@ -896,7 +919,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{3, "Bags", "BankWidth", L["Bank Width"].."*", true, {10, 40, 1}, updateBagSize},
 	},
 	[3] = {
-		{1, "UFs", "Enable", HeaderTag..L["Enable UFs"], nil, setupUnitFrame, nil, L["HideUFWarning"]},
+		{1, "UFs", "Enable", NewTag..HeaderTag..L["Enable UFs"], nil, setupUnitFrame, nil, L["HideUFWarning"]},
 		{},--blank
 		{1, "UFs", "Castbars", HeaderTag..L["UFs Castbar"], nil, setupCastbar},
 		{1, "UFs", "LagString", L["Castbar LagString"], true},
@@ -907,10 +930,10 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "UFs", "EnergyTicker", L["EnergyTicker"]},
 		{1, "UFs", "ToToT", HeaderTag..L["UFs ToToT"], true},
 		{1, "UFs", "Portrait", L["UFs Portrait"]},
-		{1, "UFs", "ClassPower", L["UFs ClassPower"], true},
+		{1, "UFs", "ClassPower", NewTag..L["UFs ClassPower"].."*", true, setupClassPower, toggleUFClassPower},
+		{1, "UFs", "DesaturateIcon", L["DesaturateIcon"].."*", nil, nil, nil, L["DesaturateIconTip"]},
 		{1, "UFs", "PlayerDebuff", L["Player Debuff"]},
 		{1, "UFs", "ToTAuras", L["ToT Debuff"], true},
-		{1, "UFs", "DesaturateIcon", L["DesaturateIcon"].."*", nil, nil, nil, L["DesaturateIconTip"]},
 		{1, "UFs", "EnergyTicker", L["EnergyTicker"]},
 		{4, "UFs", "HealthColor", L["HealthColor"].."*", nil, {L["Default Dark"], L["ClassColorHP"], L["GradientHP"]}, updateUFTextScale},
 		{3, "UFs", "TargetAurasPerRow", L["TargetAurasPerRow"].."*", true, {5, 20, 1}, updateTargetFrameAuras},
@@ -974,11 +997,12 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{3, "Nameplate", "maxAuras", L["Max Auras"].."*", false, {1, 20, 1}, refreshNameplates},
 		{3, "Nameplate", "AuraSize", L["Auras Size"].."*", true, {18, 40, 1}, refreshNameplates},
 		{},--blank
+		{4, "Nameplate", "NameType", NewTag..L["NameTextType"].."*", nil, {DISABLE, L["Tag:name"], L["Tag:levelname"], L["Tag:rarename"], L["Tag:rarelevelname"]}, refreshNameplates, L["PlateLevelTagTip"]},
+		{4, "Nameplate", "HealthType", NewTag..L["HealthValueType"].."*", true, G.HealthValues, refreshNameplates},
 		{4, "Nameplate", "TargetIndicator", L["TargetIndicator"].."*", nil, {DISABLE, L["TopArrow"], L["RightArrow"], L["TargetGlow"], L["TopNGlow"], L["RightNGlow"]}, refreshNameplates},
-		{4, "Nameplate", "HealthType", L["HealthValueType"].."*", true, G.HealthValues, refreshNameplates},
-		{1, "Nameplate", "FriendlyCC", L["Friendly CC"].."*"},
-		{1, "Nameplate", "HostileCC", L["Hostile CC"].."*"},
 		{3, "Nameplate", "ExecuteRatio", "|cffff0000"..L["ExecuteRatio"].."*", true, {0, 90, 1}, nil, L["ExecuteRatioTip"]},
+		{1, "Nameplate", "FriendlyCC", L["Friendly CC"].."*"},
+		{1, "Nameplate", "HostileCC", L["Hostile CC"].."*", true},
 		{1, "Nameplate", "FriendlyThru", NewTag..L["Friendly ClickThru"].."*", nil, nil, updateClickThru},
 		{1, "Nameplate", "EnemyThru", NewTag..L["Enemy ClickThru"].."*", true, nil, updateClickThru},
 		{1, "Nameplate", "CastbarGlow", L["PlateCastbarGlow"].."*", nil, setupPlateCastbarGlow, nil, L["PlateCastbarGlowTip"]},
@@ -1009,16 +1033,16 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{3, "Nameplate", "MinAlpha", L["Nameplate MinAlpha"].."*", true, {.5, 1, .1}, updatePlateAlpha},
 	},
 	[6] = {
-		{1, "Nameplate", "ShowPlayerPlate", HeaderTag..L["Enable PlayerPlate"]},
+		{1, "Nameplate", "ShowPlayerPlate", HeaderTag..L["Enable PlayerPlate"].."*", nil, nil, togglePlayerPlate},
+		{1, "Nameplate", "TargetPower", HeaderTag..L["TargetClassPower"].."*", true, nil, toggleTargetClassPower},
 		{},--blank
 		--{1, "Auras", "ClassAuras", L["Enable ClassAuras"], true},
-		{1, "Nameplate", "NameplateClassPower", L["Nameplate ClassPower"]},
-		{1, "Nameplate", "PPFadeout", L["PlayerPlate Fadeout"].."*", true, nil, togglePlateVisibility},
-		{1, "Nameplate", "ClassPowerOnly", L["Nameplate ClassPowerOnly"], nil},
+		{1, "Nameplate", "PPFadeout", L["PlayerPlate Fadeout"].."*", nil, nil, togglePlateVisibility},
+	--	{1, "Nameplate", "ClassPowerOnly", L["Nameplate ClassPowerOnly"], nil},
 		{1, "Nameplate", "PPPowerText", L["PlayerPlate PowerText"].."*", nil, nil, togglePlatePower},
 		{3, "Nameplate", "PPFadeoutAlpha", L["PlayerPlate FadeoutAlpha"].."*", true, {0, .5, .05}, togglePlateVisibility},
 		{},--blank
-		{3, "Nameplate", "PPWidth", L["PlayerPlate HPWidth"].."*", false, {150, 300, 1}, refreshNameplates},
+		{3, "Nameplate", "PPWidth", L["Width"].."*", false, {150, 300, 1}, refreshNameplates},
 		{3, "Nameplate", "PPBarHeight", L["PlayerPlate CPHeight"].."*", true, {2, 15, 1}, refreshNameplates},
 		{3, "Nameplate", "PPHealthHeight", L["PlayerPlate HPHeight"].."*", false, {2, 15, 1}, refreshNameplates},
 		{3, "Nameplate", "PPPowerHeight", L["PlayerPlate MPHeight"].."*", true, {2, 15, 1}, refreshNameplates},
