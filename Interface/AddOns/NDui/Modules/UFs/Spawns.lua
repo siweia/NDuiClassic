@@ -28,6 +28,7 @@ local function CreatePlayerStyle(self)
 	UF:CreatePrediction(self)
 	UF:CreateFCT(self)
 	UF:CreateAddPower(self)
+	UF:CreateClassPower(self)
 
 	if not C.db["Nameplate"]["ShowPlayerPlate"] or C.db["Nameplate"]["ClassPowerOnly"] then
 		UF:CreateEneryTicker(self)
@@ -35,9 +36,6 @@ local function CreatePlayerStyle(self)
 	if C.db["UFs"]["Castbars"] then
 		UF:ReskinMirrorBars()
 		--UF:ReskinTimerTrakcer(self)
-	end
-	if C.db["UFs"]["ClassPower"] and not C.db["Nameplate"]["ShowPlayerPlate"] then
-		UF:CreateClassPower(self)
 	end
 	if not C.db["Misc"]["ExpRep"] then UF:CreateExpRepBar(self) end
 	if C.db["UFs"]["PlayerDebuff"] then UF:CreateDebuffs(self) end
@@ -255,13 +253,19 @@ function UF:OnLogin()
 		oUF:SpawnNamePlates("oUF_NPs", UF.PostUpdatePlates)
 	end
 
-	if C.db["Nameplate"]["ShowPlayerPlate"] then
+	do -- a playerplate-like PlayerFrame
 		oUF:RegisterStyle("PlayerPlate", UF.CreatePlayerPlate)
 		oUF:SetActiveStyle("PlayerPlate")
 		local plate = oUF:Spawn("player", "oUF_PlayerPlate", true)
 		plate.mover = B.Mover(plate, L["PlayerPlate"], "PlayerPlate", C.UFs.PlayerPlate)
+		UF:TogglePlayerPlate()
+	end
 
-		UF:TogglePlayerPlateElements()
+	do	-- fake nameplate for target class power
+		oUF:RegisterStyle("TargetPlate", UF.CreateTargetPlate)
+		oUF:SetActiveStyle("TargetPlate")
+		oUF:Spawn("player", "oUF_TargetPlate", true)
+		UF:ToggleTargetClassPower()
 	end
 
 	-- Default Clicksets for RaidFrame
@@ -281,6 +285,7 @@ function UF:OnLogin()
 		local player = oUF:Spawn("player", "oUF_Player")
 		B.Mover(player, L["PlayerUF"], "PlayerUF", C.UFs.PlayerPos)
 		UF.ToggleCastBar(player, "Player")
+		UF:ToggleUFClassPower()
 
 		oUF:SetActiveStyle("Target")
 		local target = oUF:Spawn("target", "oUF_Target")
