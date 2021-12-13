@@ -117,8 +117,7 @@ G.DefaultSettings = {
 	UFs = {
 		Enable = true,
 		Portrait = true,
-		PlayerDebuff = false,
-		ToTAuras = false,
+		ShowAuras = true,
 		Arena = true,
 		Castbars = true,
 		SwingBar = false,
@@ -170,18 +169,19 @@ G.DefaultSettings = {
 		BuffIndicatorScale = 1,
 		EnergyTicker = false,
 		UFTextScale = 1,
-		SmoothAmount = .3,
 		ToToT = false,
 		RaidTextScale = 1,
 		FrequentHealth = false,
 		HealthFrequency = .2,
-		TargetAurasPerRow = 9,
 		ShowRaidBuff = false,
 		RaidBuffSize = 12,
 		ShowRaidDebuff = true,
 		RaidDebuffSize = 12,
 		SmartRaid = false,
-		DesaturateIcon = true,
+		Desaturate = true,
+		DebuffColor = false,
+		CCName = true,
+		RCCName = true,
 
 		PlayerWidth = 245,
 		PlayerHeight = 24,
@@ -198,7 +198,7 @@ G.DefaultSettings = {
 		PetWidth = 120,
 		PetHeight = 18,
 		PetPowerHeight = 2,
-		PetHPTag = 5,
+		PetHPTag = 4,
 		BossWidth = 150,
 		BossHeight = 22,
 		BossPowerHeight = 2,
@@ -216,6 +216,19 @@ G.DefaultSettings = {
 		FocusCB = true,
 		FocusCBWidth = 320,
 		FocusCBHeight = 20,
+
+		PlayerBuffType = 1,
+		PlayerDebuffType = 1,
+		PlayerAurasPerRow = 9,
+		TargetBuffType = 2,
+		TargetDebuffType = 2,
+		TargetAurasPerRow = 9,
+		FocusBuffType = 3,
+		FocusDebuffType = 2,
+		FocusAurasPerRow = 8,
+		ToTBuffType = 1,
+		ToTDebuffType = 1,
+		ToTAurasPerRow = 5,
 	},
 	Chat = {
 		Sticky = false,
@@ -286,7 +299,8 @@ G.DefaultSettings = {
 		TargetPower = false,
 		MinScale = 1,
 		MinAlpha = 1,
-		ColorBorder = false,
+		Desaturate = true,
+		DebuffColor = false,
 		QuestIndicator = true,
 		NameOnlyMode = false,
 		ExecuteRatio = 0,
@@ -445,6 +459,7 @@ G.AccountSettings = {
 	Help = {},
 	CustomTex = "",
 	MajorSpells = {},
+	SmoothAmount = .25,
 }
 
 -- Initial settings
@@ -533,6 +548,10 @@ end
 
 local function setupClassPower()
 	G:SetupUFClassPower(guiPage[3])
+end
+
+local function setupUFAuras()
+	G:SetupUFAuras(guiPage[3])
 end
 
 local function setupRaidFrame()
@@ -737,16 +756,16 @@ local function toggleUFClassPower()
 	B:GetModule("UnitFrames"):ToggleUFClassPower()
 end
 
+local function toggleAllAuras()
+	B:GetModule("UnitFrames"):ToggleAllAuras()
+end
+
 local function updateRaidTextScale()
 	B:GetModule("UnitFrames"):UpdateRaidTextScale()
 end
 
 local function refreshRaidFrameIcons()
 	B:GetModule("UnitFrames"):RefreshRaidFrameIcons()
-end
-
-local function updateTargetFrameAuras()
-	B:GetModule("UnitFrames"):UpdateTargetAuras()
 end
 
 local function updateSimpleModeGroupBy()
@@ -765,7 +784,7 @@ local function updateRaidHealthMethod()
 end
 
 local function updateSmoothingAmount()
-	B:SetSmoothingAmount(C.db["UFs"]["SmoothAmount"])
+	B:SetSmoothingAmount(NDuiADB["SmoothAmount"])
 end
 
 local function updateAllHeaders()
@@ -857,7 +876,7 @@ G.TabList = {
 	NewTag..L["Unitframes"],
 	L["RaidFrame"],
 	NewTag..L["Nameplate"],
-	L["PlayerPlate"],
+	NewTag..L["PlayerPlate"],
 	L["Auras"],
 	L["Raid Tools"],
 	L["ChatFrame"],
@@ -919,25 +938,21 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 	},
 	[3] = {
 		{1, "UFs", "Enable", NewTag..HeaderTag..L["Enable UFs"], nil, setupUnitFrame, nil, L["HideUFWarning"]},
+		{1, "UFs", "Arena", L["Arena Frame"], true},
+		{1, "UFs", "ShowAuras", NewTag..L["ShowAuras"].."*", nil, setupUFAuras, toggleAllAuras},
+		{1, "UFs", "ClassPower", NewTag..L["UFs ClassPower"].."*", true, setupClassPower, toggleUFClassPower},
+		{1, "UFs", "Portrait", L["UFs Portrait"]},
+		{1, "UFs", "CCName", NewTag..L["ClassColor Name"].."*", true, nil, updateUFTextScale},
+		{3, "UFs", "UFTextScale", L["UFTextScale"].."*", nil, {.8, 1.5, .05}, updateUFTextScale},
+		{4, "UFs", "HealthColor", L["HealthColor"].."*", true, {L["Default Dark"], L["ClassColorHP"], L["GradientHP"]}, updateUFTextScale},
 		{},--blank
 		{1, "UFs", "Castbars", HeaderTag..L["UFs Castbar"], nil, setupCastbar},
 		{1, "UFs", "LagString", L["Castbar LagString"], true},
 		{1, "UFs", "SwingBar", L["UFs SwingBar"]},
 		{1, "UFs", "SwingTimer", L["UFs SwingTimer"], true, nil, nil, L["SwingTimer Tip"]},
 		{},--blank
-		--{1, "UFs", "Arena", HeaderTag..L["Arena Frame"]},
-		{1, "UFs", "EnergyTicker", L["EnergyTicker"]},
-		{1, "UFs", "ToToT", HeaderTag..L["UFs ToToT"], true},
-		{1, "UFs", "Portrait", L["UFs Portrait"]},
-		{1, "UFs", "ClassPower", NewTag..L["UFs ClassPower"].."*", true, setupClassPower, toggleUFClassPower},
-		{1, "UFs", "DesaturateIcon", L["DesaturateIcon"].."*", nil, nil, nil, L["DesaturateIconTip"]},
-		{1, "UFs", "PlayerDebuff", L["Player Debuff"]},
-		{1, "UFs", "ToTAuras", L["ToT Debuff"], true},
-		{1, "UFs", "EnergyTicker", L["EnergyTicker"]},
-		{4, "UFs", "HealthColor", L["HealthColor"].."*", nil, {L["Default Dark"], L["ClassColorHP"], L["GradientHP"]}, updateUFTextScale},
-		{3, "UFs", "TargetAurasPerRow", L["TargetAurasPerRow"].."*", true, {5, 20, 1}, updateTargetFrameAuras},
-		{3, "UFs", "UFTextScale", L["UFTextScale"].."*", nil, {.8, 1.5, .05}, updateUFTextScale},
-		{3, "UFs", "SmoothAmount", HeaderTag..L["SmoothAmount"].."*", true, {.15, .6, .05}, updateSmoothingAmount, L["SmoothAmountTip"]},
+		{1, "UFs", "ToToT", HeaderTag..L["UFs ToToT"]},
+		{1, "UFs", "EnergyTicker", L["EnergyTicker"], true},
 		{},--blank
 		{1, "UFs", "CombatText", HeaderTag..L["UFs CombatText"]},
 		{1, "UFs", "AutoAttack", L["CombatText AutoAttack"].."*"},
@@ -968,7 +983,8 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{3, "UFs", "RaidDebuffScale", L["RaidDebuffScale"].."*", true, {.8, 2, .1}, refreshRaidFrameIcons},
 		{},--blank
 		{1, "UFs", "RaidClickSets", HeaderTag..L["Enable ClickSets"], nil, setupClickCast},
-		{1, "UFs", "ShowSolo", NewTag..L["ShowSolo"].."*", nil, nil, updateAllHeaders, L["ShowSoloTip"]},
+		{1, "UFs", "RCCName", NewTag..L["ClassColor Name"].."*", true, nil, updateUFTextScale},
+		{1, "UFs", "ShowSolo", L["ShowSolo"].."*", nil, nil, updateAllHeaders, L["ShowSoloTip"]},
 		{1, "UFs", "ShowTeamIndex", L["RaidFrame TeamIndex"], true},
 		{1, "UFs", "SmartRaid", NewTag..L["SmartRaid"].."*", nil, nil, updateAllHeaders, L["SmartRaidTip"]},
 		{1, "UFs", "HorizonRaid", L["Horizon RaidFrame"], true},
@@ -991,7 +1007,8 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Nameplate", "NameOnlyMode", L["NameOnlyMode"].."*", true, nil, nil, L["NameOnlyModeTip"]},
 		{},--blank
 		{1, "Nameplate", "PlateAuras", HeaderTag..L["PlateAuras"].."*", nil, setupNameplateFilter, refreshNameplates},
-		{1, "Nameplate", "ColorBorder", L["ColorBorder"].."*", nil, nil, refreshNameplates},
+		{1, "Nameplate", "Desaturate", NewTag..L["DesaturateIcon"].."*", nil, nil, refreshNameplates, L["DesaturateIconTip"]},
+		{1, "Nameplate", "DebuffColor", NewTag..L["DebuffColor"].."*", nil, nil, refreshNameplates, L["DebuffColorTip"]},
 		{4, "Nameplate", "AuraFilter", L["NameplateAuraFilter"].."*", true, {L["BlackNWhite"], L["PlayerOnly"], L["IncludeCrowdControl"]}, refreshNameplates},
 		{3, "Nameplate", "maxAuras", L["Max Auras"].."*", false, {1, 20, 1}, refreshNameplates},
 		{3, "Nameplate", "AuraSize", L["Auras Size"].."*", true, {18, 40, 1}, refreshNameplates},
@@ -1033,7 +1050,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 	},
 	[6] = {
 		{1, "Nameplate", "ShowPlayerPlate", HeaderTag..L["Enable PlayerPlate"].."*", nil, nil, togglePlayerPlate},
-		{1, "Nameplate", "TargetPower", HeaderTag..L["TargetClassPower"].."*", true, nil, toggleTargetClassPower},
+		{1, "Nameplate", "TargetPower", NewTag..HeaderTag..L["TargetClassPower"].."*", true, nil, toggleTargetClassPower},
 		{},--blank
 		--{1, "Auras", "ClassAuras", L["Enable ClassAuras"], true},
 		{1, "Nameplate", "PPFadeout", L["PlayerPlate Fadeout"].."*", nil, nil, togglePlateVisibility},
@@ -1185,8 +1202,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 	},
 	[14] = {
 		{1, "ACCOUNT", "VersionCheck", L["Version Check"]},
-		{},--blank
-		{1, "ACCOUNT", "DisableInfobars", HeaderTag..L["DisableInfobars"]},
+		{1, "ACCOUNT", "DisableInfobars", "|cffff0000"..L["DisableInfobars"], true},
 		{3, "Misc", "MaxAddOns", L["SysMaxAddOns"].."*", nil,  {1, 50, 1}, nil, L["SysMaxAddOnsTip"]},
 		{3, "Misc", "InfoSize", L["InfobarFontSize"].."*", true,  {10, 50, 1}, updateInfobarSize},
 		{2, "Misc", "InfoStrLeft", L["LeftInfobar"].."*", nil, nil, updateInfobarAnchor, L["InfobarStrTip"]},
@@ -1198,6 +1214,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{4, "ACCOUNT", "TexStyle", L["Texture Style"], false, {}},
 		{4, "ACCOUNT", "NumberFormat", L["Numberize"], true, {L["Number Type1"], L["Number Type2"], L["Number Type3"]}},
 		{2, "ACCOUNT", "CustomTex", L["CustomTex"], nil, nil, nil, L["CustomTexTip"]},
+		{3, "ACCOUNT", "SmoothAmount", NewTag..L["SmoothAmount"].."*", true, {.15, .6, .05}, updateSmoothingAmount, L["SmoothAmountTip"]},
 	},
 	[15] = {
 	},
@@ -1340,8 +1357,7 @@ local function CreateOption(i)
 				bu:SetScript("OnClick", data)
 			end
 			if tooltip then
-				cb.title = L["Tips"]
-				B.AddTooltip(cb, "ANCHOR_RIGHT", tooltip, "info")
+				B.AddTooltip(cb, "ANCHOR_RIGHT", tooltip, "info", true)
 			end
 		-- Editbox
 		elseif optType == 2 then
@@ -1363,10 +1379,9 @@ local function CreateOption(i)
 			eb:HookScript("OnEnterPressed", acceptEditbox)
 
 			B.CreateFS(eb, 14, name, "system", "CENTER", 0, 25)
-			eb.title = L["Tips"]
 			local tip = L["EditBox Tip"]
 			if tooltip then tip = tooltip.."|n"..tip end
-			B.AddTooltip(eb, "ANCHOR_RIGHT", tip, "info")
+			B.AddTooltip(eb, "ANCHOR_RIGHT", tip, "info", true)
 		-- Slider
 		elseif optType == 3 then
 			local min, max, step = unpack(data)
@@ -1387,8 +1402,7 @@ local function CreateOption(i)
 			s:SetScript("OnValueChanged", onSliderChanged)
 			s.value:SetText(B:Round(CheckUIOption(key, value), 2))
 			if tooltip then
-				s.title = L["Tips"]
-				B.AddTooltip(s, "ANCHOR_RIGHT", tooltip, "info")
+				B.AddTooltip(s, "ANCHOR_RIGHT", tooltip, "info", true)
 			end
 		-- Dropdown
 		elseif optType == 4 then
@@ -1423,8 +1437,7 @@ local function CreateOption(i)
 
 			B.CreateFS(dd, 14, name, "system", "CENTER", 0, 25)
 			if tooltip then
-				dd.title = L["Tips"]
-				B.AddTooltip(dd, "ANCHOR_RIGHT", tooltip, "info")
+				B.AddTooltip(dd, "ANCHOR_RIGHT", tooltip, "info", true)
 			end
 		-- Colorswatch
 		elseif optType == 5 then
