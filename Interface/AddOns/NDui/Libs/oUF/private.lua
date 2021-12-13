@@ -21,6 +21,10 @@ function Private.error(...)
 	Private.print('|cffff0000Error:|r ' .. string.format(...))
 end
 
+function Private.nierror(...)
+	return geterrorhandler()(...)
+end
+
 function Private.unitExists(unit)
 	return unit and (UnitExists(unit) or ShowBossFrameWhenUninteractable(unit))
 end
@@ -60,4 +64,17 @@ function Private.unitSelectionType(unit, considerHostile)
 	else
 		return selectionTypes[UnitSelectionType(unit, true)]
 	end
+end
+
+function Private.xpcall(func, ...)
+	return xpcall(func, Private.nierror, ...)
+end
+
+function Private.validateEvent(event)
+	local isOK = xpcall(validator.RegisterEvent, Private.nierror, validator, event)
+	if(isOK) then
+		validator:UnregisterEvent(event)
+	end
+
+	return isOK
 end

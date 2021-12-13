@@ -144,12 +144,40 @@ function UF:UpdateRaidHealthMethod()
 	end
 end
 
+UF.VariousTagIndex = {
+	[1] = "",
+	[2] = "currentpercent",
+	[3] = "currentmax",
+	[4] = "current",
+	[5] = "percent",
+	[6] = "loss",
+	[7] = "losspercent",
+}
+
+function UF:UpdateFrameHealthTag()
+	local mystyle = self.mystyle
+	local valueType
+	if mystyle == "player" or mystyle == "target" then
+		valueType = UF.VariousTagIndex[C.db["UFs"]["PlayerHPTag"]]
+	elseif mystyle == "focus" then
+		valueType = UF.VariousTagIndex[C.db["UFs"]["FocusHPTag"]]
+	elseif mystyle == "boss" or mystyle == "arena" then
+		valueType = UF.VariousTagIndex[C.db["UFs"]["BossHPTag"]]
+	else
+		valueType = UF.VariousTagIndex[C.db["UFs"]["PetHPTag"]]
+	end
+
+	self:Tag(self.healthValue, "[VariousHP("..valueType..")]")
+	self.healthValue:UpdateTag()
+end
+
 function UF:CreateHealthText(self)
 	local mystyle = self.mystyle
 	local textFrame = CreateFrame("Frame", nil, self)
 	textFrame:SetAllPoints(self.Health)
 
 	local name = B.CreateFS(textFrame, retVal(self, 13, 12, 12, 12, C.db["Nameplate"]["NameTextSize"]), "", false, "LEFT", 3, 0)
+	self.nameText = name
 	name:SetJustifyH("LEFT")
 	if mystyle == "raid" then
 		name:SetWidth(self:GetWidth()*.95)
@@ -193,11 +221,12 @@ function UF:CreateHealthText(self)
 	end
 
 	local hpval = B.CreateFS(textFrame, retVal(self, 14, 13, 13, 13, C.db["Nameplate"]["HealthTextSize"]), "", false, "RIGHT", -3, 0)
+	self.healthValue = hpval
 	if mystyle == "raid" then
 		self:Tag(hpval, "[raidhp]")
 		if self.isPartyPet then
 			hpval:SetPoint("RIGHT", -3, -1)
-			self:Tag(hpval, "[hp]")
+			self:Tag(hpval, "[VariousHP(percent)]")
 		elseif C.db["UFs"]["SimpleMode"] and not self.isPartyFrame then
 			hpval:SetPoint("RIGHT", -4, 0)
 		else
@@ -208,13 +237,10 @@ function UF:CreateHealthText(self)
 		hpval:SetScale(C.db["UFs"]["RaidTextScale"])
 	elseif mystyle == "nameplate" then
 		hpval:SetPoint("RIGHT", self, 0, 5)
-		self:Tag(hpval, "[nphp]")
+		self:Tag(hpval, "[VariousHP(currentpercent)]")
 	else
-		self:Tag(hpval, "[hp]")
+		UF.UpdateFrameHealthTag(self)
 	end
-
-	self.nameText = name
-	self.healthValue = hpval
 end
 
 function UF:UpdateRaidNameText()
@@ -319,6 +345,21 @@ function UF:CreatePowerBar(self)
 	UF:UpdatePowerBarColor(self)
 end
 
+function UF:UpdateFramePowerTag()
+	local mystyle = self.mystyle
+	local valueType
+	if mystyle == "player" or mystyle == "target" then
+		valueType = UF.VariousTagIndex[C.db["UFs"]["PlayerMPTag"]]
+	elseif mystyle == "focus" then
+		valueType = UF.VariousTagIndex[C.db["UFs"]["FocusMPTag"]]
+	else
+		valueType = UF.VariousTagIndex[C.db["UFs"]["BossMPTag"]]
+	end
+
+	self:Tag(self.powerText, "[color][VariousMP("..valueType..")]")
+	self.powerText:UpdateTag()
+end
+
 function UF:CreatePowerText(self)
 	local textFrame = CreateFrame("Frame", nil, self)
 	textFrame:SetAllPoints(self.Power)
@@ -332,8 +373,8 @@ function UF:CreatePowerText(self)
 	elseif mystyle == "focus" then
 		ppval:SetPoint("RIGHT", -3, C.db["UFs"]["FocusPowerOffset"])
 	end
-	self:Tag(ppval, "[color][power]")
 	self.powerText = ppval
+	UF.UpdateFramePowerTag(self)
 end
 
 local textScaleFrames = {
@@ -498,8 +539,8 @@ function UF:CreateCastBar(self)
 		cb:SetHeight(self:GetHeight())
 	end
 
-	local timer = B.CreateFS(cb, retVal(self, 12, 12, 12, 12, C.db["Nameplate"]["NameTextSize"]), "11", false, "RIGHT", -2, 0)
-	local name = B.CreateFS(cb, retVal(self, 12, 12, 12, 12, C.db["Nameplate"]["NameTextSize"]), "11", false, "LEFT", 2, 0)
+	local timer = B.CreateFS(cb, 12, "", false, "RIGHT", -2, 0)
+	local name = B.CreateFS(cb, 12, "", false, "LEFT", 2, 0)
 	name:SetPoint("RIGHT", timer, "LEFT", -5, 0)
 	name:SetJustifyH("LEFT")
 
@@ -671,7 +712,7 @@ function UF.PostUpdateIcon(element, _, button, _, _, duration, expiration, debuf
 	local fontSize = element.fontSize or element.size*.6
 	button.count:SetFont(DB.Font[1], fontSize, DB.Font[3])
 
-	if button.isDebuff and filteredStyle[style] and not button.isPlayer then
+	if C.db["UFs"]["DesaturateIcon"] and button.isDebuff and filteredStyle[style] and not button.isPlayer then
 		button.icon:SetDesaturated(true)
 	else
 		button.icon:SetDesaturated(false)
@@ -702,12 +743,9 @@ local function bolsterPreUpdate(element)
 end
 
 local function bolsterPostUpdate(element)
-	if not element.bolsterIndex then return end
-	for _, button in pairs(element) do
-		if button == element.bolsterIndex then
-			button.count:SetText(element.bolster)
-			return
-		end
+	local button = element.bolsterIndex
+	if button then
+		button.count:SetText(element.bolster)
 	end
 end
 

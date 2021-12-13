@@ -42,44 +42,61 @@ local function ValueAndPercent(cur, per)
 	end
 end
 
-local function GetUnitHealthPerc(unit)
-	local unitHealth, unitMaxHealth = UnitHealth(unit), UnitHealthMax(unit)
-	if unitMaxHealth == 0 then
-		return 0, unitHealth
+local function GetCurrentAndMax(cur, max)
+	if cur == max then
+		return B.Numb(max)
 	else
-		return B:Round(unitHealth / unitMaxHealth * 100, 1), unitHealth
+		return B.Numb(cur).." | "..B.Numb(max)
 	end
 end
 
-oUF.Tags.Methods["hp"] = function(unit)
+oUF.Tags.Methods["VariousHP"] = function(unit, _, arg1)
 	if UnitIsDeadOrGhost(unit) or not UnitIsConnected(unit) or UnitIsFeignDeath(unit) then
 		return oUF.Tags.Methods["DDG"](unit)
-	else
-		local per, cur = GetUnitHealthPerc(unit)
-		if unit == "player" or unit == "target" or unit == "focus" then
-			return ValueAndPercent(cur, per)
-		else
-			return ColorPercent(per)
-		end
+	end
+
+	local cur, max = UnitHealth(unit), UnitHealthMax(unit)
+	local per = max == 0 and 0 or B:Round(cur/max * 100, 1)
+
+	if arg1 == "currentpercent" then
+		return ValueAndPercent(cur, per)
+	elseif arg1 == "currentmax" then
+		return GetCurrentAndMax(cur, max)
+	elseif arg1 == "current" then
+		return B.Numb(cur)
+	elseif arg1 == "percent" then
+		return per < 100 and ColorPercent(per)
+	elseif arg1 == "loss" then
+		local loss = max - cur
+		return loss ~= 0 and B.Numb(loss)
+	elseif arg1 == "losspercent" then
+		local loss = max - cur
+		return loss ~= 0 and B:Round(loss/max*100, 1)
 	end
 end
-oUF.Tags.Events["hp"] = "UNIT_HEALTH_FREQUENT UNIT_MAXHEALTH UNIT_NAME_UPDATE UNIT_CONNECTION PLAYER_FLAGS_CHANGED"
+oUF.Tags.Events["VariousHP"] = "UNIT_HEALTH UNIT_MAXHEALTH UNIT_NAME_UPDATE UNIT_CONNECTION PLAYER_FLAGS_CHANGED"
 
-oUF.Tags.Methods["power"] = function(unit)
-	local cur, maxPower = UnitPower(unit), UnitPowerMax(unit)
-	local per = maxPower == 0 and 0 or B:Round(cur/maxPower * 100)
+oUF.Tags.Methods["VariousMP"] = function(unit, _, arg1)
+	local cur, max = UnitPower(unit), UnitPowerMax(unit)
+	local per = max == 0 and 0 or B:Round(cur/max * 100)
 
-	if unit == "player" or unit == "target" or unit == "focus" then
-		if per < 100 and UnitPowerType(unit) == 0 and maxPower ~= 0 then
-			return B.Numb(cur).." | "..per
-		else
-			return B.Numb(cur)
-		end
-	else
-		return per
+	if arg1 == "currentpercent" then
+		return ValueAndPercent(cur, per)
+	elseif arg1 == "currentmax" then
+		return GetCurrentAndMax(cur, max)
+	elseif arg1 == "current" then
+		return B.Numb(cur)
+	elseif arg1 == "percent" then
+		return per < 100 and ColorPercent(per)
+	elseif arg1 == "loss" then
+		local loss = max - cur
+		return loss ~= 0 and B.Numb(loss)
+	elseif arg1 == "losspercent" then
+		local loss = max - cur
+		return loss ~= 0 and B:Round(loss/max*100, 1)
     end
 end
-oUF.Tags.Events["power"] = "UNIT_POWER_FREQUENT UNIT_MAXPOWER UNIT_DISPLAYPOWER"
+oUF.Tags.Events["VariousMP"] = "UNIT_POWER_FREQUENT UNIT_MAXPOWER UNIT_DISPLAYPOWER"
 
 oUF.Tags.Methods["color"] = function(unit)
 	local class = select(2, UnitClass(unit))
@@ -151,33 +168,19 @@ oUF.Tags.Events["fulllevel"] = "UNIT_LEVEL PLAYER_LEVEL_UP UNIT_CLASSIFICATION_C
 
 -- RaidFrame tags
 oUF.Tags.Methods["raidhp"] = function(unit)
-	if UnitIsDeadOrGhost(unit) or not UnitIsConnected(unit) or UnitIsFeignDeath(unit) then
-		return oUF.Tags.Methods["DDG"](unit)
-	elseif C.db["UFs"]["RaidHPMode"] == 2 then
-		local per = GetUnitHealthPerc(unit) or 0
-		return ColorPercent(per)
+	local healthType
+	if C.db["UFs"]["RaidHPMode"] == 2 then
+		healthType = "percent"
 	elseif C.db["UFs"]["RaidHPMode"] == 3 then
-		local cur = UnitHealth(unit)
-		return B.Numb(cur)
+		healthType = "current"
 	elseif C.db["UFs"]["RaidHPMode"] == 4 then
-		local loss = UnitHealthMax(unit) - UnitHealth(unit)
-		if loss == 0 then return end
-		return B.Numb(loss)
+		healthType = "loss"
 	end
+	return oUF.Tags.Methods["VariousHP"](unit, _, healthType)
 end
-oUF.Tags.Events["raidhp"] = "UNIT_HEALTH_FREQUENT UNIT_MAXHEALTH UNIT_NAME_UPDATE UNIT_CONNECTION PLAYER_FLAGS_CHANGED"
+oUF.Tags.Events["raidhp"] = oUF.Tags.Events["VariousHP"]
 
 -- Nameplate tags
-oUF.Tags.Methods["nphp"] = function(unit)
-	local per, cur = GetUnitHealthPerc(unit)
-	if C.db["Nameplate"]["FullHealth"] then
-		return ValueAndPercent(cur, per)
-	elseif per < 100 then
-		return ColorPercent(per)
-	end
-end
-oUF.Tags.Events["nphp"] = "UNIT_HEALTH_FREQUENT UNIT_MAXHEALTH UNIT_CONNECTION"
-
 oUF.Tags.Methods["nppp"] = function(unit)
 	local per = oUF.Tags.Methods["perpp"](unit)
 	local color
