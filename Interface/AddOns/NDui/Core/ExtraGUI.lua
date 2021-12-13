@@ -1255,7 +1255,7 @@ function G:SetupUFClassPower(parent)
 	panel:HookScript("OnHide", function()
 		local playerFrame = _G.oUF_Player
 		if not playerFrame then return end
-		playerFrame.ClassPowerBar.bg:Hide()
+		if playerFrame.ClassPowerBar then playerFrame.ClassPowerBar.bg:Hide() end
 	end)
 end
 
