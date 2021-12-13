@@ -1251,6 +1251,12 @@ function G:SetupUFClassPower(parent)
 	createOptionSlider(parent, L["Height"], 2, 30, 5, offset-100, "CPHeight", UF.UpdateUFClassPower)
 	createOptionSlider(parent, L["xOffset"], -20, 200, 12, offset-170, "CPxOffset", UF.UpdateUFClassPower)
 	createOptionSlider(parent, L["yOffset"], -200, 20, -2, offset-240, "CPyOffset", UF.UpdateUFClassPower)
+
+	panel:HookScript("OnHide", function()
+		local playerFrame = _G.oUF_Player
+		if not playerFrame then return end
+		playerFrame.ClassPowerBar.bg:Hide()
+	end)
 end
 
 function G:SetupUFAuras(parent)
