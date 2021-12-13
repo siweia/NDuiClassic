@@ -69,7 +69,9 @@ local _, ns = ...
 local oUF = ns.oUF
 local Private = oUF.Private
 
+local nierror = Private.nierror
 local unitExists = Private.unitExists
+local xpcall = Private.xpcall
 
 local _PATTERN = '%[..-%]+'
 
@@ -587,11 +589,26 @@ local tagPool = {}
 local funcPool = {}
 local tmp = {}
 
-local function getTagName(tag)
-	local tagStart = tag:match('>+()') or 2
-	local tagEnd = (tag:match('.-()<') or -1) - 1
+local function getBracketData(tag)
+	-- full tag syntax: '[prefix$>tag-name<$suffix(a,r,g,s)]'
+	local suffixEnd = (tag:match('()%(') or -1) - 1
 
-	return tag:sub(tagStart, tagEnd), tagStart, tagEnd
+	local prefixEnd, prefixOffset = tag:match('()$>'), 1
+	if(not prefixEnd) then
+		prefixEnd = 1
+	else
+		prefixEnd = prefixEnd - 1
+		prefixOffset = 3
+	end
+
+	local suffixStart, suffixOffset = tag:match('<$()', prefixEnd), 1
+	if(not suffixStart) then
+		suffixStart = suffixEnd + 1
+	else
+		suffixOffset = 3
+	end
+
+	return tag:sub(prefixEnd + prefixOffset, suffixStart - suffixOffset), prefixEnd, suffixStart, suffixEnd, tag:match('%((.-)%)')
 end
 
 local function getTagFunc(tagstr)
@@ -599,43 +616,46 @@ local function getTagFunc(tagstr)
 	if(not func) then
 		local format, numTags = tagstr:gsub('%%', '%%%%'):gsub(_PATTERN, '%%s')
 		local args = {}
+		local idx = 1
+
+		local format_ = {}
+		for i = 1, numTags do
+			format_[i] = '%s'
+		end
 
 		for bracket in tagstr:gmatch(_PATTERN) do
 			local tagFunc = funcPool[bracket] or tags[bracket:sub(2, -2)]
 			if(not tagFunc) then
-				local tagName, tagStart, tagEnd = getTagName(bracket)
-
+				local tagName, prefixEnd, suffixStart, suffixEnd, customArgs = getBracketData(bracket)
 				local tag = tags[tagName]
 				if(tag) then
-					tagStart = tagStart - 2
-					tagEnd = tagEnd + 2
-
-					if(tagStart ~= 0 and tagEnd ~= 0) then
-						local prefix = bracket:sub(2, tagStart)
-						local suffix = bracket:sub(tagEnd, -2)
+					if(prefixEnd ~= 1 or suffixStart - suffixEnd ~= 1) then
+						local prefix = prefixEnd ~= 1 and bracket:sub(2, prefixEnd) or ''
+						local suffix = suffixStart - suffixEnd ~= 1 and bracket:sub(suffixStart, suffixEnd) or ''
 
 						tagFunc = function(unit, realUnit)
-							local str = tag(unit, realUnit)
-							if(str) then
+							local str
+							if(customArgs) then
+								str = tag(unit, realUnit, string.split(',', customArgs))
+							else
+								str = tag(unit, realUnit)
+							end
+
+							if(str and str ~= '') then
 								return prefix .. str .. suffix
 							end
 						end
-					elseif(tagStart ~= 0) then
-						local prefix = bracket:sub(2, tagStart)
-
+					else
 						tagFunc = function(unit, realUnit)
-							local str = tag(unit, realUnit)
-							if(str) then
-								return prefix .. str
+							local str
+							if(customArgs) then
+								str = tag(unit, realUnit, string.split(',', customArgs))
+							else
+								str = tag(unit, realUnit)
 							end
-						end
-					elseif(tagEnd ~= 0) then
-						local suffix = bracket:sub(tagEnd, -2)
 
-						tagFunc = function(unit, realUnit)
-							local str = tag(unit, realUnit)
-							if(str) then
-								return str .. suffix
+							if(str and str ~= '') then
+								return str
 							end
 						end
 					end
@@ -646,79 +666,35 @@ local function getTagFunc(tagstr)
 
 			if(tagFunc) then
 				table.insert(args, tagFunc)
+
+				idx = idx + 1
 			else
-				return error(string.format('Attempted to use invalid tag %s.', bracket), 3)
+				nierror(string.format('Attempted to use invalid tag %s.', bracket))
+
+				format_[idx] = bracket
+				format = format:format(unpack(format_, 1, numTags))
+				format_[idx] = '%s'
+
+				numTags = numTags - 1
 			end
 		end
 
-		if(numTags == 1) then
-			func = function(self)
-				local parent = self.parent
-				local realUnit
-				if(self.overrideUnit) then
-					realUnit = parent.realUnit
-				end
-
-				_ENV._COLORS = parent.colors
-				_ENV._FRAME = parent
-				return self:SetFormattedText(
-					format,
-					args[1](parent.unit, realUnit) or ''
-				)
+		func = function(self)
+			local parent = self.parent
+			local unit = parent.unit
+			local realUnit
+			if(self.overrideUnit) then
+				realUnit = parent.realUnit
 			end
-		elseif(numTags == 2) then
-			func = function(self)
-				local parent = self.parent
-				local unit = parent.unit
-				local realUnit
-				if(self.overrideUnit) then
-					realUnit = parent.realUnit
-				end
 
-				_ENV._COLORS = parent.colors
-				_ENV._FRAME = parent
-				return self:SetFormattedText(
-					format,
-					args[1](unit, realUnit) or '',
-					args[2](unit, realUnit) or ''
-				)
+			_ENV._COLORS = parent.colors
+			_ENV._FRAME = parent
+			for i, f in next, args do
+				tmp[i] = f(unit, realUnit) or ''
 			end
-		elseif(numTags == 3) then
-			func = function(self)
-				local parent = self.parent
-				local unit = parent.unit
-				local realUnit
-				if(self.overrideUnit) then
-					realUnit = parent.realUnit
-				end
 
-				_ENV._COLORS = parent.colors
-				_ENV._FRAME = parent
-				return self:SetFormattedText(
-					format,
-					args[1](unit, realUnit) or '',
-					args[2](unit, realUnit) or '',
-					args[3](unit, realUnit) or ''
-				)
-			end
-		else
-			func = function(self)
-				local parent = self.parent
-				local unit = parent.unit
-				local realUnit
-				if(self.overrideUnit) then
-					realUnit = parent.realUnit
-				end
-
-				_ENV._COLORS = parent.colors
-				_ENV._FRAME = parent
-				for i, func in next, args do
-					tmp[i] = func(unit, realUnit) or ''
-				end
-
-				-- We do 1, numTags because tmp can hold several unneeded variables.
-				return self:SetFormattedText(format, unpack(tmp, 1, numTags))
-			end
+			-- We do 1, numTags because tmp can hold several unneeded variables.
+			return self:SetFormattedText(format, unpack(tmp, 1, numTags))
 		end
 
 		tagPool[tagstr] = func
@@ -730,13 +706,15 @@ end
 local function registerEvent(fontstr, event)
 	if(not events[event]) then events[event] = {} end
 
-	eventFrame:RegisterEvent(event)
-	table.insert(events[event], fontstr)
+	local isOK = xpcall(eventFrame.RegisterEvent, eventFrame, event)
+	if(isOK) then
+		table.insert(events[event], fontstr)
+	end
 end
 
 local function registerEvents(fontstr, tagstr)
 	for tag in tagstr:gmatch(_PATTERN) do
-		tag = getTagName(tag)
+		tag = getBracketData(tag)
 		local tagevents = tagEvents[tag]
 		if(tagevents) then
 			for event in tagevents:gmatch('%S+') do
@@ -748,14 +726,20 @@ end
 
 local function unregisterEvents(fontstr)
 	for event, data in next, events do
-		for i, tagfsstr in next, data do
+		local index = 1
+		local tagfsstr = data[index]
+		while tagfsstr do
 			if(tagfsstr == fontstr) then
 				if(#data == 1) then
 					eventFrame:UnregisterEvent(event)
 				end
 
-				table.remove(data, i)
+				table.remove(data, index)
+			else
+				index = index + 1
 			end
+
+			tagfsstr = data[index]
 		end
 	end
 end
@@ -826,10 +810,16 @@ local function Untag(self, fs)
 
 	unregisterEvents(fs)
 	for _, timers in next, eventlessUnits do
-		for i, fontstr in next, timers do
+		local index = 1
+		local fontstr = timers[index]
+		while fontstr do
 			if(fs == fontstr) then
-				table.remove(timers, i)
+				table.remove(timers, index)
+			else
+				index = index + 1
 			end
+
+			fontstr = timers[index]
 		end
 	end
 
@@ -837,6 +827,11 @@ local function Untag(self, fs)
 
 	taggedFS[fs] = nil
 	self.__tags[fs] = nil
+end
+
+local function strip(tag)
+	-- remove prefix, custom args, and suffix
+	return tag:gsub('%[.-$>', '['):gsub('%(.-%)%]', ']'):gsub('<$.-%]', ']')
 end
 
 oUF.Tags = {
@@ -847,11 +842,18 @@ oUF.Tags = {
 	RefreshMethods = function(self, tag)
 		if(not tag) then return end
 
-		funcPool['[' .. tag .. ']'] = nil
+		-- If a tag's name contains magic chars, there's a chance that
+		-- string.match will fail to find the match.
+		tag = '%[' .. tag:gsub('[%^%$%(%)%%%.%*%+%-%?]', '%%%1') .. '%]'
 
-		tag = '%[' .. tag .. '%]'
+		for func in next, funcPool do
+			if(strip(func):match(tag)) then
+				funcPool[func] = nil
+			end
+		end
+
 		for tagstr, func in next, tagPool do
-			if(tagstr:match(tag)) then
+			if(strip(tagstr):match(tag)) then
 				tagPool[tagstr] = nil
 
 				for fs in next, taggedFS do
@@ -869,9 +871,11 @@ oUF.Tags = {
 	RefreshEvents = function(self, tag)
 		if(not tag) then return end
 
-		tag = '%[' .. tag .. '%]'
+		-- If a tag's name contains magic chars, there's a chance that
+		-- string.match will fail to find the match.
+		tag = '%[' .. tag:gsub('[%^%$%(%)%%%.%*%+%-%?]', '%%%1') .. '%]'
 		for tagstr in next, tagPool do
-			if(tagstr:match(tag)) then
+			if(strip(tagstr):match(tag)) then
 				for fs, ts in next, taggedFS do
 					if(ts == tagstr) then
 						unregisterEvents(fs)
