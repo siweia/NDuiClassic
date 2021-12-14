@@ -665,6 +665,7 @@ L["RaidDebuffSize"] = "Размер дебаффов рейда"
 L["SmartRaid"] = "Рамки рейда по размеру группы"
 L["SmartRaidTip"] = "|nЕсли включено, отображает рамки рейда только тогда, когдо в вашей группе 5 человек.|nЕсли выключено, показывает рамки рейда, если в рейде. фрейм группы, если в группе =).|n|n Доступно только если включены фрейм группы."
 L["PlateRange"] = "Дистанция полос здоровья"
+L["LanguageFilterTip"] = "You need to uncheck language filter in GUI and reload ui to get access into CN battlenet support." -- need translation
 L["EquipColor"] = "Рамки под цвет предметов"
 L["UIScaleTip"] = "|nЕсли масштаб UI меньше чем 0.64, некоторые аддоны могут странно работать."
 L["PetHappiness"] = "Счастье питомца охотника"
