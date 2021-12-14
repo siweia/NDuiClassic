@@ -105,7 +105,7 @@ function UF:CreateHealthBar(self)
 		elseif self.isPartyPet then
 			healthHeight = C.db["UFs"]["PartyPetHeight"]
 		elseif self.isSimpleMode then
-			local scale = C.db["UFs"]["SimpleRaidScale"]/10
+			local scale = C.db["UFs"]["SMRScale"]/10
 			healthHeight = 20*scale - 2*scale - C.mult
 		else
 			healthHeight = C.db["UFs"]["RaidHeight"]
@@ -233,7 +233,7 @@ function UF:CreateHealthText(self)
 
 	UF.UpdateFrameNameTag(self)
 
-	local hpval = B.CreateFS(textFrame, retVal(self, 14, 13, 13, 13, C.db["Nameplate"]["HealthTextSize"]), "", false, "RIGHT", -3, 0)
+	local hpval = B.CreateFS(textFrame, retVal(self, 13, 12, 12, 12, C.db["Nameplate"]["HealthTextSize"]), "", false, "RIGHT", -3, 0)
 	self.healthValue = hpval
 	if mystyle == "raid" then
 		self:Tag(hpval, "[raidhp]")
@@ -330,7 +330,7 @@ function UF:CreatePowerBar(self)
 		elseif self.isPartyPet then
 			powerHeight = C.db["UFs"]["PartyPetPowerHeight"]
 		elseif self.isSimpleMode then
-			powerHeight = 2*C.db["UFs"]["SimpleRaidScale"]/10
+			powerHeight = 2*C.db["UFs"]["SMRScale"]/10
 		else
 			powerHeight = C.db["UFs"]["RaidPowerHeight"]
 		end
@@ -891,11 +891,43 @@ function UF:RefreshUFAuras(frame)
 	element:ForceUpdate()
 end
 
+function UF:ConfigureBuffAndDebuff(element, isDebuff)
+	local value = element.__value
+	local vType = isDebuff and "Debuff" or "Buff"
+	element.num = C.db["UFs"][value..vType.."Type"] ~= 1 and C.db["UFs"][value.."Num"..vType] or 0
+	element.iconsPerRow = C.db["UFs"][value..vType.."PerRow"]
+	element.showDebuffType = C.db["UFs"]["DebuffColor"]
+	element.desaturateDebuff = C.db["UFs"]["Desaturate"]
+end
+
+function UF:RefreshBuffAndDebuff(frame)
+	if not frame then return end
+
+	local element = frame.Buffs
+	if element then
+		UF:ConfigureBuffAndDebuff(element)
+		UF:UpdateAuraContainer(frame, element, element.num)
+		element:ForceUpdate()
+	end
+
+	local element = frame.Debuffs
+	if element then
+		UF:ConfigureBuffAndDebuff(element, true)
+		UF:UpdateAuraContainer(frame, element, element.num)
+		element:ForceUpdate()
+	end
+end
+
 function UF:UpdateUFAuras()
 	UF:RefreshUFAuras(_G.oUF_Player)
 	UF:RefreshUFAuras(_G.oUF_Target)
 	UF:RefreshUFAuras(_G.oUF_Focus)
 	UF:RefreshUFAuras(_G.oUF_ToT)
+
+	for i = 1, 5 do
+	--	UF:RefreshBuffAndDebuff(_G["oUF_Boss"..i])
+		UF:RefreshBuffAndDebuff(_G["oUF_Arena"..i])
+	end
 end
 
 function UF:ToggleUFAuras(frame, enable)
@@ -956,7 +988,7 @@ function UF:CreateAuras(self)
 	elseif mystyle == "raid" then
 		bu.initialAnchor = "LEFT"
 		bu:SetPoint("LEFT", self, 15, 0)
-		bu.size = 18*C.db["UFs"]["SimpleRaidScale"]/10
+		bu.size = 18*C.db["UFs"]["SMRScale"]/10
 		bu.numTotal = 1
 		bu.disableCooldown = true
 		bu.gap = false
@@ -1009,10 +1041,10 @@ function UF:CreateBuffs(self)
 		bu.CustomFilter = UF.RaidBuffFilter
 		bu.disableMouse = true
 		bu.fontSize = C.db["UFs"]["RaidBuffSize"]-2
-	else
-		bu.num = 6
-		bu.iconsPerRow = 6
-		bu.onlyShowPlayer = false
+	else -- boss and arena
+		bu.__value = "Boss"
+		UF:ConfigureBuffAndDebuff(bu)
+		bu.CustomFilter = UF.UnitCustomFilter
 	end
 
 	UF:UpdateAuraContainer(self, bu, bu.num)
@@ -1032,12 +1064,7 @@ function UF:CreateDebuffs(self)
 	bu["growth-y"] = "DOWN"
 	bu.tooltipAnchor = "ANCHOR_BOTTOMLEFT"
 	bu.showDebuffType = true
-	if mystyle == "boss" or mystyle == "arena" then
-		bu:SetPoint("TOPRIGHT", self, "TOPLEFT", -5, 0)
-		bu.num = 10
-		bu.iconsPerRow = 5
-		bu.CustomFilter = UF.CustomFilter
-	elseif mystyle == "raid" then
+	if mystyle == "raid" then
 		bu.initialAnchor = "BOTTOMLEFT"
 		bu["growth-x"] = "RIGHT"
 		bu:SetPoint("BOTTOMLEFT", self.Health, C.mult, C.mult)
@@ -1046,6 +1073,11 @@ function UF:CreateDebuffs(self)
 		bu.CustomFilter = UF.RaidDebuffFilter
 		bu.disableMouse = true
 		bu.fontSize = C.db["UFs"]["RaidDebuffSize"]-2
+	else -- boss and arena
+		bu:SetPoint("TOPRIGHT", self, "TOPLEFT", -5, 0)
+		bu.__value = "Boss"
+		UF:ConfigureBuffAndDebuff(bu, true)
+		bu.CustomFilter = UF.UnitCustomFilter
 	end
 
 	UF:UpdateAuraContainer(self, bu, bu.num)
