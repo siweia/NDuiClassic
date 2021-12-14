@@ -79,4 +79,9 @@ function Bar:HideBlizz()
 	hooksecurefunc("MultiActionBar_HideAllGrids", ToggleButtonGrid)
 	B:RegisterEvent("ACTIONBAR_HIDEGRID", ToggleButtonGrid)
 	ToggleButtonGrid()
+
+	-- Hide blizz options
+	SetCVar("multiBarRightVerticalLayout", 0)
+	InterfaceOptionsActionBarsPanelStackRightBars:EnableMouse(false)
+	InterfaceOptionsActionBarsPanelStackRightBars:SetAlpha(0)
 end
