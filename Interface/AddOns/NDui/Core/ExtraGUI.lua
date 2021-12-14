@@ -741,13 +741,17 @@ local function updateDropdownState(self)
 end
 
 local function createOptionDropdown(parent, title, yOffset, options, tooltip, key, value, default, func)
-	local dd = G:CreateDropdown(parent, title, 40, yOffset, options, tooltip, 180, 28)
+	local dd = G:CreateDropdown(parent, title, 40, yOffset, options, nil, 180, 28)
 	dd.__key = key
 	dd.__value = value
 	dd.__default = default
 	dd.__options = options
 	dd.__func = func
 	dd.Text:SetText(options[C.db[key][value]])
+
+	if tooltip then
+		B.AddTooltip(dd, "ANCHOR_TOP", tooltip, "info", true)
+	end
 
 	dd.button.__owner = dd
 	dd.button:HookScript("OnClick", updateDropdownHighlight)
@@ -794,11 +798,11 @@ function G:SetupUnitFrame(parent)
 
 	local function createOptionGroup(parent, title, offset, value, func)
 		createOptionTitle(parent, title, offset)
-		createOptionDropdown(parent, L["HealthValueType"], offset-50, G.HealthValues, nil, "UFs", value.."HPTag", defaultValue[value][4], func)
+		createOptionDropdown(parent, L["HealthValueType"], offset-50, G.HealthValues, L["100PercentTip"], "UFs", value.."HPTag", defaultValue[value][4], func)
 		local mult = 0
 		if value ~= "Pet" then
 			mult = 60
-			createOptionDropdown(parent, L["PowerValueType"], offset-50-mult, G.HealthValues, nil, "UFs", value.."MPTag", defaultValue[value][4], func)
+			createOptionDropdown(parent, L["PowerValueType"], offset-50-mult, G.HealthValues, L["100PercentTip"], "UFs", value.."MPTag", defaultValue[value][4], func)
 		end
 		createOptionSlider(parent, L["Width"], sliderRange[value][1], sliderRange[value][2], defaultValue[value][1], offset-110-mult, value.."Width", func)
 		createOptionSlider(parent, L["Height"], 15, 50, defaultValue[value][2], offset-180-mult, value.."Height", func)
@@ -1446,4 +1450,41 @@ function G:SetupActionbarStyle(parent)
 		bu:HookScript("OnEnter", styleOnEnter)
 		bu:HookScript("OnLeave", B.HideTooltip)
 	end
+end
+
+function G:SetupBuffFrame(parent)
+	local guiName = "NDuiGUI_BuffFrameSetup"
+	toggleExtraGUI(guiName)
+	if extraGUIs[guiName] then return end
+
+	local panel = createExtraGUI(parent, guiName, L["BuffFrame"].."*")
+	local scroll = G:CreateScroll(panel, 260, 540)
+
+	local A = B:GetModule("Auras")
+	local parent, offset = scroll.child, -10
+	local defaultSize, defaultPerRow = 30, 16
+
+	local function updateBuffFrame()
+		if not A.settings then return end
+		A:UpdateOptions()
+		A:UpdateHeader(A.BuffFrame)
+		A.BuffFrame.mover:SetSize(A.BuffFrame:GetSize())
+	end
+	
+	local function updateDebuffFrame()
+		if not A.settings then return end
+		A:UpdateOptions()
+		A:UpdateHeader(A.DebuffFrame)
+		A.DebuffFrame.mover:SetSize(A.DebuffFrame:GetSize())
+	end
+
+	local function createOptionGroup(parent, title, offset, value, func)
+		createOptionTitle(parent, title, offset)
+		createOptionCheck(parent, offset-35, L["ReverseGrow"], "Auras", "Reverse"..value, func)
+		createOptionSlider(parent, L["Auras Size"], 20, 60, defaultSize, offset-100, value.."Size", func, "Auras")
+		createOptionSlider(parent, L["IconsPerRow"], 10, 40, defaultPerRow, offset-170, value.."sPerRow", func, "Auras")
+	end
+
+	createOptionGroup(parent, "Buffs", offset, "Buff", updateBuffFrame)
+	createOptionGroup(parent, "Debuffs", offset-260, "Debuff", updateDebuffFrame)
 end
