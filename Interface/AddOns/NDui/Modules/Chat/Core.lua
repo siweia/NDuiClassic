@@ -328,7 +328,7 @@ local function FixLanguageFilterSideEffects()
 	if sideEffectFixed then return end
 	sideEffectFixed = true
 
-	B.CreateFS(HelpFrame, 18, "需要在控制台取消关闭语言过滤器，并重载插件后才可以正常连接国服战网支持。", "system",  "TOP", 0, 30)
+	B.CreateFS(HelpFrame, 18, L["LanguageFilterTip"], "system",  "TOP", 0, 30)
 end
 
 local hasCNFix
