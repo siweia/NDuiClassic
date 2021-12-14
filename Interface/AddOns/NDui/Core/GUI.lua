@@ -106,10 +106,10 @@ G.DefaultSettings = {
 		ClassAuras = false,
 		BuffFrame = true,
 		HideBlizBuff = false,
-		ReverseBuffs = false,
+		ReverseBuff = false,
 		BuffSize = 30,
 		BuffsPerRow = 16,
-		ReverseDebuffs = false,
+		ReverseDebuff = false,
 		DebuffSize = 30,
 		DebuffsPerRow = 16,
 	},
@@ -599,6 +599,10 @@ local function setupPlateCastbarGlow()
 	G:PlateCastbarGlow(guiPage[5])
 end
 
+local function setupBuffFrame()
+	G:SetupBuffFrame(guiPage[7])
+end
+
 local function setupAuraWatch()
 	f:Hide()
 	SlashCmdList["NDUI_AWCONFIG"]()
@@ -659,22 +663,6 @@ end
 local function toggleBarFader(self)
 	local name = gsub(self.__value, "Fader", "")
 	B:GetModule("Actionbar"):ToggleBarFader(name)
-end
-
-local function updateBuffFrame()
-	local A = B:GetModule("Auras")
-	if not A.settings then return end
-	A:UpdateOptions()
-	A:UpdateHeader(A.BuffFrame)
-	A.BuffFrame.mover:SetSize(A.BuffFrame:GetSize())
-end
-
-local function updateDebuffFrame()
-	local A = B:GetModule("Auras")
-	if not A.settings then return end
-	A:UpdateOptions()
-	A:UpdateHeader(A.DebuffFrame)
-	A.DebuffFrame.mover:SetSize(A.DebuffFrame:GetSize())
 end
 
 local function updateReminder()
@@ -894,7 +882,7 @@ G.TabList = {
 	NewTag..L["RaidFrame"],
 	NewTag..L["Nameplate"],
 	NewTag..L["PlayerPlate"],
-	L["Auras"],
+	NewTag..L["Auras"],
 	L["Raid Tools"],
 	L["ChatFrame"],
 	L["Maps"],
@@ -1010,7 +998,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "UFs", "HorizonRaid", L["Horizon RaidFrame"]},
 		{1, "UFs", "RCCName", NewTag..L["ClassColor Name"].."*", true, nil, updateRaidTextScale},
 		{4, "UFs", "RaidHealthColor", L["HealthColor"].."*", nil, {L["Default Dark"], L["ClassColorHP"], L["GradientHP"]}, updateRaidTextScale},
-		{4, "UFs", "RaidHPMode", L["HealthValueType"].."*", true, {DISABLE, L["ShowHealthPercent"], L["ShowHealthCurrent"], L["ShowHealthLoss"], L["ShowHealthLossPercent"]}, updateRaidNameText},
+		{4, "UFs", "RaidHPMode", L["HealthValueType"].."*", true, {DISABLE, L["ShowHealthPercent"], L["ShowHealthCurrent"], L["ShowHealthLoss"], L["ShowHealthLossPercent"]}, updateRaidNameText, L["100PercentTip"]},
 		{3, "UFs", "NumGroups", L["Num Groups"], nil, {4, 8, 1}},
 		{3, "UFs", "RaidTextScale", L["UFTextScale"].."*", true, {.8, 1.5, .05}, updateRaidTextScale},
 		{nil, true},-- FIXME: dirty fix for now
@@ -1020,6 +1008,8 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Nameplate", "Enable", HeaderTag..L["Enable Nameplate"], nil, setupNameplateSize, refreshNameplates},
 		{1, "Nameplate", "FriendPlate", L["FriendPlate"].."*", nil, nil, refreshNameplates, L["FriendPlateTip"]},
 		{1, "Nameplate", "NameOnlyMode", L["NameOnlyMode"].."*", true, nil, nil, L["NameOnlyModeTip"]},
+		{4, "Nameplate", "NameType", NewTag..L["NameTextType"].."*", nil, {DISABLE, L["Tag:name"], L["Tag:levelname"], L["Tag:rarename"], L["Tag:rarelevelname"]}, refreshNameplates, L["PlateLevelTagTip"]},
+		{4, "Nameplate", "HealthType", NewTag..L["HealthValueType"].."*", true, G.HealthValues, refreshNameplates, L["100PercentTip"]},
 		{},--blank
 		{1, "Nameplate", "PlateAuras", HeaderTag..L["PlateAuras"].."*", nil, setupNameplateFilter, refreshNameplates},
 		{1, "Nameplate", "Desaturate", NewTag..L["DesaturateIcon"].."*", nil, nil, refreshNameplates, L["DesaturateIconTip"]},
@@ -1028,8 +1018,6 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{3, "Nameplate", "maxAuras", L["Max Auras"].."*", false, {1, 20, 1}, refreshNameplates},
 		{3, "Nameplate", "AuraSize", L["Auras Size"].."*", true, {18, 40, 1}, refreshNameplates},
 		{},--blank
-		{4, "Nameplate", "NameType", NewTag..L["NameTextType"].."*", nil, {DISABLE, L["Tag:name"], L["Tag:levelname"], L["Tag:rarename"], L["Tag:rarelevelname"]}, refreshNameplates, L["PlateLevelTagTip"]},
-		{4, "Nameplate", "HealthType", NewTag..L["HealthValueType"].."*", true, G.HealthValues, refreshNameplates},
 		{4, "Nameplate", "TargetIndicator", L["TargetIndicator"].."*", nil, {DISABLE, L["TopArrow"], L["RightArrow"], L["TargetGlow"], L["TopNGlow"], L["RightNGlow"]}, refreshNameplates},
 		{3, "Nameplate", "ExecuteRatio", "|cffff0000"..L["ExecuteRatio"].."*", true, {0, 90, 1}, nil, L["ExecuteRatioTip"]},
 		{1, "Nameplate", "FriendlyCC", L["Friendly CC"].."*"},
@@ -1061,7 +1049,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{3, "Nameplate", "PlateRange", L["PlateRange"].."*", nil, {0, 41, 1}, updatePlateRange},
 		{3, "Nameplate", "VerticalSpacing", L["NP VerticalSpacing"].."*", true, {.5, 1.5, .1}, updatePlateSpacing},
 		{3, "Nameplate", "MinScale", L["Nameplate MinScale"].."*", false, {.5, 1, .1}, updatePlateScale},
-		{3, "Nameplate", "MinAlpha", L["Nameplate MinAlpha"].."*", true, {.5, 1, .1}, updatePlateAlpha},
+		{3, "Nameplate", "MinAlpha", L["Nameplate MinAlpha"].."*", true, {.3, 1, .1}, updatePlateAlpha},
 	},
 	[6] = {
 		{1, "Nameplate", "ShowPlayerPlate", HeaderTag..L["Enable PlayerPlate"].."*", nil, nil, togglePlayerPlate},
@@ -1078,6 +1066,9 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{3, "Nameplate", "PPPowerHeight", L["PlayerPlate MPHeight"].."*", true, {2, 15, 1}, refreshNameplates},
 	},
 	[7] = {
+		{1, "Auras", "BuffFrame", NewTag..HeaderTag..L["BuffFrame"], nil, nil, nil, L["BuffFrameTip"]},
+		{1, "Auras", "HideBlizBuff", NewTag..L["HideBlizUI"], true, nil, nil, L["HideBlizBuffTip"]},
+		{},--blank
 		{1, "AuraWatch", "Enable", HeaderTag..L["Enable AuraWatch"], nil, setupAuraWatch},
 		{1, "AuraWatch", "WatchSpellRank", L["AuraWatch WatchSpellRank"], nil, nil, nil, L["WatchSpellRankTip"]},
 		{1, "AuraWatch", "ClickThrough", L["AuraWatch ClickThrough"], nil, nil, nil, L["ClickThroughTip"]},
@@ -1088,15 +1079,6 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{3, "Auras", "TotemSize", L["TotemSize"].."*", true, {24, 60, 1}, refreshTotemBar},
 		{},--blank
 		{1, "Auras", "Reminder", L["Enable Reminder"].."*", nil, nil, updateReminder, L["ReminderTip"]},
-		{},--blank
-		{1, "Auras", "BuffFrame", NewTag..HeaderTag..L["BuffFrame"], nil, nil, nil, L["BuffFrameTip"]},
-		{1, "Auras", "HideBlizBuff", NewTag..L["HideBlizUI"], true, nil, nil, L["HideBlizBuffTip"]},
-		{1, "Auras", "ReverseBuffs", L["ReverseBuffs"].."*", nil, nil, updateBuffFrame},
-		{1, "Auras", "ReverseDebuffs", L["ReverseDebuffs"].."*", true, nil, updateDebuffFrame},
-		{3, "Auras", "BuffSize", L["BuffSize"].."*", nil, {24, 50, 1}, updateBuffFrame},
-		{3, "Auras", "DebuffSize", L["DebuffSize"].."*", true, {24, 50, 1}, updateDebuffFrame},
-		{3, "Auras", "BuffsPerRow", L["BuffsPerRow"].."*", nil, {10, 20, 1}, updateBuffFrame},
-		{3, "Auras", "DebuffsPerRow", L["DebuffsPerRow"].."*", true, {10, 20, 1}, updateDebuffFrame},
 	},
 	[8] = {
 		{1, "Misc", "RaidTool", HeaderTag..L["Raid Manger"]},
