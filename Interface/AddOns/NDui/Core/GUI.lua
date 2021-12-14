@@ -169,7 +169,7 @@ G.DefaultSettings = {
 		PartyPetPowerHeight = 2,
 		PartyPetPerCol = 5,
 		PartyPetMaxCol = 1,
-		RaidPets = false,
+		PartyPetVsby = 1,
 		HealthColor = 1,
 		BuffIndicatorType = 1,
 		BuffIndicatorScale = 1,
@@ -794,6 +794,10 @@ local function updateRaidHealthMethod()
 	B:GetModule("UnitFrames"):UpdateRaidHealthMethod()
 end
 
+local function toggleCastBarLatency()
+	B:GetModule("UnitFrames"):ToggleCastBarLatency()
+end
+
 local function updateSmoothingAmount()
 	B:SetSmoothingAmount(NDuiADB["SmoothAmount"])
 end
@@ -957,8 +961,8 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{3, "UFs", "UFTextScale", L["UFTextScale"].."*", nil, {.8, 1.5, .05}, updateUFTextScale},
 		{4, "UFs", "HealthColor", L["HealthColor"].."*", true, {L["Default Dark"], L["ClassColorHP"], L["GradientHP"]}, updateUFTextScale},
 		{},--blank
-		{1, "UFs", "Castbars", HeaderTag..L["UFs Castbar"], nil, setupCastbar},
-		{1, "UFs", "LagString", L["Castbar LagString"], true},
+		{1, "UFs", "Castbars", NewTag..HeaderTag..L["UFs Castbar"], nil, setupCastbar},
+		{1, "UFs", "LagString", L["Castbar LagString"].."*", true, nil, toggleCastBarLatency},
 		{1, "UFs", "SwingBar", L["UFs SwingBar"]},
 		{1, "UFs", "SwingTimer", L["UFs SwingTimer"], true, nil, nil, L["SwingTimer Tip"]},
 		{},--blank

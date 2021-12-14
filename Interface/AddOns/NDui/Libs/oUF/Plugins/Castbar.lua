@@ -2,8 +2,9 @@ local _, ns = ...
 local B, C, L, DB = unpack(ns)
 local UF
 
-local unpack = unpack
-local GetTime, UnitIsUnit = GetTime, UnitIsUnit
+local unpack, pairs, min, format, strupper = unpack, pairs, min, format, strupper
+local GetTime, IsPlayerSpell, UnitName = GetTime, IsPlayerSpell, UnitName
+local UnitIsUnit, UnitExists = UnitIsUnit, UnitExists
 
 local CastbarCompleteColor = {.1, .8, 0}
 local CastbarFailColor = {1, .1, 0}
@@ -144,9 +145,6 @@ function B:OnCastbarUpdate(elapsed)
 				self.Time:SetFormattedText(decimal.." | |cffff0000"..decimal, duration, self.casting and self.max + self.delay or self.max - self.delay)
 			else
 				self.Time:SetFormattedText(decimal.." | "..decimal, duration, self.max)
-				if self.Lag and self.SafeZone and self.SafeZone.timeDiff and self.SafeZone.timeDiff ~= 0 then
-					self.Lag:SetFormattedText("%d ms", self.SafeZone.timeDiff * 1000)
-				end
 			end
 		else
 			if duration > 1e4 then
@@ -175,8 +173,7 @@ end
 function B:OnCastSent()
 	local element = self.Castbar
 	if not element.SafeZone then return end
-	element.SafeZone.sendTime = GetTime()
-	element.SafeZone.castSent = true
+	element.__sendTime = GetTime()
 end
 
 local function ResetSpellTarget(self)
@@ -203,26 +200,40 @@ local function UpdateSpellTarget(self, unit)
 	end
 end
 
+local function UpdateCastBarColor(self, unit)
+	local color = C.db["UFs"]["CastingColor"]
+	if not UnitIsUnit(unit, "player") and self.notInterruptible then
+		--color = C.db["UFs"]["NotInterruptColor"]
+		color = NotInterruptColor
+	end
+	self:SetStatusBarColor(color.r, color.g, color.b)
+end
+
 function B:PostCastStart(unit)
 	self:SetAlpha(1)
 	self.Spark:Show()
-	local color = C.db["UFs"]["CastingColor"]
-	self:SetStatusBarColor(color.r, color.g, color.b)
+	local safeZone = self.SafeZone
+	local lagString = self.LagString
 
 	if unit == "vehicle" then
-		if self.SafeZone then self.SafeZone:Hide() end
-		if self.Lag then self.Lag:Hide() end
-	elseif unit == "player" then
-		local safeZone = self.SafeZone
 		if safeZone then
-			safeZone.timeDiff = 0
-			if safeZone.castSent then
-				safeZone.timeDiff = GetTime() - safeZone.sendTime
-				safeZone.timeDiff = safeZone.timeDiff > self.max and self.max or safeZone.timeDiff
-				safeZone:SetWidth(self:GetWidth() * (safeZone.timeDiff + .001) / self.max)
+			safeZone:Hide()
+			lagString:Hide()
+		end
+	elseif unit == "player" then
+		if safeZone then
+			local sendTime = self.__sendTime
+			local timeDiff = sendTime and min((GetTime() - sendTime), self.max)
+			if timeDiff and timeDiff ~= 0 then
+				safeZone:SetWidth(self:GetWidth() * timeDiff / self.max)
 				safeZone:Show()
-				safeZone.castSent = nil
+				lagString:SetFormattedText("%d ms", timeDiff * 1000)
+				lagString:Show()
+			else
+				safeZone:Hide()
+				lagString:Hide()
 			end
+			self.__sendTime = nil
 		end
 
 		local numTicks = 0
@@ -230,11 +241,9 @@ function B:PostCastStart(unit)
 			numTicks = channelingTicks[self.spellID] or 0
 		end
 		updateCastBarTicks(self, numTicks)
-	elseif not UnitIsUnit(unit, "player") and self.notInterruptible then
-		--color = C.db["UFs"]["NotInterruptColor"]
-		color = NotInterruptColor
-		self:SetStatusBarColor(color.r, color.g, color.b)
 	end
+
+	UpdateCastBarColor(self, unit)
 
 	-- Fix for empty icon
 	if self.Icon then
@@ -264,12 +273,7 @@ function B:PostCastUpdate(unit)
 end
 
 function B:PostUpdateInterruptible(unit)
-	local color = C.db["UFs"]["CastingColor"]
-	if not UnitIsUnit(unit, "player") and self.notInterruptible then
-		--color = C.db["UFs"]["NotInterruptColor"]
-		color = NotInterruptColor
-	end
-	self:SetStatusBarColor(color.r, color.g, color.b)
+	UpdateCastBarColor(self, unit)
 end
 
 function B:PostCastStop()
