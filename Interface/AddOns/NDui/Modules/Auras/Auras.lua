@@ -44,12 +44,12 @@ function A:BuildBuffFrame()
 	}
 
 	-- Movers
-	A.BuffFrame = self:CreateAuraHeader("HELPFUL")
+	A.BuffFrame = A:CreateAuraHeader("HELPFUL")
 	A.BuffFrame.mover = B.Mover(A.BuffFrame, "Buffs", "BuffAnchor", C.Auras.BuffPos)
 	A.BuffFrame:ClearAllPoints()
 	A.BuffFrame:SetPoint("TOPRIGHT", A.BuffFrame.mover)
 
-	A.DebuffFrame = self:CreateAuraHeader("HARMFUL")
+	A.DebuffFrame = A:CreateAuraHeader("HARMFUL")
 	A.DebuffFrame.mover = B.Mover(A.DebuffFrame, "Debuffs", "DebuffAnchor", {"TOPRIGHT", A.BuffFrame.mover, "BOTTOMRIGHT", 0, -12})
 	A.DebuffFrame:ClearAllPoints()
 	A.DebuffFrame:SetPoint("TOPRIGHT", A.DebuffFrame.mover)
@@ -109,7 +109,7 @@ end
 
 function A:UpdateAuras(button, index)
 	local unit, filter = button.header:GetAttribute("unit"), button.filter
-	local name, texture, count, debuffType, duration, expirationTime = UnitAura(unit, index, filter)
+	local name, texture, count, debuffType, duration, expirationTime, _, _, _, spellID = UnitAura(unit, index, filter)
 	if not name then return end
 
 	if duration > 0 and expirationTime then
@@ -121,7 +121,6 @@ function A:UpdateAuras(button, index)
 		else
 			button.timeLeft = timeLeft
 		end
-		-- need reviewed
 		button.nextUpdate = -1
 		A.UpdateTimer(button, 0)
 	else
@@ -142,6 +141,7 @@ function A:UpdateAuras(button, index)
 		button:SetBackdropBorderColor(0, 0, 0)
 	end
 
+	button.spellID = spellID
 	button.icon:SetTexture(texture)
 	button.offset = nil
 end
@@ -262,6 +262,13 @@ function A:CreateAuraHeader(filter)
 	return header
 end
 
+function A:RemoveSpellFromIgnoreList()
+	if IsAltKeyDown() and IsControlKeyDown() and self.spellID and C.db["AuraWatchList"]["IgnoreSpells"][self.spellID] then
+		C.db["AuraWatchList"]["IgnoreSpells"][self.spellID] = nil
+		print(format(L["RemoveFromIgnoreList"], DB.NDuiString, self.spellID))
+	end
+end
+
 function A:Button_SetTooltip(button)
 	if button:GetAttribute("index") then
 		GameTooltip:SetUnitAura(button.header:GetAttribute("unit"), button:GetID(), button.filter)
@@ -308,6 +315,7 @@ function A:CreateAuraIcon(button)
 
 	button:RegisterForClicks("RightButtonUp")
 	button:SetScript("OnAttributeChanged", A.OnAttributeChanged)
+	--button:HookScript("OnMouseDown", A.RemoveSpellFromIgnoreList)
 	button:SetScript("OnEnter", A.Button_OnEnter)
 	button:SetScript("OnLeave", B.HideTooltip)
 end
