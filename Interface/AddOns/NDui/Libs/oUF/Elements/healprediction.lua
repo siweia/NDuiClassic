@@ -4,7 +4,7 @@ local oUF = ns.oUF
 local myGUID = UnitGUID('player')
 local HealComm = LibStub("LibHealComm-4.0")
 
-local function UpdateFillBar(frame, previousTexture, bar, amount, maxHealth)
+local function UpdateFillBar(previousTexture, bar, amount, ratio)
 	if amount == 0 then
 		bar:Hide()
 		return previousTexture
@@ -12,10 +12,7 @@ local function UpdateFillBar(frame, previousTexture, bar, amount, maxHealth)
 
 	bar:SetPoint("TOPLEFT", previousTexture, "TOPRIGHT", 0, 0)
 	bar:SetPoint("BOTTOMLEFT", previousTexture, "BOTTOMRIGHT", 0, 0)
-
-	local totalWidth, totalHeight = frame.Health:GetSize()
-	local barSize = (amount / maxHealth) * totalWidth
-	bar:SetWidth(barSize)
+	bar:SetWidth(amount * ratio)
 	bar:Show()
 	return bar
 end
@@ -33,6 +30,7 @@ local function Update(self, event, unit)
 	local allHot = HealComm:GetHealAmount(guid, hp.healType) or 0
 	local myHot = (HealComm:GetHealAmount(guid, hp.healType, nil, myGUID) or 0) * (HealComm:GetHealModifier(myGUID) or 1)
 	local health, maxHealth = UnitHealth(unit), UnitHealthMax(unit)
+	local ratio = self.Health:GetWidth() / maxHealth
 
 	allIncomingHeal = allIncomingHeal + allHot
 	myIncomingHeal = myIncomingHeal + myHot
@@ -53,8 +51,8 @@ local function Update(self, event, unit)
 	end
 
 	local previousTexture = self.Health:GetStatusBarTexture()
-	previousTexture = UpdateFillBar(self, previousTexture, hp.myBar, myIncomingHeal, maxHealth)
-	previousTexture = UpdateFillBar(self, previousTexture, hp.otherBar, allIncomingHeal, maxHealth)
+	previousTexture = UpdateFillBar(previousTexture, hp.myBar, myIncomingHeal, ratio)
+	previousTexture = UpdateFillBar(previousTexture, hp.otherBar, allIncomingHeal, ratio)
 
 	if(hp.PostUpdate) then
 		return hp:PostUpdate(unit)
