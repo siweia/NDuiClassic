@@ -5,7 +5,7 @@ local myGUID = UnitGUID('player')
 local HealComm = LibStub("LibHealComm-4.0")
 
 local function UpdateFillBar(previousTexture, bar, amount, ratio)
-	if amount == 0 then
+	if amount <= 0 then
 		bar:Hide()
 		return previousTexture
 	end
