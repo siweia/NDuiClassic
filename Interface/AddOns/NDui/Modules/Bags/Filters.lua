@@ -16,6 +16,9 @@ local CustomFilterList = {
 	[12458] = true,	-- Juju Guile
 	[12459] = true,	-- Juju Escape
 	[12460] = true,	-- Juju Might
+	[10646] = true,	-- 地精工兵炸药
+	[23737] = true,	-- 精金手雷
+	[23827] = true,	-- 超级神风炸药
 }
 
 local function isCustomFilter(item)
