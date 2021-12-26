@@ -1001,6 +1001,7 @@ function UF:CreateAuras(self)
 		bu.CustomFilter = UF.UnitCustomFilter
 	elseif mystyle == "pet" then
 		bu.initialAnchor = "TOPRIGHT"
+		bu["growth-x"] = "LEFT"
 		bu:SetPoint("TOPRIGHT", self.Power, "BOTTOMRIGHT", 0, -5)
 		bu.__value = "Pet"
 		UF:ConfigureAuras(bu)
