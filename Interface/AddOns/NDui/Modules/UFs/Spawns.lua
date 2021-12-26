@@ -509,6 +509,7 @@ function UF:OnLogin()
 			end
 		end
 
+		local raidMover
 		if C.db["UFs"]["SimpleMode"] then
 			oUF:RegisterStyle("Raid", CreateSimpleRaidStyle)
 			oUF:SetActiveStyle("Raid")
