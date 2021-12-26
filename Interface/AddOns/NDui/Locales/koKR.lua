@@ -759,3 +759,5 @@ L["Visibility"] = "Visibility"
 L["ShowInParty"] = "Party only"
 L["ShowInRaid"] = "Raid only"
 L["ShowInGroup"] = "Grouped"
+L["HideTooltip"] = "Hide GameTooltip" -- need translation
+L["HideTooltipTip"] = "|nIf checked, no longer show GameTooltip when mouseover frames." -- need translation

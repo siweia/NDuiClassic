@@ -38,12 +38,16 @@ end
 
 -- Elements
 local function UF_OnEnter(self)
-	UnitFrame_OnEnter(self)
+	if not self.disableTooltip then
+		UnitFrame_OnEnter(self)
+	end
 	self.Highlight:Show()
 end
 
 local function UF_OnLeave(self)
-	UnitFrame_OnLeave(self)
+	if not self.disableTooltip then
+		UnitFrame_OnLeave(self)
+	end
 	self.Highlight:Hide()
 end
 
@@ -100,11 +104,11 @@ function UF:CreateHealthBar(self)
 	if mystyle == "PlayerPlate" then
 		healthHeight = C.db["Nameplate"]["PPHealthHeight"]
 	elseif mystyle == "raid" then
-		if self.isPartyFrame then
+		if self.raidType = "party" then
 			healthHeight = C.db["UFs"]["PartyHeight"]
-		elseif self.isPartyPet then
+		elseif self.raidType = "pet" then
 			healthHeight = C.db["UFs"]["PartyPetHeight"]
-		elseif self.isSimpleMode then
+		elseif self.raidType == "simple" then
 			local scale = C.db["UFs"]["SMRScale"]/10
 			healthHeight = 20*scale - 2*scale - C.mult
 		else
@@ -189,7 +193,7 @@ function UF:UpdateFrameNameTag()
 		self:Tag(name, colorTag.."[name][afkdnd]")
 	elseif mystyle == "arena" then
 		self:Tag(name, colorTag.."[name]")
-	elseif self.isSimpleMode and C.db["UFs"]["ShowTeamIndex"] then
+	elseif self.raidType == "simple" and C.db["UFs"]["ShowTeamIndex"] then
 		self:Tag(name, "[group] "..colorTag.."[name]")
 	else
 		self:Tag(name, colorTag.."[name]")
@@ -208,10 +212,10 @@ function UF:CreateHealthText(self)
 	if mystyle == "raid" then
 		name:SetWidth(self:GetWidth()*.95)
 		name:ClearAllPoints()
-		if self.isPartyPet then
+		if self.raidType = "pet" then
 			name:SetWidth(self:GetWidth()*.55)
 			name:SetPoint("LEFT", 3, -1)
-		elseif self.isSimpleMode then
+		elseif self.raidType == "simple" then
 			name:SetPoint("LEFT", 4, 0)
 		else
 			name:SetJustifyH("CENTER")
@@ -237,10 +241,10 @@ function UF:CreateHealthText(self)
 	self.healthValue = hpval
 	if mystyle == "raid" then
 		self:Tag(hpval, "[raidhp]")
-		if self.isPartyPet then
+		if self.raidType = "pet" then
 			hpval:SetPoint("RIGHT", -3, -1)
 			self:Tag(hpval, "[VariousHP(current)]")
-		elseif self.isSimpleMode then
+		elseif self.raidType == "simple" then
 			hpval:SetPoint("RIGHT", -4, 0)
 		else
 			hpval:ClearAllPoints()
@@ -258,10 +262,10 @@ end
 
 function UF:UpdateRaidNameText()
 	for _, frame in pairs(oUF.objects) do
-		if frame.mystyle == "raid" and not frame.isPartyPet then
+		if frame.mystyle == "raid" and not frame.raidType = "pet" then
 			local name = frame.nameText
 			name:ClearAllPoints()
-			if frame.isSimpleMode then
+			if frame.raidType == "simple" then
 				name:SetPoint("LEFT", 4, 0)
 			else
 				name:SetJustifyH("CENTER")
@@ -325,11 +329,11 @@ function UF:CreatePowerBar(self)
 	if mystyle == "PlayerPlate" then
 		powerHeight = C.db["Nameplate"]["PPPowerHeight"]
 	elseif mystyle == "raid" then
-		if self.isPartyFrame then
+		if self.raidType = "party" then
 			powerHeight = C.db["UFs"]["PartyPowerHeight"]
-		elseif self.isPartyPet then
+		elseif self.raidType = "pet" then
 			powerHeight = C.db["UFs"]["PartyPetPowerHeight"]
-		elseif self.isSimpleMode then
+		elseif self.raidType == "simple" then
 			powerHeight = 2*C.db["UFs"]["SMRScale"]/10
 		else
 			powerHeight = C.db["UFs"]["RaidPowerHeight"]
@@ -430,6 +434,7 @@ function UF:UpdateRaidTextScale()
 			UF:UpdateHealthBarColor(frame, true)
 			UF:UpdatePowerBarColor(frame, true)
 			UF.UpdateFrameNameTag(frame)
+			frame.disableTooltip = C.db["UFs"]["HideTip"]
 		end
 	end
 end
@@ -1051,7 +1056,7 @@ function UF:CreateBuffs(self)
 		bu["growth-x"] = "LEFT"
 		bu:ClearAllPoints()
 		bu:SetPoint("BOTTOMRIGHT", self.Health, -C.mult, C.mult)
-		bu.num = (self.isSimpleMode or not C.db["UFs"]["ShowRaidBuff"]) and 0 or 3
+		bu.num = (self.raidType == "simple" or not C.db["UFs"]["ShowRaidBuff"]) and 0 or 3
 		bu.size = C.db["UFs"]["RaidBuffSize"]
 		bu.CustomFilter = UF.RaidBuffFilter
 		bu.disableMouse = true
@@ -1083,7 +1088,7 @@ function UF:CreateDebuffs(self)
 		bu.initialAnchor = "BOTTOMLEFT"
 		bu["growth-x"] = "RIGHT"
 		bu:SetPoint("BOTTOMLEFT", self.Health, C.mult, C.mult)
-		bu.num = (self.isSimpleMode or not C.db["UFs"]["ShowRaidDebuff"]) and 0 or 3
+		bu.num = (self.raidType == "simple" or not C.db["UFs"]["ShowRaidDebuff"]) and 0 or 3
 		bu.size = C.db["UFs"]["RaidDebuffSize"]
 		bu.CustomFilter = UF.RaidDebuffFilter
 		bu.disableMouse = true
@@ -1107,7 +1112,7 @@ function UF:UpdateRaidAuras()
 		if frame.mystyle == "raid" then
 			local debuffs = frame.Debuffs
 			if debuffs then
-				debuffs.num = (frame.isSimpleMode or not C.db["UFs"]["ShowRaidDebuff"]) and 0 or 3
+				debuffs.num = (frame.raidType == "simple" or not C.db["UFs"]["ShowRaidDebuff"]) and 0 or 3
 				debuffs.size = C.db["UFs"]["RaidDebuffSize"]
 				debuffs.fontSize = C.db["UFs"]["RaidDebuffSize"]-2
 				UF:UpdateAuraContainer(frame, debuffs, debuffs.num)
@@ -1116,7 +1121,7 @@ function UF:UpdateRaidAuras()
 
 			local buffs = frame.Buffs
 			if buffs then
-				buffs.num = (frame.isSimpleMode or not C.db["UFs"]["ShowRaidBuff"]) and 0 or 3
+				buffs.num = (frame.raidType == "simple" or not C.db["UFs"]["ShowRaidBuff"]) and 0 or 3
 				buffs.size = C.db["UFs"]["RaidBuffSize"]
 				buffs.fontSize = C.db["UFs"]["RaidBuffSize"]-2
 				UF:UpdateAuraContainer(frame, buffs, buffs.num)
