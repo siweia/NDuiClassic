@@ -130,6 +130,7 @@ G.DefaultSettings = {
 		RaidFrame = true,
 		NumGroups = 8,
 		RaidDirec = 1,
+		RaidRows = 1,
 		SimpleMode = false,
 		SMRScale = 10,
 		SMRPerCol = 20,
