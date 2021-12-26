@@ -1405,7 +1405,7 @@ function G:SetupUFAuras(parent)
 	createOptionGroup(parent, L["TotUF"], offset-960, "ToT", UF.UpdateUFAuras)
 	createOptionGroup(parent, L["PetUF"], offset-1370, "Pet", UF.UpdateUFAuras)
 	createOptionGroup(parent, L["FocusUF"], offset-1780, "Focus", UF.UpdateUFAuras)
-	createOptionGroup(parent, L["BossFrame"], offset-2190, "Boss", UF.UpdateUFAuras, true)
+	createOptionGroup(parent, L["ArenaFrame"], offset-2190, "Boss", UF.UpdateUFAuras, true)
 end
 
 function G:SetupActionbarStyle(parent)
