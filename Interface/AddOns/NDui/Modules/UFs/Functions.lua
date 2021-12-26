@@ -193,7 +193,7 @@ function UF:UpdateFrameNameTag()
 		self:Tag(name, colorTag.."[name][afkdnd]")
 	elseif mystyle == "arena" then
 		self:Tag(name, colorTag.."[name]")
-	elseif self.raidType == "simple" and C.db["UFs"]["ShowTeamIndex"] then
+	elseif self.raidType == "simple" and C.db["UFs"]["TeamIndex"] then
 		self:Tag(name, "[group] "..colorTag.."[name]")
 	else
 		self:Tag(name, colorTag.."[name]")
@@ -943,6 +943,7 @@ function UF:UpdateUFAuras()
 	UF:RefreshUFAuras(_G.oUF_Target)
 	UF:RefreshUFAuras(_G.oUF_Focus)
 	UF:RefreshUFAuras(_G.oUF_ToT)
+	UF:RefreshUFAuras(_G.oUF_Pet)
 
 	for i = 1, 5 do
 	--	UF:RefreshBuffAndDebuff(_G["oUF_Boss"..i])
@@ -996,6 +997,12 @@ function UF:CreateAuras(self)
 	elseif mystyle == "tot" then
 		bu:SetPoint("TOPLEFT", self.Power, "BOTTOMLEFT", 0, -5)
 		bu.__value = "ToT"
+		UF:ConfigureAuras(bu)
+		bu.CustomFilter = UF.UnitCustomFilter
+	elseif mystyle == "pet" then
+		bu.initialAnchor = "TOPRIGHT"
+		bu:SetPoint("TOPRIGHT", self.Power, "BOTTOMRIGHT", 0, -5)
+		bu.__value = "Pet"
 		UF:ConfigureAuras(bu)
 		bu.CustomFilter = UF.UnitCustomFilter
 	elseif mystyle == "focus" then

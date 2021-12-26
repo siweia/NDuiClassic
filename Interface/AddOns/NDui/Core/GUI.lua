@@ -126,17 +126,17 @@ G.DefaultSettings = {
 		SwingTimer = false,
 		RaidFrame = true,
 		NumGroups = 8,
+		RaidDirec = 1,
 		SimpleMode = false,
 		SMRScale = 10,
 		SMRPerCol = 20,
 		SMRGroupBy = 1,
 		SMRGroups = 6,
+		SMRDirec = 1,
 		InstanceAuras = true,
 		DispellOnly = false,
 		RaidDebuffScale = 1,
 		RaidHealthColor = 1,
-		HorizonRaid = false,
-		HorizonParty = false,
 		ShowSolo = false,
 		RaidWidth = 80,
 		RaidHeight = 32,
@@ -150,7 +150,7 @@ G.DefaultSettings = {
 		FCTFontSize = 18,
 		PetCombatText = true,
 		RaidClickSets = false,
-		ShowTeamIndex = false,
+		TeamIndex = false,
 		ClassPower = true,
 		CPWidth = 150,
 		CPHeight = 5,
@@ -159,6 +159,7 @@ G.DefaultSettings = {
 		LagString = true,
 		RaidBuffIndicator = true,
 		PartyFrame = true,
+		PartyDirec = 2,
 		PWOnRight = false,
 		PartyWidth = 100,
 		PartyHeight = 32,
@@ -170,6 +171,7 @@ G.DefaultSettings = {
 		PartyPetPerCol = 5,
 		PartyPetMaxCol = 1,
 		PartyPetVsby = 1,
+		PetDirec = 1,
 		HealthColor = 1,
 		BuffIndicatorType = 1,
 		BuffIndicatorScale = 1,
@@ -244,6 +246,11 @@ G.DefaultSettings = {
 		ToTBuffType = 1,
 		ToTDebuffType = 1,
 		ToTAurasPerRow = 5,
+		PetNumBuff = 6,
+		PetNumDebuff = 6,
+		PetBuffType = 1,
+		PetDebuffType = 1,
+		PetAurasPerRow = 5,
 		BossNumBuff = 6,
 		BossNumDebuff = 6,
 		BossBuffType = 2,
@@ -583,6 +590,10 @@ local function setupSimpleRaidFrame()
 	G:SetupSimpleRaidFrame(guiPage[4])
 end
 
+local function setupPartyFrame()
+	G:SetupPartyFrame(guiPage[4])
+end
+
 local function setupPartyPetFrame()
 	G:SetupPartyPetFrame(guiPage[4])
 end
@@ -811,6 +822,14 @@ local function updateAllHeaders()
 	B:GetModule("UnitFrames"):UpdateAllHeaders()
 end
 
+local function updateTeamIndex()
+	local UF = B:GetModule("UnitFrames")
+	if UF.UpdateRaidTeamIndex then
+		UF:UpdateRaidTeamIndex()
+	end
+	updateRaidTextScale()
+end
+
 local function updateMapFader()
 	B:GetModule("Maps"):MapFader()
 end
@@ -984,10 +1003,8 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 	[4] = {
 		{1, "UFs", "RaidFrame", HeaderTag..L["UFs RaidFrame"], nil, setupRaidFrame, nil, L["RaidFrameTip"]},
 		{1, "UFs", "SimpleMode", NewTag..L["SimpleRaidFrame"], true, setupSimpleRaidFrame, nil, L["SimpleRaidFrameTip"]},
-		{},--blank
-		{1, "UFs", "PartyFrame", HeaderTag..L["PartyFrame"], nil, nil, nil, L["PartyFrameTip"]},
+		{1, "UFs", "PartyFrame", HeaderTag..L["PartyFrame"], nil, setupPartyFrame, nil, L["PartyFrameTip"]},
 		{1, "UFs", "PartyPetFrame", NewTag..HeaderTag..L["PartyPetFrame"], true, setupPartyPetFrame},
-		{1, "UFs", "HorizonParty", L["Horizon PartyFrame"]},
 		{},--blank
 		{1, "UFs", "ShowRaidDebuff", NewTag..L["ShowRaidDebuff"].."*", nil, nil, updateRaidAuras, L["ShowRaidDebuffTip"]},
 		{1, "UFs", "ShowRaidBuff", NewTag..L["ShowRaidBuff"].."*", true, nil, updateRaidAuras, L["ShowRaidBuffTip"]},
@@ -1005,20 +1022,16 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{},--blank
 		{1, "UFs", "RaidClickSets", HeaderTag..L["Enable ClickSets"], nil, setupClickCast},
 		{},--blank
-		{1, "UFs", "ShowSolo", L["ShowSolo"].."*", nil, nil, updateAllHeaders, L["ShowSoloTip"]},
-		{1, "UFs", "FrequentHealth", HeaderTag..L["FrequentHealth"].."*", true, nil, updateRaidHealthMethod, L["FrequentHealthTip"]},
-		{1, "UFs", "SmartRaid", NewTag..L["SmartRaid"].."*", nil, nil, updateAllHeaders, L["SmartRaidTip"]},
-		{1, "UFs", "ShowTeamIndex", L["RaidFrame TeamIndex"], nil, nil, updateRaidTextScale},
-		{3, "UFs", "HealthFrequency", L["HealthFrequency"].."*", true, {.1, .5, .05}, updateRaidHealthMethod, L["HealthFrequencyTip"]},
-		{1, "UFs", "HorizonRaid", L["Horizon RaidFrame"]},
-		{1, "UFs", "RCCName", NewTag..L["ClassColor Name"].."*", true, nil, updateRaidTextScale},
-		{1, "UFs", "HideTip", NewTag..L["HideTooltip"].."*", nil, nil, updateRaidTextScale, L["HideTooltipTip"]},
 		{4, "UFs", "RaidHealthColor", L["HealthColor"].."*", nil, {L["Default Dark"], L["ClassColorHP"], L["GradientHP"]}, updateRaidTextScale},
 		{4, "UFs", "RaidHPMode", L["HealthValueType"].."*", true, {DISABLE, L["ShowHealthPercent"], L["ShowHealthCurrent"], L["ShowHealthLoss"], L["ShowHealthLossPercent"]}, updateRaidNameText, L["100PercentTip"]},
-		{3, "UFs", "NumGroups", L["Num Groups"], nil, {4, 8, 1}},
-		{3, "UFs", "RaidTextScale", L["UFTextScale"].."*", true, {.8, 1.5, .05}, updateRaidTextScale},
-		{nil, true},-- FIXME: dirty fix for now
-		{nil, true},
+		{1, "UFs", "ShowSolo", L["ShowSolo"].."*", nil, nil, updateAllHeaders, L["ShowSoloTip"]},
+		{1, "UFs", "SmartRaid", NewTag..L["SmartRaid"].."*", nil, nil, updateAllHeaders, L["SmartRaidTip"]},
+		{3, "UFs", "RaidTextScale", L["UFTextScale"].."*", nil, {.8, 1.5, .05}, updateRaidTextScale},
+		{1, "UFs", "TeamIndex", L["RaidFrame TeamIndex"], nil, nil, updateRaidTextScale},
+		{1, "UFs", "FrequentHealth", HeaderTag..L["FrequentHealth"].."*", true, nil, updateRaidHealthMethod, L["FrequentHealthTip"]},
+		{1, "UFs", "HideTip", NewTag..L["HideTooltip"].."*", nil, nil, updateRaidTextScale, L["HideTooltipTip"]},
+		{1, "UFs", "RCCName", NewTag..L["ClassColor Name"].."*", nil, nil, updateRaidTextScale},
+		{3, "UFs", "HealthFrequency", L["HealthFrequency"].."*", true, {.1, .5, .05}, updateRaidHealthMethod, L["HealthFrequencyTip"]},
 	},
 	[5] = {
 		{1, "Nameplate", "Enable", HeaderTag..L["Enable Nameplate"], nil, setupNameplateSize, refreshNameplates},
