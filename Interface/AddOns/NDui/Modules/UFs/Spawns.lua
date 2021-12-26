@@ -596,14 +596,14 @@ function UF:OnLogin()
 
 			local teamIndexes = {}
 			local teamIndexAnchor = {
-				[1] = {"BOTTOMLEFT", "TOPLEFT", 0, 5},
-				[2] = {"BOTTOMLEFT", "TOPLEFT", 0, 5},
-				[3] = {"TOPLEFT", "BOTTOMLEFT", 0, -5},
-				[4] = {"TOPLEFT", "BOTTOMLEFT", 0, -5},
-				[5] = {"TOPRIGHT", "TOPLEFT", -5, 0},
-				[6] = {"TOPRIGHT", "TOPLEFT", -5, 0},
-				[7] = {"TOPLEFT", "TOPRIGHT", 5, 0},
-				[8] = {"TOPLEFT", "TOPRIGHT", 5, 0},
+				[1] = {"BOTTOM", "TOP", 0, 5},
+				[2] = {"BOTTOM", "TOP", 0, 5},
+				[3] = {"TOP", "BOTTOM", 0, -5},
+				[4] = {"TOP", "BOTTOM", 0, -5},
+				[5] = {"RIGHT", "LEFT", -5, 0},
+				[6] = {"RIGHT", "LEFT", -5, 0},
+				[7] = {"LEFT", "RIGHT", 5, 0},
+				[8] = {"LEFT", "RIGHT", 5, 0},
 			}
 
 			local function UpdateTeamIndex(teamIndex, showIndex, direc)
@@ -622,9 +622,9 @@ function UF:OnLogin()
 				local direc = C.db["UFs"]["RaidDirec"]
 				local parent = _G[header:GetName().."UnitButton1"]
 				if parent and not parent.teamIndex then
-					local teamIndex = B.CreateFS(header, 14, header.index)
+					local teamIndex = B.CreateFS(parent, 14, header.index)
 					teamIndex:SetTextColor(.6, .8, 1)
-					teamIndex.__owner = header
+					teamIndex.__owner = parent
 					UpdateTeamIndex(teamIndex, showIndex, direc)
 					teamIndexes[header.index] = teamIndex
 
@@ -648,7 +648,7 @@ function UF:OnLogin()
 				local numGroups = C.db["UFs"]["NumGroups"]
 				local raidWidth, raidHeight = C.db["UFs"]["RaidWidth"], C.db["UFs"]["RaidHeight"]
 				local raidFrameHeight = raidHeight + C.db["UFs"]["RaidPowerHeight"] + C.mult
-				local indexSpacing = C.db["UFs"]["TeamIndex"] and 25 or 0
+				local indexSpacing = C.db["UFs"]["TeamIndex"] and 20 or 0
 
 				local sortData = UF.RaidDirections[index]
 				for i = 1, numGroups do

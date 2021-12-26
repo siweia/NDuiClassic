@@ -833,7 +833,8 @@ end
 
 local function updateTeamIndex()
 	local UF = B:GetModule("UnitFrames")
-	if UF.UpdateRaidTeamIndex then
+	if UF.CreateAndUpdateRaidHeader then
+		UF:CreateAndUpdateRaidHeader()
 		UF:UpdateRaidTeamIndex()
 	end
 	updateRaidTextScale()
