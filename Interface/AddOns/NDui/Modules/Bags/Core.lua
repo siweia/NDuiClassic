@@ -78,9 +78,9 @@ local function highlightFunction(button, match)
 	button.searchOverlay:SetShown(not match)
 end
 
-local function IsItemMatched(type, text)
-	if not type or type == "" then return end
-	return strmatch(type, text)
+local function IsItemMatched(str, text)
+	if not str or str == "" then return end
+	return strmatch(strlower(str), text)
 end
 
 local BagSmartFilter = {
