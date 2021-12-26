@@ -409,6 +409,7 @@ function UF:OnLogin()
 		end
 
 		-- Group Styles
+		local partyMover
 		if C.db["UFs"]["PartyFrame"] then
 			oUF:RegisterStyle("Party", CreatePartyStyle)
 			oUF:SetActiveStyle("Party")
