@@ -198,9 +198,70 @@ function S:PostalSkin()
 	Postal_BlackBookButton:SetPoint("LEFT", SendMailNameEditBox, "RIGHT", 2, 0)
 end
 
+local function restyleMRTWidget(self)
+	local iconTexture = self.iconTexture
+	local bar = self.statusbar
+
+	if not self.styled then
+		B.SetBD(iconTexture)
+		self.__bg = B.SetBD(bar)
+		self.background:SetAllPoints(bar)
+
+		self.styled = true
+	end
+	iconTexture:SetTexCoord(unpack(DB.TexCoord))
+
+	local parent = self.parent
+	if parent.optionIconPosition == 3 or parent.optionIconTitles then
+		-- do nothing
+	elseif parent.optionIconPosition == 2 then
+		self.icon:SetPoint("RIGHT", self, 3, 0)
+	else
+		self.icon:SetPoint("LEFT", self, -3, 0)
+	end
+	self.__bg:SetShown(parent.optionAlphaTimeLine ~= 0)
+end
+
+local MRTLoaded
+local function LoadMRTSkin()
+	if MRTLoaded then return end
+	MRTLoaded = true
+
+	local name = "MRTRaidCooldownCol"
+	for i = 1, 10 do
+		local column = _G[name..i]
+		local lines = column and column.lines
+		if lines then
+			for j = 1, #lines do
+				local line = lines[j]
+				if line.UpdateStyle then
+					hooksecurefunc(line, "UpdateStyle", restyleMRTWidget)
+					line:UpdateStyle()
+				end
+			end
+		end
+	end
+end
+
+function S:MRT_Skin()
+	if not IsAddOnLoaded("MRT") then return end
+
+	local isEnabled = VMRT and VMRT.ExCD2 and VMRT.ExCD2.enabled
+	if isEnabled then
+		LoadMRTSkin()
+	else
+		hooksecurefunc(MRTOptionsFrameExCD2, "Load", function(self)
+			if self.chkEnable then
+				self.chkEnable:HookScript("OnClick", LoadMRTSkin)
+			end
+		end)
+	end
+end
+
 function S:LoadOtherSkins()
-	self:WhatsTraining()
-	self:RecountSkin()
-	self:BindPad()
-	self:PostalSkin()
+	S:WhatsTraining()
+	S:RecountSkin()
+	S:BindPad()
+	S:PostalSkin()
+	S:MRT_Skin()
 end
