@@ -10,7 +10,7 @@ local format, sort, floor, select = string.format, table.sort, math.floor, selec
 local GetInventoryItemLink, GetInventoryItemDurability, GetInventoryItemTexture = GetInventoryItemLink, GetInventoryItemDurability, GetInventoryItemTexture
 local GetMoney, GetRepairAllCost, RepairAllItems, CanMerchantRepair = GetMoney, GetRepairAllCost, RepairAllItems, CanMerchantRepair
 local IsInGuild, CanGuildBankRepair, GetGuildBankWithdrawMoney = IsInGuild, CanGuildBankRepair, GetGuildBankWithdrawMoney
-local C_Timer_After, IsShiftKeyDown, InCombatLockdown = C_Timer.After, IsShiftKeyDown, InCombatLockdown
+local C_Timer_After, IsShiftKeyDown = C_Timer.After, IsShiftKeyDown
 
 local repairCostString = gsub(REPAIR_COST, HEADER_COLON, ":")
 local lowDurabilityCap = .25

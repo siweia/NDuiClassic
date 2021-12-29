@@ -47,7 +47,7 @@ tinsert(C.defaultThemes, function()
 	bubbleHook:SetScript("OnUpdate", function(self, elapsed)
 		self.elapsed = self.elapsed + elapsed
 		if self.elapsed > .1 then
-			for _, chatbubble in pairs(C_ChatBubbles.GetAllChatBubbles()) do
+			for _, chatbubble in pairs(C_ChatBubbles_GetAllChatBubbles()) do
 				reskinChatBubble(chatbubble)
 			end
 			self:Hide()

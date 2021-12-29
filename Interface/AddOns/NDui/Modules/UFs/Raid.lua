@@ -3,7 +3,7 @@ local B, C, L, DB = unpack(ns)
 local oUF = ns.oUF
 local UF = B:GetModule("UnitFrames")
 
-local strmatch, format, wipe, tinsert = string.match, string.format, table.wipe, table.insert
+local strmatch, format, wipe = string.match, string.format, table.wipe
 local pairs, ipairs, next, tonumber, unpack, gsub = pairs, ipairs, next, tonumber, unpack, gsub
 local UnitAura, GetSpellInfo = UnitAura, GetSpellInfo
 local InCombatLockdown = InCombatLockdown
@@ -269,7 +269,6 @@ local function setupClickSets(self)
 		for _, v in ipairs(keyList) do
 			if v[1] == key and v[2] == modKey then
 				if tonumber(value) then
-					local name = GetSpellInfo(value)
 					self:SetAttribute(format(v[3], "type"), "spell")
 					self:SetAttribute(format(v[3], "spell"), value)
 				elseif value == "target" then
