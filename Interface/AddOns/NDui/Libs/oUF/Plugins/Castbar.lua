@@ -3,7 +3,7 @@ local B, C, L, DB = unpack(ns)
 local UF
 
 local unpack, pairs, min, format, strupper = unpack, pairs, min, format, strupper
-local GetTime, IsPlayerSpell, UnitName = GetTime, IsPlayerSpell, UnitName
+local GetTime, UnitName = GetTime, UnitName
 local UnitIsUnit, UnitExists = UnitIsUnit, UnitExists
 
 local CastbarCompleteColor = {.1, .8, 0}

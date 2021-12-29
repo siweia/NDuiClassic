@@ -70,7 +70,7 @@ function M:CreateItemString(frame, strType)
 			slotFrame.iLvlText = B.CreateFS(slotFrame, DB.Font[2]+1)
 			slotFrame.iLvlText:ClearAllPoints()
 			slotFrame.iLvlText:SetPoint("BOTTOMLEFT", slotFrame, 1, 1)
-			local relF, x, y = M:GetSlotAnchor(index)
+			local relF, x = M:GetSlotAnchor(index)
 			for i = 1, 5 do
 				local offset = (i-1)*18 + 5
 				local iconX = x > 0 and x+offset or x-offset

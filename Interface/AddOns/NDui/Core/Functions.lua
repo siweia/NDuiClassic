@@ -166,7 +166,6 @@ end
 do
 	local iLvlDB = {}
 	local itemLevelString = "^"..gsub(ITEM_LEVEL, "%%d", "")
-	local enchantString = gsub(ENCHANTED_TOOLTIP_LINE, "%%s", "(.+)")
 	local RETRIEVING_ITEM_INFO = RETRIEVING_ITEM_INFO
 
 	local tip = CreateFrame("GameTooltip", "NDui_ScanTooltip", nil, "GameTooltipTemplate")
@@ -179,7 +178,6 @@ do
 			wipe(tip.gems)
 		end
 
-		local step = 1
 		for i = 1, 5 do
 			local tex = _G[tip:GetName().."Texture"..i]
 			local texture = tex and tex:IsShown() and tex:GetTexture()

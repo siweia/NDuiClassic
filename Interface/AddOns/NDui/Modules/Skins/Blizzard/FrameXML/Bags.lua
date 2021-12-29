@@ -63,7 +63,6 @@ tinsert(C.defaultThemes, function()
 		for k = 1, MAX_CONTAINER_ITEMS do
 			local item = "ContainerFrame"..i.."Item"..k
 			local button = _G[item]
-			local searchOverlay = button.searchOverlay
 			local questTexture = _G[item.."IconQuestTexture"]
 
 			questTexture:SetDrawLayer("BACKGROUND")

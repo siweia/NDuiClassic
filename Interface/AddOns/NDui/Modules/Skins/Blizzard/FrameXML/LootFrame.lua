@@ -61,7 +61,7 @@ tinsert(C.defaultThemes, function()
 		LootFrame:SetAlpha(.4)
 	end)
 
-	MasterLooterFrame:HookScript("OnHide", function(self)
+	MasterLooterFrame:HookScript("OnHide", function()
 		LootFrame:SetAlpha(1)
 	end)
 

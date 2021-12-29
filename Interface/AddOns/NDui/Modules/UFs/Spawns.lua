@@ -3,7 +3,7 @@ local B, C, L, DB = unpack(ns)
 
 local oUF = ns.oUF
 local UF = B:GetModule("UnitFrames")
-local format, tostring = string.format, tostring
+local tostring = tostring
 
 -- Units
 local UFRangeAlpha = {insideAlpha = 1, outsideAlpha = .4}

@@ -56,7 +56,7 @@ local framesToSort = {}
 local function UpdateCategoriesOrder()
 	wipe(framesToSort)
 
-	for order, index in ipairs(orderList) do
+	for _, index in ipairs(orderList) do
 		tinsert(framesToSort, categoryFrames[index])
 	end
 end
