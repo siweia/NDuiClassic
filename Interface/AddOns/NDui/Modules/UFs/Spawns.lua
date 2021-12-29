@@ -411,6 +411,7 @@ function UF:OnLogin()
 		-- Group Styles
 		local partyMover
 		if C.db["UFs"]["PartyFrame"] then
+			local party
 			oUF:RegisterStyle("Party", CreatePartyStyle)
 			oUF:SetActiveStyle("Party")
 
@@ -636,7 +637,7 @@ function UF:OnLogin()
 			function UF:UpdateRaidTeamIndex()
 				local showIndex = C.db["UFs"]["TeamIndex"]
 				local direc = C.db["UFs"]["RaidDirec"]
-				for index, teamIndex in pairs(teamIndexes) do
+				for _, teamIndex in pairs(teamIndexes) do
 					UpdateTeamIndex(teamIndex, showIndex, direc)
 				end
 			end
