@@ -348,6 +348,7 @@ G.DefaultSettings = {
 		FriendPlate = false,
 		EnemyThru = false,
 		FriendlyThru = false,
+		BlockDBM = true,
 
 		PlateWidth = 190,
 		PlateHeight = 8,
@@ -1071,6 +1072,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Nameplate", "CastTarget", L["PlateCastTarget"].."*", true, nil, nil, L["PlateCastTargetTip"]},
 		{1, "Nameplate", "ClampTarget", NewTag..L["ClampTargetPlate"].."*", nil, nil, clampTargetPlate, L["ClampTargetPlateTip"]},
 		{1, "Nameplate", "QuestIndicator", L["QuestIndicator"], true, nil, nil, L["QuestIndicatorAddOns"]},
+		{1, "Nameplate", "BlockDBM", NewTag..L["BlockDBM"], nil, nil, nil, L["BlockDBMTip"]},
 		{},--blank
 		{1, "Nameplate", "ColoredTarget", HeaderTag..L["ColoredTarget"].."*", nil, nil, nil, L["ColoredTargetTip"]},
 		{1, "Nameplate", "ColoredFocus", HeaderTag..L["ColoredFocus"].."*", true, nil, nil, L["ColoredFocusTip"]},
