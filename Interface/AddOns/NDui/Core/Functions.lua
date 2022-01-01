@@ -528,9 +528,9 @@ do
 
 	function B:HideBackdrop()
 		if DB.isNewPatch then
-			self.NineSlice:SetAlpha(0)
+			if self.NineSlice then self.NineSlice:SetAlpha(0) end
 		else
-			self:SetBackdrop(nil)
+			if self.SetBackdrop then self:SetBackdrop(nil) end
 		end
 	end
 
