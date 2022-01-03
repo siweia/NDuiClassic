@@ -11,7 +11,7 @@ tinsert(C.defaultThemes, function()
 	BattlefieldFrameZoneDescription:SetTextColor(1, 1, 1)
 
 	-- WorldStateScoreFrame
-	B.ReskinPortraitFrame(WorldStateScoreFrame, 13, -15, -120, 70)
+	B.ReskinPortraitFrame(WorldStateScoreFrame, 13, -15, -108, 70)
 	B.ReskinScroll(WorldStateScoreScrollFrameScrollBar)
 	for i = 1, 3 do
 		B.ReskinTab(_G["WorldStateScoreFrameTab"..i])
