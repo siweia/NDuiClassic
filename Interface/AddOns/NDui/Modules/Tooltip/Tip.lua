@@ -25,10 +25,10 @@ local classification = {
 local npcIDstring = "%s "..DB.InfoColor.."%s"
 
 function TT:GetUnit()
-	local _, unit = self and self:GetUnit()
+	local _, unit = self:GetUnit()
 	if not unit then
 		local mFocus = GetMouseFocus()
-		unit = mFocus and (mFocus.unit or (mFocus.GetAttribute and mFocus:GetAttribute("unit"))) or "mouseover"
+		unit = mFocus and (mFocus.unit or (mFocus.GetAttribute and mFocus:GetAttribute("unit")))
 	end
 	return unit
 end
@@ -109,116 +109,114 @@ function TT:OnTooltipSetUnit()
 	TT.HideLines(self)
 
 	local unit = TT.GetUnit(self)
+	if not unit or not UnitExists(unit) then return end
+
 	local isShiftKeyDown = IsShiftKeyDown()
-	if UnitExists(unit) then
-		local r, g, b = B.UnitColor(unit)
-		local hexColor = B.HexRGB(r, g, b)
-		local ricon = GetRaidTargetIndex(unit)
-		local text = GameTooltipTextLeft1:GetText()
-		if ricon and ricon > 8 then ricon = nil end
-		if ricon and text then
-			GameTooltipTextLeft1:SetFormattedText(("%s %s"), ICON_LIST[ricon].."18|t", text)
-		end
-
-		local isPlayer = UnitIsPlayer(unit)
-		if isPlayer then
-			local name, realm = UnitName(unit)
-			local pvpName = UnitPVPName(unit)
-			local relationship = UnitRealmRelationship(unit)
-			if not C.db["Tooltip"]["HideTitle"] and pvpName then
-				name = pvpName
-			end
-			if realm and realm ~= "" then
-				if isShiftKeyDown or not C.db["Tooltip"]["HideRealm"] then
-					name = name.."-"..realm
-				elseif relationship == LE_REALM_RELATION_COALESCED then
-					name = name..FOREIGN_SERVER_LABEL
-				elseif relationship == LE_REALM_RELATION_VIRTUAL then
-					name = name..INTERACTIVE_SERVER_LABEL
-				end
-			end
-
-			local status = (UnitIsAFK(unit) and AFK) or (UnitIsDND(unit) and DND) or (not UnitIsConnected(unit) and PLAYER_OFFLINE)
-			if status then
-				status = format(" |cffffcc00[%s]|r", status)
-			end
-			GameTooltipTextLeft1:SetFormattedText("%s", name..(status or ""))
-
-			if C.db["Tooltip"]["FactionIcon"] then
-				local faction = UnitFactionGroup(unit)
-				if faction and faction ~= "Neutral" then
-					TT.InsertFactionFrame(self, faction)
-				end
-			end
-
-			local guildName, rank, rankIndex, guildRealm = GetGuildInfo(unit)
-			local hasText = GameTooltipTextLeft2:GetText()
-			if guildName and hasText then
-				local myGuild, _, _, myGuildRealm = GetGuildInfo("player")
-				if IsInGuild() and guildName == myGuild and guildRealm == myGuildRealm then
-					GameTooltipTextLeft2:SetTextColor(.25, 1, .25)
-				else
-					GameTooltipTextLeft2:SetTextColor(.6, .8, 1)
-				end
-
-				rankIndex = rankIndex + 1
-				if C.db["Tooltip"]["HideRank"] then rank = "" end
-				if guildRealm and isShiftKeyDown then
-					guildName = guildName.."-"..guildRealm
-				end
-				if C.db["Tooltip"]["HideJunkGuild"] and not isShiftKeyDown then
-					if strlen(guildName) > 31 then guildName = "..." end
-				end
-				GameTooltipTextLeft2:SetText("<"..guildName.."> "..rank.."("..rankIndex..")")
-			end
-
-			local line1 = GameTooltipTextLeft1:GetText()
-			GameTooltipTextLeft1:SetFormattedText("%s", hexColor..line1)
-		end
-
-		local alive = not UnitIsDeadOrGhost(unit)
-		local level = UnitLevel(unit)
-
-		if level then
-			local boss
-			if level == -1 then boss = "|cffff0000??|r" end
-
-			local diff = GetCreatureDifficultyColor(level)
-			local classify = UnitClassification(unit)
-			local textLevel = format("%s%s%s|r", B.HexRGB(diff), boss or format("%d", level), classification[classify] or "")
-			local pvpFlag = isPlayer and UnitIsPVP(unit) and format(" |cffff0000%s|r", PVP) or ""
-			local unitClass = isPlayer and format("%s %s", UnitRace(unit) or "", hexColor..(UnitClass(unit) or "").."|r") or UnitCreatureType(unit) or ""
-			local levelString = format(("%s%s %s %s"), textLevel, pvpFlag, unitClass, (not alive and "|cffCCCCCC"..DEAD.."|r" or ""))
-
-			local tiptextLevel = TT.GetLevelLine(self)
-			if tiptextLevel then
-				tiptextLevel:SetText(levelString)
-			else
-				GameTooltip:AddLine(levelString)
-			end
-		end
-
-		if UnitExists(unit.."target") then
-			local tarRicon = GetRaidTargetIndex(unit.."target")
-			if tarRicon and tarRicon > 8 then tarRicon = nil end
-			local tar = format("%s%s", (tarRicon and ICON_LIST[tarRicon].."10|t") or "", TT:GetTarget(unit.."target"))
-			self:AddLine(TARGET..": "..tar)
-		end
-
-		if not isPlayer and isShiftKeyDown then
-			local guid = UnitGUID(unit)
-			local npcID = guid and B.GetNPCID(guid)
-			if npcID then
-				local reaction = UnitReaction(unit, "player")
-				local standingText = reaction and hexColor.._G["FACTION_STANDING_LABEL"..reaction]
-				self:AddLine(format(npcIDstring, standingText or "", npcID))
-			end
-		end
-
-		self.StatusBar:SetStatusBarColor(r, g, b)
-	else
-		self.StatusBar:SetStatusBarColor(0, .9, 0)
+	local r, g, b = B.UnitColor(unit)
+	local hexColor = B.HexRGB(r, g, b)
+	local ricon = GetRaidTargetIndex(unit)
+	local text = GameTooltipTextLeft1:GetText()
+	if ricon and ricon > 8 then ricon = nil end
+	if ricon and text then
+		GameTooltipTextLeft1:SetFormattedText(("%s %s"), ICON_LIST[ricon].."18|t", text)
 	end
+
+	local isPlayer = UnitIsPlayer(unit)
+	if isPlayer then
+		local name, realm = UnitName(unit)
+		local pvpName = UnitPVPName(unit)
+		local relationship = UnitRealmRelationship(unit)
+		if not C.db["Tooltip"]["HideTitle"] and pvpName then
+			name = pvpName
+		end
+		if realm and realm ~= "" then
+			if isShiftKeyDown or not C.db["Tooltip"]["HideRealm"] then
+				name = name.."-"..realm
+			elseif relationship == LE_REALM_RELATION_COALESCED then
+				name = name..FOREIGN_SERVER_LABEL
+			elseif relationship == LE_REALM_RELATION_VIRTUAL then
+				name = name..INTERACTIVE_SERVER_LABEL
+			end
+		end
+
+		local status = (UnitIsAFK(unit) and AFK) or (UnitIsDND(unit) and DND) or (not UnitIsConnected(unit) and PLAYER_OFFLINE)
+		if status then
+			status = format(" |cffffcc00[%s]|r", status)
+		end
+		GameTooltipTextLeft1:SetFormattedText("%s", name..(status or ""))
+
+		if C.db["Tooltip"]["FactionIcon"] then
+			local faction = UnitFactionGroup(unit)
+			if faction and faction ~= "Neutral" then
+				TT.InsertFactionFrame(self, faction)
+			end
+		end
+
+		local guildName, rank, rankIndex, guildRealm = GetGuildInfo(unit)
+		local hasText = GameTooltipTextLeft2:GetText()
+		if guildName and hasText then
+			local myGuild, _, _, myGuildRealm = GetGuildInfo("player")
+			if IsInGuild() and guildName == myGuild and guildRealm == myGuildRealm then
+				GameTooltipTextLeft2:SetTextColor(.25, 1, .25)
+			else
+				GameTooltipTextLeft2:SetTextColor(.6, .8, 1)
+			end
+
+			rankIndex = rankIndex + 1
+			if C.db["Tooltip"]["HideRank"] then rank = "" end
+			if guildRealm and isShiftKeyDown then
+				guildName = guildName.."-"..guildRealm
+			end
+			if C.db["Tooltip"]["HideJunkGuild"] and not isShiftKeyDown then
+				if strlen(guildName) > 31 then guildName = "..." end
+			end
+			GameTooltipTextLeft2:SetText("<"..guildName.."> "..rank.."("..rankIndex..")")
+		end
+
+		local line1 = GameTooltipTextLeft1:GetText()
+		GameTooltipTextLeft1:SetFormattedText("%s", hexColor..line1)
+	end
+
+	local alive = not UnitIsDeadOrGhost(unit)
+	local level = UnitLevel(unit)
+
+	if level then
+		local boss
+		if level == -1 then boss = "|cffff0000??|r" end
+
+		local diff = GetCreatureDifficultyColor(level)
+		local classify = UnitClassification(unit)
+		local textLevel = format("%s%s%s|r", B.HexRGB(diff), boss or format("%d", level), classification[classify] or "")
+		local pvpFlag = isPlayer and UnitIsPVP(unit) and format(" |cffff0000%s|r", PVP) or ""
+		local unitClass = isPlayer and format("%s %s", UnitRace(unit) or "", hexColor..(UnitClass(unit) or "").."|r") or UnitCreatureType(unit) or ""
+		local levelString = format(("%s%s %s %s"), textLevel, pvpFlag, unitClass, (not alive and "|cffCCCCCC"..DEAD.."|r" or ""))
+
+		local tiptextLevel = TT.GetLevelLine(self)
+		if tiptextLevel then
+			tiptextLevel:SetText(levelString)
+		else
+			GameTooltip:AddLine(levelString)
+		end
+	end
+
+	if UnitExists(unit.."target") then
+		local tarRicon = GetRaidTargetIndex(unit.."target")
+		if tarRicon and tarRicon > 8 then tarRicon = nil end
+		local tar = format("%s%s", (tarRicon and ICON_LIST[tarRicon].."10|t") or "", TT:GetTarget(unit.."target"))
+		self:AddLine(TARGET..": "..tar)
+	end
+
+	if not isPlayer and isShiftKeyDown then
+		local guid = UnitGUID(unit)
+		local npcID = guid and B.GetNPCID(guid)
+		if npcID then
+			local reaction = UnitReaction(unit, "player")
+			local standingText = reaction and hexColor.._G["FACTION_STANDING_LABEL"..reaction]
+			self:AddLine(format(npcIDstring, standingText or "", npcID))
+		end
+	end
+
+	self.StatusBar:SetStatusBarColor(r, g, b)
 end
 
 function TT:StatusBar_OnValueChanged(value)
@@ -232,6 +230,7 @@ function TT:StatusBar_OnValueChanged(value)
 
 	if value > 0 and max == 1 then
 		self.text:SetFormattedText("%d%%", value*100)
+		self:SetStatusBarColor(.6, .6, .6) -- Wintergrasp building
 	else
 		self.text:SetText(B.Numb(value).." | "..B.Numb(max))
 	end
