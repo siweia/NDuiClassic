@@ -19,6 +19,12 @@ local CustomFilterList = {
 	[10646] = true,	-- 地精工兵炸药
 	[23737] = true,	-- 精金手雷
 	[23827] = true,	-- 超级神风炸药
+
+	[4366] = true,	-- 活动假人
+	[12662] = true,	-- 恶魔符文
+	[20520] = true,	-- 黑暗符文
+	[16023] = true,	-- 高级活动假人
+	[22797] = true,	-- 梦魇草
 }
 
 local function isCustomFilter(item)
