@@ -414,6 +414,20 @@ function M:CharacterStatePanel()
 	PaperDollFrame:HookScript("OnShow", function()
 		ExpandCharacterFrame(C.db["Misc"]["StatExpand"])
 	end)
+
+	-- Block LeatrixPlus toggle
+	if IsAddOnLoaded("Leatrix_Plus") then
+		local function resetModelAnchor(frame, _, _, x, y)
+			if x ~= 65 or y ~= -78 then
+				frame:ClearAllPoints()
+				frame:SetPoint("TOPLEFT", PaperDollFrame, 65, -78)
+				ToggleStatPanel(bu.__texture)
+				CharacterResistanceFrame:Show()
+			end
+		end
+		resetModelAnchor(CharacterModelFrame)
+		hooksecurefunc(CharacterModelFrame, "SetPoint", resetModelAnchor)
+	end
 end
 
 M:RegisterMisc("StatPanel", M.CharacterStatePanel)
