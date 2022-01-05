@@ -50,6 +50,7 @@ function M:OnLogin()
 	M:TogglePetHappiness()
 	M:QuickMenuButton()
 	M:BaudErrorFrameHelpTip()
+	M:EnhancedPicker()
 
 	-- Auto chatBubbles
 	if NDuiADB["AutoBubbles"] then
@@ -501,5 +502,97 @@ function M:BaudErrorFrameHelpTip()
 				B:ShowHelpTip(button, L["BaudErrorTip"], "TOP", -90, 15, nil, "BaudError", 80)
 			end
 		end
+	end)
+end
+
+-- Enhanced ColorPickerFrame
+local function translateColor(r)
+	if not r then r = "ff" end
+	return tonumber(r, 16)/255
+end
+
+function M:EnhancedPicker_UpdateColor()
+	local r, g, b = strmatch(self.colorStr, "(%x%x)(%x%x)(%x%x)$")
+	r = translateColor(r)
+	g = translateColor(g)
+	b = translateColor(b)
+	_G.ColorPickerFrame:SetColorRGB(r, g, b)
+end
+
+local function GetBoxColor(box)
+	local r = box:GetText()
+	r = tonumber(r)
+	if not r or r < 0 or r > 255 then r = 255 end
+	return r
+end
+
+local function updateColorRGB(self)
+	local r = GetBoxColor(_G.ColorPickerFrame.__boxR)
+	local g = GetBoxColor(_G.ColorPickerFrame.__boxG)
+	local b = GetBoxColor(_G.ColorPickerFrame.__boxB)
+	self.colorStr = format("%02x%02x%02x", r, g, b)
+	M.EnhancedPicker_UpdateColor(self)
+end
+
+local function updateColorStr(self)
+	self.colorStr = self:GetText()
+	M.EnhancedPicker_UpdateColor(self)
+end
+
+local function createCodeBox(width, index, text)
+	local box = B.CreateEditBox(_G.ColorPickerFrame, width, 22)
+	box:SetMaxLetters(index == 4 and 6 or 3)
+	box:SetTextInsets(0, 0, 0, 0)
+	box:SetPoint("TOPLEFT", _G.ColorSwatch, "BOTTOMLEFT", 0, -index*24 + 2)
+	B.CreateFS(box, 14, text, "system", "LEFT", -15, 0)
+	if index == 4 then
+		box:HookScript("OnEnterPressed", updateColorStr)
+	else
+		box:HookScript("OnEnterPressed", updateColorRGB)
+	end
+	return box
+end
+
+function M:EnhancedPicker()
+	local pickerFrame = _G.ColorPickerFrame
+	pickerFrame:SetHeight(250)
+	B.CreateMF(pickerFrame.Header, pickerFrame) -- movable by header
+	_G.OpacitySliderFrame:SetPoint("TOPLEFT", _G.ColorSwatch, "TOPRIGHT", 50, 0)
+
+	local colorBar = CreateFrame("Frame", nil, pickerFrame)
+	colorBar:SetSize(1, 22)
+	colorBar:SetPoint("BOTTOM", 0, 38)
+
+	local count = 0
+	for name, class in pairs(DB.ClassList) do
+		local value = DB.ClassColors[class]
+		if value then
+			local bu = B.CreateButton(colorBar, 22, 22, true)
+			bu.Icon:SetColorTexture(value.r, value.g, value.b)
+			bu:SetPoint("LEFT", count*22, 0)
+			bu.colorStr = value.colorStr
+			bu:SetScript("OnClick", M.EnhancedPicker_UpdateColor)
+			B.AddTooltip(bu, "ANCHOR_TOP", "|c"..value.colorStr..name)
+
+			count = count + 1
+		end
+	end
+	colorBar:SetWidth(count*22)
+
+	pickerFrame.__boxR = createCodeBox(45, 1, "|cffff0000R")
+	pickerFrame.__boxG = createCodeBox(45, 2, "|cff00ff00G")
+	pickerFrame.__boxB = createCodeBox(45, 3, "|cff0000ffB")
+	pickerFrame.__boxH = createCodeBox(70, 4, "#")
+
+	pickerFrame:HookScript("OnColorSelect", function(self)
+		local r, g, b = self:GetColorRGB()
+		r = r*255
+		g = g*255
+		b = b*255
+
+		self.__boxR:SetText(r)
+		self.__boxG:SetText(g)
+		self.__boxB:SetText(b)
+		self.__boxH:SetText(format("%02x%02x%02x", r, g, b))
 	end)
 end
