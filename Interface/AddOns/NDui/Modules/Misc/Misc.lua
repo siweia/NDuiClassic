@@ -3,6 +3,7 @@ local B, C, L, DB = unpack(ns)
 local M = B:RegisterModule("Misc")
 
 local _G = getfenv(0)
+local tonumber, strmatch = tonumber, strmatch
 local InCombatLockdown, IsModifiedClick, IsAltKeyDown = InCombatLockdown, IsModifiedClick, IsAltKeyDown
 local GetNumAuctionItems, GetAuctionItemInfo = GetNumAuctionItems, GetAuctionItemInfo
 local FauxScrollFrame_GetOffset, SetMoneyFrameColor = FauxScrollFrame_GetOffset, SetMoneyFrameColor
@@ -556,8 +557,10 @@ end
 function M:EnhancedPicker()
 	local pickerFrame = _G.ColorPickerFrame
 	pickerFrame:SetHeight(250)
-	B.CreateMF(pickerFrame.Header, pickerFrame) -- movable by header
 	_G.OpacitySliderFrame:SetPoint("TOPLEFT", _G.ColorSwatch, "TOPRIGHT", 50, 0)
+	local mover = CreateFrame("Frame", nil, pickerFrame)
+	mover:SetAllPoints(_G.ColorPickerFrameHeader)
+	B.CreateMF(mover, pickerFrame) -- movable by header)
 
 	local colorBar = CreateFrame("Frame", nil, pickerFrame)
 	colorBar:SetSize(1, 22)
@@ -586,9 +589,9 @@ function M:EnhancedPicker()
 
 	pickerFrame:HookScript("OnColorSelect", function(self)
 		local r, g, b = self:GetColorRGB()
-		r = r*255
-		g = g*255
-		b = b*255
+		r = B:Round(r*255)
+		g = B:Round(g*255)
+		b = B:Round(b*255)
 
 		self.__boxR:SetText(r)
 		self.__boxG:SetText(g)
