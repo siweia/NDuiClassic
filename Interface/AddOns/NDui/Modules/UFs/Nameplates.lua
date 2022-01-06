@@ -909,7 +909,7 @@ function UF:CreatePlayerPlate()
 	UF:CreatePowerBar(self)
 	UF:CreatePrediction(self)
 	UF:CreateClassPower(self)
-	--UF:CreateEneryTicker(self)
+	UF:CreateEneryTicker(self)
 	--if C.db["Auras"]["ClassAuras"] then
 	--	B:GetModule("Auras"):CreateLumos(self)
 	--end
@@ -933,6 +933,8 @@ function UF:TogglePlayerPlate()
 	else
 		plate:Disable()
 	end
+
+	UF.ToggleEnergyTicker(plate, C.db["Nameplate"]["EnergyTicker"])
 end
 
 function UF:TogglePlatePower()

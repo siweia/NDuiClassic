@@ -1243,6 +1243,8 @@ function UF:ToggleUFClassPower()
 			end
 		end
 	end
+
+	UF.ToggleEnergyTicker(playerFrame, C.db["UFs"]["EnergyTicker"])
 end
 
 function UF:UpdateUFClassPower()
@@ -1428,7 +1430,6 @@ function UF:CreateFCT(self)
 end
 
 function UF:CreateEneryTicker(self)
-	if not C.db["UFs"]["EnergyTicker"] then return end
 	if DB.MyClass == "WARRIOR" then return end
 
 	local ticker = CreateFrame("StatusBar", nil, self.Power)
@@ -1437,4 +1438,17 @@ function UF:CreateEneryTicker(self)
 	ticker.Spark = ticker:CreateTexture(nil, "OVERLAY")
 
 	self.EnergyManaRegen = ticker
+end
+
+function UF:ToggleEnergyTicker(enable)
+	if not self.EnergyManaRegen then return end
+	if enable then
+		if not self:IsElementEnabled("EnergyManaRegen") then
+			self:EnableElement("EnergyManaRegen")
+		end
+	else
+		if self:IsElementEnabled("EnergyManaRegen") then
+			self:DisableElement("EnergyManaRegen")
+		end
+	end
 end
