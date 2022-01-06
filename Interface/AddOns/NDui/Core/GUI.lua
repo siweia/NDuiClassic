@@ -760,10 +760,6 @@ local function updateClickThru()
 	B:GetModule("UnitFrames"):UpdatePlateClickThru()
 end
 
-local function togglePlatePower()
-	B:GetModule("UnitFrames"):TogglePlatePower()
-end
-
 local function togglePlateVisibility()
 	B:GetModule("UnitFrames"):TogglePlateVisibility()
 end
@@ -1095,7 +1091,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{},--blank
 		--{1, "Auras", "ClassAuras", L["Enable ClassAuras"], true},
 		{1, "Nameplate", "PPFadeout", L["PlayerPlate Fadeout"].."*", nil, nil, togglePlateVisibility},
-		{1, "Nameplate", "PPPowerText", L["PlayerPlate PowerText"].."*", nil, nil, togglePlatePower},
+		{1, "Nameplate", "PPPowerText", L["PlayerPlate PowerText"].."*", nil, nil, togglePlayerPlate},
 		{3, "Nameplate", "PPFadeoutAlpha", L["PlayerPlate FadeoutAlpha"].."*", true, {0, .5, .05}, togglePlateVisibility},
 		{1, "Nameplate", "EnergyTicker", NewTag..L["EnergyTicker"].."*", nil, nil, togglePlayerPlate},
 		{},--blank
