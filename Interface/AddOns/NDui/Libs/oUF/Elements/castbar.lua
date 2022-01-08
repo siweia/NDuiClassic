@@ -108,10 +108,10 @@ local function UNIT_SPELLCAST_START(self, event, unit)
 
 	local element = self.Castbar
 
-	local name, text, texture, startTime, endTime, _, castID, spellID = UnitCastingInfo(unit)
-	local notInterruptible = false
+	local name, text, texture, startTime, endTime, _, castID, arg1, arg2 = UnitCastingInfo(unit)
+	local notInterruptible, spellID = false, arg1
 	if isBuild253 then
-		name, text, texture, startTime, endTime, _, castID, notInterruptible, spellID = UnitCastingInfo(unit)
+		notInterruptible, spellID = arg1, arg2
 	end
 
 	if(not name) then
@@ -299,10 +299,10 @@ local function UNIT_SPELLCAST_CHANNEL_START(self, event, unit, _, spellID)
 
 	local element = self.Castbar
 
-	local name, _, texture, startTime, endTime, _, spellID = UnitChannelInfo(unit)
-	local notInterruptible = false
+	local name, _, texture, startTime, endTime, _, arg1, arg2 = UnitChannelInfo(unit)
+	local notInterruptible, spellID = false, arg1
 	if isBuild253 then
-		name, _, texture, startTime, endTime, _, notInterruptible, spellID = UnitChannelInfo(unit)
+		notInterruptible, spellID = arg1, arg2
 	end
 
 	if(not name) then
