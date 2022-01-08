@@ -120,8 +120,7 @@ local function UNIT_SPELLCAST_START(self, event, unit)
 	if(self.unit ~= unit and self.realUnit ~= unit) then return end
 
 	local element = self.Castbar
-	local name, text, texture, startTime, endTime, _, castID, spellID = UnitCastingInfo(unit)
-	local notInterruptible = false
+	local name, text, texture, startTime, endTime, _, castID, notInterruptible, spellID = UnitCastingInfo(unit)
 	if(not name) then
 		return element:Hide()
 	end
@@ -306,8 +305,7 @@ local function UNIT_SPELLCAST_CHANNEL_START(self, event, unit, _, spellID)
 	if(self.unit ~= unit and self.realUnit ~= unit) then return end
 
 	local element = self.Castbar
-	local name, _, texture, startTime, endTime, _, spellID = UnitChannelInfo(unit)
-	local notInterruptible = false
+	local name, _, texture, startTime, endTime, _, notInterruptible, spellID = UnitChannelInfo(unit)
 	if(not name) then
 		return
 	end
