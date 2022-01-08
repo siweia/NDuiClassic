@@ -574,9 +574,10 @@ function M:EnhancedPicker()
 	colorBar:SetSize(1, 22)
 	colorBar:SetPoint("BOTTOM", 0, 38)
 
+	local fixedShaman = {r=0, g=.44, b=.87, colorStr="ff0070DD"}
 	local count = 0
 	for name, class in pairs(DB.ClassList) do
-		local value = DB.ClassColors[class]
+		local value = class == "SHAMAN" and fixedShaman or DB.ClassColors[class]
 		if value then
 			local bu = B.CreateButton(colorBar, 22, 22, true)
 			bu.Icon:SetColorTexture(value.r, value.g, value.b)
