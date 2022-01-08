@@ -905,6 +905,7 @@ function G:SetupRaidFrame(parent)
 		for _, frame in pairs(ns.oUF.objects) do
 			if frame.mystyle == "raid" and not frame.raidType then
 				SetUnitFrameSize(frame, "Raid")
+				UF.UpdateRaidNameAnchor(frame, frame.nameText)
 			end
 		end
 		if UF.CreateAndUpdateRaidHeader then
