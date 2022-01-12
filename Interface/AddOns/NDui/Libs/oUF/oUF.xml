@@ -33,7 +33,6 @@
 	<Script file="elements\tags.lua"/>
 	<Script file="elements\threatindicator.lua"/>
 
-	<Script file='Plugins\Castbar.lua' />
 	<Script file='Plugins\FloatingCombatFeedback.lua' />
 	<Script file='Plugins\Swing.lua' />
 	<Script file='Plugins\EnergyManaRegen.lua' />

@@ -523,7 +523,7 @@ local function createBarMover(bar, text, value, anchor)
 end
 
 local function updateSpellTarget(self, _, unit)
-	B.PostCastUpdate(self.Castbar, unit)
+	UF.PostCastUpdate(self.Castbar, unit)
 end
 
 function UF:ToggleCastBarLatency(frame)
@@ -531,13 +531,13 @@ function UF:ToggleCastBarLatency(frame)
 	if not frame then return end
 
 	if C.db["UFs"]["LagString"] then
-		--frame:RegisterEvent("GLOBAL_MOUSE_UP", B.OnCastSent, true) -- Fix quests with WorldFrame interaction
-		--frame:RegisterEvent("GLOBAL_MOUSE_DOWN", B.OnCastSent, true)
-		frame:RegisterEvent("CURRENT_SPELL_CAST_CHANGED", B.OnCastSent, true)
+		--frame:RegisterEvent("GLOBAL_MOUSE_UP", UF.OnCastSent, true) -- Fix quests with WorldFrame interaction
+		--frame:RegisterEvent("GLOBAL_MOUSE_DOWN", UF.OnCastSent, true)
+		frame:RegisterEvent("CURRENT_SPELL_CAST_CHANGED", UF.OnCastSent, true)
 	else
-		--frame:UnregisterEvent("GLOBAL_MOUSE_UP", B.OnCastSent)
-		--frame:UnregisterEvent("GLOBAL_MOUSE_DOWN", B.OnCastSent)
-		frame:UnregisterEvent("CURRENT_SPELL_CAST_CHANGED", B.OnCastSent)
+		--frame:UnregisterEvent("GLOBAL_MOUSE_UP", UF.OnCastSent)
+		--frame:UnregisterEvent("GLOBAL_MOUSE_DOWN", UF.OnCastSent)
+		frame:UnregisterEvent("CURRENT_SPELL_CAST_CHANGED", UF.OnCastSent)
 		if frame.Castbar then frame.Castbar.__sendTime = nil end
 	end
 end
@@ -635,17 +635,17 @@ function UF:CreateCastBar(self)
 
 	cb.Time = timer
 	cb.Text = name
-	cb.OnUpdate = B.OnCastbarUpdate
-	cb.PostCastStart = B.PostCastStart
-	cb.PostChannelStart = B.PostCastStart
-	cb.PostCastStop = B.PostCastStop
-	cb.PostChannelStop = B.PostChannelStop
-	cb.PostCastDelayed = B.PostCastUpdate
-	cb.PostChannelUpdate = B.PostCastUpdate
-	cb.PostCastFailed = B.PostCastFailed
-	cb.PostCastInterrupted = B.PostCastFailed
-	cb.PostCastInterruptible = B.PostUpdateInterruptible
-	cb.PostCastNotInterruptible = B.PostUpdateInterruptible
+	cb.OnUpdate = UF.OnCastbarUpdate
+	cb.PostCastStart = UF.PostCastStart
+	cb.PostChannelStart = UF.PostCastStart
+	cb.PostCastStop = UF.PostCastStop
+	cb.PostChannelStop = UF.PostChannelStop
+	cb.PostCastDelayed = UF.PostCastUpdate
+	cb.PostChannelUpdate = UF.PostCastUpdate
+	cb.PostCastFailed = UF.PostCastFailed
+	cb.PostCastInterrupted = UF.PostCastFailed
+	cb.PostCastInterruptible = UF.PostUpdateInterruptible
+	cb.PostCastNotInterruptible = UF.PostUpdateInterruptible
 
 	self.Castbar = cb
 end
