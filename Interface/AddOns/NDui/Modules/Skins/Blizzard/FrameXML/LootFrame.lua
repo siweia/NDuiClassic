@@ -51,9 +51,6 @@ tinsert(C.defaultThemes, function()
 	local MasterLooterFrame = MasterLooterFrame
 
 	B.StripTextures(MasterLooterFrame)
-	if not DB.isNewPatch then
-		MasterLooterFrame.Background:Hide()
-	end
 	B.StripTextures(MasterLooterFrame.Item)
 	MasterLooterFrame.Item.Icon:SetTexCoord(.08, .92, .08, .92)
 	MasterLooterFrame.Item.bg = B.CreateBDFrame(MasterLooterFrame.Item.Icon)

@@ -40,7 +40,7 @@ C.themes["Blizzard_ItemSocketingUI"] = function()
 			_G["ItemSocketingSocket"..i].bg:SetBackdropBorderColor(color.r, color.g, color.b)
 		end
 
-		ItemSocketingDescription:HideBackdrop() -- isNewPatch
+		ItemSocketingDescription:HideBackdrop()
 	end)
 
 	if not ItemSocketingFrame.CloseButton then

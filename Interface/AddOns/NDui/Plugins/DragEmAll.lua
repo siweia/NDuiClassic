@@ -26,7 +26,6 @@ local frames = {
 	["HelpFrame"] = false,
 	["InterfaceOptionsFrame"] = false,
 	["ItemTextFrame"] = false,
-	["LFGParentFrame"] = false, -- isNewPatch, removed
 	["LootFrame"] = false,
 	["MailFrame"] = false,
 	["MerchantFrame"] = false,

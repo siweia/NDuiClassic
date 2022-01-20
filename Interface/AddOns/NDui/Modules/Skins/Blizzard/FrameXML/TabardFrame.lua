@@ -3,12 +3,8 @@ local B, C, L, DB = unpack(ns)
 
 tinsert(C.defaultThemes, function()
 	B.ReskinPortraitFrame(TabardFrame, 15, -15, -35, 73)
-	if DB.isNewPatch then
-		B.StripTextures(TabardFrameCostFrame)
-		B.CreateBDFrame(TabardFrameCostFrame, .25)
-	else
-		B.CreateBD(TabardFrameCostFrame, .25)
-	end
+	B.StripTextures(TabardFrameCostFrame)
+	B.CreateBDFrame(TabardFrameCostFrame, .25)
 	B.Reskin(TabardFrameAcceptButton)
 	B.Reskin(TabardFrameCancelButton)
 	B.ReskinRotationButtons("TabardCharacterModel")
