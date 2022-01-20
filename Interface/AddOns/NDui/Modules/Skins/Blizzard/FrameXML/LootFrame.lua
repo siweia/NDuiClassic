@@ -68,7 +68,7 @@ tinsert(C.defaultThemes, function()
 		LootFrame:SetAlpha(1)
 	end)
 
-	B.ReskinClose(select(3, MasterLooterFrame:GetChildren()))
+	B.ReskinClose(select(4, MasterLooterFrame:GetChildren()), nil)
 	B.SetBD(MasterLooterFrame)
 
 	hooksecurefunc("MasterLooterFrame_UpdatePlayers", function()
