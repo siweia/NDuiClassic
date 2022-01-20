@@ -344,7 +344,7 @@ function TT:ReskinTooltip()
 	self:SetScale(C.db["Tooltip"]["Scale"])
 
 	if not self.tipStyled then
-		B.HideBackdrop(self) -- isNewPatch
+		self:HideBackdrop() -- isNewPatch
 		self:DisableDrawLayer("BACKGROUND")
 		self.bg = B.SetBD(self, .7)
 		self.bg:SetInside(self)

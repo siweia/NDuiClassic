@@ -12,7 +12,7 @@ C.themes["Blizzard_MacroUI"] = function()
 	MacroPopupNameLeft:Hide()
 	MacroPopupNameMiddle:Hide()
 	MacroPopupNameRight:Hide()
-	B.HideBackdrop(MacroFrameTextBackground) -- isNewPatch
+	MacroFrameTextBackground:HideBackdrop() -- isNewPatch
 	select(2, MacroFrameSelectedMacroButton:GetRegions()):Hide()
 	MacroFrameSelectedMacroBackground:SetAlpha(0)
 	MacroButtonScrollFrameTop:Hide()

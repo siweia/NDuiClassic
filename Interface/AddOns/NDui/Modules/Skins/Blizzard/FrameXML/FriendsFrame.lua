@@ -265,7 +265,7 @@ tinsert(C.defaultThemes, function()
 	B.ReskinCheck(GuildControlTabPermissionsViewTab)
 	B.ReskinCheck(GuildControlTabPermissionsDepositItems)
 	B.ReskinCheck(GuildControlTabPermissionsUpdateText)
-	B.HideBackdrop(GuildControlPopupFrameTabPermissions)
+	GuildControlPopupFrameTabPermissions:HideBackdrop()
 
 	-- Font width fix
 	for i = 1, 13 do
