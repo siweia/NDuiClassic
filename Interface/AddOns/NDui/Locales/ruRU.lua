@@ -500,6 +500,7 @@ L["UFTextScale"] = "Масштаб текста рамок"
 L["Bags ShowNewItem"] = "Подсвечивать новые предметы"
 L["InstantDelete"] = "Заполнять 'УДАЛИТЬ' при удалении"
 L["PartyPetFrame"] = "Рамка питомцев группы"
+L["PartyPetTip"] = "|nYou must enable PartyFrame as well." -- need translation
 L["ToggleDirection"] = "Переключить направление"
 L["ContactList"] = "Контакты"
 L["QuickSplit"] = "Разделить"

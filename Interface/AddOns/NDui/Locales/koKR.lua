@@ -500,6 +500,7 @@ L["UFTextScale"] = "텍스트 사이즈"
 L["Bags ShowNewItem"] = "신규 아이템 밝음처리"
 L["InstantDelete"] = "템 파괴 시 DELETE 자동입력"
 L["PartyPetFrame"] = "파티원 팻프레임"
+L["PartyPetTip"] = "|nYou must enable PartyFrame as well." -- need translation
 L["ToggleDirection"] = "온오프 방향"
 L["ContactList"] = "컨택리스트"
 L["QuickSplit"] = "분할"
