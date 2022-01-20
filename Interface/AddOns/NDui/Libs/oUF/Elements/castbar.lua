@@ -88,7 +88,6 @@ local oUF = ns.oUF
 
 local GetNetStats = GetNetStats
 local GetTime = GetTime
-local isBuild253 = select(4, GetBuildInfo()) >= 20503 -- 2.5.3
 
 local function updateSafeZone(self)
 	local safeZone = self.SafeZone
@@ -108,11 +107,7 @@ local function UNIT_SPELLCAST_START(self, event, unit)
 
 	local element = self.Castbar
 
-	local name, text, texture, startTime, endTime, _, castID, arg1, arg2 = UnitCastingInfo(unit)
-	local notInterruptible, spellID = false, arg1
-	if isBuild253 then
-		notInterruptible, spellID = arg1, arg2
-	end
+	local name, text, texture, startTime, endTime, _, castID, notInterruptible, spellID = UnitCastingInfo(unit)
 
 	if(not name) then
 		return element:Hide()
@@ -299,11 +294,7 @@ local function UNIT_SPELLCAST_CHANNEL_START(self, event, unit, _, spellID)
 
 	local element = self.Castbar
 
-	local name, _, texture, startTime, endTime, _, arg1, arg2 = UnitChannelInfo(unit)
-	local notInterruptible, spellID = false, arg1
-	if isBuild253 then
-		notInterruptible, spellID = arg1, arg2
-	end
+	local name, _, texture, startTime, endTime, _, notInterruptible, spellID = UnitChannelInfo(unit)
 
 	if(not name) then
 		return
