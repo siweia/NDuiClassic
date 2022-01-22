@@ -20,6 +20,13 @@ local function setupCheckButton()
 	end)
 	B.AddTooltip(mono, "ANCHOR_BOTTOMLEFT", L["AutoQuestTip"], "info", true)
 
+	if Questie_Toggle then
+		Questie_Toggle:ClearAllPoints()
+		Questie_Toggle:SetHeight(22)
+		Questie_Toggle:SetPoint("LEFT", WorldMapZoomOutButton, "RIGHT", 5, 0)
+		Questie_Toggle.SetPoint = B.Dummy
+	end
+
 	created = true
 end
 WorldMapFrame:HookScript("OnShow", setupCheckButton)
