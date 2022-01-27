@@ -1,8 +1,11 @@
-local parent, ns = ...
+local _, ns = ...
 local oUF = ns.oUF
 
 -- sourced from Blizzard_ArenaUI/Blizzard_ArenaUI.lua
 local MAX_ARENA_ENEMIES = _G.MAX_ARENA_ENEMIES or 5
+
+-- sourced from FrameXML/TargetFrame.lua
+local MAX_BOSS_FRAMES = _G.MAX_BOSS_FRAMES or 5
 
 -- sourced from FrameXML/PartyMemberFrame.lua
 local MAX_PARTY_MEMBERS = _G.MAX_PARTY_MEMBERS or 4
@@ -66,6 +69,10 @@ function oUF:DisableBlizzard(unit)
 
 		-- For the damn vehicle support:
 		PlayerFrame:RegisterEvent('PLAYER_ENTERING_WORLD')
+		--PlayerFrame:RegisterEvent('UNIT_ENTERING_VEHICLE')
+		--PlayerFrame:RegisterEvent('UNIT_ENTERED_VEHICLE')
+		--PlayerFrame:RegisterEvent('UNIT_EXITING_VEHICLE')
+		--PlayerFrame:RegisterEvent('UNIT_EXITED_VEHICLE')
 
 		-- User placed frames don't animate
 		PlayerFrame:SetUserPlaced(true)
@@ -80,6 +87,15 @@ function oUF:DisableBlizzard(unit)
 		handleFrame(TargetofFocusFrame)
 	elseif(unit == 'targettarget') then
 		handleFrame(TargetFrameToT)
+--[[elseif(unit:match('boss%d?$')) then
+		local id = unit:match('boss(%d)')
+		if(id) then
+			handleFrame('Boss' .. id .. 'TargetFrame')
+		else
+			for i = 1, MAX_BOSS_FRAMES do
+				handleFrame(string.format('Boss%dTargetFrame', i))
+			end
+		end]]
 	elseif(unit:match('party%d?$')) then
 		local id = unit:match('party(%d)')
 		if(id) then
