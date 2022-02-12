@@ -397,17 +397,19 @@ function UF:UpdateForQuestie(npcID)
 		local foundObjective, progressText
 		for _, tooltip in pairs(data) do
 			local questID = tooltip.questId
-			_QuestieQuest:UpdateQuest(questID)
+			if questID then
+				_QuestieQuest:UpdateQuest(questID)
 
-			if _QuestiePlayer.currentQuestlog[questID] then
-				foundObjective = true
+				if _QuestiePlayer.currentQuestlog[questID] then
+					foundObjective = true
 
-				if tooltip.objective and tooltip.objective.Needed then
-					progressText = tooltip.objective.Needed - tooltip.objective.Collected
-					if progressText == 0 then
-						foundObjective = nil
+					if tooltip.objective and tooltip.objective.Needed then
+						progressText = tooltip.objective.Needed - tooltip.objective.Collected
+						if progressText == 0 then
+							foundObjective = nil
+						end
+						break
 					end
-					break
 				end
 			end
 		end
