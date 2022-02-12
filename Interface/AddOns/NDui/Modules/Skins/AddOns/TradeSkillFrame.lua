@@ -247,6 +247,7 @@ function S:EnhancedTradeSkill()
 		TradeSkillRankFrame:ClearAllPoints()
 		TradeSkillRankFrame:SetPoint("TOPLEFT", TradeSkillFrame, 24, -24)
 	end
+	TradeSkillFrameAvailableFilterCheckButton:SetPoint("TOPLEFT", 230, -70)
 
 	-- Search widgets
 	local searchBox, nextButton, prevButton = S:CreateSearchWidget(TradeSkillFrame, TradeSkillRankFrame)

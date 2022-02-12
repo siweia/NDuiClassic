@@ -67,6 +67,7 @@ C.themes["Blizzard_TradeSkillUI"] = function()
 
 	B.ReskinCollapse(TradeSkillCollapseAllButton)
 	TradeSkillExpandButtonFrame:DisableDrawLayer("BACKGROUND")
+	B.ReskinCheck(TradeSkillFrameAvailableFilterCheckButton)
 
 	TradeSkillFrame:HookScript("OnShow", function()
 		for i = 1, 22 do
