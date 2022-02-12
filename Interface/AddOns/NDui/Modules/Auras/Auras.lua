@@ -11,7 +11,6 @@ local GetInventoryItemQuality, GetInventoryItemTexture, GetItemQualityColor, Get
 function A:OnLogin()
 	A:HideBlizBuff()
 	A:BuildBuffFrame()
-	A:Totems()
 	A:InitReminder()
 end
 
