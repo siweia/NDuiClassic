@@ -469,7 +469,6 @@ G.AccountSettings = {
 	GuildSortBy = 1,
 	GuildSortOrder = true,
 	DetectVersion = DB.Version,
-	ResetDetails = true,
 	LockUIScale = false,
 	UIScale = .71,
 	NumberFormat = 1,
@@ -889,8 +888,7 @@ StaticPopupDialogs["RESET_DETAILS"] = {
 	button1 = YES,
 	button2 = NO,
 	OnAccept = function()
-		NDuiADB["ResetDetails"] = true
-		ReloadUI()
+		B:GetModule("Skins"):ResetDetailsAnchor(true)
 	end,
 	whileDead = 1,
 }
