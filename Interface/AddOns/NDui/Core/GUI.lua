@@ -126,6 +126,8 @@ G.DefaultSettings = {
 		Arena = true,
 		Castbars = true,
 		SwingBar = false,
+		SwingWidth = 275,
+		SwingHeight = 3,
 		SwingTimer = false,
 		RaidFrame = true,
 		NumGroups = 8,
@@ -589,6 +591,10 @@ local function setupUFAuras()
 	G:SetupUFAuras(guiPage[3])
 end
 
+local function setupSwingBars()
+	G:SetupSwingBars(guiPage[3])
+end
+
 local function setupRaidFrame()
 	G:SetupRaidFrame(guiPage[4])
 end
@@ -822,6 +828,10 @@ local function toggleCastBarLatency()
 	B:GetModule("UnitFrames"):ToggleCastBarLatency()
 end
 
+local function toggleSwingBars()
+	B:GetModule("UnitFrames"):ToggleSwingBars()
+end
+
 local function updateSmoothingAmount()
 	B:SetSmoothingAmount(NDuiADB["SmoothAmount"])
 end
@@ -997,8 +1007,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{},--blank
 		{1, "UFs", "Castbars", HeaderTag..L["UFs Castbar"], nil, setupCastbar},
 		{1, "UFs", "LagString", L["Castbar LagString"].."*", true, nil, toggleCastBarLatency},
-		{1, "UFs", "SwingBar", L["UFs SwingBar"]},
-		{1, "UFs", "SwingTimer", L["UFs SwingTimer"], true, nil, nil, L["SwingTimer Tip"]},
+		{1, "UFs", "SwingBar", L["UFs SwingBar"].."*", nil, setupSwingBars, toggleSwingBars},
 		{},--blank
 		{1, "UFs", "CombatText", HeaderTag..L["UFs CombatText"]},
 		{1, "UFs", "AutoAttack", L["CombatText AutoAttack"].."*"},
