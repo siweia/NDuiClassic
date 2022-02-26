@@ -33,13 +33,13 @@ local function CreatePlayerStyle(self)
 	UF:CreateClassPower(self)
 	UF:CreateEneryTicker(self)
 	UF:CreateAuras(self)
+	UF:CreateSwing(self)
 
 	if C.db["UFs"]["Castbars"] then
 		UF:ReskinMirrorBars()
 		--UF:ReskinTimerTrakcer(self)
 	end
 	if not C.db["Misc"]["ExpRep"] then UF:CreateExpRepBar(self) end
-	if C.db["UFs"]["SwingBar"] then UF:CreateSwing(self) end
 end
 
 local function CreateTargetStyle(self)
@@ -389,6 +389,7 @@ function UF:OnLogin()
 			end
 		end]]
 
+		UF:ToggleSwingBars()
 		UF:ToggleUFClassPower()
 		UF:UpdateTextScale()
 		UF:ToggleAllAuras()
