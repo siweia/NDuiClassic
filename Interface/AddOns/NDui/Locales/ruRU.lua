@@ -778,3 +778,4 @@ L["BottomBox"] = "Editbox on bottom" -- need translation
 L["BlockDBM"] = "Block DBM Auras" -- need translation
 L["BlockDBMTip"] = "|nIf enabled, nameplate auras add by DBM will be removed, and auto presents in nameplate white list." -- need translation
 L["AutoHide"] = "AutoHide" -- need translation
+L["OffhandOnTop"] = "Offhand timer on top" -- need translation

@@ -126,6 +126,7 @@ G.DefaultSettings = {
 		SwingWidth = 275,
 		SwingHeight = 3,
 		SwingTimer = false,
+		OffOnTop = false,
 		RaidFrame = true,
 		NumGroups = 8,
 		RaidDirec = 1,
