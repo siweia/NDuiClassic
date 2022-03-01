@@ -351,17 +351,15 @@ local function FixLanguageFilterSideEffects()
 	B.CreateFS(HelpFrame, 18, L["LanguageFilterTip"], "system",  "TOP", 0, 30)
 end
 
-local hasCNFix
 function module:ToggleLanguageFilter()
 	if C.db["Chat"]["Freedom"] then
 		if GetCVar("portal") == "CN" then
 			ConsoleExec("portal TW")
 			FixLanguageFilterSideEffects()
-			hasCNFix = true
 		end
 		SetCVar("profanityFilter", 0)
 	else
-		if hasCNFix then
+		if sideEffectFixed then
 			ConsoleExec("portal CN")
 		end
 		SetCVar("profanityFilter", 1)
