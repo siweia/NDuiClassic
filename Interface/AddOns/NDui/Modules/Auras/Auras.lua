@@ -15,7 +15,11 @@ function A:OnLogin()
 	A:InitReminder()
 end
 
+-- 2.5.4.42581 missing APIs for in AuraUtil.ForEachAura
+local disableBuff = DB.isNewPatch and not AuraUtil.ForEachAura
+
 function A:HideBlizBuff()
+	if disableBuff then return end
 	if not C.db["Auras"]["BuffFrame"] and not C.db["Auras"]["HideBlizBuff"] then return end
 
 	B.HideObject(_G.BuffFrame)
@@ -23,6 +27,7 @@ function A:HideBlizBuff()
 end
 
 function A:BuildBuffFrame()
+	if disableBuff then return end
 	if not C.db["Auras"]["BuffFrame"] then return end
 
 	-- Config
