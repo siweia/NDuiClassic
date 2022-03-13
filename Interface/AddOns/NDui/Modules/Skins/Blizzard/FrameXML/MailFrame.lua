@@ -41,16 +41,21 @@ tinsert(C.defaultThemes, function()
 	B.ReskinInput(SendMailNameEditBox, 20, 85)
 	B.ReskinInput(SendMailSubjectEditBox, nil, 200)
 	B:UpdateMoneyDisplay(SendMailMoneyGold, SendMailMoneySilver, SendMailMoneyCopper)
-	B.ReskinScroll(SendMailScrollFrameScrollBar)
 	B.ReskinScroll(OpenMailScrollFrameScrollBar)
+	B.CreateBDFrame(OpenMailScrollFrame, .25)
 	B.ReskinRadio(SendMailSendMoneyButton)
 	B.ReskinRadio(SendMailCODButton)
 	B.ReskinArrow(InboxPrevPageButton, "left")
 	B.ReskinArrow(InboxNextPageButton, "right")
 
-	B.CreateBDFrame(OpenMailScrollFrame, .25)
-	local bg = B.CreateBDFrame(SendMailScrollFrame, .25)
-	bg:SetPoint("TOPLEFT", 6, 0)
+	if DB.isNewPatch then
+		B.ReskinTrimScroll(MailEditBoxScrollBar)
+		B.CreateBDFrame(MailEditBox, .25)
+	else
+		B.ReskinScroll(SendMailScrollFrameScrollBar)
+		local bg = B.CreateBDFrame(SendMailScrollFrame, .25)
+		bg:SetPoint("TOPLEFT", 6, 0)
+	end
 
 	SendMailMailButton:SetPoint("RIGHT", SendMailCancelButton, "LEFT", -1, 0)
 	OpenMailDeleteButton:SetPoint("RIGHT", OpenMailCancelButton, "LEFT", -1, 0)
