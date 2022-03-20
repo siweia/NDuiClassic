@@ -627,13 +627,6 @@ function UF:CreatePlates()
 	self.Health.frequentUpdates = true
 	self.Health.UpdateColor = UF.UpdateColor
 
-	local title = B.CreateFS(self, C.db["Nameplate"]["NameTextSize"]-1)
-	title:ClearAllPoints()
-	title:SetPoint("TOP", self, "BOTTOM", 0, -10)
-	title:Hide()
-	self:Tag(title, "[npctitle]")
-	self.npcTitle = title
-
 	UF:CreateHealthText(self)
 	UF:CreateCastBar(self)
 	UF:CreateRaidMark(self)
@@ -645,6 +638,13 @@ function UF:CreatePlates()
 	self.powerText:ClearAllPoints()
 	self.powerText:SetPoint("TOP", self.Castbar, "BOTTOM", 0, -4)
 	self:Tag(self.powerText, "[nppp]")
+
+	local title = B.CreateFS(self, C.db["Nameplate"]["NameTextSize"]-1)
+	title:ClearAllPoints()
+	title:SetPoint("TOP", self, "BOTTOM", 0, -10)
+	title:Hide()
+	self:Tag(title, "[npctitle]")
+	self.npcTitle = title
 
 	UF:MouseoverIndicator(self)
 	UF:AddTargetIndicator(self)
@@ -712,29 +712,36 @@ function UF:UpdateNameplateSize()
 	local font, fontFlag = DB.Font[1], DB.Font[3]
 	local iconSize = plateHeight + plateCBHeight + 5
 	local nameType = C.db["Nameplate"]["NameType"]
+	local nameOnlyTextSize, nameOnlyTitleSize = C.db["Nameplate"]["NameOnlyTextSize"], C.db["Nameplate"]["NameOnlyTitleSize"]
 
-	self:SetSize(plateWidth, plateHeight)
-	self.nameText:SetFont(font, nameTextSize, fontFlag)
-	if self.plateType ~= "NameOnly" then
+	if self.plateType == "NameOnly" then
+		self.nameText:SetFont(font, nameOnlyTextSize, fontFlag)
+		self:Tag(self.nameText, "[nprare][nplevel][color][name]")
+		self.__tagIndex = 6
+		self.npcTitle:SetFont(font, nameOnlyTitleSize, fontFlag)
+		self.npcTitle:UpdateTag()
+	else
+		self.nameText:SetFont(font, nameTextSize, fontFlag)
 		self:Tag(self.nameText, UF.PlateNameTags[nameType])
-		self.nameText:UpdateTag()
 		self.__tagIndex = nameType
+
+		self:SetSize(plateWidth, plateHeight)
+		self.Castbar.Icon:SetSize(iconSize, iconSize)
+		self.Castbar.glowFrame:SetSize(iconSize+8, iconSize+8)
+		self.Castbar:SetHeight(plateCBHeight)
+		self.Castbar.Time:SetFont(font, CBTextSize, fontFlag)
+		self.Castbar.Time:SetPoint("TOPRIGHT", self.Castbar, "RIGHT", 0, plateCBOffset)
+		self.Castbar.Text:SetFont(font, CBTextSize, fontFlag)
+		self.Castbar.Text:SetPoint("TOPLEFT", self.Castbar, "LEFT", 0, plateCBOffset)
+		self.Castbar.Shield:SetPoint("TOP", self.Castbar, "CENTER", 0, plateCBOffset)
+		self.Castbar.Shield:SetSize(CBTextSize + 4, CBTextSize + 4)
+		self.Castbar.spellTarget:SetFont(font, CBTextSize+3, fontFlag)
+		self.healthValue:SetFont(font, healthTextSize, fontFlag)
+		self.healthValue:SetPoint("RIGHT", self, 0, healthTextOffset)
+		self:Tag(self.healthValue, "[VariousHP("..UF.VariousTagIndex[C.db["Nameplate"]["HealthType"]]..")]")
+		self.healthValue:UpdateTag()
 	end
-	self.npcTitle:SetFont(font, nameTextSize-1, fontFlag)
-	self.Castbar.Icon:SetSize(iconSize, iconSize)
-	self.Castbar.glowFrame:SetSize(iconSize+8, iconSize+8)
-	self.Castbar:SetHeight(plateCBHeight)
-	self.Castbar.Time:SetFont(font, CBTextSize, fontFlag)
-	self.Castbar.Time:SetPoint("TOPRIGHT", self.Castbar, "RIGHT", 0, plateCBOffset)
-	self.Castbar.Text:SetFont(font, CBTextSize, fontFlag)
-	self.Castbar.Text:SetPoint("TOPLEFT", self.Castbar, "LEFT", 0, plateCBOffset)
-	self.Castbar.Shield:SetPoint("TOP", self.Castbar, "CENTER", 0, plateCBOffset)
-	self.Castbar.Shield:SetSize(CBTextSize + 4, CBTextSize + 4)
-	self.Castbar.spellTarget:SetFont(font, CBTextSize+3, fontFlag)
-	self.healthValue:SetFont(font, healthTextSize, fontFlag)
-	self.healthValue:SetPoint("RIGHT", self, 0, healthTextOffset)
-	self:Tag(self.healthValue, "[VariousHP("..UF.VariousTagIndex[C.db["Nameplate"]["HealthType"]]..")]")
-	self.healthValue:UpdateTag()
+	self.nameText:UpdateTag()
 end
 
 function UF:RefreshNameplats()
@@ -774,9 +781,6 @@ function UF:UpdatePlateByType()
 		end
 
 		name:SetJustifyH("CENTER")
-		self:Tag(name, "[nprare][nplevel][color][name]")
-		self.__tagIndex = 6
-		name:UpdateTag()
 		name:SetPoint("CENTER", self, "BOTTOM")
 		hpval:Hide()
 		title:Show()
@@ -798,10 +802,9 @@ function UF:UpdatePlateByType()
 
 		raidtarget:SetPoint("BOTTOMRIGHT", self, "TOPLEFT", 0, 3)
 		if questIcon then questIcon:SetPoint("LEFT", self, "RIGHT", -1, 0) end
-
-		UF.UpdateNameplateSize(self)
 	end
 
+	UF.UpdateNameplateSize(self)
 	UF.UpdateTargetIndicator(self)
 	UF.ToggleNameplateAuras(self)
 end
