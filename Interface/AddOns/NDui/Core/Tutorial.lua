@@ -21,7 +21,6 @@ local function ForceDefaultSettings()
 	SetCVar("lockActionBars", 1)
 	SetCVar("autoQuestWatch", 1)
 	SetCVar("overrideArchive", 0)
-	SetCVar("predictedHealth", 1)
 	SetCVar("cameraDistanceMaxZoomFactor", 2.6)
 	SetActionBarToggles(1, 1, 1, 1)
 	if not InCombatLockdown() then
