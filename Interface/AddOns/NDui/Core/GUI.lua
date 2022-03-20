@@ -374,6 +374,8 @@ G.DefaultSettings = {
 		NameOnlyTitleSize = 12,
 		NameOnlyTitle = true,
 		NameOnlyGuild = false,
+		CVarOnlyNames = false,
+		CVarShowNPCs = false,
 	},
 	Skins = {
 		DBM = true,
@@ -1046,7 +1048,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 	[5] = {
 		{1, "Nameplate", "Enable", HeaderTag..L["Enable Nameplate"], nil, setupNameplateSize, refreshNameplates},
 		{1, "Nameplate", "FriendPlate", L["FriendPlate"].."*", nil, nil, refreshNameplates, L["FriendPlateTip"]},
-		{1, "Nameplate", "NameOnlyMode", L["NameOnlyMode"].."*", true, setupNameOnlySize, nil, L["NameOnlyModeTip"]},
+		{1, "Nameplate", "NameOnlyMode", NewTag..L["NameOnlyMode"].."*", true, setupNameOnlySize, nil, L["NameOnlyModeTip"]},
 		{4, "Nameplate", "NameType", L["NameTextType"].."*", nil, {DISABLE, L["Tag:name"], L["Tag:levelname"], L["Tag:rarename"], L["Tag:rarelevelname"]}, refreshNameplates, L["PlateLevelTagTip"]},
 		{4, "Nameplate", "HealthType", L["HealthValueType"].."*", true, G.HealthValues, refreshNameplates, L["100PercentTip"]},
 		{},--blank
@@ -1086,6 +1088,8 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		--{1, "Nameplate", "DPSRevertThreat", L["DPS Revert Threat"].."*", true},
 		--{5, "Nameplate", "OffTankColor", L["OffTank Color"].."*", 3},
 		{},--blank
+		{1, "Nameplate", "CVarOnlyNames", NewTag..L["CVarOnlyNames"], nil, nil, updatePlateCVars, L["CVarOnlyNamesTip"]},
+		{1, "Nameplate", "CVarShowNPCs", NewTag..L["CVarShowNPCs"].."*", true, nil, updatePlateCVars, L["CVarShowNPCsTip"]},
 		{3, "Nameplate", "PlateRange", L["PlateRange"].."*", nil, {0, 41, 1}, updatePlateCVars},
 		{3, "Nameplate", "VerticalSpacing", L["NP VerticalSpacing"].."*", true, {.5, 1.5, .1}, updatePlateCVars},
 		{3, "Nameplate", "MinScale", L["Nameplate MinScale"].."*", false, {.5, 1, .1}, updatePlateCVars},
