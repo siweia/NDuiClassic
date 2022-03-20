@@ -627,7 +627,7 @@ function UF:CreatePlates()
 
 	local title = B.CreateFS(self, C.db["Nameplate"]["NameTextSize"]-1)
 	title:ClearAllPoints()
-	title:SetPoint("TOP", self, "BOTTOM", 0, -10)
+	title:SetPoint("TOP", self.nameText, "BOTTOM", 0, -3)
 	title:Hide()
 	self:Tag(title, "[npctitle]")
 	self.npcTitle = title
