@@ -463,6 +463,8 @@ function G:ExportGUIData()
 			for k, v in pairs(VALUE) do
 				text = text..";ACCOUNT:"..KEY..":"..k..":"..v
 			end
+		elseif VALUE == true or VALUE == false then
+			text = text..";ACCOUNT:"..KEY..":"..tostring(VALUE)
 		end
 	end
 
@@ -509,7 +511,11 @@ function G:ImportGUIData()
 		local option = options[i]
 		local key, value, arg1 = strsplit(":", option)
 		if arg1 == "true" or arg1 == "false" then
-			C.db[key][value] = toBoolean(arg1)
+			if key == "ACCOUNT" then
+				NDuiADB[value] = toBoolean(arg1)
+			else
+				C.db[key][value] = toBoolean(arg1)
+			end
 		elseif arg1 == "EMPTYTABLE" then
 			C.db[key][value] = {}
 		elseif strfind(value, "Color") and (arg1 == "r" or arg1 == "g" or arg1 == "b") then
