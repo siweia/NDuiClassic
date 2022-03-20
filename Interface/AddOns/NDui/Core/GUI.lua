@@ -928,7 +928,7 @@ G.TabList = {
 	L["Unitframes"],
 	NewTag..L["RaidFrame"],
 	NewTag..L["Nameplate"],
-	NewTag..L["PlayerPlate"],
+	L["PlayerPlate"],
 	L["Auras"],
 	L["Raid Tools"],
 	L["ChatFrame"],
@@ -1069,7 +1069,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Nameplate", "CastTarget", L["PlateCastTarget"].."*", true, nil, nil, L["PlateCastTargetTip"]},
 		{1, "Nameplate", "ClampTarget", L["ClampTargetPlate"].."*", nil, nil, updatePlateCVars, L["ClampTargetPlateTip"]},
 		{1, "Nameplate", "QuestIndicator", L["QuestIndicator"], true, nil, nil, L["QuestIndicatorAddOns"]},
-		{1, "Nameplate", "BlockDBM", NewTag..L["BlockDBM"], nil, nil, nil, L["BlockDBMTip"]},
+		{1, "Nameplate", "BlockDBM", L["BlockDBM"], nil, nil, nil, L["BlockDBMTip"]},
 		{},--blank
 		{1, "Nameplate", "ColoredTarget", HeaderTag..L["ColoredTarget"].."*", nil, nil, nil, L["ColoredTargetTip"]},
 		{1, "Nameplate", "ColoredFocus", HeaderTag..L["ColoredFocus"].."*", true, nil, nil, L["ColoredFocusTip"]},
@@ -1103,7 +1103,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Nameplate", "PPFadeout", L["PlayerPlate Fadeout"].."*", nil, nil, togglePlateVisibility},
 		{1, "Nameplate", "PPPowerText", L["PlayerPlate PowerText"].."*", nil, nil, togglePlayerPlate},
 		{3, "Nameplate", "PPFadeoutAlpha", L["PlayerPlate FadeoutAlpha"].."*", true, {0, .5, .05}, togglePlateVisibility},
-		{1, "Nameplate", "EnergyTicker", NewTag..L["EnergyTicker"].."*", nil, nil, togglePlayerPlate},
+		{1, "Nameplate", "EnergyTicker", L["EnergyTicker"].."*", nil, nil, togglePlayerPlate},
 		{},--blank
 		{3, "Nameplate", "PPWidth", L["Width"].."*", false, {150, 300, 1}, refreshNameplates},
 		{3, "Nameplate", "PPBarHeight", L["PlayerPlate CPHeight"].."*", true, {2, 15, 1}, refreshNameplates},

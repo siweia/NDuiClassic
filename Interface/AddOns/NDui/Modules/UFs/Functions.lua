@@ -564,8 +564,8 @@ function UF:CreateCastBar(self)
 		cb:SetSize(C.db["UFs"]["FocusCBWidth"], C.db["UFs"]["FocusCBHeight"])
 		createBarMover(cb, L["Focus Castbar"], "FocusCB", C.UFs.Focuscb)
 	elseif mystyle == "boss" or mystyle == "arena" then
-		cb:SetPoint("TOPLEFT", self.Power, "BOTTOMLEFT", 0, -8)
-		cb:SetPoint("TOPRIGHT", self.Power, "BOTTOMRIGHT", 0, -8)
+		cb:SetPoint("TOPLEFT", self.Power, "BOTTOMLEFT", 0, -3)
+		cb:SetPoint("TOPRIGHT", self.Power, "BOTTOMRIGHT", 0, -3)
 		cb:SetHeight(10)
 	elseif mystyle == "nameplate" then
 		cb:SetPoint("TOPLEFT", self, "BOTTOMLEFT", 0, -5)
