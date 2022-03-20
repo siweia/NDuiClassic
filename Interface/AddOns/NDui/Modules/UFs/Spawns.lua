@@ -384,7 +384,7 @@ function UF:OnLogin()
 				if i == 1 then
 					arena[i].mover = B.Mover(arena[i], L["ArenaFrame"]..i, "Arena1", {"RIGHT", UIParent, "RIGHT", -350, -90}, moverWidth, moverHeight)
 				else
-					arena[i].mover = B.Mover(arena[i], L["ArenaFrame"]..i, "Arena"..i, {"BOTTOM", arena[i-1], "TOP", 0, 50}, moverWidth, moverHeight)
+					arena[i].mover = B.Mover(arena[i], L["ArenaFrame"]..i, "Arena"..i, {"BOTTOMLEFT", arena[i-1], "TOPLEFT", 0, 50}, moverWidth, moverHeight)
 				end
 			end
 		end]]
