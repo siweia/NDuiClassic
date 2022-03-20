@@ -16,26 +16,14 @@ local INTERRUPTED = INTERRUPTED
 local _QuestieTooltips, _QuestiePlayer, _QuestieQuest
 
 -- Init
-function UF:ClampTargetPlate()
+function UF:UpdatePlateCVars()
 	SetCVar("ClampTargetNameplateToScreen", C.db["Nameplate"]["ClampTarget"] and 1 or 0)
-end
-
-function UF:UpdatePlateRange()
 	SetCVar("nameplateMaxDistance", C.db["Nameplate"]["PlateRange"])
-end
-
-function UF:UpdatePlateScale()
 	SetCVar("namePlateMinScale", C.db["Nameplate"]["MinScale"])
 	SetCVar("namePlateMaxScale", C.db["Nameplate"]["MinScale"])
-end
-
-function UF:UpdatePlateAlpha()
 	SetCVar("nameplateMinAlpha", C.db["Nameplate"]["MinAlpha"])
 	SetCVar("nameplateMaxAlpha", C.db["Nameplate"]["MinAlpha"])
 	SetCVar("nameplateNotSelectedAlpha", C.db["Nameplate"]["MinAlpha"])
-end
-
-function UF:UpdatePlateSpacing()
 	SetCVar("nameplateOverlapV", C.db["Nameplate"]["VerticalSpacing"])
 end
 
@@ -47,16 +35,12 @@ function UF:UpdatePlateClickThru()
 end
 
 function UF:SetupCVars()
-	UF:ClampTargetPlate()
-	UF:UpdatePlateRange()
+	UF:UpdatePlateCVars()
 	SetCVar("nameplateOverlapH", .8)
-	UF:UpdatePlateSpacing()
-	UF:UpdatePlateAlpha()
 	SetCVar("nameplateSelectedAlpha", 1)
-	UF:UpdatePlateClickThru()
 	SetCVar("predictedHealth", 1)
+	UF:UpdatePlateClickThru()
 
-	UF:UpdatePlateScale()
 	SetCVar("nameplateSelectedScale", 1)
 	SetCVar("nameplateLargerScale", 1)
 	SetCVar("nameplateGlobalScale", 1)
