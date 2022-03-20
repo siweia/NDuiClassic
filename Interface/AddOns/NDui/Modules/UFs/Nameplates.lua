@@ -54,6 +54,7 @@ function UF:SetupCVars()
 	UF:UpdatePlateAlpha()
 	SetCVar("nameplateSelectedAlpha", 1)
 	UF:UpdatePlateClickThru()
+	SetCVar("predictedHealth", 1)
 
 	UF:UpdatePlateScale()
 	SetCVar("nameplateSelectedScale", 1)
