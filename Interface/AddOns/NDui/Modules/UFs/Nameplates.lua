@@ -208,8 +208,14 @@ function UF:UpdateTargetChange()
 	if C.db["Nameplate"]["TargetIndicator"] ~= 1 then
 		if UnitIsUnit(unit, "target") and not UnitIsUnit(unit, "player") then
 			element:Show()
+			if element.TopArrow:IsShown() and not element.TopArrowAnim:IsPlaying() then
+				element.TopArrowAnim:Play()
+			end
 		else
 			element:Hide()
+			if element.TopArrowAnim:IsPlaying() then
+				element.TopArrowAnim:Stop()
+			end
 		end
 	end
 	if C.db["Nameplate"]["ColoredTarget"] then
@@ -269,6 +275,8 @@ function UF:UpdateTargetIndicator()
 	end
 end
 
+local points = {-15, -5, 0, 5, 0}
+
 function UF:AddTargetIndicator(self)
 	local frame = CreateFrame("Frame", nil, self)
 	frame:SetAllPoints()
@@ -279,6 +287,17 @@ function UF:AddTargetIndicator(self)
 	frame.TopArrow:SetSize(50, 50)
 	frame.TopArrow:SetTexture(DB.arrowTex)
 	frame.TopArrow:SetPoint("BOTTOM", frame, "TOP", 0, 20)
+
+	local animGroup = frame.TopArrow:CreateAnimationGroup()
+	animGroup:SetLooping("REPEAT")
+	local anim = animGroup:CreateAnimation("Path")
+	anim:SetDuration(1)
+	for i = 1, #points do
+		local point = anim:CreateControlPoint()
+		point:SetOrder(i)
+		point:SetOffset(0, points[i])
+	end
+	frame.TopArrowAnim = animGroup
 
 	frame.RightArrow = frame:CreateTexture(nil, "BACKGROUND", nil, -5)
 	frame.RightArrow:SetSize(50, 50)
