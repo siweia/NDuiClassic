@@ -16,7 +16,10 @@ function A:OnLogin()
 end
 
 -- 2.5.4.42581 missing APIs for in AuraUtil.ForEachAura
-local disableBuff = DB.isNewPatch and not AuraUtil.ForEachAura
+-- fixed in 42873
+local build = select(2, GetBuildInfo())
+build = tonumber(build)
+local disableBuff = DB.isNewPatch and tonumber(build) < 42873
 
 function A:HideBlizBuff()
 	if disableBuff then return end
