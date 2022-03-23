@@ -250,34 +250,40 @@ function S:EnhancedTradeSkill()
 	TradeSkillFrameAvailableFilterCheckButton:SetPoint("TOPLEFT", 230, -70)
 
 	-- Search widgets
-	local searchBox, nextButton, prevButton = S:CreateSearchWidget(TradeSkillFrame, TradeSkillRankFrame)
+	if DB.isNewPatch then
+		TradeSearchInputBox:ClearAllPoints()
+		TradeSearchInputBox:SetPoint("TOPLEFT", TradeSkillRankFrame, "BOTTOMLEFT", 0, -6)
+		TradeSearchInputBox:SetWidth(221)
+	else
+		local searchBox, nextButton, prevButton = S:CreateSearchWidget(TradeSkillFrame, TradeSkillRankFrame)
 
-	searchBox:HookScript("OnEnterPressed", function(self)
-		local text = self:GetText()
-		if not text or text == "" then return end
+		searchBox:HookScript("OnEnterPressed", function(self)
+			local text = self:GetText()
+			if not text or text == "" then return end
 
-		if not S:GetTradeSearchResult(text, 1, GetNumTradeSkills(), 1) then
-			UIErrorsFrame:AddMessage(DB.InfoColor..L["InvalidName"])
-		end
-	end)
+			if not S:GetTradeSearchResult(text, 1, GetNumTradeSkills(), 1) then
+				UIErrorsFrame:AddMessage(DB.InfoColor..L["InvalidName"])
+			end
+		end)
 
-	nextButton:SetScript("OnClick", function()
-		local text = searchBox:GetText()
-		if not text or text == "" then return end
+		nextButton:SetScript("OnClick", function()
+			local text = searchBox:GetText()
+			if not text or text == "" then return end
 
-		if not S:GetTradeSearchResult(text, GetTradeSkillSelectionIndex() + 1, GetNumTradeSkills(), 1) then
-			UIErrorsFrame:AddMessage(DB.InfoColor..L["NoMatchReult"])
-		end
-	end)
+			if not S:GetTradeSearchResult(text, GetTradeSkillSelectionIndex() + 1, GetNumTradeSkills(), 1) then
+				UIErrorsFrame:AddMessage(DB.InfoColor..L["NoMatchReult"])
+			end
+		end)
 
-	prevButton:SetScript("OnClick", function()
-		local text = searchBox:GetText()
-		if not text or text == "" then return end
+		prevButton:SetScript("OnClick", function()
+			local text = searchBox:GetText()
+			if not text or text == "" then return end
 
-		if not S:GetTradeSearchResult(text, GetTradeSkillSelectionIndex() - 1, 1, -1) then
-			UIErrorsFrame:AddMessage(DB.InfoColor..L["NoMatchReult"])
-		end
-	end)
+			if not S:GetTradeSearchResult(text, GetTradeSkillSelectionIndex() - 1, 1, -1) then
+				UIErrorsFrame:AddMessage(DB.InfoColor..L["NoMatchReult"])
+			end
+		end)
+	end
 end
 
 function S:EnhancedCraft()
