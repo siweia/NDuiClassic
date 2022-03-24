@@ -4,7 +4,6 @@ local S = B:GetModule("Skins")
 
 -- Credit: LeatrixPlus
 local strfind = strfind
-local GetTradeSkillSelectionIndex, GetTradeSkillInfo, GetNumTradeSkills = GetTradeSkillSelectionIndex, GetTradeSkillInfo, GetNumTradeSkills
 local GetCraftSelectionIndex, GetCraftInfo, GetNumCrafts = GetCraftSelectionIndex, GetCraftInfo, GetNumCrafts
 
 local skinIndex = 0
@@ -80,22 +79,6 @@ local function updateScrollBarValue(scrollBar, maxSkills, selectSkill)
 	if selectIndex < 0 then selectIndex = 0 end
 
 	scrollBar:SetValue(selectIndex / maxIndex * maxValue)
-end
-
-function S:UpdateTradeSelection(i, maxSkills)
-	TradeSkillFrame_SetSelection(i)
-	TradeSkillFrame_Update()
-	updateScrollBarValue(TradeSkillListScrollFrameScrollBar, maxSkills, GetTradeSkillSelectionIndex())
-end
-
-function S:GetTradeSearchResult(text, from, to, step)
-	for i = from, to, step do
-		local skillName, skillType = GetTradeSkillInfo(i)
-		if skillType ~= "header" and strfind(skillName, text) then
-			S:UpdateTradeSelection(i, GetNumTradeSkills())
-			return true
-		end
-	end
 end
 
 function S:UpdateCraftSelection(i, maxSkills)
@@ -249,41 +232,10 @@ function S:EnhancedTradeSkill()
 	end
 	TradeSkillFrameAvailableFilterCheckButton:SetPoint("TOPLEFT", 230, -70)
 
-	-- Search widgets
-	if DB.isNewPatch then
-		TradeSearchInputBox:ClearAllPoints()
-		TradeSearchInputBox:SetPoint("TOPLEFT", TradeSkillRankFrame, "BOTTOMLEFT", 0, -6)
-		TradeSearchInputBox:SetWidth(221)
-	else
-		local searchBox, nextButton, prevButton = S:CreateSearchWidget(TradeSkillFrame, TradeSkillRankFrame)
-
-		searchBox:HookScript("OnEnterPressed", function(self)
-			local text = self:GetText()
-			if not text or text == "" then return end
-
-			if not S:GetTradeSearchResult(text, 1, GetNumTradeSkills(), 1) then
-				UIErrorsFrame:AddMessage(DB.InfoColor..L["InvalidName"])
-			end
-		end)
-
-		nextButton:SetScript("OnClick", function()
-			local text = searchBox:GetText()
-			if not text or text == "" then return end
-
-			if not S:GetTradeSearchResult(text, GetTradeSkillSelectionIndex() + 1, GetNumTradeSkills(), 1) then
-				UIErrorsFrame:AddMessage(DB.InfoColor..L["NoMatchReult"])
-			end
-		end)
-
-		prevButton:SetScript("OnClick", function()
-			local text = searchBox:GetText()
-			if not text or text == "" then return end
-
-			if not S:GetTradeSearchResult(text, GetTradeSkillSelectionIndex() - 1, 1, -1) then
-				UIErrorsFrame:AddMessage(DB.InfoColor..L["NoMatchReult"])
-			end
-		end)
-	end
+	-- Searchbox
+	TradeSearchInputBox:ClearAllPoints()
+	TradeSearchInputBox:SetPoint("TOPLEFT", TradeSkillRankFrame, "BOTTOMLEFT", 0, -6)
+	TradeSearchInputBox:SetWidth(221)
 end
 
 function S:EnhancedCraft()
