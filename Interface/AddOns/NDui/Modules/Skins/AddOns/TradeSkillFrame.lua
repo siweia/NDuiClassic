@@ -4,7 +4,9 @@ local S = B:GetModule("Skins")
 
 -- Credit: LeatrixPlus
 local strfind = strfind
+local GetTradeSkillLine = GetTradeSkillLine
 local GetCraftSelectionIndex, GetCraftInfo, GetNumCrafts = GetCraftSelectionIndex, GetCraftInfo, GetNumCrafts
+local SEARCH = _G.SEARCH
 
 local skinIndex = 0
 function S:TradeSkill_OnEvent(addon)
@@ -43,15 +45,15 @@ local function removeInputText(self)
 end
 
 function S:CreateSearchWidget(parent, anchor)
-	local title = B.CreateFS(parent, 15, SEARCH, "system")
+	local searchBox = B.CreateEditBox(parent, 150, 20)
+	local title = B.CreateFS(searchBox, 15, SEARCH, "system")
 	title:ClearAllPoints()
 
-	local searchBox = B.CreateEditBox(parent, 150, 20)
 	if C.db["Skins"]["BlizzardSkins"] then
 		title:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", 6, -6)
 		searchBox.bg:SetBackdropColor(0, 0, 0, 0)
-		searchBox:SetPoint("TOPLEFT", title, "TOPRIGHT", 3, 3)
-		searchBox:SetPoint("BOTTOMRIGHT", anchor, "BOTTOMRIGHT", 0, -23)
+		searchBox:SetPoint("TOPLEFT", title, "TOPRIGHT", 3, 1)
+		searchBox:SetPoint("BOTTOMRIGHT", anchor, "BOTTOMRIGHT", 1, -23)
 	else
 		title:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", 5, -5)
 		searchBox:SetFrameLevel(6)
@@ -95,6 +97,42 @@ function S:GetCraftSearchResult(text, from, to, step)
 			return true
 		end
 	end
+end
+
+local function searchBox_OnShow(self)
+	self:SetText(SEARCH)
+end
+
+local function searchBox_OnTextChanged(self)
+	TradeSkillFilter_OnTextChanged(self)
+end
+
+local function searchBox_OnEditFocusLost(self)
+	self:HighlightText(0, 0)
+	if self:GetText() == "" then
+		self:SetText(SEARCH)
+	end
+end
+
+local function searchBox_OnEditFocusGained(self)
+	self:HighlightText()
+	if self:GetText() == SEARCH then
+		self:SetText("")
+	end
+end
+
+function S:CreateTradeSearchBox(parent, anchor)
+	local searchBox = B.CreateEditBox(parent, 223, 20)
+	searchBox:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", -1, -6)
+	searchBox:SetTextInsets(6, 6, 0, 0)
+
+	searchBox:SetScript("OnShow", searchBox_OnShow)
+	searchBox:SetScript("OnTextChanged", searchBox_OnTextChanged)
+	searchBox:SetScript("OnEditFocusLost", searchBox_OnEditFocusLost)
+	searchBox:SetScript("OnEditFocusGained", searchBox_OnEditFocusGained)
+	searchBox:HookScript("OnEscapePressed", searchBox_OnShow)
+
+	return searchBox
 end
 
 local SharedWindowData = {
@@ -234,8 +272,24 @@ function S:EnhancedTradeSkill()
 
 	-- Searchbox
 	TradeSearchInputBox:ClearAllPoints()
-	TradeSearchInputBox:SetPoint("TOPLEFT", TradeSkillRankFrame, "BOTTOMLEFT", 0, -6)
+	TradeSearchInputBox:SetPoint("TOPLEFT", TradeSkillRankFrame, "BOTTOMLEFT", 1, -6)
 	TradeSearchInputBox:SetWidth(221)
+	TradeSearchInputBox:SetTextInsets(5, 5, 0, 0)
+	TradeSearchInputBox:SetFont(DB.Font[1], DB.Font[2]+2, DB.Font[3])
+	TradeSearchInputBox:HookScript("OnEscapePressed", searchBox_OnShow)
+
+	local searchBox = S:CreateTradeSearchBox(TradeSkillFrame, TradeSkillRankFrame)
+
+	local prevTrade
+	hooksecurefunc("TradeSkillFrame_Update", function()
+		local name = GetTradeSkillLine()
+		if not prevTrade or prevTrade ~= name then
+			searchBox_OnShow(searchBox)
+			searchBox:ClearFocus()
+			prevTrade = name
+		end
+		searchBox:SetShown(not TradeSearchInputBox:IsShown())
+	end)
 end
 
 function S:EnhancedCraft()
