@@ -125,7 +125,7 @@ function G:SetupRaidDebuffs(parent)
 			tinsert(dungeons, name)
 		end
 	end
-	local raidIDs = {564,565,534,532,544,548,580,550,0}
+	local raidIDs = {564,565,534,532,544,548,580,550,568,0}
 	local raids = {}
 	for _, id in pairs(raidIDs) do
 		local name = GetNameFromID(id)
