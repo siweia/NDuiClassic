@@ -11,4 +11,5 @@
 	<Script file="TBC\SerpentshrineCavern.lua"/>
 	<Script file="TBC\SunwellPlateau.lua"/>
 	<Script file="TBC\TempestKeep.lua"/>
+	<Script file="TBC\ZulAman.lua"/>
 </Ui>
