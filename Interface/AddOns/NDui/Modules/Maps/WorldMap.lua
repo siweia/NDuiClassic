@@ -144,7 +144,6 @@ end
 function module:SetupWorldMap()
 	if C.db["Map"]["DisableMap"] then return end
 	if IsAddOnLoaded("Mapster") then return end
-	if IsAddOnLoaded("Leatrix_Maps") then return end
 
 	-- Fix worldmap cursor when scaling
 	WorldMapFrame.ScrollContainer.GetCursorPosition = function(f)
@@ -188,7 +187,6 @@ function module:SetupWorldMap()
 	self:MapPartyDots()
 	self:SetupCoords()
 	self:MapFader()
-	self:MapReveal()
 end
 
 function module:OnLogin()
