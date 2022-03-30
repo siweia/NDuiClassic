@@ -195,4 +195,15 @@ function S:EnlargeDefaultUIPanel(name, pushed)
 	frame.scrollFrame:SetPoint("TOPRIGHT", frame, -65, -70)
 	frame.scrollFrame:SetPoint("BOTTOMRIGHT", frame, -65, 80)
 	frame.listScrollFrame:SetPoint("BOTTOMLEFT", frame, 19, 80)
+
+	if not C.db["Skins"]["BlizzardSkins"] then
+		local leftTex = frame:CreateTexture(nil, "BACKGROUND")
+		leftTex:SetTexture(309665)
+		leftTex:SetSize(512, 512)
+		leftTex:SetPoint("TOPLEFT")
+		local rightTex = frame:CreateTexture(nil, "BACKGROUND")
+		rightTex:SetTexture(309666)
+		rightTex:SetSize(256, 512)
+		rightTex:SetPoint("TOPLEFT", leftTex, "TOPRIGHT")
+	end
 end

@@ -20,6 +20,7 @@ function S:ExtQuestLogFrame()
 	local QuestLogFrame = _G.QuestLogFrame
 	if QuestLogFrame:GetWidth() > 700 then return end
 
+	B.StripTextures(QuestLogFrame, 2)
 	QuestLogFrame.TitleText = _G.QuestLogTitleText
 	QuestLogFrame.scrollFrame = _G.QuestLogDetailScrollFrame
 	QuestLogFrame.listScrollFrame = _G.QuestLogListScrollFrame
@@ -58,16 +59,6 @@ function S:ExtQuestLogFrame()
 
 	if C.db["Skins"]["BlizzardSkins"] then
 		B.CreateBDFrame(QuestLogFrame.scrollFrame, .25)
-	else
-		B.StripTextures(QuestLogFrame, 2)
-		local leftTex = QuestLogFrame:CreateTexture(nil, "BACKGROUND")
-		leftTex:SetTexture(309665)
-		leftTex:SetSize(512, 512)
-		leftTex:SetPoint("TOPLEFT")
-		local rightTex = QuestLogFrame:CreateTexture(nil, "BACKGROUND")
-		rightTex:SetTexture(309666)
-		rightTex:SetSize(256, 512)
-		rightTex:SetPoint("TOPLEFT", leftTex, "TOPRIGHT")
 	end
 
 	-- Move ClassicCodex
