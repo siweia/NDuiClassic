@@ -169,3 +169,30 @@ function S:RefreshToggleDirection()
 		S:SetToggleDirection(frame)
 	end
 end
+
+S.SharedWindowData = {
+	area = "override",
+	xoffset = -16,
+	yoffset = 12,
+	bottomClampOverride = 152,
+	width = 714,
+	height = 487,
+	whileDead = 1,
+}
+
+function S:EnlargeDefaultUIPanel(name, pushed)
+	local frame = _G[name]
+	if not frame then return end
+
+	UIPanelWindows[name] = S.SharedWindowData
+	UIPanelWindows[name].pushable = pushed
+
+	frame:SetSize(S.SharedWindowData.width, S.SharedWindowData.height)
+	frame.TitleText:ClearAllPoints()
+	frame.TitleText:SetPoint("TOP", frame, 0, -18)
+
+	frame.scrollFrame:ClearAllPoints()
+	frame.scrollFrame:SetPoint("TOPRIGHT", frame, -65, -70)
+	frame.scrollFrame:SetPoint("BOTTOMRIGHT", frame, -65, 80)
+	frame.listScrollFrame:SetPoint("BOTTOMLEFT", frame, 19, 80)
+end

@@ -16,6 +16,80 @@ local headerString = QUESTS_LABEL.." %s/%s"
 
 local frame
 
+function S:ExtQuestLogFrame()
+	local QuestLogFrame = _G.QuestLogFrame
+	if QuestLogFrame:GetWidth() > 700 then return end
+
+	QuestLogFrame.TitleText = _G.QuestLogTitleText
+	QuestLogFrame.scrollFrame = _G.QuestLogDetailScrollFrame
+	QuestLogFrame.listScrollFrame = _G.QuestLogListScrollFrame
+	S:EnlargeDefaultUIPanel("QuestLogFrame", 0)
+
+	B.StripTextures(_G.EmptyQuestLogFrame)
+	_G.QuestLogNoQuestsText:ClearAllPoints()
+	_G.QuestLogNoQuestsText:SetPoint("CENTER", QuestLogFrame.listScrollFrame)
+	_G.QuestFramePushQuestButton:ClearAllPoints()
+	_G.QuestFramePushQuestButton:SetPoint("LEFT", _G.QuestLogFrameAbandonButton, "RIGHT", 1, 0)
+
+	_G.QUESTS_DISPLAYED = 22
+	for i = 7, _G.QUESTS_DISPLAYED do
+		local button = _G["QuestLogTitle"..i]
+		if not button then
+			button = CreateFrame("Button", "QuestLogTitle"..i, QuestLogFrame, "QuestLogTitleButtonTemplate")
+			button:SetPoint("TOPLEFT", _G["QuestLogTitle"..(i-1)], "BOTTOMLEFT", 0, 1)
+			button:SetID(i)
+			button:Hide()
+		end
+	end
+
+	local toggleMap = CreateFrame("Button", nil, QuestLogFrame)
+	toggleMap:SetPoint("TOP", 10, -35)
+	toggleMap:SetSize(48, 32)
+	local text = B.CreateFS(toggleMap, 14, SHOW_MAP)
+	text:ClearAllPoints()
+	text:SetPoint("LEFT", toggleMap, "RIGHT")
+	local tex = toggleMap:CreateTexture(nil, "ARTWORK")
+	tex:SetAllPoints()
+	tex:SetTexture(316593)
+	tex:SetTexCoord(.125, .875, 0, .5)
+	toggleMap:SetScript("OnClick", ToggleWorldMap)
+	toggleMap:SetScript("OnMouseUp", function() tex:SetTexCoord(.125, .875, 0, .5) end)
+	toggleMap:SetScript("OnMouseDown", function() tex:SetTexCoord(.125, .875, .5, 1) end)
+
+	if C.db["Skins"]["BlizzardSkins"] then
+		B.CreateBDFrame(QuestLogFrame.scrollFrame, .25)
+	else
+		B.StripTextures(QuestLogFrame, 2)
+		local leftTex = QuestLogFrame:CreateTexture(nil, "BACKGROUND")
+		leftTex:SetTexture(309665)
+		leftTex:SetSize(512, 512)
+		leftTex:SetPoint("TOPLEFT")
+		local rightTex = QuestLogFrame:CreateTexture(nil, "BACKGROUND")
+		rightTex:SetTexture(309666)
+		rightTex:SetSize(256, 512)
+		rightTex:SetPoint("TOPLEFT", leftTex, "TOPRIGHT")
+	end
+
+	-- Move ClassicCodex
+	if CodexQuest then
+		local buttonShow = CodexQuest.buttonShow
+		buttonShow:SetWidth(55)
+		buttonShow:SetText(DB.InfoColor..SHOW)
+
+		local buttonHide = CodexQuest.buttonHide
+		buttonHide:ClearAllPoints()
+		buttonHide:SetPoint("LEFT", buttonShow, "RIGHT", 5, 0)
+		buttonHide:SetWidth(55)
+		buttonHide:SetText(DB.InfoColor..HIDE)
+
+		local buttonReset = CodexQuest.buttonReset
+		buttonReset:ClearAllPoints()
+		buttonReset:SetPoint("LEFT", buttonHide, "RIGHT", 5, 0)
+		buttonReset:SetWidth(55)
+		buttonReset:SetText(DB.InfoColor..RESET)
+	end
+end
+
 function S:QuestLogLevel()
 	local numEntries = GetNumQuestLogEntries()
 
@@ -248,5 +322,6 @@ function S:QuestTracker()
 	if not C.db["Skins"]["QuestTracker"] then return end
 
 	S:EnhancedQuestTracker()
+	S:ExtQuestLogFrame()
 	hooksecurefunc("QuestLog_Update", S.QuestLogLevel)
 end
