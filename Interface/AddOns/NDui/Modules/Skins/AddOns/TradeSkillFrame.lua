@@ -210,7 +210,7 @@ function S:EnhancedCraft()
 	for i = 2, _G.CRAFTS_DISPLAYED do
 		local button = _G["Craft"..i]
 		if not button then
-			button = CreateFrame("Button", "Craft"..i, TradeSkillFrame, "CraftButtonTemplate")
+			button = CreateFrame("Button", "Craft"..i, CraftFrame, "CraftButtonTemplate")
 			button:SetID(i)
 			button:Hide()
 		end
