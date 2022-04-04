@@ -304,7 +304,7 @@ function UF:OnLogin()
 		UF:CreateUnitTable()
 		UF:CreatePowerUnitTable()
 		UF:QuestIconCheck()
-		UF:RefreshPlateOnFactionChanged()
+		UF:RefreshPlateByEvents()
 		UF:RefreshMajorSpells()
 
 		oUF:RegisterStyle("Nameplates", UF.CreatePlates)
