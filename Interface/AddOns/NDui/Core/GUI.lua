@@ -934,9 +934,9 @@ G.TabList = {
 	L["ChatFrame"],
 	L["Maps"],
 	L["Skins"],
-	NewTag..L["Tooltip"],
+	L["Tooltip"],
 	L["Misc"],
-	NewTag..L["UI Settings"],
+	L["UI Settings"],
 	L["Profile"],
 }
 
@@ -990,14 +990,14 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{3, "Bags", "BankWidth", L["Bank Width"].."*", true, {10, 40, 1}, updateBagSize},
 	},
 	[3] = {
-		{1, "UFs", "Enable", NewTag..HeaderTag..L["Enable UFs"], nil, setupUnitFrame, nil, L["HideUFWarning"]},
+		{1, "UFs", "Enable", HeaderTag..L["Enable UFs"], nil, setupUnitFrame, nil, L["HideUFWarning"]},
 		--{1, "UFs", "Arena", L["Arena Frame"], true},
 		{1, "UFs", "ToToT", L["TototUF"]},
 		{1, "UFs", "EnergyTicker", L["EnergyTicker"].."*", true, nil, toggleUFClassPower},
-		{1, "UFs", "ShowAuras", NewTag..L["ShowAuras"].."*", nil, setupUFAuras, toggleAllAuras},
-		{1, "UFs", "ClassPower", NewTag..L["UFs ClassPower"].."*", true, setupClassPower, toggleUFClassPower},
+		{1, "UFs", "ShowAuras", L["ShowAuras"].."*", nil, setupUFAuras, toggleAllAuras},
+		{1, "UFs", "ClassPower", L["UFs ClassPower"].."*", true, setupClassPower, toggleUFClassPower},
 		{1, "UFs", "Portrait", L["UFs Portrait"]},
-		{1, "UFs", "CCName", NewTag..L["ClassColor Name"].."*", true, nil, updateUFTextScale},
+		{1, "UFs", "CCName", L["ClassColor Name"].."*", true, nil, updateUFTextScale},
 		{3, "UFs", "UFTextScale", L["UFTextScale"].."*", nil, {.8, 1.5, .05}, updateUFTextScale},
 		{4, "UFs", "HealthColor", L["HealthColor"].."*", true, {L["Default Dark"], L["ClassColorHP"], L["GradientHP"]}, updateUFTextScale},
 		{},--blank
@@ -1013,14 +1013,14 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{3, "UFs", "FCTFontSize", L["FCTFontSize"].."*", true, {12, 40, 1}},
 	},
 	[4] = {
-		{1, "UFs", "RaidFrame", NewTag..HeaderTag..L["UFs RaidFrame"], nil, setupRaidFrame, nil, L["RaidFrameTip"]},
-		{1, "UFs", "SimpleMode", NewTag..L["SimpleRaidFrame"], true, setupSimpleRaidFrame, nil, L["SimpleRaidFrameTip"]},
+		{1, "UFs", "RaidFrame", HeaderTag..L["UFs RaidFrame"], nil, setupRaidFrame, nil, L["RaidFrameTip"]},
+		{1, "UFs", "SimpleMode", L["SimpleRaidFrame"], true, setupSimpleRaidFrame, nil, L["SimpleRaidFrameTip"]},
 		{},--blank
 		{1, "UFs", "PartyFrame", L["PartyFrame"], nil, setupPartyFrame, nil, L["PartyFrameTip"]},
 		{1, "UFs", "PartyPetFrame", L["PartyPetFrame"], true, setupPartyPetFrame, nil, L["PartyPetTip"]},
 		{},--blank
-		{1, "UFs", "ShowRaidDebuff", NewTag..L["ShowRaidDebuff"].."*", nil, nil, updateRaidAuras, L["ShowRaidDebuffTip"]},
-		{1, "UFs", "ShowRaidBuff", NewTag..L["ShowRaidBuff"].."*", true, nil, updateRaidAuras, L["ShowRaidBuffTip"]},
+		{1, "UFs", "ShowRaidDebuff", L["ShowRaidDebuff"].."*", nil, nil, updateRaidAuras, L["ShowRaidDebuffTip"]},
+		{1, "UFs", "ShowRaidBuff", L["ShowRaidBuff"].."*", true, nil, updateRaidAuras, L["ShowRaidBuffTip"]},
 		{3, "UFs", "RaidDebuffSize", L["RaidDebuffSize"].."*", nil, {5, 30, 1}, updateRaidAuras},
 		{3, "UFs", "RaidBuffSize", L["RaidBuffSize"].."*", true, {5, 30, 1}, updateRaidAuras},
 		{},--blank
@@ -1042,8 +1042,8 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{3, "UFs", "RaidTextScale", L["UFTextScale"].."*", true, {.8, 1.5, .05}, updateRaidTextScale},
 		{1, "UFs", "TeamIndex", L["RaidFrame TeamIndex"].."*", nil, nil, updateTeamIndex},
 		{1, "UFs", "FrequentHealth", HeaderTag..L["FrequentHealth"].."*", true, nil, updateRaidHealthMethod, L["FrequentHealthTip"]},
-		{1, "UFs", "HideTip", NewTag..L["HideTooltip"].."*", nil, nil, updateRaidTextScale, L["HideTooltipTip"]},
-		{1, "UFs", "RCCName", NewTag..L["ClassColor Name"].."*", nil, nil, updateRaidTextScale},
+		{1, "UFs", "HideTip", L["HideTooltip"].."*", nil, nil, updateRaidTextScale, L["HideTooltipTip"]},
+		{1, "UFs", "RCCName", L["ClassColor Name"].."*", nil, nil, updateRaidTextScale},
 		{3, "UFs", "HealthFrequency", L["HealthFrequency"].."*", true, {.1, .5, .05}, updateRaidHealthMethod, L["HealthFrequencyTip"]},
 	},
 	[5] = {
@@ -1065,8 +1065,8 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{3, "Nameplate", "ExecuteRatio", "|cffff0000"..L["ExecuteRatio"].."*", true, {0, 90, 1}, nil, L["ExecuteRatioTip"]},
 		{1, "Nameplate", "FriendlyCC", L["Friendly CC"].."*"},
 		{1, "Nameplate", "HostileCC", L["Hostile CC"].."*", true},
-		{1, "Nameplate", "FriendlyThru", NewTag..L["Friendly ClickThru"].."*", nil, nil, updateClickThru},
-		{1, "Nameplate", "EnemyThru", NewTag..L["Enemy ClickThru"].."*", true, nil, updateClickThru},
+		{1, "Nameplate", "FriendlyThru", L["Friendly ClickThru"].."*", nil, nil, updateClickThru},
+		{1, "Nameplate", "EnemyThru", L["Enemy ClickThru"].."*", true, nil, updateClickThru},
 		{1, "Nameplate", "CastbarGlow", L["PlateCastbarGlow"].."*", nil, setupPlateCastbarGlow, nil, L["PlateCastbarGlowTip"]},
 		{1, "Nameplate", "CastTarget", L["PlateCastTarget"].."*", true, nil, nil, L["PlateCastTargetTip"]},
 		{1, "Nameplate", "ClampTarget", L["ClampTargetPlate"].."*", nil, nil, updatePlateCVars, L["ClampTargetPlateTip"]},
@@ -1101,7 +1101,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 	},
 	[6] = {
 		{1, "Nameplate", "ShowPlayerPlate", HeaderTag..L["Enable PlayerPlate"].."*", nil, nil, togglePlayerPlate},
-		{1, "Nameplate", "TargetPower", NewTag..HeaderTag..L["TargetClassPower"].."*", true, nil, toggleTargetClassPower},
+		{1, "Nameplate", "TargetPower", HeaderTag..L["TargetClassPower"].."*", true, nil, toggleTargetClassPower},
 		{},--blank
 		--{1, "Auras", "ClassAuras", L["Enable ClassAuras"], true},
 		{1, "Nameplate", "PPFadeout", L["PlayerPlate Fadeout"].."*", nil, nil, togglePlateVisibility},
@@ -1115,8 +1115,8 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{3, "Nameplate", "PPPowerHeight", L["PlayerPlate MPHeight"].."*", true, {2, 15, 1}, refreshNameplates},
 	},
 	[7] = {
-		{1, "Auras", "BuffFrame", NewTag..HeaderTag..L["BuffFrame"], nil, setupBuffFrame, nil, L["BuffFrameTip"]},
-		{1, "Auras", "HideBlizBuff", NewTag..L["HideBlizUI"], true, nil, nil, L["HideBlizBuffTip"]},
+		{1, "Auras", "BuffFrame", HeaderTag..L["BuffFrame"], nil, setupBuffFrame, nil, L["BuffFrameTip"]},
+		{1, "Auras", "HideBlizBuff", L["HideBlizUI"], true, nil, nil, L["HideBlizBuffTip"]},
 		{},--blank
 		{1, "AuraWatch", "Enable", HeaderTag..L["Enable AuraWatch"], nil, setupAuraWatch},
 		{1, "AuraWatch", "WatchSpellRank", L["AuraWatch WatchSpellRank"], nil, nil, nil, L["WatchSpellRankTip"]},
@@ -1220,10 +1220,10 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 	},
 	[12] = {
 		{3, "Tooltip", "Scale", L["Tooltip Scale"].."*", nil, {.5, 1.5, .1}},
-		{4, "Tooltip", "TipAnchor", NewTag..L["TipAnchor"].."*", true, {L["TOPLEFT"], L["TOPRIGHT"], L["BOTTOMLEFT"], L["BOTTOMRIGHT"]}, nil, L["TipAnchorTip"]},
+		{4, "Tooltip", "TipAnchor", L["TipAnchor"].."*", true, {L["TOPLEFT"], L["TOPRIGHT"], L["BOTTOMLEFT"], L["BOTTOMRIGHT"]}, nil, L["TipAnchorTip"]},
 		{1, "Tooltip", "CombatHide", L["Hide Tooltip"].."*"},
-		{1, "Tooltip", "ItemQuality", NewTag..L["ShowItemQuality"].."*"},
-		{4, "Tooltip", "CursorMode", NewTag..L["Follow Cursor"].."*", true, {DISABLE, L["LEFT"], L["TOP"], L["RIGHT"]}},
+		{1, "Tooltip", "ItemQuality", L["ShowItemQuality"].."*"},
+		{4, "Tooltip", "CursorMode", L["Follow Cursor"].."*", true, {DISABLE, L["LEFT"], L["TOP"], L["RIGHT"]}},
 		{1, "Tooltip", "HideTitle", L["Hide Title"].."*"},
 		{1, "Tooltip", "HideRank", L["Hide Rank"].."*", true},
 		{1, "Tooltip", "FactionIcon", L["FactionIcon"].."*"},
@@ -1245,8 +1245,8 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Misc", "InstantDelete", L["InstantDelete"].."*", true},
 		{1, "Misc", "AutoDismount", L["AutoDismount"].."*", nil, nil, nil, L["AutoDismountTip"]},
 	--	{1, "Misc", "Focuser", L["Easy Focus"]},
-		{1, "Misc", "PetHappiness", NewTag..L["PetHappiness"].."*", true, nil, togglePetHappiness},
-		{1, "Misc", "MenuButton", NewTag..L["MenuButton"], nil, nil, nil, L["MenuButtonTip"]},
+		{1, "Misc", "PetHappiness", L["PetHappiness"].."*", true, nil, togglePetHappiness},
+		{1, "Misc", "MenuButton", L["MenuButton"], nil, nil, nil, L["MenuButtonTip"]},
 		{1, "Misc", "BlockInvite", "|cffff0000"..L["BlockInvite"].."*", true, nil, nil, L["BlockInviteTip"]},
 	},
 	[14] = {
