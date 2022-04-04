@@ -24,7 +24,8 @@ G.DefaultSettings = {
 		Count = true,
 		Classcolor = false,
 		Cooldown = true,
-		DecimalCD = true,
+		MmssTH = 60,
+		TenthTH = 3,
 		Bar4Fader = false,
 		Bar5Fader = true,
 		BindType = 1,
@@ -930,10 +931,10 @@ local NewTag = "|TInterface\\OptionsFrame\\UI-OptionsFrame-NewFeatureIcon:0|t"
 G.HealthValues = {DISABLE, L["ShowHealthDefault"], L["ShowHealthCurMax"], L["ShowHealthCurrent"], L["ShowHealthPercent"], L["ShowHealthLoss"], L["ShowHealthLossPercent"]}
 
 G.TabList = {
-	L["Actionbar"],
+	NewTag..L["Actionbar"],
 	L["Bags"],
 	L["Unitframes"],
-	NewTag..L["RaidFrame"],
+	L["RaidFrame"],
 	NewTag..L["Nameplate"],
 	L["PlayerPlate"],
 	L["Auras"],
@@ -964,14 +965,15 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{},--blank
 		{1, "Actionbar", "Cooldown", HeaderTag..L["Show Cooldown"]},
 		{1, "Actionbar", "OverrideWA", L["HideCooldownOnWA"].."*", true},
-		{1, "Actionbar", "DecimalCD", L["Decimal Cooldown"].."*"},
-		{1, "Misc", "SendActionCD", HeaderTag..L["SendActionCD"].."*", true, nil, nil, L["SendActionCDTip"]},
+		{3, "Actionbar", "MmssTH", NewTag..L["MmssThreshold"].."*", nil, {60, 600, 1}, nil, L["MmssThresholdTip"]},
+		{3, "Actionbar", "TenthTH", NewTag..L["TenthThreshold"].."*", true, {0, 60, 1}, nil, L["TenthThresholdTip"]},
 		{},--blank
 		{1, "Actionbar", "Hotkeys", L["Actionbar Hotkey"].."*", nil, nil, updateHotkeys},
 		{1, "Actionbar", "Macro", L["Actionbar Macro"], true},
 		{1, "Actionbar", "Count", L["Actionbar Item Counts"]},
 		{1, "Actionbar", "Classcolor", L["ClassColor BG"], true},
 		{1, "Actionbar", "EquipColor", L["EquipColor"].."*", nil, nil, updateEquipColor},
+		{1, "Misc", "SendActionCD", HeaderTag..L["SendActionCD"].."*", true, nil, nil, L["SendActionCDTip"]},
 		{},--blank
 		{1, "Actionbar", "AspectBar", HeaderTag..L["AspectBar"].."*", nil, nil, toggleAspectBar},
 		{1, "Actionbar", "VerticleAspect", L["VerticleAspect"].."*", nil, nil, updateAspectStatus},
@@ -1023,7 +1025,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "UFs", "SimpleMode", L["SimpleRaidFrame"], true, setupSimpleRaidFrame, nil, L["SimpleRaidFrameTip"]},
 		{},--blank
 		{1, "UFs", "PartyFrame", L["PartyFrame"], nil, setupPartyFrame, nil, L["PartyFrameTip"]},
-		{1, "UFs", "PartyPetFrame", NewTag..L["PartyPetFrame"], true, setupPartyPetFrame, nil, L["PartyPetTip"]},
+		{1, "UFs", "PartyPetFrame", L["PartyPetFrame"], true, setupPartyPetFrame, nil, L["PartyPetTip"]},
 		{},--blank
 		{1, "UFs", "ShowRaidDebuff", L["ShowRaidDebuff"].."*", nil, nil, updateRaidAuras, L["ShowRaidDebuffTip"]},
 		{1, "UFs", "ShowRaidBuff", L["ShowRaidBuff"].."*", true, nil, updateRaidAuras, L["ShowRaidBuffTip"]},
