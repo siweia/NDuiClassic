@@ -348,13 +348,14 @@ G.DefaultSettings = {
 		CastbarGlow = true,
 		CastTarget = false,
 		Interruptor = true,
-		Dispellable = true,
 		PlateRange = 41,
 		ClampTarget = true,
 		FriendPlate = false,
 		EnemyThru = false,
 		FriendlyThru = false,
 		BlockDBM = true,
+		Dispellable = true,
+		UnitTargeted = false,
 
 		PlateWidth = 190,
 		PlateHeight = 8,
@@ -850,6 +851,10 @@ local function updateMapFader()
 	B:GetModule("Maps"):MapFader()
 end
 
+local function refreshPlateByEvents()
+	B:GetModule("UnitFrames"):RefreshPlateByEvents()
+end
+
 local function updateMinimapScale()
 	B:GetModule("Maps"):UpdateMinimapScale()
 end
@@ -1074,6 +1079,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Nameplate", "QuestIndicator", L["QuestIndicator"], true, nil, nil, L["QuestIndicatorAddOns"]},
 		{1, "Nameplate", "BlockDBM", L["BlockDBM"], nil, nil, nil, L["BlockDBMTip"]},
 		{1, "Nameplate", "Interruptor", NewTag..L["ShowInterruptor"].."*", true},
+		{1, "Nameplate", "UnitTargeted", NewTag..L["Show TargetedBy"].."*", nil, nil, refreshPlateByEvents},
 		{},--blank
 		{1, "Nameplate", "ColoredTarget", HeaderTag..L["ColoredTarget"].."*", nil, nil, nil, L["ColoredTargetTip"]},
 		{1, "Nameplate", "ColoredFocus", HeaderTag..L["ColoredFocus"].."*", true, nil, nil, L["ColoredFocusTip"]},
