@@ -98,8 +98,8 @@ function G:SetupRaidDebuffs(parent)
 	local frame = panel.bg
 	local bars, options = {}, {}
 
-	local iType = G:CreateDropdown(frame, L["Type*"], 10, -30, {DUNGEONS, RAID}, L["Instance Type"])
-	for i = 1, 2 do
+	local iType = G:CreateDropdown(frame, L["Type*"], 10, -30, {DUNGEONS, RAID, OTHER}, L["Instance Type"])
+	for i = 1, 3 do
 		iType.options[i]:HookScript("OnClick", function()
 			for j = 1, 2 do
 				G:ClearEdit(options[j])
@@ -113,6 +113,10 @@ function G:SetupRaidDebuffs(parent)
 			for k = 1, #bars do
 				bars[k]:Hide()
 			end
+
+			if i == 3 then
+				setupBars(0) -- add OTHER spells
+			end
 		end)
 	end
 
@@ -125,7 +129,7 @@ function G:SetupRaidDebuffs(parent)
 			tinsert(dungeons, name)
 		end
 	end
-	local raidIDs = {564,565,534,532,544,548,580,550,568,0}
+	local raidIDs = {564,565,534,532,544,548,580,550,568}
 	local raids = {}
 	for _, id in pairs(raidIDs) do
 		local name = GetNameFromID(id)
@@ -147,6 +151,7 @@ function G:SetupRaidDebuffs(parent)
 			end
 		end
 	end
+	NameToId[0] = 0 -- OTHER group
 
 	options[1] = G:CreateDropdown(frame, DUNGEONS.."*", 120, -30, dungeons, L["Dungeons Intro"], 130, 30)
 	options[1]:Hide()
@@ -174,7 +179,7 @@ function G:SetupRaidDebuffs(parent)
 
 	local function addClick(options)
 		local dungeonName, raidName, spellID, priority = options[1].Text:GetText(), options[2].Text:GetText(), tonumber(options[3]:GetText()), tonumber(options[4]:GetText())
-		local instName = dungeonName or raidName
+		local instName = dungeonName or raidName or (iType.Text:GetText() == OTHER and 0)
 		if not instName or not spellID then UIErrorsFrame:AddMessage(DB.InfoColor..L["Incomplete Input"]) return end
 		if spellID and not GetSpellInfo(spellID) then UIErrorsFrame:AddMessage(DB.InfoColor..L["Incorrect SpellID"]) return end
 		local instID = NameToId[instName]
