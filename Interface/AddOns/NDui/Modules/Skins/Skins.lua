@@ -194,6 +194,8 @@ function S:EnlargeDefaultUIPanel(name, pushed)
 	frame.scrollFrame:ClearAllPoints()
 	frame.scrollFrame:SetPoint("TOPRIGHT", frame, -65, -70)
 	frame.scrollFrame:SetPoint("BOTTOMRIGHT", frame, -65, 80)
+	frame.listScrollFrame:ClearAllPoints()
+	frame.listScrollFrame:SetPoint("TOPLEFT", frame, 19, -70)
 	frame.listScrollFrame:SetPoint("BOTTOMLEFT", frame, 19, 80)
 
 	if not C.db["Skins"]["BlizzardSkins"] then
