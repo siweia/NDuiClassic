@@ -941,7 +941,7 @@ G.TabList = {
 	L["Auras"],
 	L["Raid Tools"],
 	L["ChatFrame"],
-	L["Maps"],
+	NewTag..L["Maps"],
 	L["Skins"],
 	L["Tooltip"],
 	L["Misc"],
@@ -1200,7 +1200,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Map", "WhoPings", L["Show WhoPings"], true},
 		{1, "Map", "ShowRecycleBin", L["Show RecycleBin"]},
 		{1, "Misc", "ExpRep", L["Show Expbar"], true},
-		{2, "ACCOUNT", "IgnoredButtons", L["IgnoredButtons"], nil, nil, nil, L["IgnoredButtonsTip"]},
+		{2, "ACCOUNT", "IgnoredButtons", NewTag..L["IgnoredButtons"], nil, nil, nil, L["IgnoredButtonsTip"]},
 	},
 	[11] = {
 		{1, "Skins", "BlizzardSkins", HeaderTag..L["BlizzardSkins"], nil, nil, nil, L["BlizzardSkinsTips"]},
