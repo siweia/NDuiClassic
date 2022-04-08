@@ -173,6 +173,8 @@ function module:RecycleBin()
 		["Guidelime"] = true,
 		["QuestieFrame"] = true,
 	}
+	B.SplitList(ignoredButtons, NDuiADB["IgnoredButtons"])
+
 	local function isButtonIgnored(name)
 		for addonName in pairs(ignoredButtons) do
 			if strmatch(name, addonName) then

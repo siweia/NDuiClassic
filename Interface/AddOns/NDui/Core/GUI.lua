@@ -505,6 +505,7 @@ G.AccountSettings = {
 	MajorSpells = {},
 	SmoothAmount = .25,
 	AutoRecycle = false,
+	IgnoredButtons = "",
 }
 
 -- Initial settings
@@ -1179,14 +1180,15 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Map", "MapFader", L["MapFader"].."*", nil, nil, updateMapFader},
 		{3, "Map", "MapScale", L["Map Scale"], true, {.5, 1, .1}},
 		{},--blank
+		{3, "Map", "MinimapScale", L["Minimap Scale"].."*", nil, {.5, 3, .1}, updateMinimapScale},
+		{3, "Map", "MinimapSize", L["Minimap Size"].."*", true, {100, 500, 1}, updateMinimapScale},
 		{1, "Map", "Clock", L["Minimap Clock"].."*", nil, nil, showMinimapClock},
 		{1, "Map", "DiffFlag", L["Minimap DiffFlag"], true, nil, nil, L["DiffFlagTip"]},
 		{1, "Map", "CombatPulse", L["Minimap Pulse"]},
 		{1, "Map", "WhoPings", L["Show WhoPings"], true},
 		{1, "Map", "ShowRecycleBin", L["Show RecycleBin"]},
 		{1, "Misc", "ExpRep", L["Show Expbar"], true},
-		{3, "Map", "MinimapScale", L["Minimap Scale"].."*", nil, {.5, 3, .1}, updateMinimapScale},
-		{3, "Map", "MinimapSize", L["Minimap Size"].."*", true, {100, 500, 1}, updateMinimapScale},
+		{2, "ACCOUNT", "IgnoredButtons", L["IgnoredButtons"], nil, nil, nil, L["IgnoredButtonsTip"]},
 	},
 	[11] = {
 		{1, "Skins", "BlizzardSkins", HeaderTag..L["BlizzardSkins"], nil, nil, nil, L["BlizzardSkinsTips"]},
