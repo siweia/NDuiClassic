@@ -373,6 +373,13 @@ local bloodlustFilter = {
 	[264689] = true
 }
 
+local accountStrValues = {
+	["ChatFilterList"] = true,
+	["ChatFilterWhiteList"] = true,
+	["CustomTex"] = true,
+	["IgnoredButtons"] = true,
+}
+
 function G:ExportGUIData()
 	local text = "NDuiSettings:"..DB.Version..":"..DB.MyName..":"..DB.MyClass
 	for KEY, VALUE in pairs(C.db) do
@@ -463,7 +470,7 @@ function G:ExportGUIData()
 			for k, v in pairs(VALUE) do
 				text = text..";ACCOUNT:"..KEY..":"..k..":"..v
 			end
-		elseif VALUE == true or VALUE == false then
+		elseif VALUE == true or VALUE == false or accountStrValues[KEY] then
 			text = text..";ACCOUNT:"..KEY..":"..tostring(VALUE)
 		end
 	end
@@ -563,6 +570,12 @@ function G:ImportGUIData()
 			duration = tonumber(duration)
 			itemID = tonumber(itemID)
 			C.db[key][spellID] = {spellID, duration, indicator, unit, itemID}
+		elseif value == "InfoStrLeft" or value == "InfoStrRight" or accountStrValues[value] then
+			if key == "ACCOUNT" then
+				NDuiADB[value] = arg1
+			else
+				C.db[key][value] = arg1
+			end
 		elseif key == "ACCOUNT" then
 			if value == "RaidAuraWatch" then
 				local spells = {select(3, strsplit(":", option))}
