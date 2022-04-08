@@ -507,7 +507,7 @@ G.AccountSettings = {
 	CustomTex = "",
 	MajorSpells = {},
 	SmoothAmount = .25,
-	AutoRecycle = true,
+	AutoRecycle = false,
 	IgnoredButtons = "",
 }
 
