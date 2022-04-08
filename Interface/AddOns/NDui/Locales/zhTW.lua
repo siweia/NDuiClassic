@@ -797,3 +797,5 @@ L["MmssThresholdTip"] = "|n当冷却时间小于所设阈值时，精确显示�
 L["TenthThreshold"] = "显示小数点阈值"
 L["TenthThresholdTip"] = "|n当冷却时间小于所设阈值时，精确显示到小数十分位。|n例如3秒显示为3.0。"
 L["TargetedByTip"] = "|n在名條右側顯示隊友關注的統計，只在副本中生效。"
+L["IgnoredButtons"] = "回收站忽略列表"
+L["IgnoredButtonsTip"] = "|n輸入你不想收納進回收站的按鈕名字。你可以輸入/fstack後指向圖標來查看，只需輸入名字的一部分即可。|n對於多個按鈕名字，以空格隔開。需要重載插件後生效。"
