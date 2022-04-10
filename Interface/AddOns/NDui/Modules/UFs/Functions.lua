@@ -1071,7 +1071,7 @@ function UF:CreateBuffs(self)
 		bu.num = (self.raidType == "simple" or not C.db["UFs"]["ShowRaidBuff"]) and 0 or 3
 		bu.size = C.db["UFs"]["RaidBuffSize"]
 		bu.CustomFilter = UF.RaidBuffFilter
-		bu.disableMouse = true
+		bu.disableMouse = C.db["UFs"]["BuffClickThru"]
 		bu.fontSize = C.db["UFs"]["RaidBuffSize"]-2
 	else -- boss and arena
 		bu.__value = "Boss"
@@ -1103,7 +1103,7 @@ function UF:CreateDebuffs(self)
 		bu.num = (self.raidType == "simple" or not C.db["UFs"]["ShowRaidDebuff"]) and 0 or 3
 		bu.size = C.db["UFs"]["RaidDebuffSize"]
 		bu.CustomFilter = UF.RaidDebuffFilter
-		bu.disableMouse = true
+		bu.disableMouse = C.db["UFs"]["DebuffClickThru"]
 		bu.fontSize = C.db["UFs"]["RaidDebuffSize"]-2
 	else -- boss and arena
 		bu:SetPoint("TOPRIGHT", self, "TOPLEFT", -5, 0)
@@ -1127,6 +1127,7 @@ function UF:UpdateRaidAuras()
 				debuffs.num = (frame.raidType == "simple" or not C.db["UFs"]["ShowRaidDebuff"]) and 0 or 3
 				debuffs.size = C.db["UFs"]["RaidDebuffSize"]
 				debuffs.fontSize = C.db["UFs"]["RaidDebuffSize"]-2
+				debuffs.disableMouse = C.db["UFs"]["DebuffClickThru"]
 				UF:UpdateAuraContainer(frame, debuffs, debuffs.num)
 				debuffs:ForceUpdate()
 			end
@@ -1136,6 +1137,7 @@ function UF:UpdateRaidAuras()
 				buffs.num = (frame.raidType == "simple" or not C.db["UFs"]["ShowRaidBuff"]) and 0 or 3
 				buffs.size = C.db["UFs"]["RaidBuffSize"]
 				buffs.fontSize = C.db["UFs"]["RaidBuffSize"]-2
+				buffs.disableMouse = C.db["UFs"]["BuffClickThru"]
 				UF:UpdateAuraContainer(frame, buffs, buffs.num)
 				buffs:ForceUpdate()
 			end
