@@ -52,6 +52,7 @@ function M:OnLogin()
 	M:QuickMenuButton()
 	M:BaudErrorFrameHelpTip()
 	M:EnhancedPicker()
+	C_Timer_After(0, M.UpdateMaxZoomLevel)
 
 	-- Auto chatBubbles
 	if NDuiADB["AutoBubbles"] then
@@ -612,4 +613,8 @@ function M:EnhancedPicker()
 		self.__boxB:SetText(b)
 		self.__boxH:SetText(format("%02x%02x%02x", r, g, b))
 	end)
+end
+
+function M:UpdateMaxZoomLevel()
+	SetCVar("cameraDistanceMaxZoomFactor", C.db["Misc"]["MaxZoom"])
 end

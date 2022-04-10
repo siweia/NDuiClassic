@@ -462,6 +462,7 @@ G.DefaultSettings = {
 		InfoStrRight = "[spec][dura][gold][time]",
 		InfoSize = 13,
 		MaxAddOns = 12,
+		MaxZoom = 2.6,
 	},
 	Tutorial = {
 		Complete = false,
@@ -877,6 +878,10 @@ local function togglePetHappiness()
 	B:GetModule("Misc"):TogglePetHappiness()
 end
 
+local function updateMaxZoomLevel()
+	B:GetModule("Misc"):UpdateMaxZoomLevel()
+end
+
 local function updateInfobarAnchor(self)
 	if self:GetText() == "" then
 		self:SetText(self.__default)
@@ -1249,7 +1254,8 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 	--	{1, "Misc", "Focuser", L["Easy Focus"]},
 		{1, "Misc", "PetHappiness", L["PetHappiness"].."*", true, nil, togglePetHappiness},
 		{1, "Misc", "MenuButton", L["MenuButton"], nil, nil, nil, L["MenuButtonTip"]},
-		{1, "Misc", "BlockInvite", "|cffff0000"..L["BlockInvite"].."*", true, nil, nil, L["BlockInviteTip"]},
+		{1, "Misc", "BlockInvite", "|cffff0000"..L["BlockInvite"].."*", nil, nil, nil, L["BlockInviteTip"]},
+		{3, "Misc", "MaxZoom", L["MaxZoom"].."*", true, {2, 3.4, .1}, updateMaxZoomLevel},
 	},
 	[14] = {
 		{1, "ACCOUNT", "VersionCheck", L["Version Check"]},
