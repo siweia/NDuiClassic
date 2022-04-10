@@ -941,7 +941,7 @@ G.TabList = {
 	NewTag..L["Maps"],
 	L["Skins"],
 	L["Tooltip"],
-	L["Misc"],
+	NewTag..L["Misc"],
 	L["UI Settings"],
 	L["Profile"],
 }
@@ -1255,7 +1255,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Misc", "PetHappiness", L["PetHappiness"].."*", true, nil, togglePetHappiness},
 		{1, "Misc", "MenuButton", L["MenuButton"], nil, nil, nil, L["MenuButtonTip"]},
 		{1, "Misc", "BlockInvite", "|cffff0000"..L["BlockInvite"].."*", nil, nil, nil, L["BlockInviteTip"]},
-		{3, "Misc", "MaxZoom", L["MaxZoom"].."*", true, {2, 3.4, .1}, updateMaxZoomLevel},
+		{3, "Misc", "MaxZoom", NewTag..L["MaxZoom"].."*", true, {1, 3.4, .1}, updateMaxZoomLevel},
 	},
 	[14] = {
 		{1, "ACCOUNT", "VersionCheck", L["Version Check"]},
