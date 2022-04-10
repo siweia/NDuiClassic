@@ -416,6 +416,7 @@ function M:QuickMenuButton()
 
 		local name = dropdownMenu.name
 		local unit = dropdownMenu.unit
+		local bnetID = dropdownMenu.bnetIDAccount
 		local isPlayer = unit and UnitIsPlayer(unit)
 		local isFriendMenu = dropdownMenu == FriendsDropDown -- menus on FriendsFrame
 		if not name or (not isPlayer and not dropdownMenu.chatType and not isFriendMenu) then
@@ -423,10 +424,15 @@ function M:QuickMenuButton()
 			return
 		end
 
-		local gameAccountInfo = dropdownMenu.accountInfo and dropdownMenu.accountInfo.gameAccountInfo
-		if gameAccountInfo and gameAccountInfo.characterName and gameAccountInfo.realmName then
-			M.MenuButtonName = gameAccountInfo.characterName.."-"..gameAccountInfo.realmName
-			frame:Show()
+		if bnetID then
+			local gameID = select(6, BNGetFriendInfoByID(bnetID))
+			if gameID then
+				local _, characterName, client, realmName = BNGetGameAccountInfo(gameID)
+				if client == "WoW" and realmName ~= "" then
+					M.MenuButtonName = characterName.."-"..realmName
+					frame:Show()
+				end
+			end
 		else
 			local server = dropdownMenu.server
 			if not server or server == "" then
