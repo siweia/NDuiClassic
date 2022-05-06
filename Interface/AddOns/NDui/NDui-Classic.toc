@@ -1,9 +1,9 @@
-## Interface: 11402
+## Interface: 11403
 ## Title: |cff0080ffNDui|r |cffffffffClassic|r
 ## X-Credits: Elv, Freebaser, Haleth, Haste, Leatrix, lightspark, Loshine, Neavo, p3lim, Paopao001, Qulight, Ray, Rubgrsch, Tuller, zork.
 ## Author: Siweia
 ## Notes: More than a UI.
-## Version: 1.33.1
+## Version: 1.34.0
 ## X-Support: Classic
 ## X-Website: https://github.com/siweia/NDui/tree/Era
 ## SavedVariables: NDuiADB, NDuiPDB

@@ -51,7 +51,7 @@ local function UF_OnLeave(self)
 	self.Highlight:Hide()
 end
 
-function UF:CreateHeader(self)
+function UF:CreateHeader(self, onKeyDown)
 	local hl = self:CreateTexture(nil, "OVERLAY")
 	hl:SetAllPoints()
 	hl:SetTexture("Interface\\PETBATTLES\\PetBattle-SelectedPetGlow")
@@ -61,7 +61,7 @@ function UF:CreateHeader(self)
 	hl:Hide()
 	self.Highlight = hl
 
-	self:RegisterForClicks("AnyUp")
+	self:RegisterForClicks(onKeyDown and "AnyDown" or "AnyUp")
 	self:HookScript("OnEnter", UF_OnEnter)
 	self:HookScript("OnLeave", UF_OnLeave)
 end
@@ -773,6 +773,7 @@ end
 local function bolsterPreUpdate(element)
 	element.bolster = 0
 	element.bolsterIndex = nil
+	element.hasTheDot = nil
 end
 
 local function bolsterPostUpdate(element)
@@ -788,6 +789,12 @@ function UF.PostUpdateGapIcon(_, _, icon)
 	end
 end
 
+local colorDots = {}
+function UF:RefreshColorDots()
+	wipe(colorDots)
+	B.SplitList(colorDots, C.db["Nameplate"]["ColorDots"])
+end
+
 local isCasterPlayer = {
 	["player"] = true,
 	["pet"] = true,
@@ -795,6 +802,11 @@ local isCasterPlayer = {
 }
 function UF.CustomFilter(element, unit, button, name, _, _, _, _, _, caster, isStealable, _, spellID, _, _, _, nameplateShowAll)
 	local style = element.__owner.mystyle
+
+	if C.db["Nameplate"]["ColorByDot"] and style == "nameplate" and caster == "player" and colorDots[spellID] then
+		element.hasTheDot = true
+	end
+
 	if name and spellID == 209859 then
 		element.bolster = element.bolster + 1
 		if not element.bolsterIndex then
@@ -813,7 +825,7 @@ function UF.CustomFilter(element, unit, button, name, _, _, _, _, _, caster, isS
 			return NDuiADB["NameplateFilter"][1][spellID] or C.WhiteList[spellID]
 		elseif NDuiADB["NameplateFilter"][2][spellID] or C.BlackList[spellID] then
 			return false
-		elseif element.showStealableBuffs and isStealable and UnitCanAttack("player", unit) then
+		elseif element.showStealableBuffs and isStealable and not UnitIsPlayer(unit) then
 			return true
 		elseif NDuiADB["NameplateFilter"][1][spellID] or C.WhiteList[spellID] then
 			return true
@@ -857,17 +869,9 @@ function UF.RaidBuffFilter(_, _, _, _, _, _, _, _, _, caster, _, _, spellID, can
 	end
 end
 
-local debuffBlackList = {
-	[23445] = true, -- 邪恶双子
-	[36893] = true, -- 传送器故障
-	[36895] = true, -- 传送器故障
-	[36897] = true, -- 传送器故障
-	[36900] = true, -- 灵魂分裂：坏蛋
-	[36901] = true, -- 灵魂分裂：好人
-}
 function UF.RaidDebuffFilter(element, _, _, name, _, _, _, _, _, caster, _, _, spellID, _, isBossAura)
 	local parent = element.__owner
-	if debuffBlackList[spellID] then
+	if C.DebuffBlackList[spellID] then
 		return false
 	elseif (C.db["UFs"]["RaidBuffIndicator"] and UF.CornerSpellsByName[name]) or parent.RaidDebuffs.spellID == spellID or parent.rawSpellID == spellID then
 		return false
@@ -1437,11 +1441,21 @@ function UF:CreateSwing(self)
 	self.Swing.hideOoc = true
 end
 
+local scrolls = {}
+function UF:UpdateScrollingFont()
+	local fontSize = C.db["UFs"]["FCTFontSize"]
+	for _, scroll in pairs(scrolls) do
+		scroll:SetFont(DB.Font[1], fontSize, "OUTLINE")
+		scroll:SetSize(10*fontSize, 10*fontSize)
+	end
+end
+
 function UF:CreateFCT(self)
 	if not C.db["UFs"]["CombatText"] then return end
 
 	local parentFrame = CreateFrame("Frame", nil, UIParent)
-	local fcf = CreateFrame("Frame", "oUF_CombatTextFrame", parentFrame)
+	local parentName = self:GetName()
+	local fcf = CreateFrame("Frame", parentName.."CombatTextFrame", parentFrame)
 	fcf:SetSize(32, 32)
 	if self.mystyle == "player" then
 		B.Mover(fcf, L["CombatText"], "PlayerCombatText", {"BOTTOM", self, "TOPLEFT", 0, 120})
@@ -1452,6 +1466,16 @@ function UF:CreateFCT(self)
 	for i = 1, 36 do
 		fcf[i] = parentFrame:CreateFontString("$parentText", "OVERLAY")
 	end
+
+	local scrolling = CreateFrame("ScrollingMessageFrame", parentName.."CombatTextScrollingFrame", parentFrame)
+	scrolling:SetSpacing(3)
+	scrolling:SetMaxLines(20)
+	scrolling:SetFadeDuration(.2)
+	scrolling:SetTimeVisible(3)
+	scrolling:SetJustifyH("CENTER")
+	scrolling:SetPoint("BOTTOM", fcf)
+	fcf.Scrolling = scrolling
+	tinsert(scrolls, scrolling)
 
 	fcf.font = DB.Font[1]
 	fcf.fontFlags = DB.Font[3]

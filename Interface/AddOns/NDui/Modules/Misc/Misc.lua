@@ -85,12 +85,9 @@ function M:OnLogin()
 	-- Fix blizz error
 	MAIN_MENU_MICRO_ALERT_PRIORITY = MAIN_MENU_MICRO_ALERT_PRIORITY or {}
 
+	-- Still exisits in 1.14.3.43154
 	if not InspectTalentFrameSpentPoints then
 		InspectTalentFrameSpentPoints = CreateFrame("Frame")
-	end
-
-	if not TicketStatusFrame.TitleText then
-		TicketStatusFrame.TitleText = TicketStatusTitleText
 	end
 
 	-- Fix blizz bug in addon list
