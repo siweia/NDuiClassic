@@ -190,6 +190,14 @@ tinsert(C.defaultThemes, function()
 			B.Reskin(CodexQuestHide)
 			B.Reskin(CodexQuestReset)
 		end
+
+		-- Check all buttons
+		for i = 1, QuestLogDetailScrollChildFrame:GetNumChildren() do
+			local child = select(i, QuestLogDetailScrollChildFrame:GetChildren())
+			if child:IsObjectType("Button") and child.Text and not child.__bg then
+				B.Reskin(child)
+			end
+		end
 	end)
 
 	-- QuestTimerFrame
