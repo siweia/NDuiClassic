@@ -1,3 +1,11 @@
+# The project has been moved to https://github.com/siweia/NDui, under different branches.
+
+
+
+
+
+
+
 # ScreenShot
 ![1](http://wx4.sinaimg.cn/large/7112bfffgy1fwr835r4grj21hc0u0kjm.jpg)
 
